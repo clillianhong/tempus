@@ -1,4 +1,4 @@
-package edu.cornell.gdiac.tempus.tempus;
+package edu.cornell.gdiac.tempus.tempus.models;
 
 import com.badlogic.gdx.math.Vector2;
 import edu.cornell.gdiac.tempus.obstacle.CapsuleObstacle;

@@ -32,12 +32,13 @@ public class BoxObstacle extends SimpleObstacle {
 	/** A cache value for the fixture (for resizing) */
 	private Fixture geometry;
 	/** Cache of the polygon vertices (for resizing) */
-	private float[] vertices;
-	
-	/** 
+	protected float[] vertices;
+	/** The color to show off the debug shape */
+	private Color debugColor;
+	/**
 	 * Returns the dimensions of this box
 	 *
-	 * This method does NOT return a reference to the dimension vector. Changes to this 
+	 * This method does NOT return a reference to the dimension vector. Changes to this
 	 * vector will not affect the shape.  However, it returns the same vector each time
 	 * its is called, and so cannot be used as an allocator.
 	 *
@@ -47,7 +48,7 @@ public class BoxObstacle extends SimpleObstacle {
 		return sizeCache.set(dimension);
 	}
 
-	/** 
+	/**
 	 * Sets the dimensions of this box
 	 *
 	 * This method does not keep a reference to the parameter.
@@ -57,8 +58,8 @@ public class BoxObstacle extends SimpleObstacle {
 	public void setDimension(Vector2 value) {
 		setDimension(value.x, value.y);
 	}
-	
-	/** 
+
+	/**
 	 * Sets the dimensions of this box
 	 *
 	 * @param width   The width of this box
@@ -69,7 +70,7 @@ public class BoxObstacle extends SimpleObstacle {
 		markDirty(true);
 		resize(width, height);
 	}
-	
+
 	/**
 	 * Returns the box width
 	 *
@@ -78,7 +79,7 @@ public class BoxObstacle extends SimpleObstacle {
 	public float getWidth() {
 		return dimension.x;
 	}
-	
+
 	/**
 	 * Sets the box width
 	 *
@@ -88,7 +89,7 @@ public class BoxObstacle extends SimpleObstacle {
 		sizeCache.set(value,dimension.y);
 		setDimension(sizeCache);
 	}
-	
+
 	/**
 	 * Returns the box height
 	 *
@@ -97,7 +98,7 @@ public class BoxObstacle extends SimpleObstacle {
 	public float getHeight() {
 		return dimension.y;
 	}
-	
+
 	/**
 	 * Sets the box height
 	 *
@@ -107,12 +108,12 @@ public class BoxObstacle extends SimpleObstacle {
 		sizeCache.set(dimension.x,value);
 		setDimension(sizeCache);
 	}
-	
+
 	/**
 	 * Creates a new box at the origin.
 	 *
-	 * The size is expressed in physics units NOT pixels.  In order for 
-	 * drawing to work properly, you MUST set the drawScale. The drawScale 
+	 * The size is expressed in physics units NOT pixels.  In order for
+	 * drawing to work properly, you MUST set the drawScale. The drawScale
 	 * converts the physics units to pixels.
 	 *
 	 * @param width		The object width in physics units
@@ -125,8 +126,8 @@ public class BoxObstacle extends SimpleObstacle {
 	/**
 	 * Creates a new box object.
 	 *
-	 * The size is expressed in physics units NOT pixels.  In order for 
-	 * drawing to work properly, you MUST set the drawScale. The drawScale 
+	 * The size is expressed in physics units NOT pixels.  In order for
+	 * drawing to work properly, you MUST set the drawScale. The drawScale
 	 * converts the physics units to pixels.
 	 *
 	 * @param x  		Initial x position of the box center
@@ -141,15 +142,16 @@ public class BoxObstacle extends SimpleObstacle {
 		shape = new PolygonShape();
 		vertices = new float[8];
 		geometry = null;
-		
+		debugColor = Color.YELLOW;
+
 		// Initialize
-		resize(width, height);	
+		resize(width, height);
 	}
-	
+
 	/**
 	 * Reset the polygon vertices in the shape to match the dimension.
 	 */
-	private void resize(float width, float height) {
+	protected void resize(float width, float height) {
 		// Make the box with the center in the center
 		vertices[0] = -width/2.0f;
 		vertices[1] = -height/2.0f;
@@ -161,6 +163,14 @@ public class BoxObstacle extends SimpleObstacle {
 		vertices[7] = -height/2.0f;
 		shape.set(vertices);
 	}
+	/**
+	 * Sets the color to display the physics outline
+	 *
+	 * @param value	the color to display the physics outline
+	 */
+	public void setDebugColor(Color value) {
+		debugColor = value;
+	}
 
 	/**
 	 * Create new fixtures for this body, defining the shape
@@ -170,8 +180,8 @@ public class BoxObstacle extends SimpleObstacle {
 	protected void createFixtures() {
 		if (body == null) {
 			return;
-		} 
-		
+		}
+
 	    releaseFixtures();
 
 		// Create the fixture
@@ -179,7 +189,7 @@ public class BoxObstacle extends SimpleObstacle {
 		geometry = body.createFixture(fixture);
 		markDirty(false);
 	}
-	
+
 	/**
 	 * Release the fixtures for this body, reseting the shape
 	 *
@@ -192,7 +202,7 @@ public class BoxObstacle extends SimpleObstacle {
 	    }
 	}
 
-	
+
 	/**
 	 * Draws the outline of the physics body.
 	 *
@@ -201,8 +211,11 @@ public class BoxObstacle extends SimpleObstacle {
 	 * @param canvas Drawing context
 	 */
 	public void drawDebug(GameCanvas canvas) {
-		canvas.drawPhysics(shape,Color.YELLOW,getX(),getY(),getAngle(),drawScale.x,drawScale.y);
+		if (debugColor != null) {
+			canvas.drawPhysics(shape,debugColor,getX(),getY(),getAngle(),drawScale.x,drawScale.y);
+		}
 	}
 
 
 }
+

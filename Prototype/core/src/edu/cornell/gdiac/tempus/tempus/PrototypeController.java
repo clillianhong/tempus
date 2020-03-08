@@ -17,10 +17,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.utils.ObjectSet;
 import edu.cornell.gdiac.tempus.InputController;
 import edu.cornell.gdiac.tempus.WorldController;
 import edu.cornell.gdiac.tempus.obstacle.*;
+import edu.cornell.gdiac.tempus.tempus.models.Avatar;
+import edu.cornell.gdiac.tempus.tempus.models.Turret;
 import edu.cornell.gdiac.util.SoundController;
 
 /**
@@ -32,7 +33,7 @@ import edu.cornell.gdiac.util.SoundController;
  * This is the purpose of our AssetState variable; it ensures that multiple instances
  * place nicely with the static assets.
  */
-public class PrototypeController extends WorldController implements ContactListener {
+public class PrototypeController extends WorldController {
 	/** The texture file for the character avatar (no animation) */
 	private static final String DUDE_FILE  = "enemies/dude.png";
 	/** The texture file for the spinning barrier */
@@ -222,8 +223,9 @@ public class PrototypeController extends WorldController implements ContactListe
 	/** Whether the avatar is shifted to the other world or not */
 	private boolean shifted;
 
-	/** Mark set to handle more sophisticated collision callbacks */
-	protected ObjectSet<Fixture> sensorFixtures;
+
+	/** Collision Controller instance **/
+	protected CollisionController collisionController;
 
 	/**
 	 * Creates and initialize a new instance of the platformer game
@@ -235,8 +237,7 @@ public class PrototypeController extends WorldController implements ContactListe
 		setDebug(false);
 		setComplete(false);
 		setFailure(false);
-		world.setContactListener(this);
-		sensorFixtures = new ObjectSet<Fixture>();
+
 		shifted = false;
 		debug = false;
 	}
@@ -257,7 +258,8 @@ public class PrototypeController extends WorldController implements ContactListe
 		world.dispose();
 		shifted = false;
 		world = new World(gravity,false);
-		world.setContactListener(this);
+		world.setContactListener(collisionController);
+//		world.setContactListener(this);
 		setComplete(false);
 		setFailure(false);
 		populateLevel();
@@ -345,6 +347,8 @@ public class PrototypeController extends WorldController implements ContactListe
 		turret2.setName("turret2");
 		addObject(turret2);
 
+		collisionController = new CollisionController(this);
+		world.setContactListener(collisionController);
 	}
 	
 	/**
@@ -362,7 +366,7 @@ public class PrototypeController extends WorldController implements ContactListe
 		if (!super.preUpdate(dt)) {
 			return false;
 		}
-		
+
 		if (!isFailure() && avatar.getY() < -1) {
 			setFailure(true);
 			return false;
@@ -511,15 +515,7 @@ public class PrototypeController extends WorldController implements ContactListe
 		origin.coolDown(false);
 	}
 	
-	/**
-	 * Remove a new bullet from the world.
-	 *
-	 * @param  bullet   the bullet to remove
-	 */
-	public void removeBullet(Obstacle bullet) {
-	    bullet.markRemoved(true);
-	    SoundController.getInstance().play(POP_FILE,POP_FILE,false,EFFECT_VOLUME);
-	}
+
 
 	/**
 	 * Draws an object if it is in this world
@@ -533,9 +529,6 @@ public class PrototypeController extends WorldController implements ContactListe
 				obj.draw(canvas);
 			} else if (!shifted && (obj.getSpace() == 1)) {
 				obj.draw(canvas);
-			}
-			if (obj.getName() == "bullet") {
-				System.out.println("BULLET WAS FOUND");
 			}
 		}
 
@@ -586,97 +579,20 @@ public class PrototypeController extends WorldController implements ContactListe
 		}
 	}
 
-	public void beginContactHelper(Object sensor, AvatarOrientation or, Object fd1, Object fd2,
-								   Obstacle bd1, Obstacle bd2, Fixture fix1, Fixture fix2){
-		if ((sensor.equals(fd2) && avatar != bd1) ||
-				(sensor.equals(fd1) && avatar != bd2)) {
-			avatar.setAvatarOrientation(or);
-			avatar.setGrounded(true);
-			avatar.setSticking(true);
-			sensorFixtures.add(avatar == bd1 ? fix2 : fix1); // Could have more than one ground
-		}
-	}
-	/**
-	 * Callback method for the start of a collision
-	 *
-	 * This method is called when we first get a collision between two objects.  We use 
-	 * this method to test if it is the "right" kind of collision.  In particular, we
-	 * use it to test if we made it to the win door.
-	 *
-	 * @param contact The two bodies that collided
-	 */
-	public void beginContact(Contact contact) {
-		Fixture fix1 = contact.getFixtureA();
-		Fixture fix2 = contact.getFixtureB();
 
-		Body body1 = fix1.getBody();
-		Body body2 = fix2.getBody();
-
-		Object fd1 = fix1.getUserData();
-		Object fd2 = fix2.getUserData();
-		
-		try {
-			Obstacle bd1 = (Obstacle)body1.getUserData();
-			Obstacle bd2 = (Obstacle)body2.getUserData();
-
-			// Test bullet collision with world
-
-			if (bd1.getName().equals("bullet") && bd2 != avatar) {
-		        removeBullet(bd1);
-			}
-
-			if (bd2.getName().equals("bullet") && bd1 != avatar) {
-				removeBullet(bd2);
-			}
-
-			beginContactHelper(avatar.getSensorName(), AvatarOrientation.OR_UP, fd1, fd2, bd1, bd2, fix1, fix2);
-			beginContactHelper(avatar.getLeftSensorName(), AvatarOrientation.OR_RIGHT, fd1, fd2, bd1, bd2, fix1, fix2);
-			beginContactHelper(avatar.getRightSensorName(), AvatarOrientation.OR_LEFT, fd1, fd2, bd1, bd2, fix1, fix2);
-			beginContactHelper(avatar.getTopSensorName(), AvatarOrientation.OR_DOWN, fd1, fd2, bd1, bd2, fix1, fix2);
-
-			// Check for win condition
-			if ((bd1 == avatar   && bd2 == goalDoor) ||
-				(bd1 == goalDoor && bd2 == avatar)) {
-				setComplete(true);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-	}
-
-	/**
-	 * Callback method for the start of a collision
-	 *
-	 * This method is called when two objects cease to touch.  The main use of this method
-	 * is to determine when the characer is NOT on the ground.  This is how we prevent
-	 * double jumping.
-	 */ 
-	public void endContact(Contact contact) {
-		Fixture fix1 = contact.getFixtureA();
-		Fixture fix2 = contact.getFixtureB();
-
-		Body body1 = fix1.getBody();
-		Body body2 = fix2.getBody();
-
-		Object fd1 = fix1.getUserData();
-		Object fd2 = fix2.getUserData();
-		
-		Object bd1 = body1.getUserData();
-		Object bd2 = body2.getUserData();
-
-		if ((avatar.getSensorName().equals(fd2) && avatar != bd1) ||
-			(avatar.getSensorName().equals(fd1) && avatar != bd2)) {
-			sensorFixtures.remove(avatar == bd1 ? fix2 : fix1);
-			if (sensorFixtures.size == 0) {
-				avatar.setGrounded(false);
-				avatar.setSticking(false);
-			}
-		}
-	}
 
 	/** Unused ContactListener method */
 	public void postSolve(Contact contact, ContactImpulse impulse) {}
 	/** Unused ContactListener method */
 	public void preSolve(Contact contact, Manifold oldManifold) {}
+
+	/**
+	 * @return avatar object
+	 */
+	public Avatar getAvatar() { return avatar; }
+
+	/**
+	 * @return goal door object
+	 */
+	public BoxObstacle getGoalDoor() { return goalDoor; }
 }
