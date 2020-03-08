@@ -101,6 +101,8 @@ public class Avatar extends CapsuleObstacle {
     private boolean isSticking;
     /** Whether already stuck */
     private boolean wasSticking;
+    /** Whether we are actively holding */
+    private boolean isHolding;
     /** the current orientation of the player */
     private AvatarOrientation orientation;
     /** the dash distance of the player (max is DASH_RANGE) */
@@ -109,6 +111,8 @@ public class Avatar extends CapsuleObstacle {
     private Vector2 dashStartPos;
     /** the dash direction */
     private Vector2 dashDirection;
+    /** the bullet the character is currently holding */
+    private Obstacle heldBullet;
 
     /** Cache for internal force calculations */
     private Vector2 forceCache = new Vector2();
@@ -298,6 +302,19 @@ public class Avatar extends CapsuleObstacle {
     }
 
     /**
+     * Returns true if the dude is holding.
+     *
+     * @return true if the dude is holding
+     */
+    public boolean isHolding() {return isHolding;}
+
+    /**
+     * Returns true if the dude is holding.
+     *
+     */
+    public void setHolding(boolean s) { isHolding = s;}
+
+    /**
      * Sets whether the avatar is already sticking
      *
      * @param s whether the avatar was sticking
@@ -413,6 +430,9 @@ public class Avatar extends CapsuleObstacle {
     public boolean isFacingRight() {
         return faceRight;
     }
+
+    public void setHeldBullet(Obstacle bullet) {heldBullet = bullet;}
+    public Obstacle getHeldBullet() {return heldBullet; }
 
     /**
      * Creates a new dude avatar at the given position.
