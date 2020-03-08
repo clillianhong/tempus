@@ -69,16 +69,16 @@ public class CollisionController implements ContactListener {
         //TODO: create delegation of all contacts
     }
 
-    private void processAvatarPlatformContact(Fixture avatar, Fixture platform){
+    private void processAvatarPlatformContact(Fixture av, Fixture platform){
         //TODO: avatar platform contact
     }
-    private void processAvatarTurretContact(Fixture avatar, Fixture turret){
+    private void processAvatarTurretContact(Fixture av, Fixture turret){
         //TODO: avatar turret contact
     }
-    private void processAvatarProjectileContact(Fixture avatar, Fixture projectile){
+    private void processAvatarProjectileContact(Fixture av, Fixture projectile){
         //TODO: avatar projectile contact
     }
-    private void processAvatarDoorContact(Fixture avatar, Fixture door){
+    private void processAvatarDoorContact(Fixture av, Fixture door){
         //TODO: avatar door contact
     }
     private void processProjPlatformContact(Fixture projectile, Fixture platform){
