@@ -435,7 +435,6 @@ public class PrototypeController extends WorldController implements ContactListe
 		if(dashAttempt && !avatar.isDashing() && avatar.isSticking()){
 			//check valid direction
 			Vector2 mousePos = InputController.getInstance().getMousePosition();
-			if(validDashDirection(mousePos)){
 				avatar.setBodyType(BodyDef.BodyType.DynamicBody);
 				avatar.setSticking(false);
 				avatar.setWasSticking(false);
@@ -444,7 +443,6 @@ public class PrototypeController extends WorldController implements ContactListe
 				avatar.setDashDistance(avatar.getDashRange());
 				//avatar.setDashDistance(Math.min(avatar.getDashRange(), avatar.getPosition().dst(mousePos)));
 				avatar.setDashForceDirection(mousePos.sub(avatar.getPosition()));
-			}
 		}
 
 		// Process actions in object model
