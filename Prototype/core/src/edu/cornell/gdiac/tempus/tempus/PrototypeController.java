@@ -24,7 +24,10 @@ import edu.cornell.gdiac.tempus.tempus.models.Avatar;
 import edu.cornell.gdiac.tempus.tempus.models.Door;
 import edu.cornell.gdiac.tempus.tempus.models.Projectile;
 import edu.cornell.gdiac.tempus.tempus.models.Turret;
+import edu.cornell.gdiac.util.PooledList;
 import edu.cornell.gdiac.util.SoundController;
+
+import java.util.Iterator;
 
 /**
  * Gameplay specific controller for the platformer game.  
@@ -445,7 +448,7 @@ public class PrototypeController extends WorldController {
 					if (obj.getPosition().dst(avatar.getPosition()) < 50){
 						avatar.setBodyType(BodyDef.BodyType.StaticBody);
 						avatar.setHolding(true);
-						avatar.setHeldBullet(obj);
+						avatar.setHeldBullet((Projectile)obj);
 						obj.setBodyType(BodyDef.BodyType.StaticBody);
 						obj.setPosition(avatar.getPosition());
 						keepGoing = false;

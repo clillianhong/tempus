@@ -10,11 +10,11 @@
  * Based on original Optimization Lab by Don Holden, 2007
  * LibGDX version, 2/2/2015
  */
-package edu.cornell.gdiac.physics.desktop;
+package edu.cornell.gdiac.tempus.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import edu.cornell.gdiac.physics.GDXRoot;
+import edu.cornell.gdiac.tempus.GDXRoot;
 
 /**
  * The main class of the game.

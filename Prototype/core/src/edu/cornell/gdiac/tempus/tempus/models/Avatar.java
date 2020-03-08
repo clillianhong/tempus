@@ -106,7 +106,7 @@ public class Avatar extends CapsuleObstacle {
     /** the dash direction */
     private Vector2 dashDirection;
     /** the bullet the character is currently holding */
-    private Obstacle heldBullet;
+    private Projectile heldBullet;
 
     /** Cache for internal force calculations */
     private Vector2 forceCache = new Vector2();
@@ -425,8 +425,8 @@ public class Avatar extends CapsuleObstacle {
         return faceRight;
     }
 
-    public void setHeldBullet(Obstacle bullet) {heldBullet = bullet;}
-    public Obstacle getHeldBullet() {return heldBullet; }
+    public void setHeldBullet(Projectile bullet) {heldBullet = bullet;}
+    public Projectile getHeldBullet() {return heldBullet; }
 
     /**
      * Creates a new dude avatar at the given position.
