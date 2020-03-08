@@ -21,6 +21,8 @@ import edu.cornell.gdiac.tempus.InputController;
 import edu.cornell.gdiac.tempus.WorldController;
 import edu.cornell.gdiac.tempus.obstacle.*;
 import edu.cornell.gdiac.tempus.tempus.models.Avatar;
+import edu.cornell.gdiac.tempus.tempus.models.Door;
+import edu.cornell.gdiac.tempus.tempus.models.Projectile;
 import edu.cornell.gdiac.tempus.tempus.models.Turret;
 import edu.cornell.gdiac.util.SoundController;
 
@@ -215,7 +217,7 @@ public class PrototypeController extends WorldController {
 	/** Reference to the character avatar */
 	private Avatar avatar;
 	/** Reference to the goalDoor (for collision detection) */
-	private BoxObstacle goalDoor;
+	private Door goalDoor;
 
 	private Turret turret;
 	private Turret turret2;
@@ -272,7 +274,7 @@ public class PrototypeController extends WorldController {
 		// Add level goal
 		float dwidth  = goalTile.getRegionWidth()/scale.x;
 		float dheight = goalTile.getRegionHeight()/scale.y;
-		goalDoor = new BoxObstacle(GOAL_POS.x,GOAL_POS.y,dwidth,dheight);
+		goalDoor = new Door(GOAL_POS.x,GOAL_POS.y,dwidth,dheight,0);
 		goalDoor.setBodyType(BodyDef.BodyType.StaticBody);
 		goalDoor.setDensity(0.0f);
 		goalDoor.setFriction(0.0f);
@@ -497,7 +499,7 @@ public class PrototypeController extends WorldController {
 	private void createBullet(Turret origin) {
 		float offset = BULLET_OFFSET;
 		float radius = bulletBigTexture.getRegionWidth()/(2.0f*scale.x);
-		WheelObstacle bullet = new WheelObstacle(origin.getX(), origin.getY()+offset, radius);
+		Projectile bullet = new Projectile(origin, origin.getX(), origin.getY()+offset, radius);
 		
 	    bullet.setName("bullet");
 		bullet.setDensity(HEAVY_DENSITY);

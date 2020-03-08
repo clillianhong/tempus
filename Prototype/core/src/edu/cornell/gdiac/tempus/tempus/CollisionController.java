@@ -4,7 +4,7 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.ObjectSet;
 import edu.cornell.gdiac.tempus.obstacle.Obstacle;
-import edu.cornell.gdiac.tempus.tempus.models.Avatar;
+import edu.cornell.gdiac.tempus.tempus.models.*;
 
 public class CollisionController implements ContactListener {
     private PrototypeController controller;
@@ -39,9 +39,56 @@ public class CollisionController implements ContactListener {
         Object objA = fixA.getBody().getUserData();
         Object objB = fixB.getBody().getUserData();
 
-//        if((objA instanceof Avatar) && (objB instanceof ))
-        //TODO: model classes for platforms, bullet
+        //avatar-projectile
+        if((objA instanceof Avatar) && (objB instanceof Projectile)){
+            processAvatarProjectileContact(fixA, fixB);
+        }else if((objB instanceof Avatar) && (objA instanceof Projectile)){
+            processAvatarProjectileContact(fixB, fixA);
+        }
+        //avatar-platform
+        else if((objA instanceof Avatar) && (objB instanceof Platform)){
+            processAvatarPlatformContact(fixA, fixB);
+        }else if((objB instanceof Avatar) && (objA instanceof Platform)){
+            processAvatarPlatformContact(fixB, fixA);
+        }
+        //avatar-turret
+        else if((objA instanceof Avatar) && (objB instanceof Turret)){
+            processAvatarTurretContact(fixA, fixB);
+        }
+        else if((objB instanceof Avatar) && (objA instanceof Turret)){
+            processAvatarTurretContact(fixB, fixA);
+        }
+        //avatar-door
+        else if((objA instanceof Avatar) && (objB instanceof Door)){
+            processAvatarDoorContact(fixA, fixB);
+        }
+        else if((objB instanceof Avatar) && (objA instanceof Door)){
+            processAvatarDoorContact(fixB, fixA);
+        }
+        //TODO: model classes for platforms, projectiles
         //TODO: create delegation of all contacts
+    }
+
+    private void processAvatarPlatformContact(Fixture avatar, Fixture platform){
+        //TODO: avatar platform contact
+    }
+    private void processAvatarTurretContact(Fixture avatar, Fixture turret){
+        //TODO: avatar turret contact
+    }
+    private void processAvatarProjectileContact(Fixture avatar, Fixture projectile){
+        //TODO: avatar projectile contact
+    }
+    private void processAvatarDoorContact(Fixture avatar, Fixture door){
+        //TODO: avatar door contact
+    }
+    private void processProjPlatformContact(Fixture projectile, Fixture platform){
+        //TODO: platform projectile contact
+    }
+    private void processProjTurretContact(Fixture projectile, Fixture turret){
+        //TODO: platform projectile contact
+    }
+    private void processProjProjContact(Fixture projectile1, Fixture projectile2){
+        //TODO: projectile projectile contact
     }
 
 
