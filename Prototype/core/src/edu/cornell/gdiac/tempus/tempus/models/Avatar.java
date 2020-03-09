@@ -96,7 +96,7 @@ public class Avatar extends CapsuleObstacle {
     /** Whether already stuck */
     private boolean wasSticking;
     /** Whether we are actively holding */
-    private boolean isHolding;
+    public boolean isHolding;
     /** the current orientation of the player */
     private AvatarOrientation orientation;
     /** the dash distance of the player (max is DASH_RANGE) */
@@ -462,6 +462,7 @@ public class Avatar extends CapsuleObstacle {
         shootCooldown = 0;
         jumpCooldown = 0;
         setName("dude");
+        isHolding = false;
     }
 
     /**

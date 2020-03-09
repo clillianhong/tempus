@@ -414,7 +414,24 @@ public class PrototypeController extends WorldController {
 	 * @param dt Number of seconds since last animation frame
 	 */
 	public void update(float dt) {
-
+		if (avatar.isHolding()) {
+			if (avatar.getBodyType() != BodyDef.BodyType.StaticBody) {
+				avatar.setBodyType(BodyDef.BodyType.StaticBody);
+			} else if (InputController.getInstance().releasedLeftMouseButton()){
+				Vector2 mousePos = InputController.getInstance().getMousePosition();
+				avatar.setBodyType(BodyDef.BodyType.DynamicBody);
+				avatar.setSticking(false);
+				avatar.setWasSticking(false);
+				avatar.setDashing(true);
+				avatar.setDashStartPos(avatar.getPosition().cpy());
+				avatar.setDashDistance(avatar.getDashRange());
+				//avatar.setDashDistance(Math.min(avatar.getDashRange(), avatar.getPosition().dst(mousePos)));
+				avatar.setDashForceDirection(mousePos.cpy().sub(avatar.getPosition()));
+				avatar.setHolding(false);
+				Vector2 redirection = avatar.getPosition().cpy().sub(mousePos).nor();
+				createBullet(new Turret(avatar.getX() + (redirection.x * avatar.getWidth()),avatar.getY()  - BULLET_OFFSET + (redirection.y * avatar.getHeight()), 1, 1, 0, redirection.cpy().scl(12)));
+			}
+		}
 		if (InputController.getInstance().pressedRightMouseButton()){
 			shifted = !shifted;
 		}
@@ -437,40 +454,6 @@ public class PrototypeController extends WorldController {
 				avatar.setDashDistance(avatar.getDashRange());
 				//avatar.setDashDistance(Math.min(avatar.getDashRange(), avatar.getPosition().dst(mousePos)));
 				avatar.setDashForceDirection(mousePos.sub(avatar.getPosition()));
-		} else if (avatar.isDashing() && !avatar.isHolding() && InputController.getInstance().pressedLeftMouseButton()) {
-			Iterator<PooledList<Obstacle>.Entry> iterator = objects.entryIterator();
-			boolean keepGoing = true;
-			while (keepGoing) {
-				PooledList<Obstacle>.Entry entry = iterator.next();
-				Obstacle obj = entry.getValue();
-				keepGoing = iterator.hasNext();
-				if (obj.isBullet()) {
-					if (obj.getPosition().dst(avatar.getPosition()) < 50){
-						avatar.setBodyType(BodyDef.BodyType.StaticBody);
-						avatar.setHolding(true);
-						avatar.setHeldBullet((Projectile)obj);
-						obj.setBodyType(BodyDef.BodyType.StaticBody);
-						obj.setPosition(avatar.getPosition());
-						keepGoing = false;
-					}
-				}
-			}
-		} else if (avatar.isHolding() && InputController.getInstance().releasedLeftMouseButton()){
-			Vector2 mousePos = InputController.getInstance().getMousePosition();
-			avatar.setBodyType(BodyDef.BodyType.DynamicBody);
-			avatar.setSticking(false);
-			avatar.setWasSticking(false);
-			avatar.setDashing(true);
-			avatar.setDashStartPos(avatar.getPosition().cpy());
-			avatar.setDashDistance(avatar.getDashRange());
-			avatar.setDashForceDirection(mousePos.cpy().sub(avatar.getPosition()));
-			Obstacle obj = avatar.getHeldBullet();
-			obj.setBodyType(BodyDef.BodyType.DynamicBody);
-			Vector2 bulletRedirection = avatar.getPosition().cpy().sub(mousePos).nor();
-			obj.setPosition(obj.getPosition().add(bulletRedirection.cpy()));
-			obj.setLinearVelocity(bulletRedirection.cpy().scl(12.0f));
-			avatar.setHolding(false);
-			avatar.setHeldBullet(null);
 		}
 
 		// Process actions in object model

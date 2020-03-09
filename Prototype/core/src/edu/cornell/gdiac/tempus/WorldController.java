@@ -544,9 +544,7 @@ public abstract class WorldController implements Screen {
 	public void postUpdate(float dt) {
 		// Add any objects created by actions
 		while (!addQueue.isEmpty()) {
-			System.out.println("getting here");
 			Obstacle b = addQueue.poll();
-			System.out.println("name: " + b.getName());
 			addObject(b);
 		}
 		

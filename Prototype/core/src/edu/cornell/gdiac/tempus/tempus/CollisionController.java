@@ -1,10 +1,15 @@
 package edu.cornell.gdiac.tempus.tempus;
 
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.ObjectSet;
+import edu.cornell.gdiac.tempus.InputController;
 import edu.cornell.gdiac.tempus.obstacle.Obstacle;
 import edu.cornell.gdiac.tempus.tempus.models.*;
+import edu.cornell.gdiac.util.PooledList;
+
+import java.util.Iterator;
 
 public class CollisionController implements ContactListener {
     private PrototypeController controller;
@@ -32,7 +37,6 @@ public class CollisionController implements ContactListener {
      */
     private void processContact(Contact contact)
     {
-
         Fixture fixA = contact.getFixtureA();
         Fixture fixB = contact.getFixtureB();
 
@@ -76,7 +80,35 @@ public class CollisionController implements ContactListener {
         //TODO: avatar turret contact
     }
     private void processAvatarProjectileContact(Fixture av, Fixture projectile){
-        //TODO: avatar projectile contact
+        if (avatar.isDashing() && !avatar.isHolding() && InputController.getInstance().pressedLeftMouseButton()) {
+            avatar.setHolding(true);
+            Obstacle  bullet = (Obstacle) projectile.getBody().getUserData();
+            removeBullet(bullet);
+            // //bullet.markRemoved(true);
+           //bullet.setPosition(avatar.getPosition());
+            // avatar.setHeldBullet(bullet);
+//            projectile.getBody().setType(BodyDef.BodyType.StaticBody);
+        } else {
+            Obstacle  bullet = (Obstacle) projectile.getBody().getUserData();
+            removeBullet(bullet);
+            /*else if (avatar.isHolding() && InputController.getInstance().releasedLeftMouseButton()){
+            Vector2 mousePos = InputController.getInstance().getMousePosition();
+            avatar.setBodyType(BodyDef.BodyType.DynamicBody);
+            avatar.setSticking(false);
+            avatar.setWasSticking(false);
+            avatar.setDashing(true);
+            avatar.setDashStartPos(avatar.getPosition().cpy());
+            avatar.setDashDistance(avatar.getDashRange());
+            avatar.setDashForceDirection(mousePos.cpy().sub(avatar.getPosition()));
+            Obstacle obj = avatar.getHeldBullet();
+            obj.setBodyType(BodyDef.BodyType.DynamicBody);
+            Vector2 bulletRedirection = avatar.getPosition().cpy().sub(mousePos).nor();
+            obj.setPosition(obj.getPosition().add(bulletRedirection.cpy()));
+            obj.setLinearVelocity(bulletRedirection.cpy().scl(12.0f));
+            avatar.setHolding(false);
+            avatar.setHeldBullet(null);
+        }*/
+        }
     }
     private void processAvatarDoorContact(Fixture av, Fixture door){
         //TODO: avatar door contact
@@ -96,10 +128,13 @@ public class CollisionController implements ContactListener {
                                    Obstacle bd1, Obstacle bd2, Fixture fix1, Fixture fix2){
         if ((sensor.equals(fd2) && avatar != bd1) ||
                 (sensor.equals(fd1) && avatar != bd2)) {
-            avatar.setAvatarOrientation(or);
-            avatar.setGrounded(true);
-            avatar.setSticking(true);
-            sensorFixtures.add(avatar == bd1 ? fix2 : fix1); // Could have more than one ground
+            if ((sensor.equals(fd2) && !bd1.getName().equals("bullet")) ||
+                    (sensor.equals(fd1) && !bd2.getName().equals("bullet"))){
+                avatar.setAvatarOrientation(or);
+                avatar.setGrounded(true);
+                avatar.setSticking(true);
+                sensorFixtures.add(avatar == bd1 ? fix2 : fix1); // Could have more than one ground
+            }
         }
     }
 
@@ -125,6 +160,7 @@ public class CollisionController implements ContactListener {
      */
     @Override
     public void beginContact(Contact contact) {
+
         Fixture fix1 = contact.getFixtureA();
         Fixture fix2 = contact.getFixtureB();
 
