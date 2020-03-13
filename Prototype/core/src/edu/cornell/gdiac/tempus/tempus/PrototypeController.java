@@ -14,7 +14,9 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import edu.cornell.gdiac.tempus.InputController;
@@ -55,7 +57,7 @@ public class PrototypeController extends WorldController {
 
 	/** Checks if did debug */
 	private boolean debug;
-	
+
 	/** The sound file for a jump */
 	private static final String JUMP_FILE = "enemies/jump.mp3";
 	/** The sound file for a bullet fire */
@@ -63,6 +65,21 @@ public class PrototypeController extends WorldController {
 	/** The sound file for a bullet collision */
 	private static final String POP_FILE = "enemies/plop.mp3";
 
+	// Pathnames to shared assets
+	/** File to texture for walls and platforms */
+	private static String EARTH_FILE = "shared/earthtile.png";
+	/** File to texture for the win door */
+	private static String GOAL_FILE = "shared/goaldoor.png";
+	/** Retro font for displaying messages */
+	private static String FONT_FILE = "shared/RetroGame.ttf";
+	private static int FONT_SIZE = 64;
+
+	/** The texture for walls and platforms */
+	protected TextureRegion earthTile;
+	/** The texture for the exit condition */
+	protected TextureRegion goalTile;
+	/** The font for giving messages to the player */
+	protected BitmapFont displayFont;
 	/** Texture asset for character avatar */
 	private TextureRegion avatarTexture;
 	/** Texture asset for the spinning barrier */
@@ -75,6 +92,8 @@ public class PrototypeController extends WorldController {
 	private TextureRegion bridgeTexture;
 	/** Texture asset for the turret */
 	private TextureRegion turretTexture;
+
+
 
 	/** Texture asset for the background */
 	private TextureRegion backgroundTexture;
@@ -96,8 +115,20 @@ public class PrototypeController extends WorldController {
 		if (platformAssetState != AssetState.EMPTY) {
 			return;
 		}
-		
 		platformAssetState = AssetState.LOADING;
+		// Load the shared tiles.
+		manager.load(EARTH_FILE,Texture.class);
+		assets.add(EARTH_FILE);
+		manager.load(GOAL_FILE,Texture.class);
+		assets.add(GOAL_FILE);
+
+		// Load the font
+		FreetypeFontLoader.FreeTypeFontLoaderParameter size2Params = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
+		size2Params.fontFileName = FONT_FILE;
+		size2Params.fontParameters.size = FONT_SIZE;
+		manager.load(FONT_FILE, BitmapFont.class, size2Params);
+		assets.add(FONT_FILE);
+
 		manager.load(DUDE_FILE, Texture.class);
 		assets.add(DUDE_FILE);
 		manager.load(BARRIER_FILE, Texture.class);
@@ -118,7 +149,7 @@ public class PrototypeController extends WorldController {
 		manager.load(POP_FILE, Sound.class);
 		assets.add(POP_FILE);
 		
-		super.preLoadContent(manager);
+		//super.preLoadContent(manager);
 	}
 
 	/**
@@ -135,7 +166,16 @@ public class PrototypeController extends WorldController {
 		if (platformAssetState != AssetState.LOADING) {
 			return;
 		}
-		
+		// Allocate the tiles
+		earthTile = createTexture(manager,EARTH_FILE,true);
+		goalTile  = createTexture(manager,GOAL_FILE,true);
+
+		// Allocate the font
+		if (manager.isLoaded(FONT_FILE)) {
+			displayFont = manager.get(FONT_FILE,BitmapFont.class);
+		} else {
+			displayFont = null;
+		}
 		avatarTexture = createTexture(manager,DUDE_FILE,false);
 		barrierTexture = createTexture(manager,BARRIER_FILE,false);
 		bulletTexture = createTexture(manager,BULLET_FILE,false);
@@ -182,8 +222,6 @@ public class PrototypeController extends WorldController {
 											};
 	
 	/** The outlines of all of the platforms */
-	private static float dudex = 2.5f;
-	private static float dudey = 5.0f;
 	private static final float[][] PLATFORMS = {
 
 			{1.0f, 4.0f, 3.0f, 4.0f, 3.0f, 2.5f, 1.0f, 2.5f},
@@ -210,7 +248,7 @@ public class PrototypeController extends WorldController {
 	/** The position of the spinning barrier */
 	private static Vector2 SPIN_POS = new Vector2(13.0f,12.5f);
 	/** The initial position of the dude */
-	private static Vector2 DUDE_POS = new Vector2(dudex, dudey);
+	private static Vector2 DUDE_POS = new Vector2(2.5f, 5.0f);
 	/** The position of the rope bridge */
 	private static Vector2 BRIDGE_POS  = new Vector2(9.0f, 3.8f);
 	/** The initial position of the turret */
@@ -596,6 +634,18 @@ public class PrototypeController extends WorldController {
 			canvas.beginDebug();
 			drawDebugInWorld();
 			canvas.endDebug();
+		}
+		// Final message
+		if (complete && !failed) {
+			displayFont.setColor(Color.YELLOW);
+			canvas.begin(); // DO NOT SCALE
+			canvas.drawTextCentered("VICTORY!", displayFont, 0.0f);
+			canvas.end();
+		} else if (failed) {
+			displayFont.setColor(Color.RED);
+			canvas.begin(); // DO NOT SCALE
+			canvas.drawTextCentered("FAILURE!", displayFont, 0.0f);
+			canvas.end();
 		}
 	}
 
