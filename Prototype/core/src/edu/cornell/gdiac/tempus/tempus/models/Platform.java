@@ -24,7 +24,6 @@ public class Platform extends BoxObstacle {
     protected PolygonRegion region;
     /** The texture anchor upon region initialization */
     protected Vector2 anchor;
-
     /**
      * Create a new PlatformModel with degenerate settings
      */
