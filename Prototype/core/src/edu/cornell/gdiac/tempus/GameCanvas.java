@@ -915,6 +915,23 @@ public class GameCanvas {
 		float y = (getHeight() + layout.height) / 2.0f;
 		font.draw(spriteBatch, layout, x, y+offset);
     }
+
+	/**
+	 * Draws a line indicating the direction and distance of the dash.
+	 *
+	 * @param x0 The initial x coordinate of the line.
+	 * @param y0 The initial y coordinate of the line.
+	 * @param xf The final x coordinate of the line.
+	 * @param yf The final y coordinate of the line.
+	 */
+    public void drawIndicator(float x0, float y0, float xf, float yf) {
+		debugRender.begin(ShapeRenderer.ShapeType.Filled);
+		active = DrawPass.STANDARD;
+		debugRender.setColor(0, 05f, 0.5f, 1);
+		debugRender.rectLine(new Vector2(x0,y0),new Vector2(xf,yf), 3);
+		debugRender.end();
+		active = DrawPass.INACTIVE;
+	}
     
 	/**
 	 * Start the debug drawing sequence.

@@ -17,6 +17,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import edu.cornell.gdiac.tempus.GameCanvas;
 import edu.cornell.gdiac.tempus.InputController;
 import edu.cornell.gdiac.tempus.WorldController;
 import edu.cornell.gdiac.tempus.obstacle.*;
@@ -28,6 +29,7 @@ import edu.cornell.gdiac.util.PooledList;
 import edu.cornell.gdiac.util.SoundController;
 
 import java.util.Iterator;
+import java.util.Vector;
 
 /**
  * Gameplay specific controller for the platformer game.  
@@ -551,8 +553,19 @@ public class PrototypeController extends WorldController {
 				obj.draw(canvas);
 			}
 		}
+	}
 
-
+	/**
+	 * Draws a line indicating the direction and distance of the dash.
+	 */
+	public void drawIndicator(GameCanvas canvas) {
+		if (avatar.isDashing()) return; // do not draw while player is dashing
+		Vector2 startPos = avatar.getPosition().scl(scale);
+		Vector2 mousePos = InputController.getInstance().getMousePosition().scl(scale);
+		Vector2 alteredPos = mousePos.sub(startPos).nor();
+		Vector2 endPos = alteredPos.scl(avatar.getDashRange()).scl(scale);
+		endPos.add(startPos);
+		canvas.drawIndicator(startPos.x, startPos.y, endPos.x, endPos.y);
 	}
 
 	/**
@@ -591,6 +604,7 @@ public class PrototypeController extends WorldController {
 		drawObjectInWorld ();
 		canvas.end();
 
+		drawIndicator(canvas);
 
 		if (debug) {
 			canvas.beginDebug();
