@@ -15,6 +15,7 @@ public class CollisionController implements ContactListener {
     private PrototypeController controller;
     private ObjectMap<Short, ObjectMap<Short, ContactListener>> listeners;
     private Avatar avatar;
+    private Turret enemy;
     /** Mark set to handle more sophisticated collision callbacks */
     protected ObjectSet<Fixture> sensorFixtures;
 
@@ -26,6 +27,7 @@ public class CollisionController implements ContactListener {
     {
         controller = w;
         avatar = w.getAvatar();
+        enemy = w.getEnemy();
         listeners = new ObjectMap<Short, ObjectMap<Short, ContactListener>>();
         sensorFixtures = new ObjectSet<Fixture>();
 
@@ -77,7 +79,7 @@ public class CollisionController implements ContactListener {
         //TODO: avatar platform contact
     }
     private void processAvatarTurretContact(Fixture av, Fixture turret){
-        //TODO: avatar turret contact
+        //TODO: avatar turret contact (die)
     }
     private void processAvatarProjectileContact(Fixture av, Fixture projectile){
         if (avatar.isDashing() && !avatar.isHolding() && InputController.getInstance().pressedLeftMouseButton()) {
@@ -138,6 +140,17 @@ public class CollisionController implements ContactListener {
         }
     }
 
+    public void beginEnemyContactHelper(Object sensor, Object fd1, Object fd2,
+                                   Obstacle bd1, Obstacle bd2, Fixture fix1, Fixture fix2){
+        if ((sensor.equals(fd2) && enemy != bd1) ||
+                (sensor.equals(fd1) && enemy != bd2)) {
+            if ((sensor.equals(fd2) && !bd1.getName().equals("bullet")) ||
+                    (sensor.equals(fd1) && !bd2.getName().equals("bullet"))){
+                sensorFixtures.add(enemy == bd1 ? fix2 : fix1); // Could have more than one ground
+            }
+        }
+    }
+
     /**
      * Remove a new bullet from the world.
      *
@@ -187,6 +200,9 @@ public class CollisionController implements ContactListener {
             beginContactHelper(avatar.getRightSensorName(), AvatarOrientation.OR_LEFT, fd1, fd2, bd1, bd2, fix1, fix2);
             beginContactHelper(avatar.getTopSensorName(), AvatarOrientation.OR_DOWN, fd1, fd2, bd1, bd2, fix1, fix2);
 
+            beginEnemyContactHelper(enemy.getLeftSensorName(), fd1, fd2, bd1, bd2, fix1, fix2);
+            beginEnemyContactHelper(enemy.getRightSensorName(), fd1, fd2, bd1, bd2, fix1, fix2);
+
             // Check for win condition
             if ((bd1 == avatar   && bd2 == controller.getGoalDoor()) ||
                     (bd1 == controller.getGoalDoor() && bd2 == avatar)) {
@@ -227,6 +243,20 @@ public class CollisionController implements ContactListener {
                 avatar.setGrounded(false);
                 avatar.setSticking(false);
             }
+        }
+
+        if ((enemy.getLeftSensorName().equals(fd2) && enemy != bd1) ||
+                (enemy.getLeftSensorName().equals(fd1) && enemy != bd2)) {
+            sensorFixtures.remove(enemy == bd1 ? fix2 : fix1);
+            enemy.setMovement(0);
+            enemy.setNextDirection(1);
+        }
+
+        if ((enemy.getRightSensorName().equals(fd2) && enemy != bd1) ||
+                (enemy.getRightSensorName().equals(fd1) && enemy != bd2)) {
+            sensorFixtures.remove(enemy == bd1 ? fix2 : fix1);
+            enemy.setMovement(0);
+            enemy.setNextDirection(-1);
         }
     }
 

@@ -215,6 +215,8 @@ public class PrototypeController extends WorldController {
 	private static Vector2 BRIDGE_POS  = new Vector2(9.0f, 3.8f);
 	/** The initial position of the turret */
 	private static Vector2 TURRET_POS = new Vector2(8.5f, 10.0f);
+	/** The initial position of the enemy */
+	private static Vector2 ENEMY_POS = new Vector2(13.0f, 7.5f);
 
 	// Physics objects for the game
 	/** Reference to the character avatar */
@@ -224,6 +226,7 @@ public class PrototypeController extends WorldController {
 
 	private Turret turret;
 	private Turret turret2;
+	private Turret enemy;
 
 	/** Whether the avatar is shifted to the other world or not */
 	private boolean shifted;
@@ -332,6 +335,14 @@ public class PrototypeController extends WorldController {
 		avatar.setName("avatar");
 		addObject(avatar);
 
+		// Create enemy
+		enemy = new Turret(ENEMY_POS.x, ENEMY_POS.y, dwidth, dheight, 60, avatar);
+		enemy.setDrawScale(scale);
+		enemy.setTexture(avatarTexture);
+		enemy.setBodyType(BodyDef.BodyType.DynamicBody);
+		enemy.setName("enemy");
+		addObject(enemy);
+
 		// Create one turret
 		dwidth  = turretTexture.getRegionWidth()/scale.x;
 		dheight = turretTexture.getRegionHeight()/scale.y;
@@ -376,6 +387,8 @@ public class PrototypeController extends WorldController {
 			setFailure(true);
 			return false;
 		}
+
+		enemy.createLineOfSight(world);
 		
 		return true;
 	}
@@ -473,8 +486,16 @@ public class PrototypeController extends WorldController {
 		} else {
 			turret2.coolDown(true);
 		}
+
+		if (enemy.canFire()) {
+			enemy.setVelocity();
+			createBullet(enemy);
+		} else {
+			enemy.coolDown(true);
+		}
 		
 		avatar.applyForce();
+		enemy.applyForce();
 
 	    if (avatar.isJumping()) {
 	        SoundController.getInstance().play(JUMP_FILE,JUMP_FILE,false,EFFECT_VOLUME);
@@ -610,6 +631,8 @@ public class PrototypeController extends WorldController {
 	 * @return avatar object
 	 */
 	public Avatar getAvatar() { return avatar; }
+
+	public Turret getEnemy() { return enemy; }
 
 	/**
 	 * @return goal door object
