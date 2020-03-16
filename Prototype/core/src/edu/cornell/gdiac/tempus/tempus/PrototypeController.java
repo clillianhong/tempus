@@ -42,36 +42,36 @@ import java.util.Iterator;
  */
 public class PrototypeController extends WorldController {
 	/** The texture file for the character avatar (no animation) */
-	private static final String DUDE_FILE  = "enemies/dude.png";
+	private static final String DUDE_FILE  = "textures/dude.png";
 	/** The texture file for the spinning barrier */
-	private static final String BARRIER_FILE = "enemies/barrier.png";
+	private static final String BARRIER_FILE = "textures/barrier.png";
 	/** The texture file for the bullet */
-	private static final String BULLET_FILE  = "enemies/bullet.png";
+	private static final String BULLET_FILE  = "textures/bullet.png";
 
 	/** The texture file for the big bullet */
-	private static final String BULLET_BIG_FILE  = "enemies/bulletbig.png";
+	private static final String BULLET_BIG_FILE  = "textures/bulletbig.png";
 	/** The texture file for the turret */
-	private static final String TURRET_FILE  = "enemies/turret.png";
+	private static final String TURRET_FILE  = "textures/turret.png";
 	/** The texture file for the background */
-	private static final String BACKGROUND_FILE = "shared/ice.png";
+	private static final String BACKGROUND_FILE = "textures/ice.png";
 
 	/** Checks if did debug */
 	private boolean debug;
 
 	/** The sound file for a jump */
-	private static final String JUMP_FILE = "enemies/jump.mp3";
+	private static final String JUMP_FILE = "sounds/jump.mp3";
 	/** The sound file for a bullet fire */
-	private static final String PEW_FILE = "enemies/pew.mp3";
+	private static final String PEW_FILE = "sounds/pew.mp3";
 	/** The sound file for a bullet collision */
-	private static final String POP_FILE = "enemies/plop.mp3";
+	private static final String POP_FILE = "sounds/plop.mp3";
 
 	// Pathnames to shared assets
 	/** File to texture for walls and platforms */
-	private static String EARTH_FILE = "shared/earthtile.png";
+	private static String EARTH_FILE = "textures/earthtile.png";
 	/** File to texture for the win door */
-	private static String GOAL_FILE = "shared/goaldoor.png";
+	private static String GOAL_FILE = "textures/goaldoor.png";
 	/** Retro font for displaying messages */
-	private static String FONT_FILE = "shared/RetroGame.ttf";
+	private static String FONT_FILE = "fonts/RetroGame.ttf";
 	private static int FONT_SIZE = 64;
 
 	/** The texture for walls and platforms */
