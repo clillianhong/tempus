@@ -44,15 +44,21 @@ public class PrototypeController extends WorldController {
 	private static final String DUDE_FILE  = "enemies/dude.png";
 	/** The texture file for the spinning barrier */
 	private static final String BARRIER_FILE = "enemies/barrier.png";
+
 	/** The texture file for the bullet */
 	private static final String BULLET_FILE  = "enemies/bullet.png";
-
 	/** The texture file for the big bullet */
 	private static final String BULLET_BIG_FILE  = "enemies/bulletbig.png";
+
 	/** The texture file for the turret */
 	private static final String TURRET_FILE  = "enemies/turret.png";
 	/** The texture file for the background */
 	private static final String BACKGROUND_FILE = "shared/ice.png";
+
+	/** The texture file for present enemy */
+	private static final String ENEMY_PRESENT_FILE  = "enemies/enemy_present.png";
+	/** The texture file for past enemy */
+	private static final String ENEMY_PAST_FILE  = "enemies/enemy_past.png";
 
 	/** Checks if did debug */
 	private boolean debug;
@@ -76,6 +82,10 @@ public class PrototypeController extends WorldController {
 	private TextureRegion bridgeTexture;
 	/** Texture asset for the turret */
 	private TextureRegion turretTexture;
+	/** Texture asset for present enemy */
+	private TextureRegion enemyPresentTexture;
+	/** Texture asset for past enemy */
+	private TextureRegion enemyPastTexture;
 
 	/** Texture asset for the background */
 	private TextureRegion backgroundTexture;
@@ -97,7 +107,8 @@ public class PrototypeController extends WorldController {
 		if (platformAssetState != AssetState.EMPTY) {
 			return;
 		}
-		
+
+		// Images
 		platformAssetState = AssetState.LOADING;
 		manager.load(DUDE_FILE, Texture.class);
 		assets.add(DUDE_FILE);
@@ -109,9 +120,16 @@ public class PrototypeController extends WorldController {
 		assets.add(BULLET_BIG_FILE);
 		manager.load(TURRET_FILE, Texture.class);
 		assets.add(TURRET_FILE);
+		manager.load(ENEMY_PRESENT_FILE, Texture.class);
+		assets.add(ENEMY_PRESENT_FILE);
+		manager.load(ENEMY_PAST_FILE, Texture.class);
+		assets.add(ENEMY_PAST_FILE);
+
 		//background files
 		manager.load(BACKGROUND_FILE, Texture.class);
 		assets.add(BACKGROUND_FILE);
+
+		// Sounds
 		manager.load(JUMP_FILE, Sound.class);
 		assets.add(JUMP_FILE);
 		manager.load(PEW_FILE, Sound.class);
@@ -143,6 +161,8 @@ public class PrototypeController extends WorldController {
 		bulletBigTexture = createTexture(manager,BULLET_BIG_FILE,false);
 		turretTexture = createTexture(manager,TURRET_FILE,false);
 		backgroundTexture = createTexture(manager,BACKGROUND_FILE, false);
+		enemyPresentTexture = createTexture(manager,ENEMY_PRESENT_FILE,false);
+		enemyPastTexture = createTexture(manager,ENEMY_PAST_FILE,false);
 
 		SoundController sounds = SoundController.getInstance();
 		sounds.allocate(manager, JUMP_FILE);
@@ -225,6 +245,7 @@ public class PrototypeController extends WorldController {
 
 	private Turret turret;
 	private Turret turret2;
+	private Enemy enemyPresent1;
 
 	/** Whether the avatar is shifted to the other world or not */
 	private boolean shifted;
@@ -352,6 +373,16 @@ public class PrototypeController extends WorldController {
 		turret2.setBodyType(BodyDef.BodyType.StaticBody);
 		turret2.setName("turret2");
 		addObject(turret2);
+
+		// Create present enemy
+		dwidth  = enemyPresentTexture.getRegionWidth()/scale.x;
+		dheight = enemyPresentTexture.getRegionHeight()/scale.y;
+		enemyPresent1 = new Enemy(PRESENT, DUDE_POS.x, DUDE_POS.y, dwidth, dheight);
+		enemyPresent1.setDrawScale(scale);
+		enemyPresent1.setTexture(enemyPresentTexture);
+		enemyPresent1.setBodyType(BodyDef.BodyType.DynamicBody);
+		enemyPresent1.setName("enemyPresent1");
+		addObject(enemyPresent1);
 
 		collisionController = new CollisionController(this);
 		world.setContactListener(collisionController);
@@ -546,9 +577,9 @@ public class PrototypeController extends WorldController {
 		for(Obstacle obj : objects) {
 			if (obj.getSpace() == 3) {
 				obj.draw(canvas);
-			} else if (shifted && (obj.getSpace() == 2)) {
+			} else if (shifted && (obj.getSpace() == 2)) { //past world
 				obj.draw(canvas);
-			} else if (!shifted && (obj.getSpace() == 1)) {
+			} else if (!shifted && (obj.getSpace() == 1)) { //present world
 				obj.draw(canvas);
 			}
 		}
