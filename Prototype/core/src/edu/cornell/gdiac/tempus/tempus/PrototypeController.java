@@ -475,7 +475,7 @@ public class PrototypeController extends WorldController {
 				createBullet(new Enemy(PRESENT, avatar.getX() + (redirection.x * avatar.getWidth()),avatar.getY()  - BULLET_OFFSET + (redirection.y * avatar.getHeight()), 1, 1, 0, redirection.cpy().scl(12)));
 			}
 		}
-		if (InputController.getInstance().pressedRightMouseButton()){
+		if (InputController.getInstance().pressedShiftKey()){
 			shifted = !shifted;
 		}
 		//Check if the platform is in this world or other world. If in the other world, make the platform sleep.

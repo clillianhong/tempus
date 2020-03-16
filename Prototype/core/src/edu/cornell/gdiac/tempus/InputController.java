@@ -96,6 +96,10 @@ public class InputController {
 	/** The mouse position cache (for using as a return value) */
 	private Vector2 mouseCache;
 
+	/** Whether the shift key was pressed. */
+	private boolean shiftKeyPressed;
+	private boolean shiftKeyPrevious;
+
 	/** An X-Box controller (if it is connected) */
 	XBox360Controller xbox;
 	
@@ -269,6 +273,19 @@ public class InputController {
 	}
 
 	/**
+	 * Returns true if the shift key was pressed.
+	 *
+	 * This is a one-press button. It only returns true at the moment it was
+	 * pressed, and returns false at any frame afterwards.
+	 *
+	 * @return true if the shift key was pressed.
+	 */
+	public boolean pressedShiftKey() {
+		return shiftKeyPressed && !shiftKeyPrevious;
+	}
+
+
+	/**
 	 * Creates a new input controller
 	 * 
 	 * The input controller attempts to connect to the X-Box controller at device 0,
@@ -309,113 +326,40 @@ public class InputController {
 		prevPrevious = prevPressed;
 		leftMousePrevious = leftMouseReleased;
 		rightMousePrevious = rightMousePressed;
+		shiftKeyPrevious = shiftKeyPressed;
 
 		//old stuff
-		boolean secondary = false;
-		resetPressed = (secondary && resetPressed) || (Gdx.input.isKeyPressed(Input.Keys.R));
-		debugPressed = (secondary && debugPressed) || (Gdx.input.isKeyPressed(Input.Keys.D));
-		primePressed = (secondary && primePressed) || (Gdx.input.isKeyPressed(Input.Keys.UP));
-		secondPressed = (secondary && secondPressed) || (Gdx.input.isKeyPressed(Input.Keys.SPACE));
-		prevPressed = (secondary && prevPressed) || (Gdx.input.isKeyPressed(Input.Keys.P));
-		nextPressed = (secondary && nextPressed) || (Gdx.input.isKeyPressed(Input.Keys.N));
-		exitPressed  = (secondary && exitPressed) || (Gdx.input.isKeyPressed(Input.Keys.ESCAPE));
+		resetPressed = Gdx.input.isKeyPressed(Input.Keys.R);
+		debugPressed = Gdx.input.isKeyPressed(Input.Keys.D);
+		primePressed = Gdx.input.isKeyPressed(Input.Keys.UP);
+		secondPressed = Gdx.input.isKeyPressed(Input.Keys.SPACE);
+		prevPressed = Gdx.input.isKeyPressed(Input.Keys.P);
+		nextPressed = Gdx.input.isKeyPressed(Input.Keys.N);
+		exitPressed  = Gdx.input.isKeyPressed(Input.Keys.ESCAPE);
 
-
-		readMouse(bounds, scale, false);
-
-		/*
-		// Check to see if a GamePad is connected
-		if (xbox.isConnected()) {
-			readGamepad(bounds, scale);
-			readKeyboard(bounds, scale, true); // Read as a back-up
-		} else {
-			readKeyboard(bounds, scale, false);
-		}*/
+		readMouse(bounds, scale);
+		readKeyboard();
 	}
 
 	/**
-	 * Reads input from an X-Box controller connected to this computer.
+	 * Reads input from the keyboard.
+	 */
+	private void readKeyboard() {
+		shiftKeyPressed = Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) ||
+				Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT);
+	}
+
+	/**
+	 * Reads input from a mouse.
 	 *
 	 * The method provides both the input bounds and the drawing scale.  It needs
 	 * the drawing scale to convert screen coordinates to world coordinates.  The
 	 * bounds are for the crosshair.  They cannot go outside of this zone.
 	 *
-	 * @param bounds The input bounds for the crosshair.  
+	 * @param bounds The input bounds for the crosshair.
 	 * @param scale  The drawing scale
 	 */
-	private void readGamepad(Rectangle bounds, Vector2 scale) {
-		resetPressed = xbox.getStart();
-		exitPressed  = xbox.getBack();
-		nextPressed  = xbox.getRB();
-		prevPressed  = xbox.getLB();
-		primePressed = xbox.getA();
-		debugPressed  = xbox.getY();
-
-		// Increase animation frame, but only if trying to move
-		horizontal = xbox.getLeftX();
-		vertical   = xbox.getLeftY();
-		secondPressed = xbox.getRightTrigger() > 0.6f;
-		
-		// Move the crosshairs with the right stick.
-		tertiaryPressed = xbox.getA();
-		crosscache.set(xbox.getLeftX(), xbox.getLeftY());
-		if (crosscache.len2() > GP_THRESHOLD) {
-			momentum += GP_ACCELERATE;
-			momentum = Math.min(momentum, GP_MAX_SPEED);
-			crosscache.scl(momentum);
-			crosscache.scl(1/scale.x,1/scale.y);
-			crosshair.add(crosscache);
-		} else {
-			momentum = 0;
-		}
-		clampPosition(bounds);
-	}
-
-	/**
-	 * Reads input from the keyboard.
-	 *
-	 * This controller reads from the keyboard regardless of whether or not an X-Box
-	 * controller is connected.  However, if a controller is connected, this method
-	 * gives priority to the X-Box controller.
-	 *
-	 * @param secondary true if the keyboard should give priority to a gamepad
-	 */
-	private void readKeyboard(Rectangle bounds, Vector2 scale, boolean secondary) {
-		// Give priority to gamepad results
-		resetPressed = (secondary && resetPressed) || (Gdx.input.isKeyPressed(Input.Keys.R));
-		debugPressed = (secondary && debugPressed) || (Gdx.input.isKeyPressed(Input.Keys.D));
-		primePressed = (secondary && primePressed) || (Gdx.input.isKeyPressed(Input.Keys.UP));
-		secondPressed = (secondary && secondPressed) || (Gdx.input.isKeyPressed(Input.Keys.SPACE));
-		prevPressed = (secondary && prevPressed) || (Gdx.input.isKeyPressed(Input.Keys.P));
-		nextPressed = (secondary && nextPressed) || (Gdx.input.isKeyPressed(Input.Keys.N));
-		exitPressed  = (secondary && exitPressed) || (Gdx.input.isKeyPressed(Input.Keys.ESCAPE));
-		
-		// Directional controls
-		horizontal = (secondary ? horizontal : 0.0f);
-		if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-			horizontal += 1.0f;
-		}
-		if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-			horizontal -= 1.0f;
-		}
-		
-		vertical = (secondary ? vertical : 0.0f);
-		if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-			vertical += 1.0f;
-		}
-		if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-			vertical -= 1.0f;
-		}
-		
-		// Mouse results
-        tertiaryPressed = Gdx.input.isButtonPressed(Input.Buttons.LEFT);
-		crosshair.set(Gdx.input.getX(), Gdx.input.getY());
-		crosshair.scl(1/scale.x,-1/scale.y);
-		crosshair.y += bounds.height;
-		clampPosition(bounds);
-	}
-
-	private void readMouse(Rectangle bounds, Vector2 scale, boolean secondary){
+	private void readMouse(Rectangle bounds, Vector2 scale){
 		//mouse for dash
 		leftMousePressed = Gdx.input.isButtonPressed(Input.Buttons.LEFT);
 		rightMousePressed = Gdx.input.isButtonPressed(Input.Buttons.RIGHT);

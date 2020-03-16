@@ -82,7 +82,7 @@ public class CollisionController implements ContactListener {
         //TODO: avatar turret contact (die)
     }
     private void processAvatarProjectileContact(Fixture av, Fixture projectile){
-        if (avatar.isDashing() && !avatar.isHolding() && InputController.getInstance().pressedLeftMouseButton()) {
+        if (avatar.isDashing() && !avatar.isHolding() && InputController.getInstance().pressedRightMouseButton()) {
             avatar.setHolding(true);
             Obstacle  bullet = (Obstacle) projectile.getBody().getUserData();
             removeBullet(bullet);
