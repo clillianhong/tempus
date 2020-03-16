@@ -28,6 +28,7 @@ import edu.cornell.gdiac.util.SoundController;
 import java.util.Iterator;
 import java.util.Vector;
 
+import static edu.cornell.gdiac.tempus.tempus.models.EntityType.PAST;
 import static edu.cornell.gdiac.tempus.tempus.models.EntityType.PRESENT;
 
 /**
@@ -348,23 +349,25 @@ public class PrototypeController extends WorldController {
 		avatar.setName("avatar");
 		addObject(avatar);
 
-		// Create one turret
+		// Create turret in past world
 		dwidth  = turretTexture.getRegionWidth()/scale.x;
 		dheight = turretTexture.getRegionHeight()/scale.y;
-		Vector2 vel = new Vector2(12.0f, 8.0f);
-		turret = new Enemy(PRESENT, TURRET_POS.x,TURRET_POS.y - 5.0f, dwidth, dheight, 42, vel);
+		Vector2 projVel = new Vector2(12.0f, 8.0f);
+		turret = new Enemy(PAST, TURRET_POS.x,TURRET_POS.y - 5.0f, dwidth, dheight, 42, projVel);
 		turret.setDrawScale(scale);
 		turret.setTexture(turretTexture);
 		turret.setBodyType(BodyDef.BodyType.StaticBody);
+		turret.setSpace(2);
 		turret.setName("turret1");
 		addObject(turret);
 
-		// Create another turret
-		vel = new Vector2(-5.0f, 5.0f);
-		turret2 = new Enemy(PRESENT, TURRET_POS.x + 10.0f,TURRET_POS.y, dwidth, dheight, 60, vel);
+		// Create turret in present world
+		projVel = new Vector2(-3.0f, 0);
+		turret2 = new Enemy(PRESENT, TURRET_POS.x + 10.0f,TURRET_POS.y, dwidth, dheight, 60, projVel);
 		turret2.setDrawScale(scale);
 		turret2.setTexture(turretTexture);
 		turret2.setBodyType(BodyDef.BodyType.StaticBody);
+		turret2.setSpace(1);
 		turret2.setName("turret2");
 		addObject(turret2);
 
@@ -375,6 +378,7 @@ public class PrototypeController extends WorldController {
 		enemy.setDrawScale(scale);
 		enemy.setTexture(enemyPresentTexture);
 		enemy.setBodyType(BodyDef.BodyType.DynamicBody);
+		enemy.setSpace(1);
 		enemy.setName("enemyPresent1");
 		addObject(enemy);
 
@@ -385,6 +389,7 @@ public class PrototypeController extends WorldController {
 		enemyPast1.setDrawScale(scale);
 		enemyPast1.setTexture(enemyPastTexture);
 		enemyPast1.setBodyType(BodyDef.BodyType.DynamicBody);
+		enemyPast1.setSpace(2);
 		enemyPast1.setName("enemyPast1");
 		addObject(enemyPast1);
 
@@ -559,11 +564,13 @@ public class PrototypeController extends WorldController {
 
 	/**
 	 * Add a new bullet to the world and send it in the right direction.
+	 *
+	 * @param enemy enemy
 	 */
 	private void createBullet(Enemy enemy) {
 		float offset = BULLET_OFFSET;
 		float radius = bulletBigTexture.getRegionWidth()/(2.0f*scale.x);
-		Projectile bullet = new Projectile(PRESENT, enemy.getX(), enemy.getY()+offset, radius);
+		Projectile bullet = new Projectile(enemy.getType(), enemy.getX(), enemy.getY()+offset, radius);
 		
 	    bullet.setName("bullet");
 		bullet.setDensity(HEAVY_DENSITY);
@@ -572,7 +579,7 @@ public class PrototypeController extends WorldController {
 	    bullet.setBullet(true);
 	    bullet.setGravityScale(0);
 		bullet.setLinearVelocity(enemy.getVelocity());
-		bullet.setSpace(3);
+		bullet.setSpace(enemy.getSpace());
 		addQueuedObject(bullet);
 		
 		SoundController.getInstance().play(PEW_FILE, PEW_FILE, false, EFFECT_VOLUME);
@@ -580,8 +587,6 @@ public class PrototypeController extends WorldController {
 		// Reset the firing cooldown.
 		enemy.coolDown(false);
 	}
-	
-
 
 	/**
 	 * Draws an object if it is in this world
