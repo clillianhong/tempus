@@ -21,15 +21,14 @@ import edu.cornell.gdiac.tempus.GameCanvas;
 import edu.cornell.gdiac.tempus.InputController;
 import edu.cornell.gdiac.tempus.WorldController;
 import edu.cornell.gdiac.tempus.obstacle.*;
-import edu.cornell.gdiac.tempus.tempus.models.Avatar;
-import edu.cornell.gdiac.tempus.tempus.models.Door;
-import edu.cornell.gdiac.tempus.tempus.models.Projectile;
-import edu.cornell.gdiac.tempus.tempus.models.Turret;
+import edu.cornell.gdiac.tempus.tempus.models.*;
 import edu.cornell.gdiac.util.PooledList;
 import edu.cornell.gdiac.util.SoundController;
 
 import java.util.Iterator;
 import java.util.Vector;
+
+import static edu.cornell.gdiac.tempus.tempus.models.EntityType.PRESENT;
 
 /**
  * Gameplay specific controller for the platformer game.  
@@ -519,7 +518,7 @@ public class PrototypeController extends WorldController {
 	private void createBullet(Turret origin) {
 		float offset = BULLET_OFFSET;
 		float radius = bulletBigTexture.getRegionWidth()/(2.0f*scale.x);
-		Projectile bullet = new Projectile(origin, origin.getX(), origin.getY()+offset, radius);
+		Projectile bullet = new Projectile(PRESENT, origin, origin.getX(), origin.getY()+offset, radius);
 		
 	    bullet.setName("bullet");
 		bullet.setDensity(HEAVY_DENSITY);
