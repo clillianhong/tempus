@@ -183,12 +183,8 @@ public class PrototypeController extends WorldController {
 	private static final float  BASIC_FRICTION = 0.6f;
 	/** The restitution for all physics objects */
 	private static final float  BASIC_RESTITUTION = 0.1f;
-	/** The width of the rope bridge */
-	private static final float  BRIDGE_WIDTH = 14.0f;
 	/** Offset for bullet when firing */
 	private static final float  BULLET_OFFSET = 1.0f;
-	/** The speed of the bullet after firing */
-	private static final float  BULLET_SPEED = 20.0f;
 	/** The volume for sound effects */
 	private static final float EFFECT_VOLUME = 0.8f;
 
@@ -228,12 +224,8 @@ public class PrototypeController extends WorldController {
 	// Other game objects
 	/** The goal door position */
 	private static Vector2 GOAL_POS = new Vector2(29.5f,15.5f);
-	/** The position of the spinning barrier */
-	private static Vector2 SPIN_POS = new Vector2(13.0f,12.5f);
 	/** The initial position of the dude */
 	private static Vector2 DUDE_POS = new Vector2(dudex, dudey);
-	/** The position of the rope bridge */
-	private static Vector2 BRIDGE_POS  = new Vector2(9.0f, 3.8f);
 	/** The initial position of the turret */
 	private static Vector2 TURRET_POS = new Vector2(8.5f, 10.0f);
 	/** The initial position of the enemy */
@@ -245,10 +237,9 @@ public class PrototypeController extends WorldController {
 	/** Reference to the goalDoor (for collision detection) */
 	private Door goalDoor;
 
-	private Turret turret;
-	private Turret turret2;
-	private Enemy enemyPresent1;
-	private Turret enemy;
+	private Enemy turret;
+	private Enemy turret2;
+	private Enemy enemy;
 
 	/** Whether the avatar is shifted to the other world or not */
 	private boolean shifted;
@@ -357,19 +348,11 @@ public class PrototypeController extends WorldController {
 		avatar.setName("avatar");
 		addObject(avatar);
 
-		// Create enemy
-		enemy = new Turret(ENEMY_POS.x, ENEMY_POS.y, dwidth, dheight, 60, avatar);
-		enemy.setDrawScale(scale);
-		enemy.setTexture(avatarTexture);
-		enemy.setBodyType(BodyDef.BodyType.DynamicBody);
-		enemy.setName("enemy");
-		addObject(enemy);
-
 		// Create one turret
 		dwidth  = turretTexture.getRegionWidth()/scale.x;
 		dheight = turretTexture.getRegionHeight()/scale.y;
 		Vector2 vel = new Vector2(12.0f, 8.0f);
-		turret = new Turret(TURRET_POS.x,TURRET_POS.y - 5.0f, dwidth, dheight, 42, vel);
+		turret = new Enemy(PRESENT, TURRET_POS.x,TURRET_POS.y - 5.0f, dwidth, dheight, 42, vel);
 		turret.setDrawScale(scale);
 		turret.setTexture(turretTexture);
 		turret.setBodyType(BodyDef.BodyType.StaticBody);
@@ -378,22 +361,32 @@ public class PrototypeController extends WorldController {
 
 		// Create another turret
 		vel = new Vector2(-5.0f, 5.0f);
-		turret2 = new Turret(TURRET_POS.x + 10.0f,TURRET_POS.y, dwidth, dheight, 60, vel);
+		turret2 = new Enemy(PRESENT, TURRET_POS.x + 10.0f,TURRET_POS.y, dwidth, dheight, 60, vel);
 		turret2.setDrawScale(scale);
 		turret2.setTexture(turretTexture);
 		turret2.setBodyType(BodyDef.BodyType.StaticBody);
 		turret2.setName("turret2");
 		addObject(turret2);
 
-		// Create present enemy
+		// Create enemy in present world
 		dwidth  = enemyPresentTexture.getRegionWidth()/scale.x;
 		dheight = enemyPresentTexture.getRegionHeight()/scale.y;
-		enemyPresent1 = new Enemy(PRESENT, DUDE_POS.x, DUDE_POS.y, dwidth, dheight);
-		enemyPresent1.setDrawScale(scale);
-		enemyPresent1.setTexture(enemyPresentTexture);
-		enemyPresent1.setBodyType(BodyDef.BodyType.DynamicBody);
-		enemyPresent1.setName("enemyPresent1");
-		addObject(enemyPresent1);
+		enemy = new Enemy(PRESENT, ENEMY_POS.x, ENEMY_POS.y, dwidth, dheight, 60, avatar);
+		enemy.setDrawScale(scale);
+		enemy.setTexture(enemyPresentTexture);
+		enemy.setBodyType(BodyDef.BodyType.DynamicBody);
+		enemy.setName("enemyPresent1");
+		addObject(enemy);
+
+		// Create enemy in past world
+		dwidth  = enemyPastTexture.getRegionWidth()/scale.x;
+		dheight = enemyPastTexture.getRegionHeight()/scale.y;
+		Enemy enemyPast1 = new Enemy(PRESENT, DUDE_POS.x, DUDE_POS.y, dwidth, dheight, 60, new Vector2(0,0));
+		enemyPast1.setDrawScale(scale);
+		enemyPast1.setTexture(enemyPastTexture);
+		enemyPast1.setBodyType(BodyDef.BodyType.DynamicBody);
+		enemyPast1.setName("enemyPast1");
+		addObject(enemyPast1);
 
 		collisionController = new CollisionController(this);
 		world.setContactListener(collisionController);
@@ -474,7 +467,7 @@ public class PrototypeController extends WorldController {
 				avatar.setDashForceDirection(mousePos.cpy().sub(avatar.getPosition()));
 				avatar.setHolding(false);
 				Vector2 redirection = avatar.getPosition().cpy().sub(mousePos).nor();
-				createBullet(new Turret(avatar.getX() + (redirection.x * avatar.getWidth()),avatar.getY()  - BULLET_OFFSET + (redirection.y * avatar.getHeight()), 1, 1, 0, redirection.cpy().scl(12)));
+				createBullet(new Enemy(PRESENT, avatar.getX() + (redirection.x * avatar.getWidth()),avatar.getY()  - BULLET_OFFSET + (redirection.y * avatar.getHeight()), 1, 1, 0, redirection.cpy().scl(12)));
 			}
 		}
 		if (InputController.getInstance().pressedRightMouseButton()){
@@ -567,10 +560,10 @@ public class PrototypeController extends WorldController {
 	/**
 	 * Add a new bullet to the world and send it in the right direction.
 	 */
-	private void createBullet(Turret origin) {
+	private void createBullet(Enemy enemy) {
 		float offset = BULLET_OFFSET;
 		float radius = bulletBigTexture.getRegionWidth()/(2.0f*scale.x);
-		Projectile bullet = new Projectile(PRESENT, origin, origin.getX(), origin.getY()+offset, radius);
+		Projectile bullet = new Projectile(PRESENT, enemy.getX(), enemy.getY()+offset, radius);
 		
 	    bullet.setName("bullet");
 		bullet.setDensity(HEAVY_DENSITY);
@@ -578,14 +571,14 @@ public class PrototypeController extends WorldController {
 	    bullet.setTexture(bulletBigTexture);
 	    bullet.setBullet(true);
 	    bullet.setGravityScale(0);
-		bullet.setLinearVelocity(origin.getVelocity());
+		bullet.setLinearVelocity(enemy.getVelocity());
 		bullet.setSpace(3);
 		addQueuedObject(bullet);
 		
 		SoundController.getInstance().play(PEW_FILE, PEW_FILE, false, EFFECT_VOLUME);
 
 		// Reset the firing cooldown.
-		origin.coolDown(false);
+		enemy.coolDown(false);
 	}
 	
 
@@ -676,7 +669,7 @@ public class PrototypeController extends WorldController {
 	 */
 	public Avatar getAvatar() { return avatar; }
 
-	public Turret getEnemy() { return enemy; }
+	public Enemy getEnemy() { return enemy; }
 
 	/**
 	 * @return goal door object

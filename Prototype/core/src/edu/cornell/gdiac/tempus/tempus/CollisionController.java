@@ -15,7 +15,7 @@ public class CollisionController implements ContactListener {
     private PrototypeController controller;
     private ObjectMap<Short, ObjectMap<Short, ContactListener>> listeners;
     private Avatar avatar;
-    private Turret enemy;
+    private Enemy enemy;
     /** Mark set to handle more sophisticated collision callbacks */
     protected ObjectSet<Fixture> sensorFixtures;
 
@@ -58,10 +58,10 @@ public class CollisionController implements ContactListener {
             processAvatarPlatformContact(fixB, fixA);
         }
         //avatar-turret
-        else if((objA instanceof Avatar) && (objB instanceof Turret)){
+        else if((objA instanceof Avatar) && (objB instanceof Enemy)){
             processAvatarTurretContact(fixA, fixB);
         }
-        else if((objB instanceof Avatar) && (objA instanceof Turret)){
+        else if((objB instanceof Avatar) && (objA instanceof Enemy)){
             processAvatarTurretContact(fixB, fixA);
         }
         //avatar-door

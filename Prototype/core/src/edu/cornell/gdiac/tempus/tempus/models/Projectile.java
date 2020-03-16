@@ -5,10 +5,10 @@ import edu.cornell.gdiac.tempus.obstacle.WheelObstacle;
 
 public class Projectile extends WheelObstacle {
 
-    /** The type of this projectile. */
+    /** The type of this projectile */
     private EntityType type;
 
-    public Projectile(EntityType type, Turret origin, float x, float y, float radius) {
+    public Projectile(EntityType type, float x, float y, float radius) {
         super(x, y, radius);
         this.type = type;
     }
