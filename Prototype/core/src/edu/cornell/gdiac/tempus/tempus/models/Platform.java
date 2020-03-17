@@ -10,6 +10,7 @@ import java.lang.reflect.*;
 
 import edu.cornell.gdiac.tempus.GameCanvas;
 import edu.cornell.gdiac.tempus.obstacle.BoxObstacle;
+import edu.cornell.gdiac.tempus.obstacle.PolygonObstacle;
 import edu.cornell.gdiac.util.*;
 
 /**
@@ -19,17 +20,21 @@ import edu.cornell.gdiac.util.*;
  * by reading the JSON value.  In addition, this class overrides the drawing and
  * positioning functions to provide a tiled texture.
  */
-public class Platform extends BoxObstacle {
+public class Platform extends PolygonObstacle {
     /** Texture information for this object */
     protected PolygonRegion region;
     /** The texture anchor upon region initialization */
     protected Vector2 anchor;
-
+    /** The shape for debug mode */
+    protected PolygonShape shape;
+    /** The debug color for debug mode */
+    protected Color debugColor;
     /**
      * Create a new PlatformModel with degenerate settings
      */
-    public Platform() {
-        super(0,0,1,1);
+    public Platform(float [] points, float cx, float cy) {
+        super(points, cx, cy);
+        shape = new PolygonShape();
         region = null;
     }
 
@@ -182,7 +187,7 @@ public class Platform extends BoxObstacle {
         }
         int opacity = json.get("debugopacity").asInt();
         debugColor.mul(opacity/255.0f);
-        setDebugColor(debugColor);
+        this.debugColor = debugColor;
 
         // Now get the texture from the AssetManager singleton
         String key = json.get("texture").asString();
@@ -190,14 +195,16 @@ public class Platform extends BoxObstacle {
         setTexture(texture);
     }
 
-    /**
-     * Draws the physics object.
-     *
-     * @param canvas Drawing context
-     */
-    public void draw(GameCanvas canvas) {
-        if (region != null) {
-            canvas.draw(region,Color.WHITE,0,0,(getX()-anchor.x)*drawScale.x,(getY()-anchor.y)*drawScale.y,getAngle(),1,1);
-        }
-    }
+
+//
+//    /**
+//     * Draws the physics object.
+//     *
+//     * @param canvas Drawing context
+//     */
+//    public void draw(GameCanvas canvas) {
+//        if (region != null) {
+//            canvas.draw(region,Color.WHITE,0,0,getX()*drawScale.x,(getY()-anchor.y)*drawScale.y,getAngle(),1,1);
+//        }
+//    }
 }

@@ -52,7 +52,7 @@ public class PolygonObstacle extends SimpleObstacle {
 	/** A cache value for when the user wants to access the dimensions */
 	private Vector2 sizeCache;
 	/** Cache of the polygon vertices (for resizing) */
-	private float[] vertices;
+	protected float[] vertices;
 	
 	/** 
 	 * Returns the dimensions of this box
@@ -263,7 +263,7 @@ public class PolygonObstacle extends SimpleObstacle {
 	 * @param width The new width
 	 * @param height The new height
 	 */
-	private void resize(float width, float height) {
+	protected void resize(float width, float height) {
 		float scalex = width/dimension.x;
 		float scaley = height/dimension.y;
 		

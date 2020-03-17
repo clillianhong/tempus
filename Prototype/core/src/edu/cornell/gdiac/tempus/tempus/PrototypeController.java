@@ -322,7 +322,7 @@ public class PrototypeController extends WorldController {
 	    String pname = "platform";
 	    for (int ii = 0; ii < PLATFORMS.length; ii++) {
 	        PolygonObstacle obj;
-	    	obj = new PolygonObstacle(PLATFORMS[ii], 0, 0);
+	    	obj = new Platform(PLATFORMS[ii], 0, 0);
 			obj.setBodyType(BodyDef.BodyType.StaticBody);
 			obj.setDensity(BASIC_DENSITY);
 			obj.setFriction(BASIC_FRICTION);
