@@ -147,6 +147,7 @@ public class CollisionController implements ContactListener {
 
     public void beginContactHelper(Object sensor, AvatarOrientation or, Object fd1, Object fd2,
                                    Obstacle bd1, Obstacle bd2, Fixture fix1, Fixture fix2){
+
         if ((sensor.equals(fd2) && avatar != bd1) ||
                 (sensor.equals(fd1) && avatar != bd2)) {
             if ((sensor.equals(fd2) && !bd1.getName().equals("bullet")) ||
