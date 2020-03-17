@@ -352,8 +352,8 @@ public class PrototypeController extends WorldController {
 		// Create turret in past world
 		dwidth  = turretTexture.getRegionWidth()/scale.x;
 		dheight = turretTexture.getRegionHeight()/scale.y;
-		Vector2 projVel = new Vector2(12.0f, 8.0f);
-		turret = new Enemy(PAST, TURRET_POS.x,TURRET_POS.y - 5.0f, dwidth, dheight, 42, projVel);
+		Vector2 projVel = new Vector2(0, 2.0f);
+		turret = new Enemy(PAST, TURRET_POS.x,TURRET_POS.y - 5.0f, dwidth, dheight, 120, projVel);
 		turret.setDrawScale(scale);
 		turret.setTexture(turretTexture);
 		turret.setBodyType(BodyDef.BodyType.StaticBody);
@@ -383,7 +383,7 @@ public class PrototypeController extends WorldController {
 		// Create enemy in past world
 		dwidth  = enemyPastTexture.getRegionWidth()/scale.x;
 		dheight = enemyPastTexture.getRegionHeight()/scale.y;
-		Enemy enemyPast1 = new Enemy(PAST, DUDE_POS.x, DUDE_POS.y,
+		Enemy enemyPast1 = new Enemy(PAST, 15.625f,11.03125f,
 				dwidth, dheight, 60, new Vector2(0,0));
 		enemyPast1.setDrawScale(scale);
 		enemyPast1.setTexture(enemyPastTexture);
@@ -463,7 +463,11 @@ public class PrototypeController extends WorldController {
 				avatar.setDashForceDirection(mousePos.cpy().sub(avatar.getPosition()));
 				avatar.setHolding(false);
 				Vector2 redirection = avatar.getPosition().cpy().sub(mousePos).nor();
-				createBullet(new Enemy(PRESENT, avatar.getX() + (redirection.x * avatar.getWidth()),avatar.getY()  - BULLET_OFFSET + (redirection.y * avatar.getHeight()), 1, 1, 0, redirection.cpy().scl(12)));
+				createBullet(
+						new Enemy(avatar.getHeldBullet().getType(),
+						avatar.getX() + (redirection.x * avatar.getWidth()),
+						avatar.getY()  - BULLET_OFFSET + (redirection.y * avatar.getHeight()),
+						1, 1, 0, redirection.cpy().scl(12)));
 			}
 		}
 		if (InputController.getInstance().pressedShiftKey()){
@@ -524,6 +528,10 @@ public class PrototypeController extends WorldController {
 		
 	    // If we use sound, we must remember this.
 	    SoundController.getInstance().update();
+
+	    // Print location of the mouse position when 'X' key is pressed
+		// so we can know where to spawn enemies for testing purposes.
+		printCoordinates();
 	}
 
 	/**
@@ -583,6 +591,17 @@ public class PrototypeController extends WorldController {
 	}
 
 	/**
+	 * Prints the (x,y) coordinate of the current mouse position
+	 * when the 'X' key is pressed. For debug purposes.
+	 */
+	private void printCoordinates() {
+		if (InputController.getInstance().pressedXKey()) {
+			Vector2 pos = InputController.getInstance().getMousePosition();
+			System.out.println("Mouse position: " + pos);
+		}
+	}
+
+	/**
 	 * Draws an object if it is in this world
 	 *
 	 */
@@ -626,7 +645,7 @@ public class PrototypeController extends WorldController {
 			else if (shifted && (obj.getSpace()==2)) {obj.drawDebug(canvas);}
 			else if (!shifted && (obj.getSpace()==1)) {obj.drawDebug(canvas);}
 		}
-		}
+	}
 	/**
 	 * Draw the physics object360s to the canvas
 	 *
