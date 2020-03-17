@@ -1,10 +1,14 @@
 package edu.cornell.gdiac.tempus.tempus.models;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import edu.cornell.gdiac.tempus.GameCanvas;
 import edu.cornell.gdiac.tempus.obstacle.CapsuleObstacle;
+
+import static edu.cornell.gdiac.tempus.tempus.models.EntityType.PAST;
+import static edu.cornell.gdiac.tempus.tempus.models.EntityType.PRESENT;
 
 public class Enemy extends CapsuleObstacle {
 
@@ -56,26 +60,36 @@ public class Enemy extends CapsuleObstacle {
     /** The number of frames until the turret can fire again */
     private boolean isActive;
     /** The velocity of the projectile that this turret fires */
-    private Vector2 velocity;
+    private Vector2 projVel;
 
     /** Type of enemy */
     private EntityType type;
 
-    public Enemy(EntityType type, float x, float y,float width, float height, int cooldown, Vector2 vel) {
+    // Immobile enemy (turret)
+    public Enemy(EntityType type, float x, float y,float width, float height, int cooldown, Vector2 projVel) {
         super(x,y,width*HSHRINK,height*VSHRINK);
         this.type = type;
         this.cooldown = cooldown;
-        this.velocity = vel;
+        this.projVel = projVel;
         isActive = true;
         framesTillFire = 0;
     }
 
-    public Enemy(EntityType type, float x, float y, float width, float height, int cooldown, final Avatar target) {
+    // Moving enemy
+    public Enemy(
+            EntityType type, float x, float y, float width, float height,
+            TextureRegion texture, int cooldown, final Avatar target) {
         super(x,y,width*HSHRINK,height*VSHRINK);
+
+        this.setTexture(texture);
+        this.setBodyType(BodyDef.BodyType.DynamicBody);
+        if (type == PRESENT) this.setSpace(1);
+        else if (type == PAST) this.setSpace(2);
+
         this.type = type;
         this.target = target;
         this.cooldown = cooldown;
-        velocity = new Vector2(0,0).sub(getPosition().sub(target.getPosition()));
+        projVel = new Vector2(0,0).sub(getPosition().sub(target.getPosition()));
         isActive = false;
         framesTillFire = 0;
         movement = -1;
@@ -92,7 +106,7 @@ public class Enemy extends CapsuleObstacle {
     public EntityType getType() { return type; }
 
     public void setVelocity() {
-        velocity = new Vector2(0,0).sub(getPosition().sub(target.getPosition()));
+        projVel = new Vector2(0,0).sub(getPosition().sub(target.getPosition()));
     }
 
     /**
@@ -100,7 +114,7 @@ public class Enemy extends CapsuleObstacle {
      *
      * @return velocity of the projectiles that this enemy fires.
      */
-    public Vector2 getVelocity() { return velocity; }
+    public Vector2 getProjVelocity() { return projVel; }
 
     public void setIsActive(boolean a) {
         isActive = a;

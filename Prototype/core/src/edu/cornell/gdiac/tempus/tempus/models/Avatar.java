@@ -549,10 +549,10 @@ public class Avatar extends CapsuleObstacle {
 
         //apply dash force only ONCE per dash
         if(isDashing && !hasDashed){
-            System.out.println("APPLYING FORCE");
+//            System.out.println("APPLYING FORCE");
             //linearly interpolate dashForce
-            System.out.println("dash direction raw: " + dashDirection);
-            System.out.println("dash direction norm: " + dashDirection.nor());
+//            System.out.println("dash direction raw: " + dashDirection);
+//            System.out.println("dash direction norm: " + dashDirection.nor());
             forceCache.set(dashDirection.nor().scl(dashForce));
             body.applyForce(forceCache,getPosition(), true);
             hasDashed = true;
@@ -586,7 +586,7 @@ public class Avatar extends CapsuleObstacle {
         //check if dash must end
         if(isDashing){
             if(getPosition().dst(getDashStartPos()) > getDashDistance()){
-                System.out.println("DASHED TOO FAR");
+//                System.out.println("DASHED TOO FAR");
                 setDashing(false);
                 setLinearVelocity(new Vector2(0,0));
             }

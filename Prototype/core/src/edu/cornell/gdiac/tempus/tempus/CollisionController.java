@@ -59,10 +59,10 @@ public class CollisionController implements ContactListener {
         }
         //avatar-turret
         else if((objA instanceof Avatar) && (objB instanceof Enemy)){
-            processAvatarTurretContact(fixA, fixB);
+            processAvatarEnemyContact(fixA, fixB);
         }
         else if((objB instanceof Avatar) && (objA instanceof Enemy)){
-            processAvatarTurretContact(fixB, fixA);
+            processAvatarEnemyContact(fixB, fixA);
         }
         //avatar-door
         else if((objA instanceof Avatar) && (objB instanceof Door)){
@@ -71,6 +71,13 @@ public class CollisionController implements ContactListener {
         else if((objB instanceof Avatar) && (objA instanceof Door)){
             processAvatarDoorContact(fixB, fixA);
         }
+        //avatar-projectile
+        else if((objA instanceof Projectile) && (objB instanceof Enemy)){
+            processProjEnemyContact(fixA, fixB);
+        }
+        else if((objB instanceof Projectile) && (objA instanceof Enemy)){
+            processProjEnemyContact(fixB, fixA);
+        }
         //TODO: model classes for platforms, projectiles
         //TODO: create delegation of all contacts
     }
@@ -78,7 +85,7 @@ public class CollisionController implements ContactListener {
     private void processAvatarPlatformContact(Fixture av, Fixture platform){
         //TODO: avatar platform contact
     }
-    private void processAvatarTurretContact(Fixture av, Fixture turret){
+    private void processAvatarEnemyContact(Fixture av, Fixture turret){
         //TODO: avatar turret contact (die)
     }
     private void processAvatarProjectileContact(Fixture av, Fixture projectile){
@@ -118,8 +125,20 @@ public class CollisionController implements ContactListener {
     private void processProjPlatformContact(Fixture projectile, Fixture platform){
         //TODO: platform projectile contact
     }
-    private void processProjTurretContact(Fixture projectile, Fixture turret){
-        //TODO: platform projectile contact
+    private void processProjEnemyContact(Fixture projectile, Fixture enemy){
+        Body projBody = projectile.getBody();
+        Projectile proj = (Projectile) projBody.getUserData();
+        Body enemyBody = enemy.getBody();
+        Enemy e = (Enemy) enemyBody.getUserData();
+//        System.out.println("proj type: " + proj.getType());
+//        System.out.println("enemy type: " + e.getType());
+
+        // if projectile and enemy are of different worlds
+        // then remove enemy
+        if (proj.getType() != e.getType()) {
+            Obstacle obs = (Obstacle) enemyBody.getUserData();
+            obs.markRemoved(true);
+        }
     }
     private void processProjProjContact(Fixture projectile1, Fixture projectile2){
         //TODO: projectile projectile contact
