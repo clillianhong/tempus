@@ -374,18 +374,17 @@ public class PrototypeController extends WorldController {
 		// Create enemy in present world
 		dwidth  = enemyPresentTexture.getRegionWidth()/scale.x;
 		dheight = enemyPresentTexture.getRegionHeight()/scale.y;
-		enemy = new Enemy(PRESENT, ENEMY_POS.x, ENEMY_POS.y, dwidth, dheight, 60, avatar);
+		enemy = new Enemy(PRESENT, ENEMY_POS.x, ENEMY_POS.y, dwidth, dheight,
+				enemyPresentTexture, 60, avatar);
 		enemy.setDrawScale(scale);
-		enemy.setTexture(enemyPresentTexture);
-		enemy.setBodyType(BodyDef.BodyType.DynamicBody);
-		enemy.setSpace(1);
 		enemy.setName("enemyPresent1");
 		addObject(enemy);
 
 		// Create enemy in past world
 		dwidth  = enemyPastTexture.getRegionWidth()/scale.x;
 		dheight = enemyPastTexture.getRegionHeight()/scale.y;
-		Enemy enemyPast1 = new Enemy(PRESENT, DUDE_POS.x, DUDE_POS.y, dwidth, dheight, 60, new Vector2(0,0));
+		Enemy enemyPast1 = new Enemy(PAST, DUDE_POS.x, DUDE_POS.y,
+				dwidth, dheight, 60, new Vector2(0,0));
 		enemyPast1.setDrawScale(scale);
 		enemyPast1.setTexture(enemyPastTexture);
 		enemyPast1.setBodyType(BodyDef.BodyType.DynamicBody);
@@ -525,7 +524,7 @@ public class PrototypeController extends WorldController {
 		}
 		
 		avatar.applyForce();
-		enemy.applyForce();
+//		enemy.applyForce();
 
 	    if (avatar.isJumping()) {
 	        SoundController.getInstance().play(JUMP_FILE,JUMP_FILE,false,EFFECT_VOLUME);
@@ -578,7 +577,7 @@ public class PrototypeController extends WorldController {
 	    bullet.setTexture(bulletBigTexture);
 	    bullet.setBullet(true);
 	    bullet.setGravityScale(0);
-		bullet.setLinearVelocity(enemy.getVelocity());
+		bullet.setLinearVelocity(enemy.getProjVelocity());
 		bullet.setSpace(enemy.getSpace());
 		addQueuedObject(bullet);
 		
