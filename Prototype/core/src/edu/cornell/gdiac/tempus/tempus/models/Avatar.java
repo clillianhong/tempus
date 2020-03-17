@@ -98,7 +98,7 @@ public class Avatar extends CapsuleObstacle {
     /** Whether we are actively holding */
     public boolean isHolding;
     /** the current orientation of the player */
-    private AvatarOrientation orientation;
+    private float newAngle;
     /** the dash distance of the player (max is DASH_RANGE) */
     private float dashDistance;
     /** the dash starting position */
@@ -180,8 +180,8 @@ public class Avatar extends CapsuleObstacle {
      *
      * @return true if the dude is actively dashing.
      */
-    public Vector2 getAvatarOrientation() {
-        return orients[orientation.ordinal()];
+    public float getNewAngle() {
+        return newAngle;
     }
 
     /**
@@ -190,13 +190,6 @@ public class Avatar extends CapsuleObstacle {
      * @return max dash range
      */
     public float getDashRange(){ return DASH_RANGE; }
-
-    /**
-     * Sets avatar orientation
-     */
-    public void setAvatarOrientation(AvatarOrientation or) {
-        orientation = or;
-    }
 
     /**
      * Returns dash distance
@@ -337,6 +330,15 @@ public class Avatar extends CapsuleObstacle {
     }
 
     /**
+     * Sets new angle value out of sync
+     *
+     * @param value the angle to update body angle to after the world step
+     */
+    public void setNewAngle(float value) {
+        newAngle = value;
+    }
+
+    /**
      * Returns how much force to apply to get the dude moving
      *
      * Multiply this by the input to get the movement value.
@@ -454,7 +456,7 @@ public class Avatar extends CapsuleObstacle {
 
         //prototype added
         isDashing = false;
-        orientation = or;
+        newAngle = 0;
         isSticking = false;
         dashDistance = DASH_RANGE;
         dashStartPos = new Vector2(x,y);

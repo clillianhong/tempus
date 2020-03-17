@@ -315,7 +315,7 @@ public class PrototypeController extends WorldController {
 			obj.setRestitution(BASIC_RESTITUTION);
 			obj.setDrawScale(scale);
 			obj.setTexture(earthTile);
-			obj.setName(wname+ii);
+			obj.setName(wname);
 			addObject(obj);
 	    }
 	    
@@ -329,7 +329,7 @@ public class PrototypeController extends WorldController {
 			obj.setRestitution(BASIC_RESTITUTION);
 			obj.setDrawScale(scale);
 			obj.setTexture(earthTile);
-			obj.setName(pname+ii);
+			obj.setName(pname);
 			if (ii <= PLATFORMS.length/2){
 				obj.setSpace(1);
 			}
@@ -423,14 +423,6 @@ public class PrototypeController extends WorldController {
 		return true;
 	}
 
-	//prototype
-	/**
-	 * Whether or not the current dash command is in a feasible direction
-	 *
-	 */
-	public boolean validDashDirection(Vector2 dashPos){
-		return Math.abs((dashPos.cpy().sub(avatar.getPosition())).angle(avatar.getAvatarOrientation())) < 90;
-	}
 
 	/**
 	 * Makes the object sleep if it is not in this world
@@ -559,6 +551,8 @@ public class PrototypeController extends WorldController {
 			avatar.getBody().setAngularVelocity(0);
 			avatar.setBodyType(BodyDef.BodyType.StaticBody);
 			avatar.setWasSticking(true);
+			System.out.println("new angle " + avatar.getNewAngle());
+			avatar.setAngle(avatar.getNewAngle());
 		}
 	}
 

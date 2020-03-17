@@ -128,16 +128,22 @@ public class CollisionController implements ContactListener {
 
     public void beginContactHelper(Object sensor, AvatarOrientation or, Object fd1, Object fd2,
                                    Obstacle bd1, Obstacle bd2, Fixture fix1, Fixture fix2){
-
-        if ((sensor.equals(fd2) && avatar != bd1) ||
-                (sensor.equals(fd1) && avatar != bd2)) {
-            if ((sensor.equals(fd2) && !bd1.getName().equals("bullet")) ||
-                    (sensor.equals(fd1) && !bd2.getName().equals("bullet"))){
-                avatar.setAvatarOrientation(or);
-                avatar.setGrounded(true);
-                avatar.setSticking(true);
-                sensorFixtures.add(avatar == bd1 ? fix2 : fix1); // Could have more than one ground
-            }
+        Platform plat = null;
+        if ((sensor.equals(fd2) && avatar != bd1)){
+            plat = (Platform) bd1;
+        }
+        else if (sensor.equals(fd1) && avatar != bd2) {
+            plat = (Platform) bd2;
+        }
+        if(plat != null)
+        {
+                if ((sensor.equals(fd2) && !bd1.getName().equals("bullet")) ||
+                        (sensor.equals(fd1) && !bd2.getName().equals("bullet"))){
+                    avatar.setGrounded(true);
+                    avatar.setSticking(true);
+                    avatar.setNewAngle(plat.getAngle());
+                    sensorFixtures.add(avatar == bd1 ? fix2 : fix1); // Could have more than one ground
+                }
         }
     }
 
@@ -178,15 +184,15 @@ public class CollisionController implements ContactListener {
         Fixture fix1 = contact.getFixtureA();
         Fixture fix2 = contact.getFixtureB();
 
-        Body body1 = fix1.getBody();
-        Body body2 = fix2.getBody();
-
         Object fd1 = fix1.getUserData();
         Object fd2 = fix2.getUserData();
 
+        Object objA = fix1.getBody().getUserData();
+        Object objB = fix2.getBody().getUserData();
+
         try {
-            Obstacle bd1 = (Obstacle)body1.getUserData();
-            Obstacle bd2 = (Obstacle)body2.getUserData();
+            Obstacle bd1 = (Obstacle)objA;
+            Obstacle bd2 = (Obstacle)objB;
 
             // Test bullet collision with world
             if (bd1.getName().equals("bullet") && bd2 != avatar) {
@@ -196,10 +202,13 @@ public class CollisionController implements ContactListener {
                 removeBullet(bd2);
             }
 
-            beginContactHelper(avatar.getSensorName(), AvatarOrientation.OR_UP, fd1, fd2, bd1, bd2, fix1, fix2);
-            beginContactHelper(avatar.getLeftSensorName(), AvatarOrientation.OR_RIGHT, fd1, fd2, bd1, bd2, fix1, fix2);
-            beginContactHelper(avatar.getRightSensorName(), AvatarOrientation.OR_LEFT, fd1, fd2, bd1, bd2, fix1, fix2);
-            beginContactHelper(avatar.getTopSensorName(), AvatarOrientation.OR_DOWN, fd1, fd2, bd1, bd2, fix1, fix2);
+            //handle platform-avatar collisions first (outside of processcontact
+            if((objA instanceof Avatar) && (objB instanceof Platform) || (objB instanceof Avatar) && (objA instanceof Platform)){
+                beginContactHelper(avatar.getSensorName(), AvatarOrientation.OR_UP, fd1, fd2, bd1, bd2, fix1, fix2);
+                beginContactHelper(avatar.getLeftSensorName(), AvatarOrientation.OR_RIGHT, fd1, fd2, bd1, bd2, fix1, fix2);
+                beginContactHelper(avatar.getRightSensorName(), AvatarOrientation.OR_LEFT, fd1, fd2, bd1, bd2, fix1, fix2);
+                beginContactHelper(avatar.getTopSensorName(), AvatarOrientation.OR_DOWN, fd1, fd2, bd1, bd2, fix1, fix2);
+            }
 
             beginEnemyContactHelper(enemy.getLeftSensorName(), fd1, fd2, bd1, bd2, fix1, fix2);
             beginEnemyContactHelper(enemy.getRightSensorName(), fd1, fd2, bd1, bd2, fix1, fix2);
