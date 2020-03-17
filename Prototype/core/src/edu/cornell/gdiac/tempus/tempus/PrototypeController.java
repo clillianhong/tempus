@@ -352,8 +352,8 @@ public class PrototypeController extends WorldController {
 		// Create turret in past world
 		dwidth  = turretTexture.getRegionWidth()/scale.x;
 		dheight = turretTexture.getRegionHeight()/scale.y;
-		Vector2 projVel = new Vector2(12.0f, 8.0f);
-		turret = new Enemy(PAST, TURRET_POS.x,TURRET_POS.y - 5.0f, dwidth, dheight, 42, projVel);
+		Vector2 projVel = new Vector2(0, 2.0f);
+		turret = new Enemy(PAST, TURRET_POS.x,TURRET_POS.y - 5.0f, dwidth, dheight, 120, projVel);
 		turret.setDrawScale(scale);
 		turret.setTexture(turretTexture);
 		turret.setBodyType(BodyDef.BodyType.StaticBody);
@@ -383,7 +383,7 @@ public class PrototypeController extends WorldController {
 		// Create enemy in past world
 		dwidth  = enemyPastTexture.getRegionWidth()/scale.x;
 		dheight = enemyPastTexture.getRegionHeight()/scale.y;
-		Enemy enemyPast1 = new Enemy(PAST, DUDE_POS.x, DUDE_POS.y,
+		Enemy enemyPast1 = new Enemy(PAST, 15.625f,11.03125f,
 				dwidth, dheight, 60, new Vector2(0,0));
 		enemyPast1.setDrawScale(scale);
 		enemyPast1.setTexture(enemyPastTexture);
