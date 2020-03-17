@@ -18,5 +18,5 @@ public class Projectile extends WheelObstacle {
      *
      * @return type of projectile.
      */
-    private EntityType getType() { return type; }
+    public EntityType getType() { return type; }
 }
