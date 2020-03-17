@@ -463,7 +463,11 @@ public class PrototypeController extends WorldController {
 				avatar.setDashForceDirection(mousePos.cpy().sub(avatar.getPosition()));
 				avatar.setHolding(false);
 				Vector2 redirection = avatar.getPosition().cpy().sub(mousePos).nor();
-				createBullet(new Enemy(PRESENT, avatar.getX() + (redirection.x * avatar.getWidth()),avatar.getY()  - BULLET_OFFSET + (redirection.y * avatar.getHeight()), 1, 1, 0, redirection.cpy().scl(12)));
+				createBullet(
+						new Enemy(avatar.getHeldBullet().getType(),
+						avatar.getX() + (redirection.x * avatar.getWidth()),
+						avatar.getY()  - BULLET_OFFSET + (redirection.y * avatar.getHeight()),
+						1, 1, 0, redirection.cpy().scl(12)));
 			}
 		}
 		if (InputController.getInstance().pressedShiftKey()){

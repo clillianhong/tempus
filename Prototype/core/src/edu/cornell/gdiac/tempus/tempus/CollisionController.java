@@ -91,7 +91,8 @@ public class CollisionController implements ContactListener {
     private void processAvatarProjectileContact(Fixture av, Fixture projectile){
         if (avatar.isDashing() && !avatar.isHolding() && InputController.getInstance().pressedRightMouseButton()) {
             avatar.setHolding(true);
-            Obstacle  bullet = (Obstacle) projectile.getBody().getUserData();
+            Obstacle bullet = (Obstacle) projectile.getBody().getUserData();
+            avatar.setHeldBullet((Projectile) bullet);
             removeBullet(bullet);
             // //bullet.markRemoved(true);
            //bullet.setPosition(avatar.getPosition());
