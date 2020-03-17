@@ -99,6 +99,9 @@ public class InputController {
 	/** Whether the shift key was pressed. */
 	private boolean shiftKeyPressed;
 	private boolean shiftKeyPrevious;
+	/** Whether the 'X' key was pressed. */
+	private boolean xKeyPressed;
+	private boolean xKeyPrevious;
 
 	/** An X-Box controller (if it is connected) */
 	XBox360Controller xbox;
@@ -244,7 +247,7 @@ public class InputController {
 	 * @return true if the right mouse button was pressed.
 	 */
 	public boolean pressedRightMouseButton() {
-		return rightMousePressed && !rightMousePrevious;
+		return rightMousePressed;
 	}
 
 	/**
@@ -284,6 +287,17 @@ public class InputController {
 		return shiftKeyPressed && !shiftKeyPrevious;
 	}
 
+	/**
+	 * Returns true if the 'X' key was pressed.
+	 *
+	 * This is a one-press button. It only returns true at the moment it was
+	 * pressed, and returns false at any frame afterwards.
+	 *
+	 * @return true if the 'X' key was pressed.
+	 */
+	public boolean pressedXKey() {
+		return xKeyPressed && !xKeyPrevious;
+	}
 
 	/**
 	 * Creates a new input controller
@@ -327,6 +341,7 @@ public class InputController {
 		leftMousePrevious = leftMouseReleased;
 		rightMousePrevious = rightMousePressed;
 		shiftKeyPrevious = shiftKeyPressed;
+		xKeyPrevious = xKeyPressed;
 
 		//old stuff
 		resetPressed = Gdx.input.isKeyPressed(Input.Keys.R);
@@ -347,6 +362,7 @@ public class InputController {
 	private void readKeyboard() {
 		shiftKeyPressed = Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) ||
 				Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT);
+		xKeyPressed = Gdx.input.isKeyPressed(Input.Keys.X);
 	}
 
 	/**

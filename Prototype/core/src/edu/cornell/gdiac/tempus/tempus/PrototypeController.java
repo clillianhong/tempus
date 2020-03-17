@@ -524,6 +524,10 @@ public class PrototypeController extends WorldController {
 		
 	    // If we use sound, we must remember this.
 	    SoundController.getInstance().update();
+
+	    // Print location of the mouse position when 'X' key is pressed
+		// so we can know where to spawn enemies for testing purposes.
+		printCoordinates();
 	}
 
 	/**
@@ -582,6 +586,17 @@ public class PrototypeController extends WorldController {
 	}
 
 	/**
+	 * Prints the (x,y) coordinate of the current mouse position
+	 * when the 'X' key is pressed. For debug purposes.
+	 */
+	private void printCoordinates() {
+		if (InputController.getInstance().pressedXKey()) {
+			Vector2 pos = InputController.getInstance().getMousePosition();
+			System.out.println("Mouse position: " + pos);
+		}
+	}
+
+	/**
 	 * Draws an object if it is in this world
 	 *
 	 */
@@ -625,7 +640,7 @@ public class PrototypeController extends WorldController {
 			else if (shifted && (obj.getSpace()==2)) {obj.drawDebug(canvas);}
 			else if (!shifted && (obj.getSpace()==1)) {obj.drawDebug(canvas);}
 		}
-		}
+	}
 	/**
 	 * Draw the physics objects to the canvas
 	 *
