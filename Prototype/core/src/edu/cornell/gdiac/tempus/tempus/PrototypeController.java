@@ -495,7 +495,7 @@ public class PrototypeController extends WorldController {
 				avatar.setDashing(true);
 				avatar.setDashStartPos(avatar.getPosition().cpy());
 				avatar.setDashDistance(avatar.getDashRange());
-				//avatar.setDashDistance(Math.min(avatar.getDashRange(), avatar.getPosition().dst(mousePos)));
+				avatar.setDashDistance(Math.min(avatar.getDashRange(), avatar.getPosition().dst(mousePos)));
 				avatar.setDashForceDirection(mousePos.sub(avatar.getPosition()));
 		}
 
@@ -609,10 +609,13 @@ public class PrototypeController extends WorldController {
 	 */
 	public void drawIndicator(GameCanvas canvas) {
 		if (avatar.isDashing()) return; // do not draw while player is dashing
-		Vector2 startPos = avatar.getPosition().scl(scale);
-		Vector2 mousePos = InputController.getInstance().getMousePosition().scl(scale);
+		Vector2 avPos = avatar.getPosition();
+		Vector2 mPos = InputController.getInstance().getMousePosition();
+		Vector2 startPos = avPos.cpy().scl(scale);
+		Vector2 mousePos = mPos.cpy().scl(scale);
 		Vector2 alteredPos = mousePos.sub(startPos).nor();
-		Vector2 endPos = alteredPos.scl(avatar.getDashRange()).scl(scale);
+		float dist = Math.min(avatar.getDashRange(), avPos.dst(mPos));
+		Vector2 endPos = alteredPos.scl(dist).scl(scale);
 		endPos.add(startPos);
 		canvas.drawIndicator(startPos.x, startPos.y, endPos.x, endPos.y);
 	}
