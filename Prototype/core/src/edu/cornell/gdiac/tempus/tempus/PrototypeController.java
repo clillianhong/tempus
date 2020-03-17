@@ -552,6 +552,7 @@ public class PrototypeController extends WorldController {
 			avatar.setWasSticking(true);
 			System.out.println("new angle " + avatar.getNewAngle());
 			avatar.setAngle(avatar.getNewAngle());
+
 		}
 	}
 
@@ -585,8 +586,8 @@ public class PrototypeController extends WorldController {
 	 * Draws an object if it is in this world
 	 *
 	 */
-	public void drawObjectInWorld (){
-		for(Obstacle obj : objects) {
+	public void drawObjectInWorld () {
+		for (Obstacle obj : objects) {
 			if (obj.getSpace() == 3) {
 				obj.draw(canvas);
 			} else if (shifted && (obj.getSpace() == 2)) { //past world
@@ -627,7 +628,7 @@ public class PrototypeController extends WorldController {
 		}
 		}
 	/**
-	 * Draw the physics objects to the canvas
+	 * Draw the physics object360s to the canvas
 	 *
 	 * For simple worlds, this method is enough by itself.  It will need
 	 * to be overriden if the world needs fancy backgrounds or the like.
@@ -646,6 +647,7 @@ public class PrototypeController extends WorldController {
 		}else{
 			canvas.draw(backgroundTexture, 0, 0);
 		}
+
 		drawObjectInWorld ();
 		canvas.end();
 

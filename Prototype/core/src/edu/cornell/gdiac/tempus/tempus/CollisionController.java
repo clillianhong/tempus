@@ -16,8 +16,49 @@ public class CollisionController implements ContactListener {
     private ObjectMap<Short, ObjectMap<Short, ContactListener>> listeners;
     private Avatar avatar;
     private Enemy enemy;
+    private float cur_normal;
+    private CollisionPair prevCollisionPair;
     /** Mark set to handle more sophisticated collision callbacks */
     protected ObjectSet<Fixture> sensorFixtures;
+
+    /**
+     * CURRENTLY UNUSED
+     * helper class that uses comparable to determine if collision events are happening between the same two bodies
+     */
+    class CollisionPair implements Comparable {
+
+        private Obstacle A;
+        private Obstacle B;
+
+        public CollisionPair(Obstacle a, Obstacle b){
+            A = a;
+            B = b;
+        }
+        public CollisionPair(){
+            //do nothing
+        }
+
+        public Obstacle getA() {
+            return A;
+        }
+
+        public Obstacle getB() {
+            return B;
+        }
+
+        @Override
+        public int compareTo(Object o) {
+            CollisionPair comp = (CollisionPair) o;
+            if(comp.getA() == null){
+                return -1;
+            }
+            if((comp.getA() == this.getA() && comp.getB() == this.getB()) ||
+                    (comp.getB() == this.getA() && comp.getA() == this.getB())){
+                return 0;
+            }
+            return -1;
+        }
+    }
 
     /**
      * Creates instance of the collision handler
@@ -28,9 +69,10 @@ public class CollisionController implements ContactListener {
         controller = w;
         avatar = w.getAvatar();
         enemy = w.getEnemy();
+        cur_normal = 0;
         listeners = new ObjectMap<Short, ObjectMap<Short, ContactListener>>();
         sensorFixtures = new ObjectSet<Fixture>();
-
+        prevCollisionPair = new CollisionPair();
     }
 
     /**
@@ -158,9 +200,11 @@ public class CollisionController implements ContactListener {
         {
                 if ((sensor.equals(fd2) && !bd1.getName().equals("bullet")) ||
                         (sensor.equals(fd1) && !bd2.getName().equals("bullet"))){
-                    avatar.setGrounded(true);
-                    avatar.setSticking(true);
-                    avatar.setNewAngle(plat.getAngle());
+                    if(!avatar.isSticking()){
+                        avatar.setGrounded(true);
+                        avatar.setSticking(true);
+                        avatar.setNewAngle(cur_normal);
+                    }
                     sensorFixtures.add(avatar == bd1 ? fix2 : fix1); // Could have more than one ground
                 }
         }
@@ -199,7 +243,7 @@ public class CollisionController implements ContactListener {
      */
     @Override
     public void beginContact(Contact contact) {
-
+        
         Fixture fix1 = contact.getFixtureA();
         Fixture fix2 = contact.getFixtureB();
 
@@ -221,12 +265,33 @@ public class CollisionController implements ContactListener {
                 removeBullet(bd2);
             }
 
+
             //handle platform-avatar collisions first (outside of processcontact
-            if((objA instanceof Avatar) && (objB instanceof Platform) || (objB instanceof Avatar) && (objA instanceof Platform)){
-                beginContactHelper(avatar.getSensorName(), AvatarOrientation.OR_UP, fd1, fd2, bd1, bd2, fix1, fix2);
-                beginContactHelper(avatar.getLeftSensorName(), AvatarOrientation.OR_RIGHT, fd1, fd2, bd1, bd2, fix1, fix2);
-                beginContactHelper(avatar.getRightSensorName(), AvatarOrientation.OR_LEFT, fd1, fd2, bd1, bd2, fix1, fix2);
-                beginContactHelper(avatar.getTopSensorName(), AvatarOrientation.OR_DOWN, fd1, fd2, bd1, bd2, fix1, fix2);
+            if(((objA instanceof Avatar) && (objB instanceof Platform)) ||((objB instanceof Avatar) && (objA instanceof Platform))){
+
+                if(avatar.isSticking()){
+                    System.out.println("after: " + bd1.getName());
+                    System.out.println("after 1: " + bd2.getName());
+
+                }else{
+                    Float norm_angle = contact.getWorldManifold().getNormal().angle();
+
+                    if(!norm_angle.isNaN()){
+                        cur_normal = ((norm_angle.intValue()) == 0) ? 0 : (float) Math.toRadians(norm_angle-90);
+                        System.out.println("MANIFOLD ANGLE: " + norm_angle);
+                    }
+                }
+                if(!avatar.isSticking()){
+                    avatar.setGrounded(true);
+                    avatar.setSticking(true);
+                    avatar.setNewAngle(cur_normal);
+                }
+                sensorFixtures.add(avatar == bd1 ? fix2 : fix1); // Could have more than one ground
+//                beginContactHelper(avatar.getSensorName(), AvatarOrientation.OR_UP, fd1, fd2, bd1, bd2, fix1, fix2);
+//                beginContactHelper(avatar.getLeftSensorName(), AvatarOrientation.OR_RIGHT, fd1, fd2, bd1, bd2, fix1, fix2);
+//                beginContactHelper(avatar.getRightSensorName(), AvatarOrientation.OR_LEFT, fd1, fd2, bd1, bd2, fix1, fix2);
+//                beginContactHelper(avatar.getTopSensorName(), AvatarOrientation.OR_DOWN, fd1, fd2, bd1, bd2, fix1, fix2);
+
             }
 
             beginEnemyContactHelper(enemy.getLeftSensorName(), fd1, fd2, bd1, bd2, fix1, fix2);
