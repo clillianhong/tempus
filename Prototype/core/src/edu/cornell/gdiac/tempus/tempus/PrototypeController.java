@@ -646,7 +646,10 @@ public class PrototypeController extends WorldController {
 	 * Draws a line indicating the direction and distance of the dash.
 	 */
 	public void drawIndicator(GameCanvas canvas) {
-		if (avatar.isDashing()) return; // do not draw while player is dashing
+        // Do not draw while player is dashing or not holding a projectile
+		if (avatar.isDashing() && !avatar.isHolding()) return;
+
+		// Draw dynamic dash indicator
 		Vector2 avPos = avatar.getPosition();
 		Vector2 mPos = InputController.getInstance().getMousePosition();
 		Vector2 startPos = avPos.cpy().scl(scale);
@@ -655,7 +658,16 @@ public class PrototypeController extends WorldController {
 		float dist = Math.min(avatar.getDashRange(), avPos.dst(mPos));
 		Vector2 endPos = alteredPos.scl(dist).scl(scale);
 		endPos.add(startPos);
-		canvas.drawIndicator(startPos.x, startPos.y, endPos.x, endPos.y);
+		canvas.drawLine(startPos.x, startPos.y, endPos.x, endPos.y,
+                0, 1, 0.6f, 1);
+
+		// If player is holding a projectile, draw projectile indicator
+        // TODO: need to fix - line is a bit off
+        Vector2 projDir = startPos.cpy().sub(mousePos).scl(scale);
+        if (avatar.isHolding()) {
+            canvas.drawLine(startPos.x, startPos.y, projDir.x, projDir.y,
+                    1, 1, 1, 0.5f);
+        }
 	}
 
 	/**
