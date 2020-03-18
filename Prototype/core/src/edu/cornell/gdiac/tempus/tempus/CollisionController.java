@@ -230,8 +230,8 @@ public class CollisionController implements ContactListener {
                 beginContactHelper(avatar.getTopSensorName(), AvatarOrientation.OR_DOWN, fd1, fd2, bd1, bd2, fix1, fix2);
             }
 
-            beginEnemyContactHelper(enemy.getLeftSensorName(), fd1, fd2, bd1, bd2, fix1, fix2);
-            beginEnemyContactHelper(enemy.getRightSensorName(), fd1, fd2, bd1, bd2, fix1, fix2);
+//            beginEnemyContactHelper(enemy.getLeftSensorName(), fd1, fd2, bd1, bd2, fix1, fix2);
+//            beginEnemyContactHelper(enemy.getRightSensorName(), fd1, fd2, bd1, bd2, fix1, fix2);
 
             // Check for win condition
             if ((bd1 == avatar   && bd2 == controller.getGoalDoor()) ||
@@ -275,19 +275,19 @@ public class CollisionController implements ContactListener {
             }
         }
 
-        if ((enemy.getLeftSensorName().equals(fd2) && enemy != bd1) ||
-                (enemy.getLeftSensorName().equals(fd1) && enemy != bd2)) {
-            sensorFixtures.remove(enemy == bd1 ? fix2 : fix1);
-            enemy.setMovement(0);
-            enemy.setNextDirection(1);
-        }
-
-        if ((enemy.getRightSensorName().equals(fd2) && enemy != bd1) ||
-                (enemy.getRightSensorName().equals(fd1) && enemy != bd2)) {
-            sensorFixtures.remove(enemy == bd1 ? fix2 : fix1);
-            enemy.setMovement(0);
-            enemy.setNextDirection(-1);
-        }
+//        if ((enemy.getLeftSensorName().equals(fd2) && enemy != bd1) ||
+//                (enemy.getLeftSensorName().equals(fd1) && enemy != bd2)) {
+//            sensorFixtures.remove(enemy == bd1 ? fix2 : fix1);
+//            enemy.setMovement(0);
+//            enemy.setNextDirection(1);
+//        }
+//
+//        if ((enemy.getRightSensorName().equals(fd2) && enemy != bd1) ||
+//                (enemy.getRightSensorName().equals(fd1) && enemy != bd2)) {
+//            sensorFixtures.remove(enemy == bd1 ? fix2 : fix1);
+//            enemy.setMovement(0);
+//            enemy.setNextDirection(-1);
+//        }
     }
 
     @Override

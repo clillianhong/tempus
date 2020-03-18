@@ -66,8 +66,17 @@ public class Enemy extends CapsuleObstacle {
     private EntityType type;
 
     // Immobile enemy (turret)
-    public Enemy(EntityType type, float x, float y,float width, float height, int cooldown, Vector2 projVel) {
+    public Enemy(
+            EntityType type, float x, float y, float width, float height,
+            TextureRegion texture, int cooldown, Vector2 projVel) {
         super(x,y,width*HSHRINK,height*VSHRINK);
+
+        this.setTexture(texture);
+        // set body space so that createBullet sets the
+        // correct space for created projectiles
+        if (type == PRESENT) this.setSpace(1);
+        else if (type == PAST) this.setSpace(2);
+
         this.type = type;
         this.cooldown = cooldown;
         this.projVel = projVel;
@@ -82,7 +91,6 @@ public class Enemy extends CapsuleObstacle {
         super(x,y,width*HSHRINK,height*VSHRINK);
 
         this.setTexture(texture);
-        this.setBodyType(BodyDef.BodyType.DynamicBody);
         if (type == PRESENT) this.setSpace(1);
         else if (type == PAST) this.setSpace(2);
 

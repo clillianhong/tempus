@@ -229,8 +229,8 @@ public class PrototypeController extends WorldController {
 	private static Vector2 DUDE_POS = new Vector2(dudex, dudey);
 	/** The initial position of the turret */
 	private static Vector2 TURRET_POS = new Vector2(8.5f, 10.0f);
-	/** The initial position of the enemy */
-	private static Vector2 ENEMY_POS = new Vector2(13.0f, 7.5f);
+//	/** The initial position of the enemy */
+//	private static Vector2 ENEMY_POS = new Vector2(13.0f, 7.5f);
 
 	// Physics objects for the game
 	/** Reference to the character avatar */
@@ -238,8 +238,34 @@ public class PrototypeController extends WorldController {
 	/** Reference to the goalDoor (for collision detection) */
 	private Door goalDoor;
 
-	private Enemy turret;
-	private Enemy turret2;
+	/** The information of all the enemies */
+	private int NUMBER_ENEMIES = 2;
+	private EntityType[] TYPE_ENEMIES = {
+			PRESENT, PAST
+	};
+	private float[][] COOR_ENEMIES = {
+			{13.0f, 7.5f}, {15.625f,11.03125f}
+	};
+	private int[] CD_ENEMIES = {
+			80, 80
+	};
+
+	/** The information of all the turrets */
+	private int NUMBER_TURRETS = 2;
+	private EntityType[] TYPE_TURRETS = {
+			PRESENT, PAST
+	};
+	private float[][] COOR_TURRETS = {
+			{TURRET_POS.x + 10.0f,TURRET_POS.y},
+			{TURRET_POS.x,TURRET_POS.y - 5.0f}
+	};
+	private float[][] DIR_TURRETS = { //direction of proj which the turrets shoot
+			{-3.0f, 0}, {0, 2.0f}
+	};
+	private int[] CD_TURRETS = {
+			90, 120
+	};
+
 	private Enemy enemy;
 
 	/** Whether the avatar is shifted to the other world or not */
@@ -305,7 +331,7 @@ public class PrototypeController extends WorldController {
 		goalDoor.setName("goal");
 		addObject(goalDoor);
 
-	    String wname = "wall";
+	    String nameWall = "wall";
 	    for (int ii = 0; ii < WALLS.length; ii++) {
 	        PolygonObstacle obj;
 	    	obj = new PolygonObstacle(WALLS[ii], 0, 0);
@@ -315,11 +341,11 @@ public class PrototypeController extends WorldController {
 			obj.setRestitution(BASIC_RESTITUTION);
 			obj.setDrawScale(scale);
 			obj.setTexture(earthTile);
-			obj.setName(wname);
+			obj.setName(nameWall);
 			addObject(obj);
 	    }
 	    
-	    String pname = "platform";
+	    String namePlatform = "platform";
 	    for (int ii = 0; ii < PLATFORMS.length; ii++) {
 	        PolygonObstacle obj;
 	    	obj = new Platform(PLATFORMS[ii], 0, 0);
@@ -329,7 +355,7 @@ public class PrototypeController extends WorldController {
 			obj.setRestitution(BASIC_RESTITUTION);
 			obj.setDrawScale(scale);
 			obj.setTexture(earthTile);
-			obj.setName(pname);
+			obj.setName(namePlatform);
 			if (ii <= PLATFORMS.length/2){
 				obj.setSpace(1);
 			}
@@ -349,48 +375,34 @@ public class PrototypeController extends WorldController {
 		avatar.setName("avatar");
 		addObject(avatar);
 
-		// Create turret in past world
-		dwidth  = turretTexture.getRegionWidth()/scale.x;
-		dheight = turretTexture.getRegionHeight()/scale.y;
-		Vector2 projVel = new Vector2(0, 2.0f);
-		turret = new Enemy(PAST, TURRET_POS.x,TURRET_POS.y - 5.0f, dwidth, dheight, 120, projVel);
-		turret.setDrawScale(scale);
-		turret.setTexture(turretTexture);
-		turret.setBodyType(BodyDef.BodyType.StaticBody);
-		turret.setSpace(2);
-		turret.setName("turret1");
-		addObject(turret);
+		for (int ii = 0; ii < NUMBER_ENEMIES; ii++) {
+			TextureRegion texture;
+			if (TYPE_ENEMIES[ii] == PRESENT) texture = enemyPresentTexture;
+			else texture = enemyPastTexture;
+			dwidth  = texture.getRegionWidth()/scale.x;
+			dheight = texture.getRegionHeight()/scale.y;
+			Enemy enemy = new Enemy(
+					TYPE_ENEMIES[ii], COOR_ENEMIES[ii][0],COOR_ENEMIES[ii][1],
+					dwidth, dheight, texture, CD_ENEMIES[ii], avatar);
+			enemy.setBodyType(BodyDef.BodyType.DynamicBody);
+			enemy.setDrawScale(scale);
+			enemy.setName("enemy");
+			addObject(enemy);
+		}
 
-		// Create turret in present world
-		projVel = new Vector2(-3.0f, 0);
-		turret2 = new Enemy(PRESENT, TURRET_POS.x + 10.0f,TURRET_POS.y, dwidth, dheight, 60, projVel);
-		turret2.setDrawScale(scale);
-		turret2.setTexture(turretTexture);
-		turret2.setBodyType(BodyDef.BodyType.StaticBody);
-		turret2.setSpace(1);
-		turret2.setName("turret2");
-		addObject(turret2);
-
-		// Create enemy in present world
-		dwidth  = enemyPresentTexture.getRegionWidth()/scale.x;
-		dheight = enemyPresentTexture.getRegionHeight()/scale.y;
-		enemy = new Enemy(PRESENT, ENEMY_POS.x, ENEMY_POS.y, dwidth, dheight,
-				enemyPresentTexture, 60, avatar);
-		enemy.setDrawScale(scale);
-		enemy.setName("enemyPresent1");
-		addObject(enemy);
-
-		// Create enemy in past world
-		dwidth  = enemyPastTexture.getRegionWidth()/scale.x;
-		dheight = enemyPastTexture.getRegionHeight()/scale.y;
-		Enemy enemyPast1 = new Enemy(PAST, 15.625f,11.03125f,
-				dwidth, dheight, 60, new Vector2(0,0));
-		enemyPast1.setDrawScale(scale);
-		enemyPast1.setTexture(enemyPastTexture);
-		enemyPast1.setBodyType(BodyDef.BodyType.DynamicBody);
-		enemyPast1.setSpace(2);
-		enemyPast1.setName("enemyPast1");
-		addObject(enemyPast1);
+		for (int ii = 0; ii < NUMBER_TURRETS; ii++) {
+			TextureRegion texture = turretTexture;
+			dwidth  = texture.getRegionWidth()/scale.x;
+			dheight = texture.getRegionHeight()/scale.y;
+			Vector2 projDir = new Vector2(DIR_TURRETS[ii][0], DIR_TURRETS[ii][1]);
+			Enemy turret = new Enemy(
+					TYPE_TURRETS[ii], COOR_TURRETS[ii][0],COOR_TURRETS[ii][1],
+					dwidth, dheight, texture, CD_TURRETS[ii], projDir);
+			turret.setBodyType(BodyDef.BodyType.StaticBody);
+			turret.setDrawScale(scale);
+			turret.setName("turret");
+			addObject(turret);
+		}
 
 		collisionController = new CollisionController(this);
 		world.setContactListener(collisionController);
@@ -417,7 +429,7 @@ public class PrototypeController extends WorldController {
 			return false;
 		}
 
-		enemy.createLineOfSight(world);
+//		enemy.createLineOfSight(world);
 		
 		return true;
 	}
@@ -462,12 +474,7 @@ public class PrototypeController extends WorldController {
 				//avatar.setDashDistance(Math.min(avatar.getDashRange(), avatar.getPosition().dst(mousePos)));
 				avatar.setDashForceDirection(mousePos.cpy().sub(avatar.getPosition()));
 				avatar.setHolding(false);
-				Vector2 redirection = avatar.getPosition().cpy().sub(mousePos).nor();
-				createBullet(
-						new Enemy(avatar.getHeldBullet().getType(),
-						avatar.getX() + (redirection.x * avatar.getWidth()),
-						avatar.getY()  - BULLET_OFFSET + (redirection.y * avatar.getHeight()),
-						1, 1, 0, redirection.cpy().scl(12)));
+				createRedirectedProj();
 			}
 		}
 		if (InputController.getInstance().pressedShiftKey()){
@@ -499,24 +506,15 @@ public class PrototypeController extends WorldController {
 		avatar.setJumping(InputController.getInstance().didPrimary());
 		avatar.setShooting(InputController.getInstance().didSecondary());
 		
-		// Add a bullet if we fire
-		if (turret.canFire()) {
-			createBullet(turret);
-		} else {
-			turret.coolDown(true);
-		}
-
-		if (turret2.canFire()) {
-			createBullet(turret2);
-		} else {
-			turret2.coolDown(true);
-		}
-
-		if (enemy.canFire()) {
-			enemy.setVelocity();
-			createBullet(enemy);
-		} else {
-			enemy.coolDown(true);
+		// Add bullet if enemy can fire
+		for (Obstacle o: objects) {
+			if (o instanceof Enemy) {
+				Enemy e = (Enemy) o.getBody().getUserData();
+				if (e.canFire()) {
+					if (o.getName() == "enemy") e.setVelocity();
+					createBullet(e);
+				} else e.coolDown(true);
+			}
 		}
 		
 		avatar.applyForce();
@@ -587,6 +585,33 @@ public class PrototypeController extends WorldController {
 
 		// Reset the firing cooldown.
 		enemy.coolDown(false);
+	}
+
+	/**
+	 * Add a new bullet to the world and send it in the right direction.
+	 */
+	private void createRedirectedProj() {
+		Vector2 mousePos = InputController.getInstance().getMousePosition();
+		Vector2 redirection = avatar.getPosition().cpy().sub(mousePos).nor();
+		float x0 = avatar.getX() + (redirection.x * avatar.getWidth());
+		float y0 = avatar.getY()  - BULLET_OFFSET + (redirection.y * avatar.getHeight());
+		float radius = bulletBigTexture.getRegionWidth()/(2.0f*scale.x);
+		Vector2 projVel = redirection.cpy().scl(12);
+		EntityType projType = avatar.getHeldBullet().getType();
+
+		Projectile bullet = new Projectile(projType, x0, y0, radius);
+		bullet.setName("bullet");
+		bullet.setDensity(HEAVY_DENSITY);
+		bullet.setDrawScale(scale);
+		bullet.setTexture(bulletBigTexture);
+		bullet.setBullet(true);
+		bullet.setGravityScale(0);
+		bullet.setLinearVelocity(projVel);
+		if (shifted) bullet.setSpace(2); //past world
+		else bullet.setSpace(1); //present world
+		addQueuedObject(bullet);
+
+		SoundController.getInstance().play(PEW_FILE, PEW_FILE, false, EFFECT_VOLUME);
 	}
 
 	/**
