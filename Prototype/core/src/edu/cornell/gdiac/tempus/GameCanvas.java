@@ -923,6 +923,10 @@ public class GameCanvas {
 	 * @param y0 The initial y coordinate of the line.
 	 * @param xf The final x coordinate of the line.
 	 * @param yf The final y coordinate of the line.
+     * @param r The r value of RGB color.
+     * @param g The g value of RGB color.
+     * @param b The b value of RGB color.
+     * @param a The alpha (transparency) value of the line.
 	 */
     public void drawLine(float x0, float y0, float xf, float yf,
 						 float r, float g, float b, float a) {

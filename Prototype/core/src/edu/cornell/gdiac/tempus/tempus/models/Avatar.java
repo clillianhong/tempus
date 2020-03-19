@@ -519,7 +519,7 @@ public class Avatar extends CapsuleObstacle {
         sensorFixtureRight = body.createFixture(sensorDef);
         sensorFixtureRight.setUserData(getRightSensorName());
 
-        // To determine whether the body collides on the right side
+        // To determine whether the body collides on the top side
         Vector2 sensorCenterTop = new Vector2(0, getHeight() / 2);
         sensorShapeTop = new PolygonShape();
         sensorShapeTop.setAsBox(getWidth() / 2.0f - 2.0f * SENSOR_HEIGHT, SENSOR_HEIGHT, sensorCenterTop, 0.0f);

@@ -109,7 +109,7 @@ public class PrototypeController extends WorldController {
 			return;
 		}
 
-		// Images
+		// Entity files
 		platformAssetState = AssetState.LOADING;
 		manager.load(DUDE_FILE, Texture.class);
 		assets.add(DUDE_FILE);
@@ -126,11 +126,11 @@ public class PrototypeController extends WorldController {
 		manager.load(ENEMY_PAST_FILE, Texture.class);
 		assets.add(ENEMY_PAST_FILE);
 
-		//background files
+		// Background files
 		manager.load(BACKGROUND_FILE, Texture.class);
 		assets.add(BACKGROUND_FILE);
 
-		// Sounds
+		// Sound files
 		manager.load(JUMP_FILE, Sound.class);
 		assets.add(JUMP_FILE);
 		manager.load(PEW_FILE, Sound.class);
