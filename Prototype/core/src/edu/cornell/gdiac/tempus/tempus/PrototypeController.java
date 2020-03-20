@@ -22,6 +22,7 @@ import edu.cornell.gdiac.tempus.InputController;
 import edu.cornell.gdiac.tempus.WorldController;
 import edu.cornell.gdiac.tempus.obstacle.*;
 import edu.cornell.gdiac.tempus.tempus.models.*;
+import edu.cornell.gdiac.util.FilmStrip;
 import edu.cornell.gdiac.util.PooledList;
 import edu.cornell.gdiac.util.SoundController;
 
@@ -43,6 +44,11 @@ import static edu.cornell.gdiac.tempus.tempus.models.EntityType.PRESENT;
 public class PrototypeController extends WorldController {
 	/** The texture file for the character avatar (no animation) */
 	private static final String DUDE_FILE  = "enemies/dude.png";
+	/** The reference for the avatar movement textures  */
+	private static final String AVATAR_STANDING_TEXTURE = "enemies/blob_standing.png";
+	private static final String AVATAR_DASHING_TEXTURE = "enemies/blob_dashing.png";
+	private static final String AVATAR_FALLING_TEXTURE = "enemies/blob_dashing.png";
+
 	/** The texture file for the spinning barrier */
 	private static final String BARRIER_FILE = "enemies/barrier.png";
 
@@ -73,6 +79,13 @@ public class PrototypeController extends WorldController {
 
 	/** Texture asset for character avatar */
 	private TextureRegion avatarTexture;
+	/** Texture filmstrip for avatar standing */
+	private FilmStrip avatarStandingTexture;
+	/** Texture filmstrip for avatar dashing */
+	private FilmStrip avatarDashingTexture;
+	/** Texture filmstrip for avatar falling */
+	private FilmStrip avatarFallingTexture;
+
 	/** Texture asset for the spinning barrier */
 	private TextureRegion barrierTexture;
 	/** Texture asset for the bullet */
@@ -113,6 +126,13 @@ public class PrototypeController extends WorldController {
 		platformAssetState = AssetState.LOADING;
 		manager.load(DUDE_FILE, Texture.class);
 		assets.add(DUDE_FILE);
+		manager.load(AVATAR_STANDING_TEXTURE, Texture.class);
+		assets.add(AVATAR_STANDING_TEXTURE);
+		manager.load(AVATAR_DASHING_TEXTURE, Texture.class);
+		assets.add(AVATAR_DASHING_TEXTURE);
+		manager.load(AVATAR_FALLING_TEXTURE, Texture.class);
+		assets.add(AVATAR_FALLING_TEXTURE);
+
 		manager.load(BARRIER_FILE, Texture.class);
 		assets.add(BARRIER_FILE);
 		manager.load(BULLET_FILE, Texture.class);
@@ -157,6 +177,16 @@ public class PrototypeController extends WorldController {
 		}
 		
 		avatarTexture = createTexture(manager,DUDE_FILE,false);
+		avatarStandingTexture = createFilmStrip(
+				manager, AVATAR_STANDING_TEXTURE,1,
+				Avatar.FRAMES+0, Avatar.FRAMES+0);
+		avatarDashingTexture = createFilmStrip(
+				manager, AVATAR_DASHING_TEXTURE,1,
+				Avatar.FRAMES,Avatar.FRAMES);
+		avatarFallingTexture = createFilmStrip(
+				manager, AVATAR_FALLING_TEXTURE,1,
+				Avatar.FRAMES, Avatar.FRAMES);
+
 		barrierTexture = createTexture(manager,BARRIER_FILE,false);
 		bulletTexture = createTexture(manager,BULLET_FILE,false);
 		bulletBigTexture = createTexture(manager,BULLET_BIG_FILE,false);
@@ -373,6 +403,9 @@ public class PrototypeController extends WorldController {
 		avatar.setTexture(avatarTexture);
 		avatar.setBodyType(BodyDef.BodyType.DynamicBody);
 		avatar.setName("avatar");
+		avatar.setFilmStrip(Avatar.AvatarState.STANDING, avatarStandingTexture);
+		avatar.setFilmStrip(Avatar.AvatarState.DASHING, avatarDashingTexture);
+		avatar.setFilmStrip(Avatar.AvatarState.FALLING, avatarFallingTexture);
 		addObject(avatar);
 
 		for (int ii = 0; ii < NUMBER_ENEMIES; ii++) {
@@ -519,6 +552,19 @@ public class PrototypeController extends WorldController {
 		
 		avatar.applyForce();
 //		enemy.applyForce();
+
+		// Update animation state
+		Avatar.AvatarState state;
+		if (avatar.isSticking()) {
+			state = Avatar.AvatarState.STANDING;
+			avatar.animate(state, true);
+		} else if (avatar.isDashing()) {
+			state = Avatar.AvatarState.DASHING;
+			avatar.animate(state, false);
+		} else {
+			state = Avatar.AvatarState.FALLING;
+			avatar.animate(state, false);
+		}
 
 	    if (avatar.isJumping()) {
 	        SoundController.getInstance().play(JUMP_FILE,JUMP_FILE,false,EFFECT_VOLUME);

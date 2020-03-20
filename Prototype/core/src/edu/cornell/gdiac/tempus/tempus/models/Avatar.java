@@ -9,6 +9,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import edu.cornell.gdiac.tempus.GameCanvas;
 import edu.cornell.gdiac.tempus.obstacle.CapsuleObstacle;
 import edu.cornell.gdiac.tempus.tempus.AvatarOrientation;
+import edu.cornell.gdiac.util.FilmStrip;
 
 
 /**
@@ -18,6 +19,18 @@ import edu.cornell.gdiac.tempus.tempus.AvatarOrientation;
  * no other subclasses that we might loop through.
  */
 public class Avatar extends CapsuleObstacle {
+    /**
+     * Enumeration to identify the state of the avatar
+     */
+    public enum AvatarState {
+        /** When avatar is on a platform */
+        STANDING,
+        /** When avatar is dashing in air */
+        DASHING,
+        /** When avatar is falling in air */
+        FALLING
+    };
+
     // Physics constants
     /** The density of the character */
     private static final float DENSITY = 1.0f;
@@ -59,6 +72,14 @@ public class Avatar extends CapsuleObstacle {
     /** The amount to shrink the sensor fixture (horizontally) relative to the image */
     private static final float SSHRINK = 0.6f;
 
+
+    /** The number of frames for the animation */
+    public static final int FRAMES = 4;
+    /** The frame rate for the animation */
+    private static final float FRAME_RATE = 20;
+    /** The frame cooldown for the animation */
+    private static float frame_cooldown = FRAME_RATE;
+
     /** The current horizontal movement of the character */
     private float   movement;
     /** Which direction is the character facing */
@@ -79,7 +100,7 @@ public class Avatar extends CapsuleObstacle {
     /** Left sensor to determine sticking on the left side */
     private Fixture sensorFixtureLeft;
     private PolygonShape sensorShapeLeft;
-    /** Right sensor to determine sticking on the left side */
+    /** Right sensor to determine sticking on the right side */
     private Fixture sensorFixtureRight;
     private PolygonShape sensorShapeRight;
     /** Top sensor to determine sticking on the top */
@@ -110,6 +131,15 @@ public class Avatar extends CapsuleObstacle {
 
     /** Cache for internal force calculations */
     private Vector2 forceCache = new Vector2();
+
+    /** The texture filmstrip for the current animation */
+    FilmStrip currentStrip;
+    /** The texture filmstrip for the standing animation */
+    FilmStrip standingStrip;
+    /** The texture filmstrip for the standing animation */
+    FilmStrip dashingStrip;
+    /** The texture filmstrip for the standing animation */
+    FilmStrip fallingStrip;
 
     /**
      * Returns left/right movement of this character.
@@ -592,8 +622,6 @@ public class Avatar extends CapsuleObstacle {
             }
         }
 
-
-
         if (isJumping()) {
             jumpCooldown = JUMP_COOLDOWN;
         } else {
@@ -610,6 +638,65 @@ public class Avatar extends CapsuleObstacle {
     }
 
     /**
+     * Sets the animation node for the given state
+     *
+     * @param state enumeration to identify the state
+     * @param strip the animation for the given state
+     */
+    public void setFilmStrip(AvatarState state, FilmStrip strip) {
+        switch (state) {
+            case STANDING:
+                standingStrip = strip;
+                break;
+            case DASHING:
+                dashingStrip = strip;
+                break;
+            case FALLING:
+                fallingStrip = strip;
+                break;
+            default:
+                assert false : "Invalid AvatarState enumeration";
+        }
+    }
+
+    /**
+     * Animates the given state.
+     *
+     * @param state The reference to the rocket burner
+     * @param shouldLoop Whether the animation should loop
+     */
+    public void animate(AvatarState state, boolean shouldLoop) {
+        switch (state) {
+            case STANDING:
+                currentStrip = standingStrip;
+                break;
+            case DASHING:
+                currentStrip = dashingStrip;
+                break;
+            case FALLING:
+                currentStrip = fallingStrip;
+                break;
+            default:
+                assert false : "Invalid AvatarState enumeration";
+        }
+
+        // Adjust animation speed
+        if (frame_cooldown > 0) {
+            frame_cooldown--;
+            return;
+        } else frame_cooldown = FRAME_RATE;
+
+        // Manage current frame to draw
+        if (currentStrip.getFrame() < currentStrip.getSize()-1) {
+            currentStrip.setFrame(currentStrip.getFrame() + 1);
+        } else {
+            if (shouldLoop) currentStrip.setFrame(0); // loop animation
+            else return; // play animation once
+        }
+
+    }
+
+    /**
      * Draws the physics object.
      *
      * @param canvas Drawing context
@@ -617,7 +704,9 @@ public class Avatar extends CapsuleObstacle {
     public void draw(GameCanvas canvas) {
         float effect = faceRight ? 1.0f : -1.0f;
 //        System.out.println("draw angle: " + getAngle());;
-        canvas.draw(texture, Color.WHITE,origin.x,origin.y,getX()*drawScale.x,getY()*drawScale.y,getAngle(),1.0f,1.0f);
+//        canvas.draw(texture, Color.WHITE,origin.x,origin.y,getX()*drawScale.x,getY()*drawScale.y,getAngle(),1.0f,1.0f);
+        canvas.draw(currentStrip, Color.WHITE,origin.x,origin.y,
+                getX()*drawScale.x,getY()*drawScale.y, getAngle(),1.0f,1.0f);
     }
 
     /**
