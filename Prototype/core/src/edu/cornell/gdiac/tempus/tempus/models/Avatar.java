@@ -108,6 +108,7 @@ public class Avatar extends CapsuleObstacle {
     private PolygonShape sensorShapeTop;
 
     //added for prototype
+    private boolean startedDashing;
     /** Whether we are actively dashing */
     private boolean isDashing;
     /** Whether the initial dash force has been applied */
@@ -238,6 +239,8 @@ public class Avatar extends CapsuleObstacle {
         dashDistance = dist;
     }
 
+    public void setStartedDashing(boolean s) { startedDashing = s;}
+    public boolean getStartedDashing() { return startedDashing; }
 
     /**
      * Returns true if the dude is actively dashing.
@@ -490,6 +493,7 @@ public class Avatar extends CapsuleObstacle {
         isSticking = false;
         dashDistance = DASH_RANGE;
         dashStartPos = new Vector2(x,y);
+        startedDashing = false;
 
         shootCooldown = 0;
         jumpCooldown = 0;

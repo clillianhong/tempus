@@ -364,7 +364,7 @@ public class PrototypeController extends WorldController {
 	    String nameWall = "wall";
 	    for (int ii = 0; ii < WALLS.length; ii++) {
 	        PolygonObstacle obj;
-	    	obj = new PolygonObstacle(WALLS[ii], 0, 0);
+	    	obj = new Platform(WALLS[ii], 0, 0);
 			obj.setBodyType(BodyDef.BodyType.StaticBody);
 			obj.setDensity(BASIC_DENSITY);
 			obj.setFriction(BASIC_FRICTION);
@@ -493,10 +493,11 @@ public class PrototypeController extends WorldController {
 	 * @param dt Number of seconds since last animation frame
 	 */
 	public void update(float dt) {
+		avatar.setStartedDashing(false);
 		if (avatar.isHolding()) {
 			if (avatar.getBodyType() != BodyDef.BodyType.StaticBody) {
 				avatar.setBodyType(BodyDef.BodyType.StaticBody);
-			} else if (InputController.getInstance().releasedLeftMouseButton()){
+			} else if (InputController.getInstance().releasedRightMouseButton()){
 				Vector2 mousePos = InputController.getInstance().getMousePosition();
 				avatar.setBodyType(BodyDef.BodyType.DynamicBody);
 				avatar.setSticking(false);
@@ -530,8 +531,9 @@ public class PrototypeController extends WorldController {
 				avatar.setDashing(true);
 				avatar.setDashStartPos(avatar.getPosition().cpy());
 				avatar.setDashDistance(avatar.getDashRange());
-				avatar.setDashDistance(Math.min(avatar.getDashRange(), avatar.getPosition().dst(mousePos)));
+				//avatar.setDashDistance(Math.min(avatar.getDashRange(), avatar.getPosition().dst(mousePos)));
 				avatar.setDashForceDirection(mousePos.sub(avatar.getPosition()));
+				avatar.setStartedDashing(true);
 		}
 
 		// Process actions in object model
@@ -641,7 +643,7 @@ public class PrototypeController extends WorldController {
 		Vector2 mousePos = InputController.getInstance().getMousePosition();
 		Vector2 redirection = avatar.getPosition().cpy().sub(mousePos).nor();
 		float x0 = avatar.getX() + (redirection.x * avatar.getWidth());
-		float y0 = avatar.getY()  - BULLET_OFFSET + (redirection.y * avatar.getHeight());
+		float y0 = avatar.getY() + (redirection.y * avatar.getHeight());
 		float radius = bulletBigTexture.getRegionWidth()/(2.0f*scale.x);
 		Vector2 projVel = redirection.cpy().scl(12);
 		EntityType projType = avatar.getHeldBullet().getType();
@@ -701,7 +703,8 @@ public class PrototypeController extends WorldController {
 		Vector2 startPos = avPos.cpy().scl(scale);
 		Vector2 mousePos = mPos.cpy().scl(scale);
 		Vector2 alteredPos = mousePos.sub(startPos).nor();
-		float dist = Math.min(avatar.getDashRange(), avPos.dst(mPos));
+		float dist = avatar.getDashRange();
+		//float dist = Math.min(avatar.getDashRange(), avPos.dst(mPos));
 		Vector2 endPos = alteredPos.scl(dist).scl(scale);
 		endPos.add(startPos);
 		canvas.drawLine(startPos.x, startPos.y, endPos.x, endPos.y,

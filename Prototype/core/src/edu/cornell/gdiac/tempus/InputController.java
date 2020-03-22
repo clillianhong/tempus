@@ -87,6 +87,7 @@ public class InputController {
 	private boolean leftMousePressed;
 	/** Whether the right mouse button was pressed. */
 	private boolean rightMousePressed;
+	private boolean rightMouseReleased;
 	private boolean rightMousePrevious;
 	/** Whether the left mouse button was released. */
 	private boolean leftMouseReleased;
@@ -238,6 +239,10 @@ public class InputController {
 		return leftMouseReleased && !leftMousePrevious;
 	}
 
+	public boolean releasedRightMouseButton() {
+		return rightMouseReleased && !rightMousePrevious;
+	}
+
 	/**
 	 * Returns true if the right mouse button was pressed.
 	 *
@@ -380,6 +385,7 @@ public class InputController {
 		leftMousePressed = Gdx.input.isButtonPressed(Input.Buttons.LEFT);
 		rightMousePressed = Gdx.input.isButtonPressed(Input.Buttons.RIGHT);
 		leftMouseReleased = !leftMousePressed;
+		rightMouseReleased = !rightMousePressed;
 		mousePosition.set(Gdx.input.getX(), Gdx.input.getY());
 		mousePosition.scl(1/scale.x,-1/scale.y);
 		mousePosition.y += bounds.height;

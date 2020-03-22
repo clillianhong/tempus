@@ -274,7 +274,7 @@ public class CollisionController implements ContactListener {
                     System.out.println("after: " + bd1.getName());
                     System.out.println("after 1: " + bd2.getName());
 
-                }else{
+                } else{
                     Float norm_angle = contact.getWorldManifold().getNormal().angle();
 
                     if(!norm_angle.isNaN()){
@@ -282,7 +282,7 @@ public class CollisionController implements ContactListener {
                         System.out.println("MANIFOLD ANGLE: " + norm_angle);
                     }
                 }
-                if(!avatar.isSticking()){
+                if(!avatar.isSticking() && !avatar.getStartedDashing()){
                     avatar.setGrounded(true);
                     avatar.setSticking(true);
                     avatar.setNewAngle(cur_normal);
