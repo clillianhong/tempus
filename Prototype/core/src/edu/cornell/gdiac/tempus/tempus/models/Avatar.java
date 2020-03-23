@@ -108,6 +108,7 @@ public class Avatar extends CapsuleObstacle {
     private PolygonShape sensorShapeTop;
 
     //added for prototype
+    /** how long ago the character started dashing */
     private int startedDashing;
     /** Whether we are actively dashing */
     private boolean isDashing;
@@ -129,7 +130,7 @@ public class Avatar extends CapsuleObstacle {
     private Vector2 dashDirection;
     /** the bullet the character is currently holding */
     private Projectile heldBullet;
-
+    /** the platform the character was most recently on */
     private Platform currentPlat;
 
     /** Cache for internal force calculations */
@@ -241,10 +242,18 @@ public class Avatar extends CapsuleObstacle {
         dashDistance = dist;
     }
 
+    /** sets how long ago the character started dashing */
     public void setStartedDashing(int s) { startedDashing = s;}
+
+    /** returns how long ago the character started dashing */
     public int getStartedDashing() { return startedDashing; }
+
+    /** sets the last platform the character was on */
     public void setCurrentPlatform(Platform p) { currentPlat = p; }
+
+    /** returns the last platform the character was on */
     public Platform getCurrentPlatform() { return currentPlat; }
+    
     /**
      * Returns true if the dude is actively dashing.
      *
