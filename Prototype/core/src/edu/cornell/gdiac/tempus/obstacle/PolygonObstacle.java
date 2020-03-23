@@ -156,7 +156,6 @@ public class PolygonObstacle extends SimpleObstacle {
 	public PolygonObstacle(float[] points, float x, float y) {
 		super(x, y);
 		assert points.length % 2 == 0;
-		
 		// Compute the bounds.
 		initShapes(points);
 		initBounds();

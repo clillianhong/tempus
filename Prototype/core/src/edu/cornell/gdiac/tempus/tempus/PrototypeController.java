@@ -516,6 +516,7 @@ public class PrototypeController extends WorldController {
 				//avatar.setDashDistance(Math.min(avatar.getDashRange(), avatar.getPosition().dst(mousePos)));
 				avatar.setDashForceDirection(mousePos.cpy().sub(avatar.getPosition()));
 				avatar.setHolding(false);
+				avatar.setCurrentPlatform(null);
 				createRedirectedProj();
 			}
 		}
@@ -706,7 +707,7 @@ public class PrototypeController extends WorldController {
 				!InputController.getInstance().pressedRightMouseButton()) return;
         // Do not draw while player is dashing or not holding a projectile
 		if (avatar.isDashing() && !avatar.isHolding()) return;
-
+		if (!avatar.isHolding && !avatar.isSticking()) return;
 		// Draw dynamic dash indicator
 		Vector2 avPos = avatar.getPosition();
 		Vector2 mPos = InputController.getInstance().getMousePosition();

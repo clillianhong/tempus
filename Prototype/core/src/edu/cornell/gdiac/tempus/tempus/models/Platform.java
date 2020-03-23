@@ -150,7 +150,7 @@ public class Platform extends PolygonObstacle {
      * @param y  the y-axis scale for this physics object
      */
     public void setDrawScale(float x, float y) {
-        super.setDrawScale(x,y);
+        super.setDrawScale(x, y);
         initRegion();
     }
 
@@ -196,15 +196,4 @@ public class Platform extends PolygonObstacle {
     }
 
 
-//
-//    /**
-//     * Draws the physics object.
-//     *
-//     * @param canvas Drawing context
-//     */
-//    public void draw(GameCanvas canvas) {
-//        if (region != null) {
-//            canvas.draw(region,Color.WHITE,0,0,getX()*drawScale.x,(getY()-anchor.y)*drawScale.y,getAngle(),1,1);
-//        }
-//    }
 }

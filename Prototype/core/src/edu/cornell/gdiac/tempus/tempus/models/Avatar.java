@@ -532,7 +532,7 @@ public class Avatar extends CapsuleObstacle {
         sensorDef.density = DENSITY;
         sensorDef.isSensor = true;
         sensorShape = new PolygonShape();
-        sensorShape.setAsBox(getWidth() / 2.0f - 2.0f * SENSOR_HEIGHT, SENSOR_HEIGHT, sensorCenter, 0.0f);
+        sensorShape.setAsBox(getWidth() / 4.0f - 2.0f * SENSOR_HEIGHT, SENSOR_HEIGHT, sensorCenter, 0.0f);
         sensorDef.shape = sensorShape;
 
         sensorFixture = body.createFixture(sensorDef);
@@ -541,7 +541,7 @@ public class Avatar extends CapsuleObstacle {
         // To determine whether the body collides on the left side
         Vector2 sensorCenterLeft = new Vector2(-getWidth() / 2, 0);
         sensorShapeLeft = new PolygonShape();
-        sensorShapeLeft.setAsBox(SENSOR_HEIGHT, getHeight() / 2.0f - 2.0f * SENSOR_HEIGHT, sensorCenterLeft, 0.0f);
+        sensorShapeLeft.setAsBox(SENSOR_HEIGHT, getHeight() / 5.0f - 2.0f * SENSOR_HEIGHT, sensorCenterLeft, 0.0f);
         sensorDef.shape = sensorShapeLeft;
 
         sensorFixtureLeft = body.createFixture(sensorDef);
@@ -550,7 +550,7 @@ public class Avatar extends CapsuleObstacle {
         // To determine whether the body collides on the right side
         Vector2 sensorCenterRight = new Vector2(getWidth() / 2, 0);
         sensorShapeRight = new PolygonShape();
-        sensorShapeRight.setAsBox(SENSOR_HEIGHT, getHeight() / 2.0f - 2.0f * SENSOR_HEIGHT, sensorCenterRight, 0.0f);
+        sensorShapeRight.setAsBox(SENSOR_HEIGHT, getHeight() / 5.0f - 2.0f * SENSOR_HEIGHT, sensorCenterRight, 0.0f);
         sensorDef.shape = sensorShapeRight;
 
         sensorFixtureRight = body.createFixture(sensorDef);
@@ -559,7 +559,7 @@ public class Avatar extends CapsuleObstacle {
         // To determine whether the body collides on the top side
         Vector2 sensorCenterTop = new Vector2(0, getHeight() / 2);
         sensorShapeTop = new PolygonShape();
-        sensorShapeTop.setAsBox(getWidth() / 2.0f - 2.0f * SENSOR_HEIGHT, SENSOR_HEIGHT, sensorCenterTop, 0.0f);
+        sensorShapeTop.setAsBox(getWidth() / 4.0f - 2.0f * SENSOR_HEIGHT, SENSOR_HEIGHT, sensorCenterTop, 0.0f);
         sensorDef.shape = sensorShapeTop;
 
         sensorFixtureTop = body.createFixture(sensorDef);

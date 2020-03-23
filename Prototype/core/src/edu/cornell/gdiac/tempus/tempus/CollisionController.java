@@ -291,7 +291,7 @@ public class CollisionController implements ContactListener {
                     } else {
                         System.out.println("OBject: " + objA);
                     }*/
-                    if (bd1.getName().equals("wall") || bd2.getName().equals("wall")) {
+                    if (avatar.getCurrentPlatform() != null && (bd1.getName().equals("wall") || bd2.getName().equals("wall"))) {
                         //System.out.println("Attempted to stick to wall");
                         if (!avatar.getCurrentPlatform().equals(objA) && !avatar.getCurrentPlatform().equals(objB)) {
                             //System.out.println("STUCK");
