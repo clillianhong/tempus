@@ -108,7 +108,7 @@ public class Avatar extends CapsuleObstacle {
     private PolygonShape sensorShapeTop;
 
     //added for prototype
-    private boolean startedDashing;
+    private int startedDashing;
     /** Whether we are actively dashing */
     private boolean isDashing;
     /** Whether the initial dash force has been applied */
@@ -129,6 +129,8 @@ public class Avatar extends CapsuleObstacle {
     private Vector2 dashDirection;
     /** the bullet the character is currently holding */
     private Projectile heldBullet;
+
+    private Platform currentPlat;
 
     /** Cache for internal force calculations */
     private Vector2 forceCache = new Vector2();
@@ -239,9 +241,10 @@ public class Avatar extends CapsuleObstacle {
         dashDistance = dist;
     }
 
-    public void setStartedDashing(boolean s) { startedDashing = s;}
-    public boolean getStartedDashing() { return startedDashing; }
-
+    public void setStartedDashing(int s) { startedDashing = s;}
+    public int getStartedDashing() { return startedDashing; }
+    public void setCurrentPlatform(Platform p) { currentPlat = p; }
+    public Platform getCurrentPlatform() { return currentPlat; }
     /**
      * Returns true if the dude is actively dashing.
      *
@@ -493,7 +496,7 @@ public class Avatar extends CapsuleObstacle {
         isSticking = false;
         dashDistance = DASH_RANGE;
         dashStartPos = new Vector2(x,y);
-        startedDashing = false;
+        startedDashing = 0;
 
         shootCooldown = 0;
         jumpCooldown = 0;
@@ -622,7 +625,7 @@ public class Avatar extends CapsuleObstacle {
             if(getPosition().dst(getDashStartPos()) > getDashDistance()){
 //                System.out.println("DASHED TOO FAR");
                 setDashing(false);
-                setLinearVelocity(new Vector2(0,0));
+                setLinearVelocity(getLinearVelocity().cpy().scl(0.2f));
             }
         }
 

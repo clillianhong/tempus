@@ -222,12 +222,15 @@ public class PrototypeController extends WorldController {
 	// Since these appear only once, we do not care about the magic numbers.
 	// In an actual game, this information would go in a data file.
 	// Wall vertices
-	private static final float[][] WALLS = { 
-			  								{16.0f, 18.0f, 16.0f, 17.0f,  1.0f, 17.0f,
+	private static final float[][] WALLS = {{0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 18.0f, 0.0f, 18.0f},
+											{1.0f, 18.0f, 1.0f, 17.0f, 31.0f, 17.0f, 31.0f, 18.0f},
+											{31.0f, 18.0f, 31.0f, 0.0f, 32.0f, 0.0f, 32.0f, 18.0f}
+	};
+			  								/*{16.0f, 18.0f, 16.0f, 17.0f,  1.0f, 17.0f,
 			  								  1.0f,  0.0f,  0.0f,  0.0f,  0.0f, 18.0f},
 			  								{32.0f, 18.0f, 32.0f,  0.0f, 31.0f,  0.0f,
 			  							     31.0f, 17.0f, 16.0f, 17.0f, 16.0f, 18.0f}
-											};
+											};*/
 	
 	/** The outlines of all of the platforms */
 	private static float dudex = 2.5f;
@@ -493,7 +496,12 @@ public class PrototypeController extends WorldController {
 	 * @param dt Number of seconds since last animation frame
 	 */
 	public void update(float dt) {
-		avatar.setStartedDashing(false);
+		int t = avatar.getStartedDashing();
+		if (t > 0){
+			t = t-1;
+			avatar.setStartedDashing(t);
+		}
+
 		if (avatar.isHolding()) {
 			if (avatar.getBodyType() != BodyDef.BodyType.StaticBody) {
 				avatar.setBodyType(BodyDef.BodyType.StaticBody);
@@ -533,7 +541,7 @@ public class PrototypeController extends WorldController {
 				avatar.setDashDistance(avatar.getDashRange());
 				//avatar.setDashDistance(Math.min(avatar.getDashRange(), avatar.getPosition().dst(mousePos)));
 				avatar.setDashForceDirection(mousePos.sub(avatar.getPosition()));
-				avatar.setStartedDashing(true);
+				avatar.setStartedDashing(1);
 		}
 
 		// Process actions in object model
@@ -694,6 +702,8 @@ public class PrototypeController extends WorldController {
 	 * Draws a line indicating the direction and distance of the dash.
 	 */
 	public void drawIndicator(GameCanvas canvas) {
+		if (!InputController.getInstance().pressedLeftMouseButton() &&
+				!InputController.getInstance().pressedRightMouseButton()) return;
         // Do not draw while player is dashing or not holding a projectile
 		if (avatar.isDashing() && !avatar.isHolding()) return;
 

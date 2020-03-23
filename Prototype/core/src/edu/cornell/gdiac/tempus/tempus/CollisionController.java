@@ -141,7 +141,7 @@ public class CollisionController implements ContactListener {
             // avatar.setHeldBullet(bullet);
 //            projectile.getBody().setType(BodyDef.BodyType.StaticBody);
         } else {
-            Obstacle  bullet = (Obstacle) projectile.getBody().getUserData();
+            Obstacle bullet = (Obstacle) projectile.getBody().getUserData();
             removeBullet(bullet);
             /*else if (avatar.isHolding() && InputController.getInstance().releasedLeftMouseButton()){
             Vector2 mousePos = InputController.getInstance().getMousePosition();
@@ -205,6 +205,7 @@ public class CollisionController implements ContactListener {
                         avatar.setGrounded(true);
                         avatar.setSticking(true);
                         avatar.setNewAngle(cur_normal);
+                        avatar.setCurrentPlatform(plat);
                     }
                     sensorFixtures.add(avatar == bd1 ? fix2 : fix1); // Could have more than one ground
                 }
@@ -282,10 +283,41 @@ public class CollisionController implements ContactListener {
                         System.out.println("MANIFOLD ANGLE: " + norm_angle);
                     }
                 }
-                if(!avatar.isSticking() && !avatar.getStartedDashing()){
-                    avatar.setGrounded(true);
-                    avatar.setSticking(true);
-                    avatar.setNewAngle(cur_normal);
+
+                if (!avatar.isSticking() && avatar.getStartedDashing() == 0) {
+                    /*System.out.println("previous: " + avatar.getCurrentPlatform());
+                    if (objB instanceof Platform) {
+                        System.out.println("OBject: " + objB);
+                    } else {
+                        System.out.println("OBject: " + objA);
+                    }*/
+                    if (bd1.getName().equals("wall") || bd2.getName().equals("wall")) {
+                        //System.out.println("Attempted to stick to wall");
+                        if (!avatar.getCurrentPlatform().equals(objA) && !avatar.getCurrentPlatform().equals(objB)) {
+                            //System.out.println("STUCK");
+                            avatar.setGrounded(true);
+                            avatar.setSticking(true);
+                            avatar.setNewAngle(cur_normal);
+                            if (objB instanceof Platform) {
+                                avatar.setCurrentPlatform((Platform) objB);
+                                //System.out.println("set current platform to: " + objB);
+                            } else {
+                                avatar.setCurrentPlatform((Platform) objA);
+                                //System.out.println("set current platform to: " + objA);
+                            }
+                        }
+                    } else {
+                        avatar.setGrounded(true);
+                        avatar.setSticking(true);
+                        avatar.setNewAngle(cur_normal);
+                        if (objB instanceof Platform) {
+                            avatar.setCurrentPlatform((Platform) objB);
+                            //System.out.println("set current platform to: " + objB);
+                        } else {
+                            avatar.setCurrentPlatform((Platform) objA);
+                            //System.out.println("set current platform to: " + objA);
+                        }
+                    }
                 }
                 sensorFixtures.add(avatar == bd1 ? fix2 : fix1); // Could have more than one ground
 //                beginContactHelper(avatar.getSensorName(), AvatarOrientation.OR_UP, fd1, fd2, bd1, bd2, fix1, fix2);
