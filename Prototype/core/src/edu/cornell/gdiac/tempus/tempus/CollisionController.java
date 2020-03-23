@@ -178,7 +178,7 @@ public class CollisionController implements ContactListener {
 
         // if projectile and enemy are of different worlds
         // then remove enemy
-        if (proj.getType() != e.getType()) {
+        if (proj.getType() != e.getType() && !e.getName().equals("turret")) {
             Obstacle obs = (Obstacle) enemyBody.getUserData();
             obs.markRemoved(true);
         }

@@ -106,7 +106,9 @@ public class PrototypeController extends WorldController {
 	
 	/** Track asset loading from all instances and subclasses */
 	private AssetState platformAssetState = AssetState.EMPTY;
-	
+	/** Freeze time */
+	private boolean timeFreeze;
+
 	/**
 	 * Preloads the assets for this controller.
 	 *
@@ -321,6 +323,7 @@ public class PrototypeController extends WorldController {
 
 		shifted = false;
 		debug = false;
+		timeFreeze = false;
 	}
 	
 	/**
@@ -344,6 +347,7 @@ public class PrototypeController extends WorldController {
 		setComplete(false);
 		setFailure(false);
 		populateLevel();
+		timeFreeze = false;
 	}
 
 	/**
@@ -477,12 +481,34 @@ public class PrototypeController extends WorldController {
 	 */
 	public void sleepIfNotInWorld(){
 		for(Obstacle obj : objects) {
-			obj.setActive(true);
-			if (obj.getSpace() == 3){
-				obj.setActive(true);
+			/*if (obj instanceof  Enemy){
+				Enemy e = (Enemy) obj;
+				if (e.getSpace() == 3){
+					e.setIsActive(true);
+				}
+				else if (!shifted && (e.getSpace()==2)) {e.setIsActive(false);}
+				else if (shifted && (e.getSpace()==2)) {e.setIsActive(true);}
+				else if (shifted && (e.getSpace()==1)) {e.setIsActive(false);}
+				else if (!shifted && (e.getSpace()==1)) {e.setIsActive(true);}
 			}
-			else if (!shifted && (obj.getSpace()==2)) {obj.setActive(false);}
-			else if (shifted && (obj.getSpace()==1)) {obj.setActive(false);}
+			*/
+			if (obj.getName().equals("bullet") || obj.getName().equals("turret")){
+				obj.setSensor(false);
+				if (obj.getSpace() == 3){
+					obj.setSensor(false);
+				}
+				else if (!shifted && (obj.getSpace()==2)) {obj.setSensor(true);}
+				else if (shifted && (obj.getSpace()==1)) {obj.setSensor(true);}
+			} else {
+				obj.setActive(true);
+				if (obj.getSpace() == 3) {
+					obj.setActive(true);
+				} else if (!shifted && (obj.getSpace() == 2)) {
+					obj.setActive(false);
+				} else if (shifted && (obj.getSpace() == 1)) {
+					obj.setActive(false);
+				}
+			}
 		}
 	}
 	/**
@@ -496,6 +522,26 @@ public class PrototypeController extends WorldController {
 	 * @param dt Number of seconds since last animation frame
 	 */
 	public void update(float dt) {
+		// Turn the physics engine crank.
+//		world.step(WORLD_STEP,WORLD_VELOC,WORLD_POSIT);
+
+		//test slow down time
+		if (timeFreeze) {
+			world.step(WORLD_STEP/4, WORLD_VELOC, WORLD_POSIT);
+			for (Obstacle o: objects) {
+				if (o instanceof Enemy) {
+					((Enemy) o).slowCoolDown(true);
+				}
+			}
+		} else {
+			world.step(WORLD_STEP,WORLD_VELOC,WORLD_POSIT);
+			for (Obstacle o: objects) {
+				if (o instanceof Enemy) {
+					((Enemy) o).slowCoolDown(false);
+				}
+			}
+		}
+
 		int t = avatar.getStartedDashing();
 		if (t > 0){
 			t = t-1;
@@ -503,9 +549,11 @@ public class PrototypeController extends WorldController {
 		}
 
 		if (avatar.isHolding()) {
+			timeFreeze = true;
 			if (avatar.getBodyType() != BodyDef.BodyType.StaticBody) {
 				avatar.setBodyType(BodyDef.BodyType.StaticBody);
 			} else if (InputController.getInstance().releasedRightMouseButton()){
+				timeFreeze = false;
 				Vector2 mousePos = InputController.getInstance().getMousePosition();
 				avatar.setBodyType(BodyDef.BodyType.DynamicBody);
 				avatar.setSticking(false);
@@ -522,6 +570,19 @@ public class PrototypeController extends WorldController {
 		}
 		if (InputController.getInstance().pressedShiftKey()){
 			shifted = !shifted;
+			if (avatar.getCurrentPlatform() != null) {
+				if (avatar.isSticking()) {
+					if (!shifted && (avatar.getCurrentPlatform().getSpace() == 2)) { //past world
+						avatar.setSticking(false);
+						avatar.setWasSticking(false);
+						avatar.setBodyType(BodyDef.BodyType.DynamicBody);
+					} else if (shifted && (avatar.getCurrentPlatform().getSpace() == 1)) { //present world
+						avatar.setSticking(false);
+						avatar.setWasSticking(false);
+						avatar.setBodyType(BodyDef.BodyType.DynamicBody);
+					}
+				}
+			}
 		}
 		//Check if the platform is in this world or other world. If in the other world, make the platform sleep.
 		sleepIfNotInWorld();
@@ -638,8 +699,12 @@ public class PrototypeController extends WorldController {
 		bullet.setLinearVelocity(enemy.getProjVelocity());
 		bullet.setSpace(enemy.getSpace());
 		addQueuedObject(bullet);
-		
-		SoundController.getInstance().play(PEW_FILE, PEW_FILE, false, EFFECT_VOLUME);
+
+		if (shifted && enemy.getSpace() == 2) { //past world
+			SoundController.getInstance().play(PEW_FILE, PEW_FILE, false, EFFECT_VOLUME);
+		} else if (!shifted && enemy.getSpace() == 1) { //present world
+			SoundController.getInstance().play(PEW_FILE, PEW_FILE, false, EFFECT_VOLUME);
+		}
 
 		// Reset the firing cooldown.
 		enemy.coolDown(false);

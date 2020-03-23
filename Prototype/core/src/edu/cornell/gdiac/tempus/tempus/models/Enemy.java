@@ -61,9 +61,12 @@ public class Enemy extends CapsuleObstacle {
     private boolean isActive;
     /** The velocity of the projectile that this turret fires */
     private Vector2 projVel;
+    private int limiter;
 
     /** Type of enemy */
     private EntityType type;
+
+    private boolean isTurret;
 
     // Immobile enemy (turret)
     public Enemy(
@@ -77,11 +80,13 @@ public class Enemy extends CapsuleObstacle {
         if (type == PRESENT) this.setSpace(1);
         else if (type == PAST) this.setSpace(2);
 
+        isTurret = true;
         this.type = type;
-        this.cooldown = cooldown;
+        this.cooldown = cooldown * 4;
         this.projVel = projVel;
         isActive = true;
         framesTillFire = 0;
+        limiter = 4;
     }
 
     // Moving enemy
@@ -104,6 +109,8 @@ public class Enemy extends CapsuleObstacle {
         nextDirection = -1;
         setFixedRotation(true);
         sight = new LineOfSight(this);
+        limiter = 4;
+        isTurret = false;
     }
 
     /**
@@ -134,7 +141,12 @@ public class Enemy extends CapsuleObstacle {
      * @return whether or not enemy can fire.
      */
     public boolean canFire() {
-        return framesTillFire <= 0 && isActive;
+        if (isTurret){
+            return framesTillFire <= 0;
+        } else {
+            return false;
+            //return framesTillFire <= 0 && isActive;
+        }
     }
 
     /**
@@ -147,11 +159,21 @@ public class Enemy extends CapsuleObstacle {
      */
     public void coolDown(boolean flag) {
         if (flag && framesTillFire > 0) {
-            framesTillFire--;
+            framesTillFire = framesTillFire - limiter;
         } else if (!flag) {
             framesTillFire = cooldown;
         }
     }
+
+    public void slowCoolDown(boolean flag) {
+        if (flag){
+            limiter = 1;
+        }
+        else {
+            limiter = 4;
+        }
+    }
+
 
     /**
      * Returns the amount of sideways movement.
