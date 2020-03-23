@@ -250,6 +250,9 @@ public abstract class WorldController implements Screen {
 	/** Countdown active for winning or losing */
 	private int countdown;
 
+	/** Freeze time */
+	private boolean timeFreeze;
+
 	/**
 	 * Returns true if debug mode is active.
 	 *
@@ -402,6 +405,7 @@ public abstract class WorldController implements Screen {
 		debug  = false;
 		active = false;
 		countdown = -1;
+		timeFreeze = false;
 	}
 	
 	/**
@@ -549,7 +553,17 @@ public abstract class WorldController implements Screen {
 		}
 		
 		// Turn the physics engine crank.
-		world.step(WORLD_STEP,WORLD_VELOC,WORLD_POSIT);
+//		world.step(WORLD_STEP,WORLD_VELOC,WORLD_POSIT);
+
+		//test slow down time
+		if (InputController.getInstance().pressedXKey()) {
+			timeFreeze = !timeFreeze;
+		}
+		if (timeFreeze) {
+			world.step(WORLD_STEP/4, WORLD_VELOC, WORLD_POSIT);
+		} else {
+			world.step(WORLD_STEP,WORLD_VELOC,WORLD_POSIT);
+		}
 
 		// Garbage collect the deleted objects.
 		// Note how we use the linked list nodes to delete O(1) in place.
