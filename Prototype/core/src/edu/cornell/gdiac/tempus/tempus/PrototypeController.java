@@ -482,7 +482,8 @@ public class PrototypeController extends WorldController {
 		avatar.applyForce();
 
 	    if (avatar.isJumping()) {
-	        SoundController.getInstance().play(JUMP_FILE,JUMP_FILE,false,EFFECT_VOLUME);
+			JsonValue data = assetDirectory.get("sounds").get("jump");
+	        SoundController.getInstance().play("jump",data.get("file").asString(),false,data.get("volume").asFloat());
 	    }
 		
 	    // If we use sound, we must remember this.
