@@ -534,8 +534,9 @@ public class PrototypeController extends WorldController {
 		bullet.setLinearVelocity(origin.getVelocity());
 		bullet.setSpace(3);
 		addQueuedObject(bullet);
-		
-		SoundController.getInstance().play(PEW_FILE, PEW_FILE, false, EFFECT_VOLUME);
+
+		JsonValue data = assetDirectory.get("sounds").get("pew");
+		SoundController.getInstance().play("pew", data.get("file").asString(), false, data.get("volume").asFloat());
 
 		// Reset the firing cooldown.
 		origin.coolDown(false);
