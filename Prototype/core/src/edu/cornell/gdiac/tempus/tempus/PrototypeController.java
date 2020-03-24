@@ -10,6 +10,7 @@
  */
 package edu.cornell.gdiac.tempus.tempus;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
@@ -19,6 +20,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonReader;
+import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.gdiac.tempus.InputController;
 import edu.cornell.gdiac.tempus.WorldController;
 import edu.cornell.gdiac.tempus.obstacle.*;
@@ -26,6 +30,7 @@ import edu.cornell.gdiac.tempus.tempus.models.Avatar;
 import edu.cornell.gdiac.tempus.tempus.models.Door;
 import edu.cornell.gdiac.tempus.tempus.models.Projectile;
 import edu.cornell.gdiac.tempus.tempus.models.Turret;
+import edu.cornell.gdiac.util.JsonAssetManager;
 import edu.cornell.gdiac.util.PooledList;
 import edu.cornell.gdiac.util.SoundController;
 
@@ -93,11 +98,16 @@ public class PrototypeController extends WorldController {
 	/** Texture asset for the turret */
 	private TextureRegion turretTexture;
 
-
-
 	/** Texture asset for the background */
 	private TextureRegion backgroundTexture;
-	
+
+	/** The reader to process JSON files */
+	private JsonReader jsonReader;
+	/** The JSON asset directory */
+	private JsonValue assetDirectory;
+	/** The JSON defining the level model */
+	private JsonValue  levelFormat;
+
 	/** Track asset loading from all instances and subclasses */
 	private AssetState platformAssetState = AssetState.EMPTY;
 	
@@ -116,39 +126,12 @@ public class PrototypeController extends WorldController {
 			return;
 		}
 		platformAssetState = AssetState.LOADING;
-		// Load the shared tiles.
-		manager.load(EARTH_FILE,Texture.class);
-		assets.add(EARTH_FILE);
-		manager.load(GOAL_FILE,Texture.class);
-		assets.add(GOAL_FILE);
 
-		// Load the font
-		FreetypeFontLoader.FreeTypeFontLoaderParameter size2Params = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
-		size2Params.fontFileName = FONT_FILE;
-		size2Params.fontParameters.size = FONT_SIZE;
-		manager.load(FONT_FILE, BitmapFont.class, size2Params);
-		assets.add(FONT_FILE);
+		jsonReader = new JsonReader();
+		assetDirectory = jsonReader.parse(Gdx.files.internal("jsons/assets.json"));
 
-		manager.load(DUDE_FILE, Texture.class);
-		assets.add(DUDE_FILE);
-		manager.load(BARRIER_FILE, Texture.class);
-		assets.add(BARRIER_FILE);
-		manager.load(BULLET_FILE, Texture.class);
-		assets.add(BULLET_FILE);
-		manager.load(BULLET_BIG_FILE, Texture.class);
-		assets.add(BULLET_BIG_FILE);
-		manager.load(TURRET_FILE, Texture.class);
-		assets.add(TURRET_FILE);
-		//background files
-		manager.load(BACKGROUND_FILE, Texture.class);
-		assets.add(BACKGROUND_FILE);
-		manager.load(JUMP_FILE, Sound.class);
-		assets.add(JUMP_FILE);
-		manager.load(PEW_FILE, Sound.class);
-		assets.add(PEW_FILE);
-		manager.load(POP_FILE, Sound.class);
-		assets.add(POP_FILE);
-		
+		JsonAssetManager.getInstance().loadDirectory(assetDirectory);
+
 		//super.preLoadContent(manager);
 	}
 
@@ -162,32 +145,12 @@ public class PrototypeController extends WorldController {
 	 * 
 	 * @param manager Reference to global asset manager.
 	 */
-	public void loadContent(AssetManager manager) {
+	public void loadContent() {
 		if (platformAssetState != AssetState.LOADING) {
 			return;
 		}
-		// Allocate the tiles
-		earthTile = createTexture(manager,EARTH_FILE,true);
-		goalTile  = createTexture(manager,GOAL_FILE,true);
-
-		// Allocate the font
-		if (manager.isLoaded(FONT_FILE)) {
-			displayFont = manager.get(FONT_FILE,BitmapFont.class);
-		} else {
-			displayFont = null;
-		}
-		avatarTexture = createTexture(manager,DUDE_FILE,false);
-		barrierTexture = createTexture(manager,BARRIER_FILE,false);
-		bulletTexture = createTexture(manager,BULLET_FILE,false);
-		bulletBigTexture = createTexture(manager,BULLET_BIG_FILE,false);
-		turretTexture = createTexture(manager,TURRET_FILE,false);
-		backgroundTexture = createTexture(manager,BACKGROUND_FILE, false);
-
-		SoundController sounds = SoundController.getInstance();
-		sounds.allocate(manager, JUMP_FILE);
-		sounds.allocate(manager, PEW_FILE);
-		sounds.allocate(manager, POP_FILE);
-		super.loadContent(manager);
+		JsonAssetManager.getInstance().allocateDirectory();
+		displayFont = JsonAssetManager.getInstance().getEntry("display", BitmapFont.class);
 		platformAssetState = AssetState.COMPLETE;
 	}
 	
@@ -313,6 +276,7 @@ public class PrototypeController extends WorldController {
 	 */
 	private void populateLevel() {
 		// Add level goal
+		goalTile = JsonAssetManager.getInstance().getEntry("goal",TextureRegion.class);
 		float dwidth  = goalTile.getRegionWidth()/scale.x;
 		float dheight = goalTile.getRegionHeight()/scale.y;
 		goalDoor = new Door(GOAL_POS.x,GOAL_POS.y,dwidth,dheight,0);
@@ -327,6 +291,7 @@ public class PrototypeController extends WorldController {
 		addObject(goalDoor);
 
 	    String wname = "wall";
+	    earthTile = JsonAssetManager.getInstance().getEntry("earth",TextureRegion.class);
 	    for (int ii = 0; ii < WALLS.length; ii++) {
 	        PolygonObstacle obj;
 	    	obj = new PolygonObstacle(WALLS[ii], 0, 0);
@@ -361,6 +326,7 @@ public class PrototypeController extends WorldController {
 	    }
 
 		// Create dude
+		avatarTexture =JsonAssetManager.getInstance().getEntry("dude", TextureRegion.class);
 		dwidth  = avatarTexture.getRegionWidth()/scale.x;
 		dheight = avatarTexture.getRegionHeight()/scale.y;
 		avatar = new Avatar(DUDE_POS.x, DUDE_POS.y, dwidth, dheight, AvatarOrientation.OR_UP);
@@ -371,6 +337,7 @@ public class PrototypeController extends WorldController {
 		addObject(avatar);
 
 		// Create one turret
+		turretTexture = JsonAssetManager.getInstance().getEntry("turret",TextureRegion.class);
 		dwidth  = turretTexture.getRegionWidth()/scale.x;
 		dheight = turretTexture.getRegionHeight()/scale.y;
 		Vector2 vel = new Vector2(12.0f, 8.0f);
@@ -554,6 +521,7 @@ public class PrototypeController extends WorldController {
 	 */
 	private void createBullet(Turret origin) {
 		float offset = BULLET_OFFSET;
+		bulletBigTexture = JsonAssetManager.getInstance().getEntry("bulletbig",TextureRegion.class);
 		float radius = bulletBigTexture.getRegionWidth()/(2.0f*scale.x);
 		Projectile bullet = new Projectile(origin, origin.getX(), origin.getY()+offset, radius);
 		
@@ -617,8 +585,8 @@ public class PrototypeController extends WorldController {
 	 * @param delta The drawing context
 	 */
 	public void draw(float delta) {
+		backgroundTexture = JsonAssetManager.getInstance().getEntry("background",TextureRegion.class);
 		canvas.clear();
-
 		canvas.begin();
 		if(shifted) {
 			canvas.draw(backgroundTexture, Color.PINK, 0, 0,

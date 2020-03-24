@@ -1,0 +1,56 @@
+{
+  "textures": {
+    "earth": {
+      "file": "textures/earthtile.png",
+      "wrap": true
+    },
+    "goal": {
+      "file": "textures/goaldoor.png",
+      "wrap": true
+    },
+    "dude": {
+      "file": "textures/dude.png",
+      "wrap": false
+    },
+    "barrier": {
+      "file": "textures/barrier.png",
+      "wrap": false
+    },
+    "bullet": {
+      "file": "textures/bullet.png",
+      "wrap": false
+    },
+    "bulletbig":{
+      "file": "textures/bulletbig.png",
+      "wrap": false
+    },
+    "turret": {
+      "file": "textures/turret.png",
+      "wrap": false,
+    },
+    "background": {
+      "file": "textures/ice.png",
+      "wrap": false
+    }
+  },
+  "fonts": {
+    "display": {
+      "file": "fonts/RetroGame.ttf",
+      "size": 64
+    }
+  },
+  "sounds": {
+    "jump": {
+      "file": "sounds/jump.mp3",
+      "volume": 0.8
+    },
+    "pew": {
+      "file": "sounds/pew.mp3",
+      "volume": 0.8,
+    },
+    "pop": {
+      "file": "sounds/plop.mp3",
+      "volume": 0.8
+    }
+  }
+}

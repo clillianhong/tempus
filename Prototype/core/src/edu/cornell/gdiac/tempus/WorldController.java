@@ -90,7 +90,7 @@ public abstract class WorldController implements Screen {
 	 * 
 	 * @param manager Reference to global asset manager.
 	 */
-	public void loadContent(AssetManager manager) {
+	public void loadContent() {
 		if (worldAssetState != AssetState.LOADING) {
 			return;
 		}
@@ -152,12 +152,9 @@ public abstract class WorldController implements Screen {
 	 * 
 	 * @param manager Reference to global asset manager.
 	 */
-	public void unloadContent(AssetManager manager) {
-    	for(String s : assets) {
-    		if (manager.isLoaded(s)) {
-    			manager.unload(s);
-    		}
-    	}
+	public void unloadContent() {
+		JsonAssetManager.getInstance().unloadDirectory();
+		JsonAssetManager.clearInstance();
 	}
 	
 	/** Exit code for quitting the game */
