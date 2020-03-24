@@ -25,6 +25,8 @@ public class Avatar extends CapsuleObstacle {
     public enum AvatarState {
         /** When avatar is on a platform */
         STANDING,
+        /** When avatar is crouching before a dash */
+        CROUCHING,
         /** When avatar is dashing in air */
         DASHING,
         /** When avatar is falling in air */
@@ -71,14 +73,6 @@ public class Avatar extends CapsuleObstacle {
     private static final float HSHRINK = 0.7f;
     /** The amount to shrink the sensor fixture (horizontally) relative to the image */
     private static final float SSHRINK = 0.6f;
-
-
-    /** The number of frames for the animation */
-    public static final int FRAMES = 4;
-    /** The frame rate for the animation */
-    private static final float FRAME_RATE = 20;
-    /** The frame cooldown for the animation */
-    private static float frame_cooldown = FRAME_RATE;
 
     /** The current horizontal movement of the character */
     private float   movement;
@@ -136,14 +130,23 @@ public class Avatar extends CapsuleObstacle {
     /** Cache for internal force calculations */
     private Vector2 forceCache = new Vector2();
 
+    // ANIMATION FIELDS
     /** The texture filmstrip for the current animation */
-    FilmStrip currentStrip;
+    private FilmStrip currentStrip;
     /** The texture filmstrip for the standing animation */
-    FilmStrip standingStrip;
-    /** The texture filmstrip for the standing animation */
-    FilmStrip dashingStrip;
-    /** The texture filmstrip for the standing animation */
-    FilmStrip fallingStrip;
+    private FilmStrip standingStrip;
+    /** The texture filmstrip for the crouching animation */
+    private FilmStrip crouchingStrip;
+    /** The texture filmstrip for the dashing animation */
+    private FilmStrip dashingStrip;
+    /** The texture filmstrip for the falling animation */
+    private FilmStrip fallingStrip;
+
+    /** The frame rate for the animation */
+    private static final float FRAME_RATE = 20;
+    /** The frame cooldown for the animation */
+    private static float frame_cooldown = FRAME_RATE;
+
 
     /**
      * Returns left/right movement of this character.
@@ -664,6 +667,9 @@ public class Avatar extends CapsuleObstacle {
             case STANDING:
                 standingStrip = strip;
                 break;
+            case CROUCHING:
+                crouchingStrip = strip;
+                break;
             case DASHING:
                 dashingStrip = strip;
                 break;
@@ -685,6 +691,9 @@ public class Avatar extends CapsuleObstacle {
         switch (state) {
             case STANDING:
                 currentStrip = standingStrip;
+                break;
+            case CROUCHING:
+                currentStrip = crouchingStrip;
                 break;
             case DASHING:
                 currentStrip = dashingStrip;
@@ -720,9 +729,12 @@ public class Avatar extends CapsuleObstacle {
     public void draw(GameCanvas canvas) {
         float effect = faceRight ? 1.0f : -1.0f;
 //        System.out.println("draw angle: " + getAngle());;
-//        canvas.draw(texture, Color.WHITE,origin.x,origin.y,getX()*drawScale.x,getY()*drawScale.y,getAngle(),1.0f,1.0f);
-        canvas.draw(currentStrip, Color.WHITE,origin.x,origin.y,
-                getX()*drawScale.x,getY()*drawScale.y, getAngle(),1.0f,1.0f);
+//        if (currentStrip != null) {
+            canvas.draw(currentStrip, Color.WHITE,origin.x,origin.y,
+                    getX()*drawScale.x,getY()*drawScale.y, getAngle(),1.0f,1.0f);
+//        } else
+//            canvas.draw(texture, Color.WHITE,origin.x,origin.y,
+//                    getX()*drawScale.x,getY()*drawScale.y,getAngle(),1.0f,1.0f);
     }
 
     /**
