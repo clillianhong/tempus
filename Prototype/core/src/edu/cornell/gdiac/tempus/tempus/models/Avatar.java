@@ -29,7 +29,9 @@ public class Avatar extends CapsuleObstacle {
         /** When avatar is dashing in air */
         DASHING,
         /** When avatar is falling in air */
-        FALLING
+        FALLING,
+        /** When the avatar is dead */
+        DEAD
     };
 
     // Physics constants
@@ -73,6 +75,10 @@ public class Avatar extends CapsuleObstacle {
     /** The amount to shrink the sensor fixture (horizontally) relative to the image */
     private static final float SSHRINK = 0.6f;
 
+    /** The current lives the avatar has **/
+    private int lives;
+    /** The current state of the avatar **/
+    AvatarState state;
     /** The current horizontal movement of the character */
     private float   movement;
     /** Which direction is the character facing */
@@ -100,7 +106,6 @@ public class Avatar extends CapsuleObstacle {
     private Fixture sensorFixtureTop;
     private PolygonShape sensorShapeTop;
 
-    //added for prototype
     /** how long ago the character started dashing */
     private int startedDashing;
     /** Whether we are actively dashing */
@@ -228,6 +233,25 @@ public class Avatar extends CapsuleObstacle {
     public float getDashRange(){ return DASH_RANGE; }
 
     /**
+     * Returns the current number of lives the avatar has
+     *
+     * @return lives
+     */
+    public int getLives() {
+        return lives;
+    }
+
+    /**
+     * Decrements a life and returns whether the avatar is still alive
+     *
+     * @return true if lives > 0, else false
+     */
+    public boolean removeLife() {
+        this.lives = lives - 1;
+        return lives > 0;
+    }
+
+    /**
      * Returns dash distance
      *
      * @return dash distance
@@ -280,7 +304,13 @@ public class Avatar extends CapsuleObstacle {
         dashDirection = dpos;
     }
 
-
+    /**
+     *
+     * @return true if the Avatar is dead
+     */
+    public boolean isDead(){
+        return (lives < 1) || (state == AvatarState.DEAD);
+    }
     /**
      * Sets whether the dude is actively firing.
      *
@@ -496,12 +526,12 @@ public class Avatar extends CapsuleObstacle {
         setFixedRotation(true);
 
         // Gameplay attributes
+        lives = 3;
+        state = AvatarState.STANDING;
         isGrounded = false;
         isShooting = false;
         isJumping = false;
         faceRight = true;
-
-        //prototype added
         isDashing = false;
         newAngle = 0;
         isSticking = false;
