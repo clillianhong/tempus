@@ -307,7 +307,9 @@ public class JsonAssetManager extends AssetManager {
         return texture;
     }
 
-    private FilmStrip allocateFilmStrip
+    private FilmStrip allocateFilmStrip(JsonValue json){
+        return null;
+    }
 
     /**
      * Allocates a font and binds it to the directory key
