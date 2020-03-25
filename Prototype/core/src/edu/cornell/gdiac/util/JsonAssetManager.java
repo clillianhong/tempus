@@ -135,6 +135,8 @@ public class JsonAssetManager extends AssetManager {
             return "fonts";
         } else if (type.equals(Sound.class)) {
             return "sounds";
+        } else if (type.equals(FilmStrip.class)){
+            return "filmstrips";
         }
         // Should never reach here
         assert false : "JSON directory does not support this assets class";
@@ -270,6 +272,7 @@ public class JsonAssetManager extends AssetManager {
             allocateSound(json);
             json = json.next;
         }
+
     }
 
     /**
@@ -303,6 +306,8 @@ public class JsonAssetManager extends AssetManager {
         textures.put(json.name(),texture);
         return texture;
     }
+
+    private FilmStrip allocateFilmStrip
 
     /**
      * Allocates a font and binds it to the directory key

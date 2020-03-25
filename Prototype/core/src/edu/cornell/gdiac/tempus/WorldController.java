@@ -207,6 +207,7 @@ public abstract class WorldController implements Screen {
 	/** Countdown active for winning or losing */
 	private int countdown;
 
+
 	/**
 	 * Returns true if debug mode is active.
 	 *
@@ -504,9 +505,6 @@ public abstract class WorldController implements Screen {
 			Obstacle b = addQueue.poll();
 			addObject(b);
 		}
-		
-		// Turn the physics engine crank.
-		world.step(WORLD_STEP,WORLD_VELOC,WORLD_POSIT);
 
 		// Garbage collect the deleted objects.
 		// Note how we use the linked list nodes to delete O(1) in place.
