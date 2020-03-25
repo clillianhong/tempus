@@ -45,9 +45,10 @@ public class PrototypeController extends WorldController {
 	/** The texture file for the character avatar (no animation) */
 	private static final String DUDE_FILE  = "enemies/dude.png";
 	/** The reference for the avatar movement textures  */
-	private static final String AVATAR_STANDING_TEXTURE = "enemies/blob_standing.png";
-	private static final String AVATAR_DASHING_TEXTURE = "enemies/blob_dashing.png";
-	private static final String AVATAR_FALLING_TEXTURE = "enemies/blob_dashing.png";
+	private static final String AVATAR_STANDING_TEXTURE = "enemies/dude.png";
+	private static final String AVATAR_CROUCHING_TEXTURE = "enemies/bird_crouching.png";
+	private static final String AVATAR_DASHING_TEXTURE = "enemies/bird_dashing.png";
+	private static final String AVATAR_FALLING_TEXTURE = "enemies/dude.png";
 
 	/** The texture file for the spinning barrier */
 	private static final String BARRIER_FILE = "enemies/barrier.png";
@@ -81,6 +82,8 @@ public class PrototypeController extends WorldController {
 	private TextureRegion avatarTexture;
 	/** Texture filmstrip for avatar standing */
 	private FilmStrip avatarStandingTexture;
+	/** Texture filmstrip for avatar dashing */
+	private FilmStrip avatarCrouchingTexture;
 	/** Texture filmstrip for avatar dashing */
 	private FilmStrip avatarDashingTexture;
 	/** Texture filmstrip for avatar falling */
@@ -130,6 +133,8 @@ public class PrototypeController extends WorldController {
 		assets.add(DUDE_FILE);
 		manager.load(AVATAR_STANDING_TEXTURE, Texture.class);
 		assets.add(AVATAR_STANDING_TEXTURE);
+		manager.load(AVATAR_CROUCHING_TEXTURE, Texture.class);
+		assets.add(AVATAR_CROUCHING_TEXTURE);
 		manager.load(AVATAR_DASHING_TEXTURE, Texture.class);
 		assets.add(AVATAR_DASHING_TEXTURE);
 		manager.load(AVATAR_FALLING_TEXTURE, Texture.class);
@@ -180,14 +185,13 @@ public class PrototypeController extends WorldController {
 		
 		avatarTexture = createTexture(manager,DUDE_FILE,false);
 		avatarStandingTexture = createFilmStrip(
-				manager, AVATAR_STANDING_TEXTURE,1,
-				Avatar.FRAMES+0, Avatar.FRAMES+0);
+				manager, AVATAR_STANDING_TEXTURE,1, 1, 1);
+		avatarCrouchingTexture = createFilmStrip(
+				manager, AVATAR_CROUCHING_TEXTURE,1, 3, 3);
 		avatarDashingTexture = createFilmStrip(
-				manager, AVATAR_DASHING_TEXTURE,1,
-				Avatar.FRAMES,Avatar.FRAMES);
+				manager, AVATAR_DASHING_TEXTURE,1, 4, 4);
 		avatarFallingTexture = createFilmStrip(
-				manager, AVATAR_FALLING_TEXTURE,1,
-				Avatar.FRAMES, Avatar.FRAMES);
+				manager, AVATAR_FALLING_TEXTURE,1, 1, 1);
 
 		barrierTexture = createTexture(manager,BARRIER_FILE,false);
 		bulletTexture = createTexture(manager,BULLET_FILE,false);
@@ -411,6 +415,7 @@ public class PrototypeController extends WorldController {
 		avatar.setBodyType(BodyDef.BodyType.DynamicBody);
 		avatar.setName("avatar");
 		avatar.setFilmStrip(Avatar.AvatarState.STANDING, avatarStandingTexture);
+		avatar.setFilmStrip(Avatar.AvatarState.CROUCHING, avatarCrouchingTexture);
 		avatar.setFilmStrip(Avatar.AvatarState.DASHING, avatarDashingTexture);
 		avatar.setFilmStrip(Avatar.AvatarState.FALLING, avatarFallingTexture);
 		addObject(avatar);
@@ -626,16 +631,17 @@ public class PrototypeController extends WorldController {
 //		enemy.applyForce();
 
 		// Update animation state
-		Avatar.AvatarState state;
-		if (avatar.isSticking()) {
-			state = Avatar.AvatarState.STANDING;
-			avatar.animate(state, true);
+		if (InputController.getInstance().pressedLeftMouseButton() ||
+				InputController.getInstance().pressedRightMouseButton()) {
+			// If either mouse button is held, set animation to be crouching
+			avatar.animate(Avatar.AvatarState.CROUCHING, false);
+		} else if (avatar.isSticking()) {
+			// Default animation if player is stationary
+			avatar.animate(Avatar.AvatarState.STANDING, false);
 		} else if (avatar.isDashing()) {
-			state = Avatar.AvatarState.DASHING;
-			avatar.animate(state, false);
+			avatar.animate(Avatar.AvatarState.DASHING, false);
 		} else {
-			state = Avatar.AvatarState.FALLING;
-			avatar.animate(state, false);
+			avatar.animate(Avatar.AvatarState.FALLING, false);
 		}
 
 	    if (avatar.isJumping()) {
