@@ -31,6 +31,14 @@
     "background": {
       "file": "textures/ice.png",
       "wrap": false
+    },
+    "enemypresent": {
+      "file": "textures/enemy_present.png",
+      "wrap": false
+    },
+    "enemypast": {
+      "file": "textures/enemy_past.png",
+      "wrap": false
     }
   },
   "fonts": {
@@ -54,6 +62,29 @@
     }
   },
   "filmstrips": {
-
+    "avatarstanding": {
+      "file": "filmstrips/dude.png",
+      "rows": 1,
+      "cols": 1,
+      "size": 1
+    },
+    "avatarcrouching": {
+      "file": "filmstrips/bird_crouching.png",
+      "rows": 1,
+      "cols": 3,
+      "size": 3
+    },
+    "avatardashing": {
+      "file": "filmstrips/bird_dashing.png",
+      "rows": 1,
+      "cols": 4,
+      "size": 4
+    },
+    "avatarfalling": {
+      "file": "filmstrips/dude.png",
+      "rows": 1,
+      "cols": 1,
+      "size": 1
+    }
   }
 }

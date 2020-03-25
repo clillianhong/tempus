@@ -52,11 +52,12 @@ public class PrototypeController extends WorldController {
 	// TODO: change path for textures.
 	/** The texture file for the character avatar (no animation) */
 	private static final String DUDE_FILE = "texture/dude.png";
+
 	/** The reference for the avatar movement textures */
-	private static final String AVATAR_STANDING_TEXTURE = "textures/dude.png";
-	private static final String AVATAR_CROUCHING_TEXTURE = "textures/bird_crouching.png";
-	private static final String AVATAR_DASHING_TEXTURE = "textures/bird_dashing.png";
-	private static final String AVATAR_FALLING_TEXTURE = "textures/dude.png";
+	private static final String AVATAR_STANDING_TEXTURE = "filmstrips/dude.png";
+	private static final String AVATAR_CROUCHING_TEXTURE = "filmstrips/bird_crouching.png";
+	private static final String AVATAR_DASHING_TEXTURE = "filmstrips/bird_dashing.png";
+	private static final String AVATAR_FALLING_TEXTURE = "filmstrips/dude.png";
 
 	/** The texture file for the spinning barrier */
 	private static final String BARRIER_FILE = "textures/barrier.png";
@@ -166,44 +167,44 @@ public class PrototypeController extends WorldController {
 		// super.preLoadContent(manager);
 		// TODO: Delete
 		// Entity files
-		platformAssetState = AssetState.LOADING;
-		manager.load(DUDE_FILE, Texture.class);
-		assets.add(DUDE_FILE);
-		manager.load(AVATAR_STANDING_TEXTURE, Texture.class);
-		assets.add(AVATAR_STANDING_TEXTURE);
-		manager.load(AVATAR_CROUCHING_TEXTURE, Texture.class);
-		assets.add(AVATAR_CROUCHING_TEXTURE);
-		manager.load(AVATAR_DASHING_TEXTURE, Texture.class);
-		assets.add(AVATAR_DASHING_TEXTURE);
-		manager.load(AVATAR_FALLING_TEXTURE, Texture.class);
-		assets.add(AVATAR_FALLING_TEXTURE);
-
-		manager.load(BARRIER_FILE, Texture.class);
-		assets.add(BARRIER_FILE);
-		manager.load(BULLET_FILE, Texture.class);
-		assets.add(BULLET_FILE);
-		manager.load(BULLET_BIG_FILE, Texture.class);
-		assets.add(BULLET_BIG_FILE);
-		manager.load(TURRET_FILE, Texture.class);
-		assets.add(TURRET_FILE);
-		manager.load(ENEMY_PRESENT_FILE, Texture.class);
-		assets.add(ENEMY_PRESENT_FILE);
-		manager.load(ENEMY_PAST_FILE, Texture.class);
-		assets.add(ENEMY_PAST_FILE);
-
-		// Background files
-		manager.load(BACKGROUND_FILE, Texture.class);
-		assets.add(BACKGROUND_FILE);
-
-		// Sound files
-		manager.load(JUMP_FILE, Sound.class);
-		assets.add(JUMP_FILE);
-		manager.load(PEW_FILE, Sound.class);
-		assets.add(PEW_FILE);
-		manager.load(POP_FILE, Sound.class);
-		assets.add(POP_FILE);
-
-		super.preLoadContent(manager);
+//		platformAssetState = AssetState.LOADING;
+//		manager.load(DUDE_FILE, Texture.class);
+//		assets.add(DUDE_FILE);
+//		manager.load(AVATAR_STANDING_TEXTURE, Texture.class);
+//		assets.add(AVATAR_STANDING_TEXTURE);
+//		manager.load(AVATAR_CROUCHING_TEXTURE, Texture.class);
+//		assets.add(AVATAR_CROUCHING_TEXTURE);
+//		manager.load(AVATAR_DASHING_TEXTURE, Texture.class);
+//		assets.add(AVATAR_DASHING_TEXTURE);
+//		manager.load(AVATAR_FALLING_TEXTURE, Texture.class);
+//		assets.add(AVATAR_FALLING_TEXTURE);
+//
+//		manager.load(BARRIER_FILE, Texture.class);
+//		assets.add(BARRIER_FILE);
+//		manager.load(BULLET_FILE, Texture.class);
+//		assets.add(BULLET_FILE);
+//		manager.load(BULLET_BIG_FILE, Texture.class);
+//		assets.add(BULLET_BIG_FILE);
+//		manager.load(TURRET_FILE, Texture.class);
+//		assets.add(TURRET_FILE);
+//		manager.load(ENEMY_PRESENT_FILE, Texture.class);
+//		assets.add(ENEMY_PRESENT_FILE);
+//		manager.load(ENEMY_PAST_FILE, Texture.class);
+//		assets.add(ENEMY_PAST_FILE);
+//
+//		// Background files
+//		manager.load(BACKGROUND_FILE, Texture.class);
+//		assets.add(BACKGROUND_FILE);
+//
+//		// Sound files
+//		manager.load(JUMP_FILE, Sound.class);
+//		assets.add(JUMP_FILE);
+//		manager.load(PEW_FILE, Sound.class);
+//		assets.add(PEW_FILE);
+//		manager.load(POP_FILE, Sound.class);
+//		assets.add(POP_FILE);
+//
+//		super.preLoadContent(manager);
 	}
 
 	/**
@@ -223,25 +224,24 @@ public class PrototypeController extends WorldController {
 		JsonAssetManager.getInstance().allocateDirectory();
 		displayFont = JsonAssetManager.getInstance().getEntry("display", BitmapFont.class);
 		// TODO: Delete
-		avatarTexture = JsonAssetManager.getInstance().getEntry("dude", TextureRegion.class);
-		avatarStandingTexture = createFilmStrip(manager, AVATAR_STANDING_TEXTURE, 1, 1, 1);
-		avatarCrouchingTexture = createFilmStrip(manager, AVATAR_CROUCHING_TEXTURE, 1, 3, 3);
-		avatarDashingTexture = createFilmStrip(manager, AVATAR_DASHING_TEXTURE, 1, 4, 4);
-		avatarFallingTexture = createFilmStrip(manager, AVATAR_FALLING_TEXTURE, 1, 1, 1);
-
-		barrierTexture = createTexture(manager, BARRIER_FILE, false);
-		bulletTexture = createTexture(manager, BULLET_FILE, false);
-		bulletBigTexture = createTexture(manager, BULLET_BIG_FILE, false);
-		turretTexture = createTexture(manager, TURRET_FILE, false);
-		backgroundTexture = createTexture(manager, BACKGROUND_FILE, false);
-		enemyPresentTexture = createTexture(manager, ENEMY_PRESENT_FILE, false);
-		enemyPastTexture = createTexture(manager, ENEMY_PAST_FILE, false);
-
-		SoundController sounds = SoundController.getInstance();
-		sounds.allocate(manager, JUMP_FILE);
-		sounds.allocate(manager, PEW_FILE);
-		sounds.allocate(manager, POP_FILE);
-		super.loadContent(manager);
+//		avatarStandingTexture = createFilmStrip(manager, AVATAR_STANDING_TEXTURE, 1, 1, 1);
+//		avatarCrouchingTexture = createFilmStrip(manager, AVATAR_CROUCHING_TEXTURE, 1, 3, 3);
+//		avatarDashingTexture = createFilmStrip(manager, AVATAR_DASHING_TEXTURE, 1, 4, 4);
+//		avatarFallingTexture = createFilmStrip(manager, AVATAR_FALLING_TEXTURE, 1, 1, 1);
+//
+//		barrierTexture = createTexture(manager, BARRIER_FILE, false);
+//		bulletTexture = createTexture(manager, BULLET_FILE, false);
+//		bulletBigTexture = createTexture(manager, BULLET_BIG_FILE, false);
+//		turretTexture = createTexture(manager, TURRET_FILE, false);
+//		backgroundTexture = createTexture(manager, BACKGROUND_FILE, false);
+//		enemyPresentTexture = createTexture(manager, ENEMY_PRESENT_FILE, false);
+//		enemyPastTexture = createTexture(manager, ENEMY_PAST_FILE, false);
+//
+//		SoundController sounds = SoundController.getInstance();
+//		sounds.allocate(manager, JUMP_FILE);
+//		sounds.allocate(manager, PEW_FILE);
+//		sounds.allocate(manager, POP_FILE);
+//		super.loadContent(manager);
 		platformAssetState = AssetState.COMPLETE;
 	}
 
@@ -292,7 +292,7 @@ public class PrototypeController extends WorldController {
 	/** The goal door position */
 	private static Vector2 GOAL_POS = new Vector2(29.5f, 15.5f);
 	/** The initial position of the dude */
-	private static Vector2 DUDE_POS = new Vector2(dudex, dudey);
+	private static Vector2 DUDE_POS = new Vector2(2.5f, 5.0f);
 	/** The initial position of the turret */
 	private static Vector2 TURRET_POS = new Vector2(8.5f, 10.0f);
 	// /** The initial position of the enemy */
@@ -421,6 +421,11 @@ public class PrototypeController extends WorldController {
 		}
 
 		// Create dude
+		avatarTexture = JsonAssetManager.getInstance().getEntry("dude", TextureRegion.class);
+		avatarStandingTexture = JsonAssetManager.getInstance().getEntry("avatarstanding",FilmStrip.class);
+		avatarCrouchingTexture = JsonAssetManager.getInstance().getEntry("avatarcrouching",FilmStrip.class);
+		avatarDashingTexture = JsonAssetManager.getInstance().getEntry("avatardashing",FilmStrip.class);
+		avatarFallingTexture = JsonAssetManager.getInstance().getEntry("avatarfalling",FilmStrip.class);
 		dwidth = avatarTexture.getRegionWidth() / scale.x;
 		dheight = avatarTexture.getRegionHeight() / scale.y;
 		avatar = new Avatar(DUDE_POS.x, DUDE_POS.y, dwidth, dheight);
@@ -434,6 +439,8 @@ public class PrototypeController extends WorldController {
 		avatar.setFilmStrip(Avatar.AvatarState.FALLING, avatarFallingTexture);
 		addObject(avatar);
 
+		enemyPresentTexture = JsonAssetManager.getInstance().getEntry("enemypresent",TextureRegion.class);
+		enemyPastTexture = JsonAssetManager.getInstance().getEntry("enemypast",TextureRegion.class);
 		for (int ii = 0; ii < NUMBER_ENEMIES; ii++) {
 			TextureRegion texture;
 			if (TYPE_ENEMIES[ii] == PRESENT)

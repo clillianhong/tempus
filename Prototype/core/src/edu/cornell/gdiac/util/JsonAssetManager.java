@@ -50,6 +50,8 @@ public class JsonAssetManager extends AssetManager {
     ObjectMap<String,BitmapFont> fonts;
     /** The allocated sounds (for easy clean-up) */
     ObjectMap<String,Sound> sounds;
+    /** The allocated filmstrips (for easy clean-up) */
+    ObjectMap<String,FilmStrip> filmstrips;
 
     /** The singleton asset manager (for easy access) */
     private static JsonAssetManager manager;
@@ -103,6 +105,7 @@ public class JsonAssetManager extends AssetManager {
         textures = new ObjectMap<String,Texture>();
         fonts = new ObjectMap<String,BitmapFont>();
         sounds = new ObjectMap<String,Sound>();
+        filmstrips = new ObjectMap<String,FilmStrip>();
     }
 
     /**
@@ -117,6 +120,7 @@ public class JsonAssetManager extends AssetManager {
         assert directory == null : "Directory has already been loaded; must unload first";
         directory = json;
         loadTextures();
+        loadFilmstrips();
         loadSounds();
         loadFonts();
     }
@@ -154,7 +158,18 @@ public class JsonAssetManager extends AssetManager {
             json = json.next;
         }
     }
-
+    /**
+     * Loads all filmstrips in the asset directory
+     */
+    private void loadFilmstrips(){
+        JsonValue json = directory.getChild(getClassIdentifier(FilmStrip.class));
+        while (json != null) {
+            String file= json.getString("file");
+            //We load filmstrips as textures.
+            load(file,Texture.class);
+            json = json.next;
+        }
+    }
     /**
      * Loads all fonts in the asset directory
      */
@@ -190,6 +205,7 @@ public class JsonAssetManager extends AssetManager {
      */
     public void unloadDirectory() {
         unloadTextures();
+        unloadFilmstrips();
         unloadSounds();
         unloadFonts();
         directory = null;
@@ -214,7 +230,22 @@ public class JsonAssetManager extends AssetManager {
             json = json.next;
         }
     }
-
+    /**
+     * Unloads all filmstrips in the asset directory
+     */
+    private void unloadFilmstrips() {
+        JsonValue json = directory.getChild(getClassIdentifier(FilmStrip.class));
+        while (json != null) {
+            String file = json.getString("file");
+            if (isLoaded(file)) {
+                unload(file);
+                if (filmstrips.containsKey(file)) {
+                    filmstrips.remove(file);
+                }
+            }
+            json = json.next;
+        }
+    }
     /**
      * Unloads all fonts in the asset directory
      */
@@ -272,7 +303,11 @@ public class JsonAssetManager extends AssetManager {
             allocateSound(json);
             json = json.next;
         }
-
+        json = directory.getChild(getClassIdentifier(FilmStrip.class));
+        while (json!= null){
+            allocateFilmStrip(json);
+            json = json.next;
+        }
     }
 
     /**
@@ -308,7 +343,11 @@ public class JsonAssetManager extends AssetManager {
     }
 
     private FilmStrip allocateFilmStrip(JsonValue json){
-        return null;
+        String filename = json.getString ("file");
+        FilmStrip filmstrip = new FilmStrip(get(filename, Texture.class),json.getInt("rows"),json.getInt("cols"),json.getInt("size"));
+        filmstrip.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        filmstrips.put(json.name(),filmstrip);
+        return filmstrip;
     }
 
     /**
@@ -355,6 +394,8 @@ public class JsonAssetManager extends AssetManager {
                 return (T)fonts.get(key);
             } else if (type.equals(Sound.class)) {
                 return (T)sounds.get(key);
+            } else if (type.equals(FilmStrip.class)){
+                return (T)filmstrips.get(key);
             }
         } catch (Exception e) {
             return null;
