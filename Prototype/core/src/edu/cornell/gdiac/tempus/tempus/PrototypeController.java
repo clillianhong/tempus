@@ -405,7 +405,7 @@ public class PrototypeController extends WorldController {
 		// Create dude
 		dwidth  = avatarTexture.getRegionWidth()/scale.x;
 		dheight = avatarTexture.getRegionHeight()/scale.y;
-		avatar = new Avatar(DUDE_POS.x, DUDE_POS.y, dwidth, dheight, AvatarOrientation.OR_UP);
+		avatar = new Avatar(DUDE_POS.x, DUDE_POS.y, dwidth, dheight);
 		avatar.setDrawScale(scale);
 		avatar.setTexture(avatarTexture);
 		avatar.setBodyType(BodyDef.BodyType.DynamicBody);
