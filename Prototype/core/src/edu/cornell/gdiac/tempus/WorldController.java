@@ -60,23 +60,8 @@ public abstract class WorldController implements Screen {
 	/** Track asset loading from all instances and subclasses */
 	protected AssetState worldAssetState = AssetState.EMPTY;
 	/** Track all loaded assets (for unloading purposes) */
-	protected Array<String> assets;	
+	protected Array<String> assets;
 	
-	// Pathnames to shared assets
-	/** File to texture for walls and platforms */
-	private static String EARTH_FILE = "shared/earthtile.png";
-	/** File to texture for the win door */
-	private static String GOAL_FILE = "shared/goaldoor.png";
-	/** Retro font for displaying messages */
-	private static String FONT_FILE = "shared/RetroGame.ttf";
-	private static int FONT_SIZE = 64;
-
-	/** The texture for walls and platforms */
-	protected TextureRegion earthTile;
-	/** The texture for the exit condition */
-	protected TextureRegion goalTile;
-	/** The font for giving messages to the player */
-	protected BitmapFont displayFont;
 
 	/**
 	 * Preloads the assets for this controller.
@@ -92,20 +77,7 @@ public abstract class WorldController implements Screen {
 		if (worldAssetState != AssetState.EMPTY) {
 			return;
 		}
-		
 		worldAssetState = AssetState.LOADING;
-		// Load the shared tiles.
-		manager.load(EARTH_FILE,Texture.class);
-		assets.add(EARTH_FILE);
-		manager.load(GOAL_FILE,Texture.class);
-		assets.add(GOAL_FILE);
-		
-		// Load the font
-		FreetypeFontLoader.FreeTypeFontLoaderParameter size2Params = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
-		size2Params.fontFileName = FONT_FILE;
-		size2Params.fontParameters.size = FONT_SIZE;
-		manager.load(FONT_FILE, BitmapFont.class, size2Params);
-		assets.add(FONT_FILE);
 	}
 
 	/**
@@ -118,22 +90,10 @@ public abstract class WorldController implements Screen {
 	 * 
 	 * @param manager Reference to global asset manager.
 	 */
-	public void loadContent(AssetManager manager) {
+	public void loadContent() {
 		if (worldAssetState != AssetState.LOADING) {
 			return;
 		}
-		
-		// Allocate the tiles
-		earthTile = createTexture(manager,EARTH_FILE,true);
-		goalTile  = createTexture(manager,GOAL_FILE,true);
-		
-		// Allocate the font
-		if (manager.isLoaded(FONT_FILE)) {
-			displayFont = manager.get(FONT_FILE,BitmapFont.class);
-		} else {
-			displayFont = null;
-		}
-
 		worldAssetState = AssetState.COMPLETE;
 	}
 	
@@ -192,12 +152,9 @@ public abstract class WorldController implements Screen {
 	 * 
 	 * @param manager Reference to global asset manager.
 	 */
-	public void unloadContent(AssetManager manager) {
-    	for(String s : assets) {
-    		if (manager.isLoaded(s)) {
-    			manager.unload(s);
-    		}
-    	}
+	public void unloadContent() {
+		JsonAssetManager.getInstance().unloadDirectory();
+		JsonAssetManager.clearInstance();
 	}
 	
 	/** Exit code for quitting the game */
@@ -242,9 +199,9 @@ public abstract class WorldController implements Screen {
 	/** Whether or not this is an active controller */
 	private boolean active;
 	/** Whether we have completed this level */
-	private boolean complete;
+	protected boolean complete;
 	/** Whether we have failed at this world (and need a reset) */
-	private boolean failed;
+	protected boolean failed;
 	/** Whether or not debug mode is active */
 	private boolean debug;
 	/** Countdown active for winning or losing */
@@ -591,19 +548,6 @@ public abstract class WorldController implements Screen {
 				obj.drawDebug(canvas);
 			}
 			canvas.endDebug();
-		}
-		
-		// Final message
-		if (complete && !failed) {
-			displayFont.setColor(Color.YELLOW);
-			canvas.begin(); // DO NOT SCALE
-			canvas.drawTextCentered("VICTORY!", displayFont, 0.0f);
-			canvas.end();
-		} else if (failed) {
-			displayFont.setColor(Color.RED);
-			canvas.begin(); // DO NOT SCALE
-			canvas.drawTextCentered("FAILURE!", displayFont, 0.0f);
-			canvas.end();
 		}
 	}
 	
