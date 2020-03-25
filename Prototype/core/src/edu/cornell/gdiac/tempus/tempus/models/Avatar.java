@@ -8,7 +8,6 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import edu.cornell.gdiac.tempus.GameCanvas;
 import edu.cornell.gdiac.tempus.obstacle.CapsuleObstacle;
-import edu.cornell.gdiac.tempus.tempus.AvatarOrientation;
 import edu.cornell.gdiac.util.FilmStrip;
 
 
@@ -487,7 +486,7 @@ public class Avatar extends CapsuleObstacle {
      * @param width		The object width in physics units
      * @param height	The object width in physics units
      */
-    public Avatar(float x, float y, float width, float height, AvatarOrientation or) {
+    public Avatar(float x, float y, float width, float height) {
         super(x,y,width*HSHRINK,height*VSHRINK);
         setDensity(DENSITY);
 //        setFriction(FRICTION);  /// HE WILL STICK TO WALLS IF YOU FORGET
