@@ -8,7 +8,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import edu.cornell.gdiac.tempus.GameCanvas;
 import edu.cornell.gdiac.tempus.obstacle.CapsuleObstacle;
-import edu.cornell.gdiac.tempus.tempus.AvatarOrientation;
+import edu.cornell.gdiac.util.FilmStrip;
 
 
 /**
@@ -18,6 +18,20 @@ import edu.cornell.gdiac.tempus.tempus.AvatarOrientation;
  * no other subclasses that we might loop through.
  */
 public class Avatar extends CapsuleObstacle {
+    /**
+     * Enumeration to identify the state of the avatar
+     */
+    public enum AvatarState {
+        /** When avatar is on a platform */
+        STANDING,
+        /** When avatar is crouching before a dash */
+        CROUCHING,
+        /** When avatar is dashing in air */
+        DASHING,
+        /** When avatar is falling in air */
+        FALLING
+    };
+
     // Physics constants
     /** The density of the character */
     private static final float DENSITY = 1.0f;
@@ -79,7 +93,7 @@ public class Avatar extends CapsuleObstacle {
     /** Left sensor to determine sticking on the left side */
     private Fixture sensorFixtureLeft;
     private PolygonShape sensorShapeLeft;
-    /** Right sensor to determine sticking on the left side */
+    /** Right sensor to determine sticking on the right side */
     private Fixture sensorFixtureRight;
     private PolygonShape sensorShapeRight;
     /** Top sensor to determine sticking on the top */
@@ -87,6 +101,8 @@ public class Avatar extends CapsuleObstacle {
     private PolygonShape sensorShapeTop;
 
     //added for prototype
+    /** how long ago the character started dashing */
+    private int startedDashing;
     /** Whether we are actively dashing */
     private boolean isDashing;
     /** Whether the initial dash force has been applied */
@@ -98,7 +114,7 @@ public class Avatar extends CapsuleObstacle {
     /** Whether we are actively holding */
     public boolean isHolding;
     /** the current orientation of the player */
-    private AvatarOrientation orientation;
+    private float newAngle;
     /** the dash distance of the player (max is DASH_RANGE) */
     private float dashDistance;
     /** the dash starting position */
@@ -107,9 +123,29 @@ public class Avatar extends CapsuleObstacle {
     private Vector2 dashDirection;
     /** the bullet the character is currently holding */
     private Projectile heldBullet;
+    /** the platform the character was most recently on */
+    private Platform currentPlat;
 
     /** Cache for internal force calculations */
     private Vector2 forceCache = new Vector2();
+
+    // ANIMATION FIELDS
+    /** The texture filmstrip for the current animation */
+    private FilmStrip currentStrip;
+    /** The texture filmstrip for the standing animation */
+    private FilmStrip standingStrip;
+    /** The texture filmstrip for the crouching animation */
+    private FilmStrip crouchingStrip;
+    /** The texture filmstrip for the dashing animation */
+    private FilmStrip dashingStrip;
+    /** The texture filmstrip for the falling animation */
+    private FilmStrip fallingStrip;
+
+    /** The frame rate for the animation */
+    private static final float FRAME_RATE = 20;
+    /** The frame cooldown for the animation */
+    private static float frame_cooldown = FRAME_RATE;
+
 
     /**
      * Returns left/right movement of this character.
@@ -180,8 +216,8 @@ public class Avatar extends CapsuleObstacle {
      *
      * @return true if the dude is actively dashing.
      */
-    public Vector2 getAvatarOrientation() {
-        return orients[orientation.ordinal()];
+    public float getNewAngle() {
+        return newAngle;
     }
 
     /**
@@ -190,13 +226,6 @@ public class Avatar extends CapsuleObstacle {
      * @return max dash range
      */
     public float getDashRange(){ return DASH_RANGE; }
-
-    /**
-     * Sets avatar orientation
-     */
-    public void setAvatarOrientation(AvatarOrientation or) {
-        orientation = or;
-    }
 
     /**
      * Returns dash distance
@@ -215,7 +244,18 @@ public class Avatar extends CapsuleObstacle {
         dashDistance = dist;
     }
 
+    /** sets how long ago the character started dashing */
+    public void setStartedDashing(int s) { startedDashing = s;}
 
+    /** returns how long ago the character started dashing */
+    public int getStartedDashing() { return startedDashing; }
+
+    /** sets the last platform the character was on */
+    public void setCurrentPlatform(Platform p) { currentPlat = p; }
+
+    /** returns the last platform the character was on */
+    public Platform getCurrentPlatform() { return currentPlat; }
+    
     /**
      * Returns true if the dude is actively dashing.
      *
@@ -337,6 +377,15 @@ public class Avatar extends CapsuleObstacle {
     }
 
     /**
+     * Sets new angle value out of sync
+     *
+     * @param value the angle to update body angle to after the world step
+     */
+    public void setNewAngle(float value) {
+        newAngle = value;
+    }
+
+    /**
      * Returns how much force to apply to get the dude moving
      *
      * Multiply this by the input to get the movement value.
@@ -440,7 +489,7 @@ public class Avatar extends CapsuleObstacle {
      * @param width		The object width in physics units
      * @param height	The object width in physics units
      */
-    public Avatar(float x, float y, float width, float height, AvatarOrientation or) {
+    public Avatar(float x, float y, float width, float height) {
         super(x,y,width*HSHRINK,height*VSHRINK);
         setDensity(DENSITY);
 //        setFriction(FRICTION);  /// HE WILL STICK TO WALLS IF YOU FORGET
@@ -454,10 +503,11 @@ public class Avatar extends CapsuleObstacle {
 
         //prototype added
         isDashing = false;
-        orientation = or;
+        newAngle = 0;
         isSticking = false;
         dashDistance = DASH_RANGE;
         dashStartPos = new Vector2(x,y);
+        startedDashing = 0;
 
         shootCooldown = 0;
         jumpCooldown = 0;
@@ -493,7 +543,7 @@ public class Avatar extends CapsuleObstacle {
         sensorDef.density = DENSITY;
         sensorDef.isSensor = true;
         sensorShape = new PolygonShape();
-        sensorShape.setAsBox(getWidth() / 2.0f - 2.0f * SENSOR_HEIGHT, SENSOR_HEIGHT, sensorCenter, 0.0f);
+        sensorShape.setAsBox(getWidth() / 4.0f - 2.0f * SENSOR_HEIGHT, SENSOR_HEIGHT, sensorCenter, 0.0f);
         sensorDef.shape = sensorShape;
 
         sensorFixture = body.createFixture(sensorDef);
@@ -502,7 +552,7 @@ public class Avatar extends CapsuleObstacle {
         // To determine whether the body collides on the left side
         Vector2 sensorCenterLeft = new Vector2(-getWidth() / 2, 0);
         sensorShapeLeft = new PolygonShape();
-        sensorShapeLeft.setAsBox(SENSOR_HEIGHT, getHeight() / 2.0f - 2.0f * SENSOR_HEIGHT, sensorCenterLeft, 0.0f);
+        sensorShapeLeft.setAsBox(SENSOR_HEIGHT, getHeight() / 5.0f - 2.0f * SENSOR_HEIGHT, sensorCenterLeft, 0.0f);
         sensorDef.shape = sensorShapeLeft;
 
         sensorFixtureLeft = body.createFixture(sensorDef);
@@ -511,16 +561,16 @@ public class Avatar extends CapsuleObstacle {
         // To determine whether the body collides on the right side
         Vector2 sensorCenterRight = new Vector2(getWidth() / 2, 0);
         sensorShapeRight = new PolygonShape();
-        sensorShapeRight.setAsBox(SENSOR_HEIGHT, getHeight() / 2.0f - 2.0f * SENSOR_HEIGHT, sensorCenterRight, 0.0f);
+        sensorShapeRight.setAsBox(SENSOR_HEIGHT, getHeight() / 5.0f - 2.0f * SENSOR_HEIGHT, sensorCenterRight, 0.0f);
         sensorDef.shape = sensorShapeRight;
 
         sensorFixtureRight = body.createFixture(sensorDef);
         sensorFixtureRight.setUserData(getRightSensorName());
 
-        // To determine whether the body collides on the right side
+        // To determine whether the body collides on the top side
         Vector2 sensorCenterTop = new Vector2(0, getHeight() / 2);
         sensorShapeTop = new PolygonShape();
-        sensorShapeTop.setAsBox(getWidth() / 2.0f - 2.0f * SENSOR_HEIGHT, SENSOR_HEIGHT, sensorCenterTop, 0.0f);
+        sensorShapeTop.setAsBox(getWidth() / 4.0f - 2.0f * SENSOR_HEIGHT, SENSOR_HEIGHT, sensorCenterTop, 0.0f);
         sensorDef.shape = sensorShapeTop;
 
         sensorFixtureTop = body.createFixture(sensorDef);
@@ -547,10 +597,10 @@ public class Avatar extends CapsuleObstacle {
 
         //apply dash force only ONCE per dash
         if(isDashing && !hasDashed){
-            System.out.println("APPLYING FORCE");
+//            System.out.println("APPLYING FORCE");
             //linearly interpolate dashForce
-            System.out.println("dash direction raw: " + dashDirection);
-            System.out.println("dash direction norm: " + dashDirection.nor());
+//            System.out.println("dash direction raw: " + dashDirection);
+//            System.out.println("dash direction norm: " + dashDirection.nor());
             forceCache.set(dashDirection.nor().scl(dashForce));
             body.applyForce(forceCache,getPosition(), true);
             hasDashed = true;
@@ -584,13 +634,11 @@ public class Avatar extends CapsuleObstacle {
         //check if dash must end
         if(isDashing){
             if(getPosition().dst(getDashStartPos()) > getDashDistance()){
-                System.out.println("DASHED TOO FAR");
+//                System.out.println("DASHED TOO FAR");
                 setDashing(false);
-                setLinearVelocity(new Vector2(0,0));
+                setLinearVelocity(getLinearVelocity().cpy().scl(0.2f));
             }
         }
-
-
 
         if (isJumping()) {
             jumpCooldown = JUMP_COOLDOWN;
@@ -608,13 +656,84 @@ public class Avatar extends CapsuleObstacle {
     }
 
     /**
+     * Sets the animation node for the given state
+     *
+     * @param state enumeration to identify the state
+     * @param strip the animation for the given state
+     */
+    public void setFilmStrip(AvatarState state, FilmStrip strip) {
+        switch (state) {
+            case STANDING:
+                standingStrip = strip;
+                break;
+            case CROUCHING:
+                crouchingStrip = strip;
+                break;
+            case DASHING:
+                dashingStrip = strip;
+                break;
+            case FALLING:
+                fallingStrip = strip;
+                break;
+            default:
+                assert false : "Invalid AvatarState enumeration";
+        }
+    }
+
+    /**
+     * Animates the given state.
+     *
+     * @param state The reference to the rocket burner
+     * @param shouldLoop Whether the animation should loop
+     */
+    public void animate(AvatarState state, boolean shouldLoop) {
+        switch (state) {
+            case STANDING:
+                currentStrip = standingStrip;
+                break;
+            case CROUCHING:
+                currentStrip = crouchingStrip;
+                break;
+            case DASHING:
+                currentStrip = dashingStrip;
+                break;
+            case FALLING:
+                currentStrip = fallingStrip;
+                break;
+            default:
+                assert false : "Invalid AvatarState enumeration";
+        }
+
+        // Adjust animation speed
+        if (frame_cooldown > 0) {
+            frame_cooldown--;
+            return;
+        } else frame_cooldown = FRAME_RATE;
+
+        // Manage current frame to draw
+        if (currentStrip.getFrame() < currentStrip.getSize()-1) {
+            currentStrip.setFrame(currentStrip.getFrame() + 1);
+        } else {
+            if (shouldLoop) currentStrip.setFrame(0); // loop animation
+            else return; // play animation once
+        }
+
+    }
+
+    /**
      * Draws the physics object.
      *
      * @param canvas Drawing context
      */
     public void draw(GameCanvas canvas) {
         float effect = faceRight ? 1.0f : -1.0f;
-        canvas.draw(texture, Color.WHITE,origin.x,origin.y,getX()*drawScale.x,getY()*drawScale.y,getAngle(),effect,1.0f);
+//        System.out.println("draw angle: " + getAngle());;
+//        if (currentStrip != null) {
+            canvas.draw(currentStrip, Color.WHITE,origin.x,origin.y,
+                    getX()*drawScale.x,getY()*drawScale.y, getAngle(),1.0f,1.0f);
+//        } else
+//            canvas.draw(texture, Color.WHITE,origin.x,origin.y,
+//                    getX()*drawScale.x,getY()*drawScale.y,getAngle(),1.0f,1.0f);
     }
 
     /**
