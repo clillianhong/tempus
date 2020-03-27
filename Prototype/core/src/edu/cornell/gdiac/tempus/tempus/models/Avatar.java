@@ -2,11 +2,9 @@ package edu.cornell.gdiac.tempus.tempus.models;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.*;
 import edu.cornell.gdiac.tempus.GameCanvas;
+import edu.cornell.gdiac.tempus.InputController;
 import edu.cornell.gdiac.tempus.obstacle.CapsuleObstacle;
 import edu.cornell.gdiac.util.FilmStrip;
 
@@ -53,13 +51,15 @@ public class Avatar extends CapsuleObstacle {
     private static final int SHOOT_COOLDOWN = 40;
     /** Height of the sensor attached to the player's feet */
     private static final float SENSOR_HEIGHT = 0.05f;
+    /** Max number of dashes afforded to player **/
+    private static final int maxDashes = 2;
     /** Identifier to allow us to track the sensor in ContactListener */
     private static final String SENSOR_NAME = "DudeGroundSensor";
     //added for prototype
     /** Distance for dashing across screen */
     private static final float DASH_RANGE = 4;
     /** Dash force multiplier */
-    private static float dashForce = 1000;
+    private static float dashForce = 2000;
     /** Array containing orientation vectors based on the enums for orientation */
     private static final Vector2 [] orients =
             {new Vector2(0,1), new Vector2(0,-1), new Vector2(-1,0), new Vector2(1,0)};
@@ -79,6 +79,8 @@ public class Avatar extends CapsuleObstacle {
     private int lives;
     /** The current state of the avatar **/
     AvatarState state;
+    /** Number of dashes left*/
+    private int numDashes;
     /** The current horizontal movement of the character */
     private float   movement;
     /** Which direction is the character facing */
@@ -198,6 +200,32 @@ public class Avatar extends CapsuleObstacle {
         return isDashing;
     }
 
+    /** Enacts a dash
+     *
+     * @return true if there the player did a dash (still has dashes left) **/
+    public boolean dash() {
+        boolean candash = canDash();
+        if(candash){
+            Vector2 mousePos = InputController.getInstance().getMousePosition();
+            this.setBodyType(BodyDef.BodyType.DynamicBody);
+            this.setSticking(false);
+            this.setWasSticking(false);
+            this.setDashing(true);
+            this.setDashStartPos(this.getPosition().cpy());
+            this.setDashDistance(this.getDashRange());
+            this.setDashForceDirection(mousePos.sub(this.getPosition()));
+            this.setStartedDashing(1);
+            numDashes--;
+        }else{
+            if(numDashes == 0 && isSticking){
+                this.setDashing(false);
+                numDashes = maxDashes;
+            }
+        }
+
+        return candash;
+    }
+
     /**
      * Sets whether or not avatar is dashing.
      *
@@ -213,7 +241,7 @@ public class Avatar extends CapsuleObstacle {
      * @return true if the dude is actively dashing.
      */
     public boolean canDash() {
-        return !isDashing && isGrounded;
+        return (numDashes > 0);
     }
 
     /**
@@ -538,6 +566,7 @@ public class Avatar extends CapsuleObstacle {
         dashDistance = DASH_RANGE;
         dashStartPos = new Vector2(x,y);
         startedDashing = 0;
+        numDashes = maxDashes;
 
         shootCooldown = 0;
         jumpCooldown = 0;
@@ -634,6 +663,7 @@ public class Avatar extends CapsuleObstacle {
             forceCache.set(dashDirection.nor().scl(dashForce));
             body.applyForce(forceCache,getPosition(), true);
             hasDashed = true;
+
         }
 
         // Velocity too high, clamp it
