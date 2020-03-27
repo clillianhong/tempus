@@ -620,20 +620,23 @@ public class PrototypeController extends WorldController {
 
 		// prototype: Dash
 		boolean dashAttempt = InputController.getInstance().releasedLeftMouseButton();
-		if (dashAttempt && !avatar.isDashing() && avatar.isSticking()) {
-			// check valid direction
-			Vector2 mousePos = InputController.getInstance().getMousePosition();
-			avatar.setBodyType(BodyDef.BodyType.DynamicBody);
-			avatar.setSticking(false);
-			avatar.setWasSticking(false);
-			avatar.setDashing(true);
-			avatar.setDashStartPos(avatar.getPosition().cpy());
-			avatar.setDashDistance(avatar.getDashRange());
-			// avatar.setDashDistance(Math.min(avatar.getDashRange(),
-			// avatar.getPosition().dst(mousePos)));
-			avatar.setDashForceDirection(mousePos.sub(avatar.getPosition()));
-			avatar.setStartedDashing(1);
+		if (dashAttempt) {
+			avatar.dash(); //handles checking if dashing is possible
 		}
+//		if (dashAttempt && !avatar.isDashing() && avatar.isSticking()) {
+//			// check valid direction
+//			Vector2 mousePos = InputController.getInstance().getMousePosition();
+//			avatar.setBodyType(BodyDef.BodyType.DynamicBody);
+//			avatar.setSticking(false);
+//			avatar.setWasSticking(false);
+//			avatar.setDashing(true);
+//			avatar.setDashStartPos(avatar.getPosition().cpy());
+//			avatar.setDashDistance(avatar.getDashRange());
+//			// avatar.setDashDistance(Math.min(avatar.getDashRange(),
+//			// avatar.getPosition().dst(mousePos)));
+//			avatar.setDashForceDirection(mousePos.sub(avatar.getPosition()));
+//			avatar.setStartedDashing(1);
+//		}
 
 		// Process actions in object model
 		avatar.setMovement(InputController.getInstance().getHorizontal() * avatar.getForce());
