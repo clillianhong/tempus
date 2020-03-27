@@ -204,6 +204,10 @@ public class Avatar extends CapsuleObstacle {
      *
      * @return true if there the player did a dash (still has dashes left) **/
     public boolean dash() {
+        if(numDashes == 0 && isSticking){
+            this.setDashing(false);
+            numDashes = maxDashes;
+        }
         boolean candash = canDash();
         if(candash){
             Vector2 mousePos = InputController.getInstance().getMousePosition();
@@ -216,11 +220,6 @@ public class Avatar extends CapsuleObstacle {
             this.setDashForceDirection(mousePos.sub(this.getPosition()));
             this.setStartedDashing(1);
             numDashes--;
-        }else{
-            if(numDashes == 0 && isSticking){
-                this.setDashing(false);
-                numDashes = maxDashes;
-            }
         }
 
         return candash;
