@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="15a05de9-5548-488d-95a5-41085726bc5b" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/tempus.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Prototype/core/src/edu/cornell/gdiac/physics/tempus/Avatar.java" beforeDir="false" afterPath="$PROJECT_DIR$/Prototype/core/src/edu/cornell/gdiac/physics/tempus/Avatar.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Prototype/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/Prototype/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="1YuFK7iEO6NbrkYUZ1FfXSl60OE" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/Prototype/build.gradle" />
+  </component>
+  <component name="RunManager">
+    <configuration name="Unnamed" type="Application" factoryName="Application" nameIsGenerated="true">
+      <option name="INCLUDE_PROVIDED_SCOPE" value="true" />
+      <module name="tempus" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="15a05de9-5548-488d-95a5-41085726bc5b" name="Default Changelist" comment="" />
+      <created>1583784505788</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1583784505788</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="360" y="4" key="#Unnamed" timestamp="1583786666021">
+      <screen x="0" y="0" width="1280" height="688" />
+    </state>
+    <state x="360" y="4" key="#Unnamed/0.0.1280.688@0.0.1280.688" timestamp="1583786666021" />
+    <state x="96" y="1" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1583786642181">
+      <screen x="0" y="0" width="1280" height="688" />
+    </state>
+    <state x="96" y="1" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1280.688@0.0.1280.688" timestamp="1583786642181" />
+    <state x="371" y="130" key="#com.intellij.ide.util.TreeClassChooserDialog" timestamp="1583784919176">
+      <screen x="0" y="0" width="1280" height="688" />
+    </state>
+    <state x="371" y="130" key="#com.intellij.ide.util.TreeClassChooserDialog/0.0.1280.688@0.0.1280.688" timestamp="1583784919176" />
+    <state x="490" y="235" key="#com.intellij.ide.util.projectWizard.JdkChooserPanel.MyDialog" timestamp="1583786537907">
+      <screen x="0" y="0" width="1280" height="688" />
+    </state>
+    <state x="490" y="235" key="#com.intellij.ide.util.projectWizard.JdkChooserPanel.MyDialog/0.0.1280.688@0.0.1280.688" timestamp="1583786537907" />
+    <state x="421" y="101" key="FileChooserDialogImpl" timestamp="1583786756272">
+      <screen x="0" y="0" width="1280" height="688" />
+    </state>
+    <state x="421" y="101" key="FileChooserDialogImpl/0.0.1280.688@0.0.1280.688" timestamp="1583786756272" />
+  </component>
+</project>

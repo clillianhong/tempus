@@ -245,6 +245,12 @@ public class SoundController {
 		soundbank.put(filename,sound);
 	}
 
+	/**Deallocate all sounds*/
+	public void deallocate(AssetManager manager, String filename) {
+		Sound sound = manager.get(filename,Sound.class);
+		soundbank.remove(filename);
+	}
+
 	/**
 	 * Plays the an instance of the given sound
 	 * 
@@ -267,6 +273,7 @@ public class SoundController {
 	public boolean play(String key, String filename, boolean loop) {
 		return play(key,filename,loop,1.0f);
 	}
+
 
 	/**
 	 * Plays the an instance of the given sound
