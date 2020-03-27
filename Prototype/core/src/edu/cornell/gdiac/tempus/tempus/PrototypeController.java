@@ -214,8 +214,8 @@ public class PrototypeController extends WorldController {
 	 * this time. However, we still want the assets themselves to be static. So we
 	 * have an AssetState that determines the current loading state. If the assets
 	 * are already loaded, this method will do nothing.
-	 * 
-	 * @param manager Reference to global asset manager.
+	 *
+	 * @param  Reference to global asset manager.
 	 */
 	public void loadContent() {
 		if (platformAssetState != AssetState.LOADING) {
