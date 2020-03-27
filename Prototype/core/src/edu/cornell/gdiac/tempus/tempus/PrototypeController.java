@@ -10,16 +10,23 @@
  */
 package edu.cornell.gdiac.tempus.tempus;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import edu.cornell.gdiac.tempus.GameCanvas;
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonReader;
+import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.gdiac.tempus.InputController;
 import edu.cornell.gdiac.tempus.WorldController;
+import edu.cornell.gdiac.util.JsonAssetManager;
+import edu.cornell.gdiac.tempus.GameCanvas;
 import edu.cornell.gdiac.tempus.obstacle.*;
 import edu.cornell.gdiac.tempus.tempus.models.*;
 import edu.cornell.gdiac.util.FilmStrip;
@@ -33,51 +40,68 @@ import static edu.cornell.gdiac.tempus.tempus.models.EntityType.PAST;
 import static edu.cornell.gdiac.tempus.tempus.models.EntityType.PRESENT;
 
 /**
- * Gameplay specific controller for the platformer game.  
+ * Gameplay specific controller for the platformer game.
  *
- * You will notice that asset loading is not done with static methods this time.  
- * Instance asset loading makes it easier to process our game modes in a loop, which 
- * is much more scalable. However, we still want the assets themselves to be static.
- * This is the purpose of our AssetState variable; it ensures that multiple instances
- * place nicely with the static assets.
+ * You will notice that asset loading is not done with static methods this time.
+ * Instance asset loading makes it easier to process our game modes in a loop,
+ * which is much more scalable. However, we still want the assets themselves to
+ * be static. This is the purpose of our AssetState variable; it ensures that
+ * multiple instances place nicely with the static assets.
  */
 public class PrototypeController extends WorldController {
+	// TODO: change path for textures.
 	/** The texture file for the character avatar (no animation) */
-	private static final String DUDE_FILE  = "enemies/dude.png";
-	/** The reference for the avatar movement textures  */
-	private static final String AVATAR_STANDING_TEXTURE = "enemies/dude.png";
-	private static final String AVATAR_CROUCHING_TEXTURE = "enemies/bird_crouching.png";
-	private static final String AVATAR_DASHING_TEXTURE = "enemies/bird_dashing.png";
-	private static final String AVATAR_FALLING_TEXTURE = "enemies/dude.png";
+	private static final String DUDE_FILE = "texture/dude.png";
+
+	/** The reference for the avatar movement textures */
+	private static final String AVATAR_STANDING_TEXTURE = "filmstrips/dude.png";
+	private static final String AVATAR_CROUCHING_TEXTURE = "filmstrips/bird_crouching.png";
+	private static final String AVATAR_DASHING_TEXTURE = "filmstrips/bird_dashing.png";
+	private static final String AVATAR_FALLING_TEXTURE = "filmstrips/dude.png";
 
 	/** The texture file for the spinning barrier */
-	private static final String BARRIER_FILE = "enemies/barrier.png";
+	private static final String BARRIER_FILE = "textures/barrier.png";
 
 	/** The texture file for the bullet */
-	private static final String BULLET_FILE  = "enemies/bullet.png";
+	private static final String BULLET_FILE = "textures/bullet.png";
 	/** The texture file for the big bullet */
-	private static final String BULLET_BIG_FILE  = "enemies/bulletbig.png";
+	private static final String BULLET_BIG_FILE = "textures/bulletbig.png";
 
 	/** The texture file for the turret */
-	private static final String TURRET_FILE  = "enemies/turret.png";
+	private static final String TURRET_FILE = "textures/turret.png";
 	/** The texture file for the background */
-	private static final String BACKGROUND_FILE = "shared/ice.png";
+	private static final String BACKGROUND_FILE = "textures/ice.png";
 
 	/** The texture file for present enemy */
-	private static final String ENEMY_PRESENT_FILE  = "enemies/enemy_present.png";
+	private static final String ENEMY_PRESENT_FILE = "textures/enemy_present.png";
 	/** The texture file for past enemy */
-	private static final String ENEMY_PAST_FILE  = "enemies/enemy_past.png";
+	private static final String ENEMY_PAST_FILE = "textures/enemy_past.png";
 
 	/** Checks if did debug */
 	private boolean debug;
-	
-	/** The sound file for a jump */
-	private static final String JUMP_FILE = "enemies/jump.mp3";
-	/** The sound file for a bullet fire */
-	private static final String PEW_FILE = "enemies/pew.mp3";
-	/** The sound file for a bullet collision */
-	private static final String POP_FILE = "enemies/plop.mp3";
 
+	/** The sound file for a jump */
+	private static final String JUMP_FILE = "sounds/jump.mp3";
+	/** The sound file for a bullet fire */
+	private static final String PEW_FILE = "sounds/pew.mp3";
+	/** The sound file for a bullet collision */
+	private static final String POP_FILE = "sounds/plop.mp3";
+
+	// Pathnames to shared assets
+	/** File to texture for walls and platforms */
+	private static String EARTH_FILE = "textures/earthtile.png";
+	/** File to texture for the win door */
+	private static String GOAL_FILE = "textures/goaldoor.png";
+	/** Retro font for displaying messages */
+	private static String FONT_FILE = "fonts/RetroGame.ttf";
+	private static int FONT_SIZE = 64;
+
+	/** The texture for walls and platforms */
+	protected TextureRegion earthTile;
+	/** The texture for the exit condition */
+	protected TextureRegion goalTile;
+	/** The font for giving messages to the player */
+	protected BitmapFont displayFont;
 	/** Texture asset for character avatar */
 	private TextureRegion avatarTexture;
 	/** Texture filmstrip for avatar standing */
@@ -106,7 +130,14 @@ public class PrototypeController extends WorldController {
 
 	/** Texture asset for the background */
 	private TextureRegion backgroundTexture;
-	
+
+	/** The reader to process JSON files */
+	private JsonReader jsonReader;
+	/** The JSON asset directory */
+	private JsonValue assetDirectory;
+	/** The JSON defining the level model */
+	private JsonValue levelFormat;
+
 	/** Track asset loading from all instances and subclasses */
 	private AssetState platformAssetState = AssetState.EMPTY;
 	/** Freeze time */
@@ -116,160 +147,156 @@ public class PrototypeController extends WorldController {
 	 * Preloads the assets for this controller.
 	 *
 	 * To make the game modes more for-loop friendly, we opted for nonstatic loaders
-	 * this time.  However, we still want the assets themselves to be static.  So
-	 * we have an AssetState that determines the current loading state.  If the
-	 * assets are already loaded, this method will do nothing.
+	 * this time. However, we still want the assets themselves to be static. So we
+	 * have an AssetState that determines the current loading state. If the assets
+	 * are already loaded, this method will do nothing.
 	 * 
 	 * @param manager Reference to global asset manager.
-	 */	
+	 */
 	public void preLoadContent(AssetManager manager) {
 		if (platformAssetState != AssetState.EMPTY) {
 			return;
 		}
-
-		// Entity files
 		platformAssetState = AssetState.LOADING;
-		manager.load(DUDE_FILE, Texture.class);
-		assets.add(DUDE_FILE);
-		manager.load(AVATAR_STANDING_TEXTURE, Texture.class);
-		assets.add(AVATAR_STANDING_TEXTURE);
-		manager.load(AVATAR_CROUCHING_TEXTURE, Texture.class);
-		assets.add(AVATAR_CROUCHING_TEXTURE);
-		manager.load(AVATAR_DASHING_TEXTURE, Texture.class);
-		assets.add(AVATAR_DASHING_TEXTURE);
-		manager.load(AVATAR_FALLING_TEXTURE, Texture.class);
-		assets.add(AVATAR_FALLING_TEXTURE);
 
-		manager.load(BARRIER_FILE, Texture.class);
-		assets.add(BARRIER_FILE);
-		manager.load(BULLET_FILE, Texture.class);
-		assets.add(BULLET_FILE);
-		manager.load(BULLET_BIG_FILE, Texture.class);
-		assets.add(BULLET_BIG_FILE);
-		manager.load(TURRET_FILE, Texture.class);
-		assets.add(TURRET_FILE);
-		manager.load(ENEMY_PRESENT_FILE, Texture.class);
-		assets.add(ENEMY_PRESENT_FILE);
-		manager.load(ENEMY_PAST_FILE, Texture.class);
-		assets.add(ENEMY_PAST_FILE);
+		jsonReader = new JsonReader();
+		assetDirectory = jsonReader.parse(Gdx.files.internal("jsons/assets.json"));
 
-		// Background files
-		manager.load(BACKGROUND_FILE, Texture.class);
-		assets.add(BACKGROUND_FILE);
+		JsonAssetManager.getInstance().loadDirectory(assetDirectory);
 
-		// Sound files
-		manager.load(JUMP_FILE, Sound.class);
-		assets.add(JUMP_FILE);
-		manager.load(PEW_FILE, Sound.class);
-		assets.add(PEW_FILE);
-		manager.load(POP_FILE, Sound.class);
-		assets.add(POP_FILE);
-		
-		super.preLoadContent(manager);
+		// super.preLoadContent(manager);
+		// TODO: Delete
+		// Entity files
+//		platformAssetState = AssetState.LOADING;
+//		manager.load(DUDE_FILE, Texture.class);
+//		assets.add(DUDE_FILE);
+//		manager.load(AVATAR_STANDING_TEXTURE, Texture.class);
+//		assets.add(AVATAR_STANDING_TEXTURE);
+//		manager.load(AVATAR_CROUCHING_TEXTURE, Texture.class);
+//		assets.add(AVATAR_CROUCHING_TEXTURE);
+//		manager.load(AVATAR_DASHING_TEXTURE, Texture.class);
+//		assets.add(AVATAR_DASHING_TEXTURE);
+//		manager.load(AVATAR_FALLING_TEXTURE, Texture.class);
+//		assets.add(AVATAR_FALLING_TEXTURE);
+//
+//		manager.load(BARRIER_FILE, Texture.class);
+//		assets.add(BARRIER_FILE);
+//		manager.load(BULLET_FILE, Texture.class);
+//		assets.add(BULLET_FILE);
+//		manager.load(BULLET_BIG_FILE, Texture.class);
+//		assets.add(BULLET_BIG_FILE);
+//		manager.load(TURRET_FILE, Texture.class);
+//		assets.add(TURRET_FILE);
+//		manager.load(ENEMY_PRESENT_FILE, Texture.class);
+//		assets.add(ENEMY_PRESENT_FILE);
+//		manager.load(ENEMY_PAST_FILE, Texture.class);
+//		assets.add(ENEMY_PAST_FILE);
+//
+//		// Background files
+//		manager.load(BACKGROUND_FILE, Texture.class);
+//		assets.add(BACKGROUND_FILE);
+//
+//		// Sound files
+//		manager.load(JUMP_FILE, Sound.class);
+//		assets.add(JUMP_FILE);
+//		manager.load(PEW_FILE, Sound.class);
+//		assets.add(PEW_FILE);
+//		manager.load(POP_FILE, Sound.class);
+//		assets.add(POP_FILE);
+//
+//		super.preLoadContent(manager);
 	}
 
 	/**
 	 * Load the assets for this controller.
 	 *
 	 * To make the game modes more for-loop friendly, we opted for nonstatic loaders
-	 * this time.  However, we still want the assets themselves to be static.  So
-	 * we have an AssetState that determines the current loading state.  If the
-	 * assets are already loaded, this method will do nothing.
+	 * this time. However, we still want the assets themselves to be static. So we
+	 * have an AssetState that determines the current loading state. If the assets
+	 * are already loaded, this method will do nothing.
 	 * 
 	 * @param manager Reference to global asset manager.
 	 */
-	public void loadContent(AssetManager manager) {
+	public void loadContent() {
 		if (platformAssetState != AssetState.LOADING) {
 			return;
 		}
-		
-		avatarTexture = createTexture(manager,DUDE_FILE,false);
-		avatarStandingTexture = createFilmStrip(
-				manager, AVATAR_STANDING_TEXTURE,1, 1, 1);
-		avatarCrouchingTexture = createFilmStrip(
-				manager, AVATAR_CROUCHING_TEXTURE,1, 3, 3);
-		avatarDashingTexture = createFilmStrip(
-				manager, AVATAR_DASHING_TEXTURE,1, 4, 4);
-		avatarFallingTexture = createFilmStrip(
-				manager, AVATAR_FALLING_TEXTURE,1, 1, 1);
-
-		barrierTexture = createTexture(manager,BARRIER_FILE,false);
-		bulletTexture = createTexture(manager,BULLET_FILE,false);
-		bulletBigTexture = createTexture(manager,BULLET_BIG_FILE,false);
-		turretTexture = createTexture(manager,TURRET_FILE,false);
-		backgroundTexture = createTexture(manager,BACKGROUND_FILE, false);
-		enemyPresentTexture = createTexture(manager,ENEMY_PRESENT_FILE,false);
-		enemyPastTexture = createTexture(manager,ENEMY_PAST_FILE,false);
-
-		SoundController sounds = SoundController.getInstance();
-		sounds.allocate(manager, JUMP_FILE);
-		sounds.allocate(manager, PEW_FILE);
-		sounds.allocate(manager, POP_FILE);
-		super.loadContent(manager);
+		JsonAssetManager.getInstance().allocateDirectory();
+		displayFont = JsonAssetManager.getInstance().getEntry("display", BitmapFont.class);
+		// TODO: Delete
+//		avatarStandingTexture = createFilmStrip(manager, AVATAR_STANDING_TEXTURE, 1, 1, 1);
+//		avatarCrouchingTexture = createFilmStrip(manager, AVATAR_CROUCHING_TEXTURE, 1, 3, 3);
+//		avatarDashingTexture = createFilmStrip(manager, AVATAR_DASHING_TEXTURE, 1, 4, 4);
+//		avatarFallingTexture = createFilmStrip(manager, AVATAR_FALLING_TEXTURE, 1, 1, 1);
+//
+//		barrierTexture = createTexture(manager, BARRIER_FILE, false);
+//		bulletTexture = createTexture(manager, BULLET_FILE, false);
+//		bulletBigTexture = createTexture(manager, BULLET_BIG_FILE, false);
+//		turretTexture = createTexture(manager, TURRET_FILE, false);
+//		backgroundTexture = createTexture(manager, BACKGROUND_FILE, false);
+//		enemyPresentTexture = createTexture(manager, ENEMY_PRESENT_FILE, false);
+//		enemyPastTexture = createTexture(manager, ENEMY_PAST_FILE, false);
+//
+//		SoundController sounds = SoundController.getInstance();
+//		sounds.allocate(manager, JUMP_FILE);
+//		sounds.allocate(manager, PEW_FILE);
+//		sounds.allocate(manager, POP_FILE);
+//		super.loadContent(manager);
 		platformAssetState = AssetState.COMPLETE;
 	}
-	
+
 	// Physics constants for initialization
 	/** The new heavier gravity for this world (so it is not so floaty) */
-	private static final float  DEFAULT_GRAVITY = -14.7f;
+	private static final float DEFAULT_GRAVITY = -14.7f;
 	/** The density for most physics objects */
-	private static final float  BASIC_DENSITY = 0.0f;
+	private static final float BASIC_DENSITY = 0.0f;
 	/** The density for a bullet */
-	private static final float  HEAVY_DENSITY = 10.0f;
+	private static final float HEAVY_DENSITY = 10.0f;
 	/** Friction of most platforms */
-	private static final float  BASIC_FRICTION = 0.6f;
+	private static final float BASIC_FRICTION = 0.6f;
 	/** The restitution for all physics objects */
-	private static final float  BASIC_RESTITUTION = 0.1f;
+	private static final float BASIC_RESTITUTION = 0.1f;
 	/** Offset for bullet when firing */
-	private static final float  BULLET_OFFSET = 1.0f;
+	private static final float BULLET_OFFSET = 1.0f;
 	/** The volume for sound effects */
 	private static final float EFFECT_VOLUME = 0.8f;
 
 	// Since these appear only once, we do not care about the magic numbers.
 	// In an actual game, this information would go in a data file.
 	// Wall vertices
-	private static final float[][] WALLS = {{0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 18.0f, 0.0f, 18.0f},
-											{1.0f, 18.0f, 1.0f, 17.0f, 31.0f, 17.0f, 31.0f, 18.0f},
-											{31.0f, 18.0f, 31.0f, 0.0f, 32.0f, 0.0f, 32.0f, 18.0f}
-	};
-			  								/*{16.0f, 18.0f, 16.0f, 17.0f,  1.0f, 17.0f,
-			  								  1.0f,  0.0f,  0.0f,  0.0f,  0.0f, 18.0f},
-			  								{32.0f, 18.0f, 32.0f,  0.0f, 31.0f,  0.0f,
-			  							     31.0f, 17.0f, 16.0f, 17.0f, 16.0f, 18.0f}
-											};*/
-	
+	private static final float[][] WALLS = { { 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 18.0f, 0.0f, 18.0f },
+			{ 1.0f, 18.0f, 1.0f, 17.0f, 31.0f, 17.0f, 31.0f, 18.0f },
+			{ 31.0f, 18.0f, 31.0f, 0.0f, 32.0f, 0.0f, 32.0f, 18.0f } };
+	/*
+	 * {16.0f, 18.0f, 16.0f, 17.0f, 1.0f, 17.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+	 * 18.0f}, {32.0f, 18.0f, 32.0f, 0.0f, 31.0f, 0.0f, 31.0f, 17.0f, 16.0f, 17.0f,
+	 * 16.0f, 18.0f} };
+	 */
+
 	/** The outlines of all of the platforms */
-	private static float dudex = 2.5f;
-	private static float dudey = 5.0f;
 	private static final float[][] PLATFORMS = {
 
-			{1.0f, 4.0f, 3.0f, 4.0f, 3.0f, 2.5f, 1.0f, 2.5f},
-			{3.0f, 8.0f, 5.0f, 8.0f, 5.0f, 7.5f, 3.0f, 7.5f},
-			{5.5f, 4.5f, 7.5f, 4.5f, 7.5f, 5.0f, 5.5f, 5.0f}, //downwards diagonal
-			{9.0f, 6.0f, 9.0f, 7.5f, 9.5f, 7.5f, 9.5f, 6.0f},
-			{7.0f, 9.0f, 7.0f, 10.5f, 7.5f, 10.5f, 7.5f, 9.0f},
-			{9.0f, 11.5f, 9.0f, 13.0f, 9.5f, 13.0f, 9.5f, 11.5f},
-			{7.0f, 15.5f, 7.5f, 15.5f, 7.5f, 14.0f, 7.0f, 14.0f},
-			{11.0f, 15.5f, 11.5f, 15.5f, 11.5f, 14.0f, 11.0f, 14.0f},
-			{12.0f, 6.5f, 13.5f, 6.5f, 13.5f, 6.0f, 12.0f, 6.0f},
-			{15.0f, 8.0f, 15.0f, 8.5f, 16.5f, 8.5f, 16.5f, 8.0f},
-			{18.0f, 5.5f, 18.0f, 6.0f, 19.5f, 6.0f, 19.5f, 5.5f},
-			{21.0f, 8.0f, 21.0f, 8.5f, 22.5f, 8.5f, 22.5f, 8.0f},
-			{24.0f, 5.5f, 24.0f, 6.0f, 25.5f, 6.0f, 25.5f, 5.5f},
-			{25.5f, 10.0f, 25.5f, 11.5f, 26.0f, 11.5f, 26.0f, 10.0f},
-			{23.5f, 13.0f, 23.5f, 14.5f, 24.0f, 14.5f, 24.0f, 13.0f},
-			{26.5f, 13.0f, 26.5f, 14.0f, 31.0f, 14.0f, 31.0f, 13.0f}
-	};
+			{ 1.0f, 4.0f, 3.0f, 4.0f, 3.0f, 2.5f, 1.0f, 2.5f }, { 3.0f, 8.0f, 5.0f, 8.0f, 5.0f, 7.5f, 3.0f, 7.5f },
+			{ 5.5f, 4.5f, 7.5f, 4.5f, 7.5f, 5.0f, 5.5f, 5.0f }, // downwards diagonal
+			{ 9.0f, 6.0f, 9.0f, 7.5f, 9.5f, 7.5f, 9.5f, 6.0f }, { 7.0f, 9.0f, 7.0f, 10.5f, 7.5f, 10.5f, 7.5f, 9.0f },
+			{ 9.0f, 11.5f, 9.0f, 13.0f, 9.5f, 13.0f, 9.5f, 11.5f }, { 7.0f, 15.5f, 7.5f, 15.5f, 7.5f, 14.0f, 7.0f, 14.0f },
+			{ 11.0f, 15.5f, 11.5f, 15.5f, 11.5f, 14.0f, 11.0f, 14.0f },
+			{ 12.0f, 6.5f, 13.5f, 6.5f, 13.5f, 6.0f, 12.0f, 6.0f }, { 15.0f, 8.0f, 15.0f, 8.5f, 16.5f, 8.5f, 16.5f, 8.0f },
+			{ 18.0f, 5.5f, 18.0f, 6.0f, 19.5f, 6.0f, 19.5f, 5.5f }, { 21.0f, 8.0f, 21.0f, 8.5f, 22.5f, 8.5f, 22.5f, 8.0f },
+			{ 24.0f, 5.5f, 24.0f, 6.0f, 25.5f, 6.0f, 25.5f, 5.5f },
+			{ 25.5f, 10.0f, 25.5f, 11.5f, 26.0f, 11.5f, 26.0f, 10.0f },
+			{ 23.5f, 13.0f, 23.5f, 14.5f, 24.0f, 14.5f, 24.0f, 13.0f },
+			{ 26.5f, 13.0f, 26.5f, 14.0f, 31.0f, 14.0f, 31.0f, 13.0f } };
 
 	// Other game objects
 	/** The goal door position */
-	private static Vector2 GOAL_POS = new Vector2(29.5f,15.5f);
+	private static Vector2 GOAL_POS = new Vector2(29.5f, 15.5f);
 	/** The initial position of the dude */
-	private static Vector2 DUDE_POS = new Vector2(dudex, dudey);
+	private static Vector2 DUDE_POS = new Vector2(2.5f, 5.0f);
 	/** The initial position of the turret */
 	private static Vector2 TURRET_POS = new Vector2(8.5f, 10.0f);
-//	/** The initial position of the enemy */
-//	private static Vector2 ENEMY_POS = new Vector2(13.0f, 7.5f);
+	// /** The initial position of the enemy */
+	// private static Vector2 ENEMY_POS = new Vector2(13.0f, 7.5f);
 
 	// Physics objects for the game
 	/** Reference to the character avatar */
@@ -279,37 +306,22 @@ public class PrototypeController extends WorldController {
 
 	/** The information of all the enemies */
 	private int NUMBER_ENEMIES = 2;
-	private EntityType[] TYPE_ENEMIES = {
-			PRESENT, PAST
-	};
-	private float[][] COOR_ENEMIES = {
-			{13.0f, 7.5f}, {15.625f,11.03125f}
-	};
-	private int[] CD_ENEMIES = {
-			80, 80
-	};
+	private EntityType[] TYPE_ENEMIES = { PRESENT, PAST };
+	private float[][] COOR_ENEMIES = { { 13.0f, 7.5f }, { 15.625f, 11.03125f } };
+	private int[] CD_ENEMIES = { 80, 80 };
 
 	/** The information of all the turrets */
 	private int NUMBER_TURRETS = 2;
-	private EntityType[] TYPE_TURRETS = {
-			PRESENT, PAST
-	};
-	private float[][] COOR_TURRETS = {
-			{TURRET_POS.x + 10.0f,TURRET_POS.y},
-			{TURRET_POS.x,TURRET_POS.y - 5.0f}
-	};
-	private float[][] DIR_TURRETS = { //direction of proj which the turrets shoot
-			{-3.0f, 0}, {0, 2.0f}
-	};
-	private int[] CD_TURRETS = {
-			90, 120
-	};
+	private EntityType[] TYPE_TURRETS = { PRESENT, PAST };
+	private float[][] COOR_TURRETS = { { TURRET_POS.x + 10.0f, TURRET_POS.y }, { TURRET_POS.x, TURRET_POS.y - 5.0f } };
+	private float[][] DIR_TURRETS = { // direction of proj which the turrets shoot
+			{ -3.0f, 0 }, { 0, 2.0f } };
+	private int[] CD_TURRETS = { 90, 120 };
 
 	private Enemy enemy;
 
 	/** Whether the avatar is shifted to the other world or not */
 	private boolean shifted;
-
 
 	/** Collision Controller instance **/
 	protected CollisionController collisionController;
@@ -320,7 +332,7 @@ public class PrototypeController extends WorldController {
 	 * The game has default gravity and other settings
 	 */
 	public PrototypeController() {
-		super(DEFAULT_WIDTH,DEFAULT_HEIGHT,DEFAULT_GRAVITY);
+		super(DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_GRAVITY);
 		setDebug(false);
 		setComplete(false);
 		setFailure(false);
@@ -329,25 +341,25 @@ public class PrototypeController extends WorldController {
 		debug = false;
 		timeFreeze = false;
 	}
-	
+
 	/**
 	 * Resets the status of the game so that we can play again.
 	 *
 	 * This method disposes of the world and creates a new one.
 	 */
 	public void reset() {
-		Vector2 gravity = new Vector2(world.getGravity() );
-		
-		for(Obstacle obj : objects) {
+		Vector2 gravity = new Vector2(world.getGravity());
+
+		for (Obstacle obj : objects) {
 			obj.deactivatePhysics(world);
 		}
 		objects.clear();
 		addQueue.clear();
 		world.dispose();
 		shifted = false;
-		world = new World(gravity,false);
+		world = new World(gravity, false);
 		world.setContactListener(collisionController);
-//		world.setContactListener(this);
+		// world.setContactListener(this);
 		setComplete(false);
 		setFailure(false);
 		populateLevel();
@@ -359,9 +371,10 @@ public class PrototypeController extends WorldController {
 	 */
 	private void populateLevel() {
 		// Add level goal
-		float dwidth  = goalTile.getRegionWidth()/scale.x;
-		float dheight = goalTile.getRegionHeight()/scale.y;
-		goalDoor = new Door(GOAL_POS.x,GOAL_POS.y,dwidth,dheight,0);
+		goalTile = JsonAssetManager.getInstance().getEntry("goal", TextureRegion.class);
+		float dwidth = goalTile.getRegionWidth() / scale.x;
+		float dheight = goalTile.getRegionHeight() / scale.y;
+		goalDoor = new Door(GOAL_POS.x, GOAL_POS.y, dwidth, dheight, 0);
 		goalDoor.setBodyType(BodyDef.BodyType.StaticBody);
 		goalDoor.setDensity(0.0f);
 		goalDoor.setFriction(0.0f);
@@ -372,10 +385,11 @@ public class PrototypeController extends WorldController {
 		goalDoor.setName("goal");
 		addObject(goalDoor);
 
-	    String nameWall = "wall";
-	    for (int ii = 0; ii < WALLS.length; ii++) {
-	        PolygonObstacle obj;
-	    	obj = new Platform(WALLS[ii], 0, 0);
+		earthTile = JsonAssetManager.getInstance().getEntry("earth", TextureRegion.class);
+		String nameWall = "wall";
+		for (int ii = 0; ii < WALLS.length; ii++) {
+			PolygonObstacle obj;
+			obj = new Platform(WALLS[ii], 0, 0);
 			obj.setBodyType(BodyDef.BodyType.StaticBody);
 			obj.setDensity(BASIC_DENSITY);
 			obj.setFriction(BASIC_FRICTION);
@@ -384,12 +398,12 @@ public class PrototypeController extends WorldController {
 			obj.setTexture(earthTile);
 			obj.setName(nameWall);
 			addObject(obj);
-	    }
-	    
-	    String namePlatform = "platform";
-	    for (int ii = 0; ii < PLATFORMS.length; ii++) {
-	        PolygonObstacle obj;
-	    	obj = new Platform(PLATFORMS[ii], 0, 0);
+		}
+
+		String namePlatform = "platform";
+		for (int ii = 0; ii < PLATFORMS.length; ii++) {
+			PolygonObstacle obj;
+			obj = new Platform(PLATFORMS[ii], 0, 0);
 			obj.setBodyType(BodyDef.BodyType.StaticBody);
 			obj.setDensity(BASIC_DENSITY);
 			obj.setFriction(BASIC_FRICTION);
@@ -397,18 +411,23 @@ public class PrototypeController extends WorldController {
 			obj.setDrawScale(scale);
 			obj.setTexture(earthTile);
 			obj.setName(namePlatform);
-			if (ii <= PLATFORMS.length/2){
+			if (ii <= PLATFORMS.length / 2) {
 				obj.setSpace(1);
 			}
-			if (ii > PLATFORMS.length/2){
+			if (ii > PLATFORMS.length / 2) {
 				obj.setSpace(2);
 			}
 			addObject(obj);
-	    }
+		}
 
 		// Create dude
-		dwidth  = avatarTexture.getRegionWidth()/scale.x;
-		dheight = avatarTexture.getRegionHeight()/scale.y;
+		avatarTexture = JsonAssetManager.getInstance().getEntry("dude", TextureRegion.class);
+		avatarStandingTexture = JsonAssetManager.getInstance().getEntry("avatarstanding",FilmStrip.class);
+		avatarCrouchingTexture = JsonAssetManager.getInstance().getEntry("avatarcrouching",FilmStrip.class);
+		avatarDashingTexture = JsonAssetManager.getInstance().getEntry("avatardashing",FilmStrip.class);
+		avatarFallingTexture = JsonAssetManager.getInstance().getEntry("avatarfalling",FilmStrip.class);
+		dwidth = avatarTexture.getRegionWidth() / scale.x;
+		dheight = avatarTexture.getRegionHeight() / scale.y;
 		avatar = new Avatar(DUDE_POS.x, DUDE_POS.y, dwidth, dheight);
 		avatar.setDrawScale(scale);
 		avatar.setTexture(avatarTexture);
@@ -420,29 +439,32 @@ public class PrototypeController extends WorldController {
 		avatar.setFilmStrip(Avatar.AvatarState.FALLING, avatarFallingTexture);
 		addObject(avatar);
 
+		enemyPresentTexture = JsonAssetManager.getInstance().getEntry("enemypresent",TextureRegion.class);
+		enemyPastTexture = JsonAssetManager.getInstance().getEntry("enemypast",TextureRegion.class);
 		for (int ii = 0; ii < NUMBER_ENEMIES; ii++) {
 			TextureRegion texture;
-			if (TYPE_ENEMIES[ii] == PRESENT) texture = enemyPresentTexture;
-			else texture = enemyPastTexture;
-			dwidth  = texture.getRegionWidth()/scale.x;
-			dheight = texture.getRegionHeight()/scale.y;
-			Enemy enemy = new Enemy(
-					TYPE_ENEMIES[ii], COOR_ENEMIES[ii][0],COOR_ENEMIES[ii][1],
-					dwidth, dheight, texture, CD_ENEMIES[ii], avatar);
+			if (TYPE_ENEMIES[ii] == PRESENT)
+				texture = enemyPresentTexture;
+			else
+				texture = enemyPastTexture;
+			dwidth = texture.getRegionWidth() / scale.x;
+			dheight = texture.getRegionHeight() / scale.y;
+			Enemy enemy = new Enemy(TYPE_ENEMIES[ii], COOR_ENEMIES[ii][0], COOR_ENEMIES[ii][1], dwidth, dheight, texture,
+					CD_ENEMIES[ii], avatar);
 			enemy.setBodyType(BodyDef.BodyType.DynamicBody);
 			enemy.setDrawScale(scale);
 			enemy.setName("enemy");
 			addObject(enemy);
 		}
 
+		turretTexture = JsonAssetManager.getInstance().getEntry("turret", TextureRegion.class);
 		for (int ii = 0; ii < NUMBER_TURRETS; ii++) {
 			TextureRegion texture = turretTexture;
-			dwidth  = texture.getRegionWidth()/scale.x;
-			dheight = texture.getRegionHeight()/scale.y;
+			dwidth = texture.getRegionWidth() / scale.x;
+			dheight = texture.getRegionHeight() / scale.y;
 			Vector2 projDir = new Vector2(DIR_TURRETS[ii][0], DIR_TURRETS[ii][1]);
-			Enemy turret = new Enemy(
-					TYPE_TURRETS[ii], COOR_TURRETS[ii][0],COOR_TURRETS[ii][1],
-					dwidth, dheight, texture, CD_TURRETS[ii], projDir);
+			Enemy turret = new Enemy(TYPE_TURRETS[ii], COOR_TURRETS[ii][0], COOR_TURRETS[ii][1], dwidth, dheight, texture,
+					CD_TURRETS[ii], projDir);
 			turret.setBodyType(BodyDef.BodyType.StaticBody);
 			turret.setDrawScale(scale);
 			turret.setName("turret");
@@ -452,13 +474,12 @@ public class PrototypeController extends WorldController {
 		collisionController = new CollisionController(this);
 		world.setContactListener(collisionController);
 	}
-	
+
 	/**
 	 * Returns whether to process the update loop
 	 *
-	 * At the start of the update loop, we check if it is time
-	 * to switch to a new game mode.  If not, the update proceeds
-	 * normally.
+	 * At the start of the update loop, we check if it is time to switch to a new
+	 * game mode. If not, the update proceeds normally.
 	 *
 	 * @param dt Number of seconds since last animation frame
 	 * 
@@ -474,36 +495,34 @@ public class PrototypeController extends WorldController {
 			return false;
 		}
 
-//		enemy.createLineOfSight(world);
-		
+		// enemy.createLineOfSight(world);
+
 		return true;
 	}
-
 
 	/**
 	 * Makes the object sleep if it is not in this world
 	 *
 	 */
-	public void sleepIfNotInWorld(){
-		for(Obstacle obj : objects) {
-			/*if (obj instanceof  Enemy){
-				Enemy e = (Enemy) obj;
-				if (e.getSpace() == 3){
-					e.setIsActive(true);
-				}
-				else if (!shifted && (e.getSpace()==2)) {e.setIsActive(false);}
-				else if (shifted && (e.getSpace()==2)) {e.setIsActive(true);}
-				else if (shifted && (e.getSpace()==1)) {e.setIsActive(false);}
-				else if (!shifted && (e.getSpace()==1)) {e.setIsActive(true);}
-			}
-			*/
-			if (obj.getName().equals("bullet") || obj.getName().equals("turret")){
+	public void sleepIfNotInWorld() {
+		for (Obstacle obj : objects) {
+			/*
+			 * if (obj instanceof Enemy){ Enemy e = (Enemy) obj; if (e.getSpace() == 3){
+			 * e.setIsActive(true); } else if (!shifted && (e.getSpace()==2))
+			 * {e.setIsActive(false);} else if (shifted && (e.getSpace()==2))
+			 * {e.setIsActive(true);} else if (shifted && (e.getSpace()==1))
+			 * {e.setIsActive(false);} else if (!shifted && (e.getSpace()==1))
+			 * {e.setIsActive(true);} }
+			 */
+			if (obj.getName().equals("bullet") || obj.getName().equals("turret")) {
 				obj.setSensor(false);
-				if (obj.getSpace() == 3){
+				if (obj.getSpace() == 3) {
 					obj.setSensor(false);
+				} else if (!shifted && (obj.getSpace() == 2)) {
+					obj.setSensor(true);
+				} else if (shifted && (obj.getSpace() == 1)) {
+					obj.setSensor(true);
 				}
-				else if (!shifted && (obj.getSpace()==2)) {obj.setSensor(true);}
-				else if (shifted && (obj.getSpace()==1)) {obj.setSensor(true);}
 			} else {
 				obj.setActive(true);
 				if (obj.getSpace() == 3) {
@@ -516,31 +535,33 @@ public class PrototypeController extends WorldController {
 			}
 		}
 	}
+
 	/**
 	 * The core gameplay loop of this world.
 	 *
-	 * This method contains the specific update code for this mini-game. It does
-	 * not handle collisions, as those are managed by the parent class WorldController.
-	 * This method is called after input is read, but before collisions are resolved.
-	 * The very last thing that it should do is apply forces to the appropriate objects.
+	 * This method contains the specific update code for this mini-game. It does not
+	 * handle collisions, as those are managed by the parent class WorldController.
+	 * This method is called after input is read, but before collisions are
+	 * resolved. The very last thing that it should do is apply forces to the
+	 * appropriate objects.
 	 *
 	 * @param dt Number of seconds since last animation frame
 	 */
 	public void update(float dt) {
 		// Turn the physics engine crank.
-//		world.step(WORLD_STEP,WORLD_VELOC,WORLD_POSIT);
+		// world.step(WORLD_STEP,WORLD_VELOC,WORLD_POSIT);
 
-		//test slow down time
+		// test slow down time
 		if (timeFreeze) {
-			world.step(WORLD_STEP/4, WORLD_VELOC, WORLD_POSIT);
-			for (Obstacle o: objects) {
+			world.step(WORLD_STEP / 4, WORLD_VELOC, WORLD_POSIT);
+			for (Obstacle o : objects) {
 				if (o instanceof Enemy) {
 					((Enemy) o).slowCoolDown(true);
 				}
 			}
 		} else {
-			world.step(WORLD_STEP,WORLD_VELOC,WORLD_POSIT);
-			for (Obstacle o: objects) {
+			world.step(WORLD_STEP, WORLD_VELOC, WORLD_POSIT);
+			for (Obstacle o : objects) {
 				if (o instanceof Enemy) {
 					((Enemy) o).slowCoolDown(false);
 				}
@@ -548,8 +569,8 @@ public class PrototypeController extends WorldController {
 		}
 
 		int t = avatar.getStartedDashing();
-		if (t > 0){
-			t = t-1;
+		if (t > 0) {
+			t = t - 1;
 			avatar.setStartedDashing(t);
 		}
 
@@ -557,7 +578,7 @@ public class PrototypeController extends WorldController {
 			timeFreeze = true;
 			if (avatar.getBodyType() != BodyDef.BodyType.StaticBody) {
 				avatar.setBodyType(BodyDef.BodyType.StaticBody);
-			} else if (InputController.getInstance().releasedRightMouseButton()){
+			} else if (InputController.getInstance().releasedRightMouseButton()) {
 				timeFreeze = false;
 				Vector2 mousePos = InputController.getInstance().getMousePosition();
 				avatar.setBodyType(BodyDef.BodyType.DynamicBody);
@@ -566,22 +587,23 @@ public class PrototypeController extends WorldController {
 				avatar.setDashing(true);
 				avatar.setDashStartPos(avatar.getPosition().cpy());
 				avatar.setDashDistance(avatar.getDashRange());
-				//avatar.setDashDistance(Math.min(avatar.getDashRange(), avatar.getPosition().dst(mousePos)));
+				// avatar.setDashDistance(Math.min(avatar.getDashRange(),
+				// avatar.getPosition().dst(mousePos)));
 				avatar.setDashForceDirection(mousePos.cpy().sub(avatar.getPosition()));
 				avatar.setHolding(false);
 				avatar.setCurrentPlatform(null);
 				createRedirectedProj();
 			}
 		}
-		if (InputController.getInstance().pressedShiftKey()){
+		if (InputController.getInstance().pressedShiftKey()) {
 			shifted = !shifted;
 			if (avatar.getCurrentPlatform() != null) {
 				if (avatar.isSticking()) {
-					if (!shifted && (avatar.getCurrentPlatform().getSpace() == 2)) { //past world
+					if (!shifted && (avatar.getCurrentPlatform().getSpace() == 2)) { // past world
 						avatar.setSticking(false);
 						avatar.setWasSticking(false);
 						avatar.setBodyType(BodyDef.BodyType.DynamicBody);
-					} else if (shifted && (avatar.getCurrentPlatform().getSpace() == 1)) { //present world
+					} else if (shifted && (avatar.getCurrentPlatform().getSpace() == 1)) { // present world
 						avatar.setSticking(false);
 						avatar.setWasSticking(false);
 						avatar.setBodyType(BodyDef.BodyType.DynamicBody);
@@ -589,50 +611,54 @@ public class PrototypeController extends WorldController {
 				}
 			}
 		}
-		//Check if the platform is in this world or other world. If in the other world, make the platform sleep.
+		// Check if the platform is in this world or other world. If in the other world,
+		// make the platform sleep.
 		sleepIfNotInWorld();
-		if(InputController.getInstance().didDebug()){
+		if (InputController.getInstance().didDebug()) {
 			debug = !debug;
 		}
 
-		//prototype: Dash
+		// prototype: Dash
 		boolean dashAttempt = InputController.getInstance().releasedLeftMouseButton();
-		if(dashAttempt && !avatar.isDashing() && avatar.isSticking()){
-			//check valid direction
+		if (dashAttempt && !avatar.isDashing() && avatar.isSticking()) {
+			// check valid direction
 			Vector2 mousePos = InputController.getInstance().getMousePosition();
-				avatar.setBodyType(BodyDef.BodyType.DynamicBody);
-				avatar.setSticking(false);
-				avatar.setWasSticking(false);
-				avatar.setDashing(true);
-				avatar.setDashStartPos(avatar.getPosition().cpy());
-				avatar.setDashDistance(avatar.getDashRange());
-				//avatar.setDashDistance(Math.min(avatar.getDashRange(), avatar.getPosition().dst(mousePos)));
-				avatar.setDashForceDirection(mousePos.sub(avatar.getPosition()));
-				avatar.setStartedDashing(1);
+			avatar.setBodyType(BodyDef.BodyType.DynamicBody);
+			avatar.setSticking(false);
+			avatar.setWasSticking(false);
+			avatar.setDashing(true);
+			avatar.setDashStartPos(avatar.getPosition().cpy());
+			avatar.setDashDistance(avatar.getDashRange());
+			// avatar.setDashDistance(Math.min(avatar.getDashRange(),
+			// avatar.getPosition().dst(mousePos)));
+			avatar.setDashForceDirection(mousePos.sub(avatar.getPosition()));
+			avatar.setStartedDashing(1);
 		}
 
 		// Process actions in object model
-		avatar.setMovement(InputController.getInstance().getHorizontal() *avatar.getForce());
+		avatar.setMovement(InputController.getInstance().getHorizontal() * avatar.getForce());
 		avatar.setJumping(InputController.getInstance().didPrimary());
 		avatar.setShooting(InputController.getInstance().didSecondary());
-		
+
 		// Add bullet if enemy can fire
-		for (Obstacle o: objects) {
+		for (Obstacle o : objects) {
 			if (o instanceof Enemy) {
 				Enemy e = (Enemy) o.getBody().getUserData();
 				if (e.canFire()) {
-					if (o.getName() == "enemy") e.setVelocity();
+					if (o.getName() == "enemy")
+						e.setVelocity();
 					createBullet(e);
-				} else e.coolDown(true);
+				} else
+					e.coolDown(true);
 			}
 		}
-		
+
 		avatar.applyForce();
-//		enemy.applyForce();
+		// enemy.applyForce();
 
 		// Update animation state
-		if (InputController.getInstance().pressedLeftMouseButton() ||
-				InputController.getInstance().pressedRightMouseButton()) {
+		if (InputController.getInstance().pressedLeftMouseButton()
+				|| InputController.getInstance().pressedRightMouseButton()) {
 			// If either mouse button is held, set animation to be crouching
 			avatar.animate(Avatar.AvatarState.CROUCHING, false);
 		} else if (avatar.isSticking()) {
@@ -644,30 +670,31 @@ public class PrototypeController extends WorldController {
 			avatar.animate(Avatar.AvatarState.FALLING, false);
 		}
 
-	    if (avatar.isJumping()) {
-	        SoundController.getInstance().play(JUMP_FILE,JUMP_FILE,false,EFFECT_VOLUME);
-	    }
-		
-	    // If we use sound, we must remember this.
-	    SoundController.getInstance().update();
+		if (avatar.isJumping()) {
+			JsonValue data = assetDirectory.get("sounds").get("jump");
+			SoundController.getInstance().play("jump", data.get("file").asString(), false, data.get("volume").asFloat());
+		}
 
-	    // Print location of the mouse position when 'X' key is pressed
+		// If we use sound, we must remember this.
+		SoundController.getInstance().update();
+
+		// Print location of the mouse position when 'X' key is pressed
 		// so we can know where to spawn enemies for testing purposes.
 		printCoordinates();
 	}
 
 	/**
-
-	 * Add a new bullet to the world and send it in the direction specified by
-	 * the turret it originated from.
-	 * Processes physics
+	 * 
+	 * Add a new bullet to the world and send it in the direction specified by the
+	 * turret it originated from. Processes physics
 	 *
 	 * Once the update phase is over, but before we draw, we are ready to handle
-	 * physics.  The primary method is the step() method in world.  This implementation
-	 * works for all applications and should not need to be overwritten.
+	 * physics. The primary method is the step() method in world. This
+	 * implementation works for all applications and should not need to be
+	 * overwritten.
 	 *
-	 * If the avatar is sticking, sets the avatar's velocity to zero and makes the avatar's
-	 * body type static so that it sticks.
+	 * If the avatar is sticking, sets the avatar's velocity to zero and makes the
+	 * avatar's body type static so that it sticks.
 	 *
 	 * @param dt Number of seconds since last animation frame
 	 */
@@ -693,23 +720,26 @@ public class PrototypeController extends WorldController {
 	 */
 	private void createBullet(Enemy enemy) {
 		float offset = BULLET_OFFSET;
-		float radius = bulletBigTexture.getRegionWidth()/(2.0f*scale.x);
-		Projectile bullet = new Projectile(enemy.getType(), enemy.getX(), enemy.getY()+offset, radius);
-		
-	    bullet.setName("bullet");
+		bulletBigTexture = JsonAssetManager.getInstance().getEntry("bulletbig", TextureRegion.class);
+		float radius = bulletBigTexture.getRegionWidth() / (2.0f * scale.x);
+		Projectile bullet = new Projectile(enemy.getType(), enemy.getX(), enemy.getY() + offset, radius);
+
+		bullet.setName("bullet");
 		bullet.setDensity(HEAVY_DENSITY);
-	    bullet.setDrawScale(scale);
-	    bullet.setTexture(bulletBigTexture);
-	    bullet.setBullet(true);
-	    bullet.setGravityScale(0);
+		bullet.setDrawScale(scale);
+		bullet.setTexture(bulletBigTexture);
+		bullet.setBullet(true);
+		bullet.setGravityScale(0);
 		bullet.setLinearVelocity(enemy.getProjVelocity());
 		bullet.setSpace(enemy.getSpace());
 		addQueuedObject(bullet);
 
-		if (shifted && enemy.getSpace() == 2) { //past world
-			SoundController.getInstance().play(PEW_FILE, PEW_FILE, false, EFFECT_VOLUME);
-		} else if (!shifted && enemy.getSpace() == 1) { //present world
-			SoundController.getInstance().play(PEW_FILE, PEW_FILE, false, EFFECT_VOLUME);
+		if (shifted && enemy.getSpace() == 2) { // past world
+			JsonValue data = assetDirectory.get("sounds").get("pew");
+			SoundController.getInstance().play("pew", data.get("file").asString(), false, data.get("volume").asFloat());
+		} else if (!shifted && enemy.getSpace() == 1) { // present world
+			JsonValue data = assetDirectory.get("sounds").get("pew");
+			SoundController.getInstance().play("pew", data.get("file").asString(), false, data.get("volume").asFloat());
 		}
 
 		// Reset the firing cooldown.
@@ -724,7 +754,7 @@ public class PrototypeController extends WorldController {
 		Vector2 redirection = avatar.getPosition().cpy().sub(mousePos).nor();
 		float x0 = avatar.getX() + (redirection.x * avatar.getWidth());
 		float y0 = avatar.getY() + (redirection.y * avatar.getHeight());
-		float radius = bulletBigTexture.getRegionWidth()/(2.0f*scale.x);
+		float radius = bulletBigTexture.getRegionWidth() / (2.0f * scale.x);
 		Vector2 projVel = redirection.cpy().scl(12);
 		EntityType projType = avatar.getHeldBullet().getType();
 
@@ -736,16 +766,18 @@ public class PrototypeController extends WorldController {
 		bullet.setBullet(true);
 		bullet.setGravityScale(0);
 		bullet.setLinearVelocity(projVel);
-		if (shifted) bullet.setSpace(2); //past world
-		else bullet.setSpace(1); //present world
+		if (shifted)
+			bullet.setSpace(2); // past world
+		else
+			bullet.setSpace(1); // present world
 		addQueuedObject(bullet);
 
 		SoundController.getInstance().play(PEW_FILE, PEW_FILE, false, EFFECT_VOLUME);
 	}
 
 	/**
-	 * Prints the (x,y) coordinate of the current mouse position
-	 * when the 'X' key is pressed. For debug purposes.
+	 * Prints the (x,y) coordinate of the current mouse position when the 'X' key is
+	 * pressed. For debug purposes.
 	 */
 	private void printCoordinates() {
 		if (InputController.getInstance().pressedXKey()) {
@@ -758,13 +790,13 @@ public class PrototypeController extends WorldController {
 	 * Draws an object if it is in this world
 	 *
 	 */
-	public void drawObjectInWorld () {
+	public void drawObjectInWorld() {
 		for (Obstacle obj : objects) {
 			if (obj.getSpace() == 3) {
 				obj.draw(canvas);
-			} else if (shifted && (obj.getSpace() == 2)) { //past world
+			} else if (shifted && (obj.getSpace() == 2)) { // past world
 				obj.draw(canvas);
-			} else if (!shifted && (obj.getSpace() == 1)) { //present world
+			} else if (!shifted && (obj.getSpace() == 1)) { // present world
 				obj.draw(canvas);
 			}
 		}
@@ -774,11 +806,14 @@ public class PrototypeController extends WorldController {
 	 * Draws a line indicating the direction and distance of the dash.
 	 */
 	public void drawIndicator(GameCanvas canvas) {
-		if (!InputController.getInstance().pressedLeftMouseButton() &&
-				!InputController.getInstance().pressedRightMouseButton()) return;
-        // Do not draw while player is dashing or not holding a projectile
-		if (avatar.isDashing() && !avatar.isHolding()) return;
-		if (!avatar.isHolding && !avatar.isSticking()) return;
+		if (!InputController.getInstance().pressedLeftMouseButton()
+				&& !InputController.getInstance().pressedRightMouseButton())
+			return;
+		// Do not draw while player is dashing or not holding a projectile
+		if (avatar.isDashing() && !avatar.isHolding())
+			return;
+		if (!avatar.isHolding && !avatar.isSticking())
+			return;
 		// Draw dynamic dash indicator
 		Vector2 avPos = avatar.getPosition();
 		Vector2 mPos = InputController.getInstance().getMousePosition();
@@ -786,56 +821,57 @@ public class PrototypeController extends WorldController {
 		Vector2 mousePos = mPos.cpy().scl(scale);
 		Vector2 alteredPos = mousePos.sub(startPos).nor();
 		float dist = avatar.getDashRange();
-		//float dist = Math.min(avatar.getDashRange(), avPos.dst(mPos));
+		// float dist = Math.min(avatar.getDashRange(), avPos.dst(mPos));
 		Vector2 endPos = alteredPos.scl(dist).scl(scale);
 		endPos.add(startPos);
-		canvas.drawLine(startPos.x, startPos.y, endPos.x, endPos.y,
-                0, 1, 0.6f, 1);
+		canvas.drawLine(startPos.x, startPos.y, endPos.x, endPos.y, 0, 1, 0.6f, 1);
 
 		// If player is holding a projectile, draw projectile indicator
-        // TODO: need to fix - line is a bit off
-        Vector2 projDir = startPos.cpy().sub(mousePos).scl(scale);
-        if (avatar.isHolding()) {
-            canvas.drawLine(startPos.x, startPos.y, projDir.x, projDir.y,
-                    1, 1, 1, 0.5f);
-        }
+		// TODO: need to fix - line is a bit off
+		Vector2 projDir = startPos.cpy().sub(mousePos).scl(scale);
+		if (avatar.isHolding()) {
+			canvas.drawLine(startPos.x, startPos.y, projDir.x, projDir.y, 1, 1, 1, 0.5f);
+		}
 	}
 
 	/**
 	 * Draws the debug of an object if it is in this world
 	 *
 	 */
-	public void drawDebugInWorld(){
-		for(Obstacle obj : objects) {
-			if (obj.getSpace() == 3){
+	public void drawDebugInWorld() {
+		for (Obstacle obj : objects) {
+			if (obj.getSpace() == 3) {
+				obj.drawDebug(canvas);
+			} else if (shifted && (obj.getSpace() == 2)) {
+				obj.drawDebug(canvas);
+			} else if (!shifted && (obj.getSpace() == 1)) {
 				obj.drawDebug(canvas);
 			}
-			else if (shifted && (obj.getSpace()==2)) {obj.drawDebug(canvas);}
-			else if (!shifted && (obj.getSpace()==1)) {obj.drawDebug(canvas);}
 		}
 	}
+
 	/**
 	 * Draw the physics object360s to the canvas
 	 *
-	 * For simple worlds, this method is enough by itself.  It will need
-	 * to be overriden if the world needs fancy backgrounds or the like.
+	 * For simple worlds, this method is enough by itself. It will need to be
+	 * overriden if the world needs fancy backgrounds or the like.
 	 *
 	 * The method draws all objects in the order that they were added.
 	 *
 	 * @param delta The drawing context
 	 */
 	public void draw(float delta) {
+		backgroundTexture = JsonAssetManager.getInstance().getEntry("background", TextureRegion.class);
 		canvas.clear();
-
 		canvas.begin();
-		if(shifted) {
-			canvas.draw(backgroundTexture, Color.PINK, 0, 0,
-					backgroundTexture.getRegionWidth(), backgroundTexture.getRegionHeight());
-		}else{
+		if (shifted) {
+			canvas.draw(backgroundTexture, Color.PINK, 0, 0, backgroundTexture.getRegionWidth(),
+					backgroundTexture.getRegionHeight());
+		} else {
 			canvas.draw(backgroundTexture, 0, 0);
 		}
 
-		drawObjectInWorld ();
+		drawObjectInWorld();
 		canvas.end();
 
 		drawIndicator(canvas);
@@ -845,24 +881,43 @@ public class PrototypeController extends WorldController {
 			drawDebugInWorld();
 			canvas.endDebug();
 		}
+		// Final message
+		if (complete && !failed) {
+			displayFont.setColor(Color.YELLOW);
+			canvas.begin(); // DO NOT SCALE
+			canvas.drawTextCentered("VICTORY!", displayFont, 0.0f);
+			canvas.end();
+		} else if (failed) {
+			displayFont.setColor(Color.RED);
+			canvas.begin(); // DO NOT SCALE
+			canvas.drawTextCentered("FAILURE!", displayFont, 0.0f);
+			canvas.end();
+		}
 	}
 
-
+	/** Unused ContactListener method */
+	public void postSolve(Contact contact, ContactImpulse impulse) {
+	}
 
 	/** Unused ContactListener method */
-	public void postSolve(Contact contact, ContactImpulse impulse) {}
-	/** Unused ContactListener method */
-	public void preSolve(Contact contact, Manifold oldManifold) {}
+	public void preSolve(Contact contact, Manifold oldManifold) {
+	}
 
 	/**
 	 * @return avatar object
 	 */
-	public Avatar getAvatar() { return avatar; }
+	public Avatar getAvatar() {
+		return avatar;
+	}
 
-	public Enemy getEnemy() { return enemy; }
+	public Enemy getEnemy() {
+		return enemy;
+	}
 
 	/**
 	 * @return goal door object
 	 */
-	public BoxObstacle getGoalDoor() { return goalDoor; }
+	public BoxObstacle getGoalDoor() {
+		return goalDoor;
+	}
 }
