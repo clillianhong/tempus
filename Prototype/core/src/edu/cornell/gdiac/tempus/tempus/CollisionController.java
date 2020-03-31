@@ -131,7 +131,7 @@ public class CollisionController implements ContactListener {
         //TODO: avatar turret contact (die)
     }
     private void processAvatarProjectileContact(Fixture av, Fixture projectile){
-        if (avatar.isDashing() && !avatar.isHolding() && InputController.getInstance().pressedRightMouseButton()) {
+        if (!avatar.isHolding() && InputController.getInstance().pressedRightMouseButton()) {
             avatar.setHolding(true);
             Obstacle bullet = (Obstacle) projectile.getBody().getUserData();
             avatar.setHeldBullet((Projectile) bullet);
@@ -186,31 +186,7 @@ public class CollisionController implements ContactListener {
     private void processProjProjContact(Fixture projectile1, Fixture projectile2){
         //TODO: projectile projectile contact
     }
-
-
-    public void beginContactHelper(Object sensor, AvatarOrientation or, Object fd1, Object fd2,
-                                   Obstacle bd1, Obstacle bd2, Fixture fix1, Fixture fix2){
-        Platform plat = null;
-        if ((sensor.equals(fd2) && avatar != bd1)){
-            plat = (Platform) bd1;
-        }
-        else if (sensor.equals(fd1) && avatar != bd2) {
-            plat = (Platform) bd2;
-        }
-        if(plat != null)
-        {
-                if ((sensor.equals(fd2) && !bd1.getName().equals("bullet")) ||
-                        (sensor.equals(fd1) && !bd2.getName().equals("bullet"))){
-                    if(!avatar.isSticking()){
-                        avatar.setGrounded(true);
-                        avatar.setSticking(true);
-                        avatar.setNewAngle(cur_normal);
-                        avatar.setCurrentPlatform(plat);
-                    }
-                    sensorFixtures.add(avatar == bd1 ? fix2 : fix1); // Could have more than one ground
-                }
-        }
-    }
+    
 
     public void beginEnemyContactHelper(Object sensor, Object fd1, Object fd2,
                                    Obstacle bd1, Obstacle bd2, Fixture fix1, Fixture fix2){
@@ -260,12 +236,15 @@ public class CollisionController implements ContactListener {
             Obstacle bd2 = (Obstacle)objB;
 
             // Test bullet collision with world
-            if (bd1.getName().equals("bullet") && bd2 != avatar) {
-                removeBullet(bd1);
+            if (bd1.getSpace() != 3 && bd2.getSpace() != 3 && bd1.getSpace() != bd2.getSpace()) {
+                return;
             }
-            if (bd2.getName().equals("bullet") && bd1 != avatar) {
-                removeBullet(bd2);
-            }
+                if (bd1.getName().equals("bullet") && bd2 != avatar) {
+                    removeBullet(bd1);
+                }
+                if (bd2.getName().equals("bullet") && bd1 != avatar) {
+                    removeBullet(bd2);
+                }
 
 
             //handle platform-avatar collisions first (outside of processcontact
