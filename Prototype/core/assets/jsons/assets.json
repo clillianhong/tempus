@@ -24,6 +24,14 @@
       "file": "textures/enemy/projectile/projectile_big_stationary_lv_1.png",
       "wrap": false
     },
+    "projpresentcaught":{
+      "file": "textures/enemy/projectile/projectile_present_caught_lv_1.png",
+      "wrap": false
+    },
+    "projpastcaught":{
+      "file": "textures/enemy/projectile/projectile_past_caught_lv_1.png",
+      "wrap": false
+    },
     "turret": {
       "file": "textures/enemy/turret/turret_present_lv_1.png",
       "wrap": false
