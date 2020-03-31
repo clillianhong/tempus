@@ -318,12 +318,8 @@ public class PrototypeController extends WorldController {
 			addObject(obj);
 		}
 
-		// Create dude
+		// Create avatar
 		avatarTexture = JsonAssetManager.getInstance().getEntry("dude", TextureRegion.class);
-		avatarStandingTexture = JsonAssetManager.getInstance().getEntry("avatarstanding",FilmStrip.class);
-		avatarCrouchingTexture = JsonAssetManager.getInstance().getEntry("avatarcrouching",FilmStrip.class);
-		avatarDashingTexture = JsonAssetManager.getInstance().getEntry("avatardashing",FilmStrip.class);
-		avatarFallingTexture = JsonAssetManager.getInstance().getEntry("avatarfalling",FilmStrip.class);
 		dwidth = avatarTexture.getRegionWidth() / scale.x;
 		dheight = avatarTexture.getRegionHeight() / scale.y;
 		avatar = new Avatar(DUDE_POS.x, DUDE_POS.y, dwidth, dheight);
@@ -331,14 +327,24 @@ public class PrototypeController extends WorldController {
 		avatar.setTexture(avatarTexture);
 		avatar.setBodyType(BodyDef.BodyType.DynamicBody);
 		avatar.setName("avatar");
+
 		// Set film strips to animate avatar states
+		avatarStandingTexture = JsonAssetManager.getInstance().getEntry("avatarstanding",FilmStrip.class);
+		avatarCrouchingTexture = JsonAssetManager.getInstance().getEntry("avatarcrouching",FilmStrip.class);
+		avatarDashingTexture = JsonAssetManager.getInstance().getEntry("avatardashing",FilmStrip.class);
+		avatarFallingTexture = JsonAssetManager.getInstance().getEntry("avatarfalling",FilmStrip.class);
+
 		avatar.setFilmStrip(Avatar.AvatarState.STANDING, avatarStandingTexture);
 		avatar.setFilmStrip(Avatar.AvatarState.CROUCHING, avatarCrouchingTexture);
 		avatar.setFilmStrip(Avatar.AvatarState.DASHING, avatarDashingTexture);
 		avatar.setFilmStrip(Avatar.AvatarState.FALLING, avatarFallingTexture);
+
 		// Set textures for caught projectiles
+		projPresentCaughtTexture = JsonAssetManager.getInstance().getEntry("projpresentcaught", TextureRegion.class);
+		projPastCaughtTexture = JsonAssetManager.getInstance().getEntry("projpastcaught", TextureRegion.class);
 		avatar.setCaughtProjTexture(PRESENT, projPresentCaughtTexture);
 		avatar.setCaughtProjTexture(PAST, projPastCaughtTexture);
+
 		addObject(avatar);
 
 		enemyPresentTexture = JsonAssetManager.getInstance().getEntry("enemypresent",TextureRegion.class);
