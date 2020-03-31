@@ -77,10 +77,10 @@
       "size": 1
     },
     "avatarcrouching": {
-      "file": "filmstrips/bird_crouching.png",
+      "file": "filmstrips/bird_crouching_v2.png",
       "rows": 1,
-      "cols": 3,
-      "size": 3
+      "cols": 4,
+      "size": 4
     },
     "avatardashing": {
       "file": "filmstrips/bird_dashing.png",
