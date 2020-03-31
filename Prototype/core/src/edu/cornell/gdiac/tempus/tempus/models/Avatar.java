@@ -1,6 +1,7 @@
 package edu.cornell.gdiac.tempus.tempus.models;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
@@ -143,10 +144,15 @@ public class Avatar extends CapsuleObstacle {
     private FilmStrip fallingStrip;
 
     /** The frame rate for the animation */
-    private static final float FRAME_RATE = 20;
+    private static final float FRAME_RATE = 10;
     /** The frame cooldown for the animation */
     private static float frame_cooldown = FRAME_RATE;
 
+    // CAUGHT PROJECTILE TEXTURES
+    /** The texture for the caught projectile of type present */
+    private TextureRegion projPresentCaughtTexture;
+    /** The texture for the caught projectile of type past */
+    private TextureRegion projPastCaughtTexture;
 
     /**
      * Returns left/right movement of this character.
@@ -475,8 +481,19 @@ public class Avatar extends CapsuleObstacle {
         return faceRight;
     }
 
-    public void setHeldBullet(Projectile bullet) {heldBullet = bullet;}
-    public Projectile getHeldBullet() {return heldBullet; }
+    /**
+     * Sets the held projectile of the player
+     *
+     * @param bullet projectile to set held bullet
+     */
+    public void setHeldBullet(Projectile bullet) { heldBullet = bullet; }
+
+    /**
+     * Returns the currently held projectile of the player
+     *
+     * @return the currently held projectile
+     */
+    public Projectile getHeldBullet() { return heldBullet; }
 
     /**
      * Creates a new dude avatar at the given position.
@@ -718,7 +735,25 @@ public class Avatar extends CapsuleObstacle {
             if (shouldLoop) currentStrip.setFrame(0); // loop animation
             else return; // play animation once
         }
+    }
 
+    /**
+     * Sets the texture for the given projectile type
+     *
+     * @param type the type of projectile
+     * @param texture the texture for the given projectile type
+     */
+    public void setCaughtProjTexture(EntityType type, TextureRegion texture) {
+        switch (type) {
+            case PRESENT:
+                projPresentCaughtTexture = texture;
+                break;
+            case PAST:
+                projPastCaughtTexture = texture;
+                break;
+            default:
+                assert false : "Invalid projectile type";
+        }
     }
 
     /**
@@ -729,12 +764,29 @@ public class Avatar extends CapsuleObstacle {
     public void draw(GameCanvas canvas) {
         float effect = faceRight ? 1.0f : -1.0f;
 //        System.out.println("draw angle: " + getAngle());;
-//        if (currentStrip != null) {
-            canvas.draw(currentStrip, Color.WHITE,origin.x,origin.y,
-                    getX()*drawScale.x,getY()*drawScale.y, getAngle(),1.0f,1.0f);
-//        } else
-//            canvas.draw(texture, Color.WHITE,origin.x,origin.y,
-//                    getX()*drawScale.x,getY()*drawScale.y,getAngle(),1.0f,1.0f);
+
+        // Draw avatar body
+        canvas.draw(currentStrip, Color.WHITE,origin.x,origin.y,
+                getX()*drawScale.x,getY()*drawScale.y, getAngle(),1.0f,1.0f);
+
+        // If player is holding a projectile then draw the held projectile
+        // Caught projectile should be drawn at the center of the player's horns
+        // TODO: fix rotation of caught projectile
+        if (heldBullet != null) {
+            EntityType projType = heldBullet.getType();
+            switch (projType) {
+                case PRESENT:
+                    canvas.draw(projPresentCaughtTexture, Color.WHITE,origin.x + 10,origin.y,
+                            getX()*drawScale.x + 10,getY()*drawScale.y, getAngle(),1.0f,1.0f);
+                    break;
+                case PAST:
+                    canvas.draw(projPastCaughtTexture, Color.WHITE,origin.x,origin.y,
+                            getX()*drawScale.x,getY()*drawScale.y, getAngle(),1.0f,1.0f);
+                    break;
+                default:
+                    assert false : "Invalid projectile type";
+            }
+        }
     }
 
     /**

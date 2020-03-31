@@ -46,7 +46,7 @@ public class PrototypeController extends WorldController {
 	private static final String DUDE_FILE  = "enemies/dude.png";
 	/** The reference for the avatar movement textures  */
 	private static final String AVATAR_STANDING_TEXTURE = "enemies/dude.png";
-	private static final String AVATAR_CROUCHING_TEXTURE = "enemies/bird_crouching.png";
+	private static final String AVATAR_CROUCHING_TEXTURE = "enemies/bird_crouching_v2.png";
 	private static final String AVATAR_DASHING_TEXTURE = "enemies/bird_dashing.png";
 	private static final String AVATAR_FALLING_TEXTURE = "enemies/dude.png";
 
@@ -57,6 +57,10 @@ public class PrototypeController extends WorldController {
 	private static final String BULLET_FILE  = "enemies/bullet.png";
 	/** The texture file for the big bullet */
 	private static final String BULLET_BIG_FILE  = "enemies/bulletbig.png";
+	/** The texture file for the caught projectile of type present */
+	private static final String PROJ_PRESENT_CAUGHT_FILE  = "enemies/proj_present_caught.png";
+	/** The texture file for the caught projectile of type past */
+	private static final String PROJ_PAST_CAUGHT_FILE  = "enemies/proj_past_caught.png";
 
 	/** The texture file for the turret */
 	private static final String TURRET_FILE  = "enemies/turret.png";
@@ -95,6 +99,10 @@ public class PrototypeController extends WorldController {
 	private TextureRegion bulletTexture;
 	/** Texture asset for the big bullet */
 	private TextureRegion bulletBigTexture;
+	/** Texture asset for the caught proj of type present */
+	private TextureRegion projPresentCaughtTexture;
+	/** Texture asset for the caught proj of type past */
+	private TextureRegion projPastCaughtTexture;
 	/** Texture asset for the bridge plank */
 	private TextureRegion bridgeTexture;
 	/** Texture asset for the turret */
@@ -146,6 +154,10 @@ public class PrototypeController extends WorldController {
 		assets.add(BULLET_FILE);
 		manager.load(BULLET_BIG_FILE, Texture.class);
 		assets.add(BULLET_BIG_FILE);
+		manager.load(PROJ_PRESENT_CAUGHT_FILE, Texture.class);
+		assets.add(PROJ_PRESENT_CAUGHT_FILE);
+		manager.load(PROJ_PAST_CAUGHT_FILE, Texture.class);
+		assets.add(PROJ_PAST_CAUGHT_FILE);
 		manager.load(TURRET_FILE, Texture.class);
 		assets.add(TURRET_FILE);
 		manager.load(ENEMY_PRESENT_FILE, Texture.class);
@@ -187,7 +199,7 @@ public class PrototypeController extends WorldController {
 		avatarStandingTexture = createFilmStrip(
 				manager, AVATAR_STANDING_TEXTURE,1, 1, 1);
 		avatarCrouchingTexture = createFilmStrip(
-				manager, AVATAR_CROUCHING_TEXTURE,1, 3, 3);
+				manager, AVATAR_CROUCHING_TEXTURE,1, 4, 4);
 		avatarDashingTexture = createFilmStrip(
 				manager, AVATAR_DASHING_TEXTURE,1, 4, 4);
 		avatarFallingTexture = createFilmStrip(
@@ -196,6 +208,8 @@ public class PrototypeController extends WorldController {
 		barrierTexture = createTexture(manager,BARRIER_FILE,false);
 		bulletTexture = createTexture(manager,BULLET_FILE,false);
 		bulletBigTexture = createTexture(manager,BULLET_BIG_FILE,false);
+		projPresentCaughtTexture = createTexture(manager,PROJ_PRESENT_CAUGHT_FILE,false);
+		projPastCaughtTexture = createTexture(manager,PROJ_PAST_CAUGHT_FILE,false);
 		turretTexture = createTexture(manager,TURRET_FILE,false);
 		backgroundTexture = createTexture(manager,BACKGROUND_FILE, false);
 		enemyPresentTexture = createTexture(manager,ENEMY_PRESENT_FILE,false);
@@ -406,7 +420,7 @@ public class PrototypeController extends WorldController {
 			addObject(obj);
 	    }
 
-		// Create dude
+		// Create avatar
 		dwidth  = avatarTexture.getRegionWidth()/scale.x;
 		dheight = avatarTexture.getRegionHeight()/scale.y;
 		avatar = new Avatar(DUDE_POS.x, DUDE_POS.y, dwidth, dheight, AvatarOrientation.OR_UP);
@@ -414,10 +428,14 @@ public class PrototypeController extends WorldController {
 		avatar.setTexture(avatarTexture);
 		avatar.setBodyType(BodyDef.BodyType.DynamicBody);
 		avatar.setName("avatar");
+		// Set film strips to animate avatar states
 		avatar.setFilmStrip(Avatar.AvatarState.STANDING, avatarStandingTexture);
 		avatar.setFilmStrip(Avatar.AvatarState.CROUCHING, avatarCrouchingTexture);
 		avatar.setFilmStrip(Avatar.AvatarState.DASHING, avatarDashingTexture);
 		avatar.setFilmStrip(Avatar.AvatarState.FALLING, avatarFallingTexture);
+		// Set textures for caught projectiles
+		avatar.setCaughtProjTexture(PRESENT, projPresentCaughtTexture);
+		avatar.setCaughtProjTexture(PAST, projPastCaughtTexture);
 		addObject(avatar);
 
 		for (int ii = 0; ii < NUMBER_ENEMIES; ii++) {
@@ -571,6 +589,7 @@ public class PrototypeController extends WorldController {
 				avatar.setHolding(false);
 				avatar.setCurrentPlatform(null);
 				createRedirectedProj();
+				avatar.setHeldBullet(null); // NOTE: gives error if called before createRedirectedProj()
 			}
 		}
 		if (InputController.getInstance().pressedShiftKey()){
@@ -631,15 +650,15 @@ public class PrototypeController extends WorldController {
 //		enemy.applyForce();
 
 		// Update animation state
-		if (InputController.getInstance().pressedLeftMouseButton() ||
+		if (avatar.isDashing()) {
+			avatar.animate(Avatar.AvatarState.DASHING, false);
+		}  else if (InputController.getInstance().pressedLeftMouseButton() ||
 				InputController.getInstance().pressedRightMouseButton()) {
 			// If either mouse button is held, set animation to be crouching
-			avatar.animate(Avatar.AvatarState.CROUCHING, false);
+			avatar.animate(Avatar.AvatarState.CROUCHING, true);
 		} else if (avatar.isSticking()) {
 			// Default animation if player is stationary
 			avatar.animate(Avatar.AvatarState.STANDING, false);
-		} else if (avatar.isDashing()) {
-			avatar.animate(Avatar.AvatarState.DASHING, false);
 		} else {
 			avatar.animate(Avatar.AvatarState.FALLING, false);
 		}
