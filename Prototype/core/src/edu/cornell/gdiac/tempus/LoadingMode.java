@@ -46,9 +46,9 @@ import edu.cornell.gdiac.util.*;
  */
 public class LoadingMode implements Screen, InputProcessor, ControllerListener {
 	// Textures necessary to support the loading screen 
-	private static final String BACKGROUND_FILE = "shared/loading.png";
-	private static final String PROGRESS_FILE = "shared/progressbar.png";
-	private static final String PLAY_BTN_FILE = "shared/play.png";
+	private static final String BACKGROUND_FILE = "textures/loading.png";
+	private static final String PROGRESS_FILE = "textures/progressbar.png";
+	private static final String PLAY_BTN_FILE = "textures/play.png";
 	
 	/** Background texture for start-up */
 	private Texture background;
@@ -167,7 +167,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
 	 * @param manager The AssetManager to load in the background
 	 */
 	public LoadingMode(GameCanvas canvas, AssetManager manager) {
-		this(canvas, manager,DEFAULT_BUDGET);
+		this(canvas,DEFAULT_BUDGET);
 	}
 
 	/**
@@ -181,8 +181,8 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
 	 * @param manager The AssetManager to load in the background
 	 * @param millis The loading budget in milliseconds
 	 */
-	public LoadingMode(GameCanvas canvas, AssetManager manager, int millis) {
-		this.manager = manager;
+	public LoadingMode(GameCanvas canvas, int millis) {
+		this.manager = JsonAssetManager.getInstance();
 		this.canvas  = canvas;
 		budget = millis;
 		

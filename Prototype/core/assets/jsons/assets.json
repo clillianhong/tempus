@@ -1,0 +1,90 @@
+{
+  "textures": {
+    "earth": {
+      "file": "textures/platform/platform_rectangle_lv_1.png",
+      "wrap": true
+    },
+    "goal": {
+      "file": "textures/general/goaldoor.png",
+      "wrap": true
+    },
+    "dude": {
+      "file": "textures/dude.png",
+      "wrap": false
+    },
+    "barrier": {
+      "file": "textures/barrier.png",
+      "wrap": false
+    },
+    "bullet": {
+      "file": "textures/enemy/projectile/projectile_stationary_lv_1.png",
+      "wrap": false
+    },
+    "bulletbig":{
+      "file": "textures/enemy/projectile/projectile_big_stationary_lv_1.png",
+      "wrap": false
+    },
+    "turret": {
+      "file": "textures/enemy/turret/turret_present_lv_1.png",
+      "wrap": false
+    },
+    "background": {
+      "file": "textures/background/bg_present_lv_1.png",
+      "wrap": false
+    },
+    "enemypresent": {
+      "file": "textures/enemy/creature/enemy_present_alive_lv_1.png",
+      "wrap": false
+    },
+    "enemypast": {
+      "file": "textures/enemy/creature/enemy_past_alive_lv_1.png",
+      "wrap": false
+    }
+  },
+  "fonts": {
+    "display": {
+      "file": "fonts/RetroGame.ttf",
+      "size": 64
+    }
+  },
+  "sounds": {
+    "jump": {
+      "file": "sounds/jump.mp3",
+      "volume": 0.8
+    },
+    "pew": {
+      "file": "sounds/pew.mp3",
+      "volume": 0.8,
+    },
+    "pop": {
+      "file": "sounds/plop.mp3",
+      "volume": 0.8
+    }
+  },
+  "filmstrips": {
+    "avatarstanding": {
+      "file": "filmstrips/dude.png",
+      "rows": 1,
+      "cols": 1,
+      "size": 1
+    },
+    "avatarcrouching": {
+      "file": "filmstrips/bird_crouching.png",
+      "rows": 1,
+      "cols": 3,
+      "size": 3
+    },
+    "avatardashing": {
+      "file": "filmstrips/bird_dashing.png",
+      "rows": 1,
+      "cols": 4,
+      "size": 4
+    },
+    "avatarfalling": {
+      "file": "filmstrips/dude.png",
+      "rows": 1,
+      "cols": 1,
+      "size": 1
+    }
+  }
+}
