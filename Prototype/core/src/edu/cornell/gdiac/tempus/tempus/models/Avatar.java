@@ -825,7 +825,7 @@ public class Avatar extends CapsuleObstacle {
 
         // Draw avatar body
         canvas.draw(currentStrip, Color.WHITE,origin.x,origin.y,
-                getX()*drawScale.x,getY()*drawScale.y, getAngle(),1.0f,1.0f);
+                getX()*drawScale.x,getY()*drawScale.y, getAngle(),2.0f,2.0f);
 
         // If player is holding a projectile then draw the held projectile
         // Caught projectile should be drawn at the center of the player's horns
@@ -835,11 +835,11 @@ public class Avatar extends CapsuleObstacle {
             switch (projType) {
                 case PRESENT:
                     canvas.draw(projPresentCaughtTexture, Color.WHITE,origin.x + 10,origin.y,
-                            getX()*drawScale.x + 10,getY()*drawScale.y, getAngle(),1.0f,1.0f);
+                            getX()*drawScale.x + 10,getY()*drawScale.y, getAngle(),2.0f,2.0f);
                     break;
                 case PAST:
                     canvas.draw(projPastCaughtTexture, Color.WHITE,origin.x,origin.y,
-                            getX()*drawScale.x,getY()*drawScale.y, getAngle(),1.0f,1.0f);
+                            getX()*drawScale.x,getY()*drawScale.y, getAngle(),2.0f,2.0f);
                     break;
                 default:
                     assert false : "Invalid projectile type";

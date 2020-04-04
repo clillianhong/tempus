@@ -87,8 +87,6 @@ public abstract class WorldController implements Screen {
 	 * this time.  However, we still want the assets themselves to be static.  So
 	 * we have an AssetState that determines the current loading state.  If the
 	 * assets are already loaded, this method will do nothing.
-	 * 
-	 * @param manager Reference to global asset manager.
 	 */
 	public void loadContent() {
 		if (worldAssetState != AssetState.LOADING) {
@@ -149,8 +147,7 @@ public abstract class WorldController implements Screen {
 	 * 
 	 * This method erases the static variables.  It also deletes the associated textures 
 	 * from the asset manager. If no assets are loaded, this method does nothing.
-	 * 
-	 * @param manager Reference to global asset manager.
+	 *
 	 */
 	public void unloadContent() {
 		JsonAssetManager.getInstance().unloadDirectory();

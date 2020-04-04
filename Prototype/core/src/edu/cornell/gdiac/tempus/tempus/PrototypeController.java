@@ -155,7 +155,7 @@ public class PrototypeController extends WorldController {
 	/** The restitution for all physics objects */
 	private static final float BASIC_RESTITUTION = 0.1f;
 	/** Offset for bullet when firing */
-	private static final float BULLET_OFFSET = 1.0f;
+	private static final float BULLET_OFFSET = 0.6f;
 	/** The volume for sound effects */
 	private static final float EFFECT_VOLUME = 0.8f;
 
@@ -211,7 +211,7 @@ public class PrototypeController extends WorldController {
 	/** The information of all the turrets */
 	private int NUMBER_TURRETS = 2;
 	private EntityType[] TYPE_TURRETS = { PRESENT, PAST };
-	private float[][] COOR_TURRETS = { { TURRET_POS.x + 10.0f, TURRET_POS.y }, { TURRET_POS.x, TURRET_POS.y - 5.0f } };
+	private float[][] COOR_TURRETS = { { TURRET_POS.x + 10.0f, TURRET_POS.y + 0.4f }, { TURRET_POS.x, TURRET_POS.y - 5.0f } };
 	private float[][] DIR_TURRETS = { // direction of proj which the turrets shoot
 			{ -3.0f, 0 }, { 0, 2.0f } };
 	private int[] CD_TURRETS = { 90, 120 };
@@ -322,7 +322,7 @@ public class PrototypeController extends WorldController {
 		avatarTexture = JsonAssetManager.getInstance().getEntry("dude", TextureRegion.class);
 		dwidth = avatarTexture.getRegionWidth() / scale.x;
 		dheight = avatarTexture.getRegionHeight() / scale.y;
-		avatar = new Avatar(DUDE_POS.x, DUDE_POS.y, dwidth, dheight);
+		avatar = new Avatar(DUDE_POS.x, DUDE_POS.y, dwidth * 2, dheight * 2);
 		avatar.setDrawScale(scale);
 		avatar.setTexture(avatarTexture);
 		avatar.setBodyType(BodyDef.BodyType.DynamicBody);
@@ -619,7 +619,6 @@ public class PrototypeController extends WorldController {
 			avatar.setWasSticking(true);
 			System.out.println("new angle " + avatar.getNewAngle());
 			avatar.setAngle(avatar.getNewAngle());
-
 		}
 	}
 
@@ -775,10 +774,10 @@ public class PrototypeController extends WorldController {
 		canvas.clear();
 		canvas.begin();
 		if (shifted) {
-			canvas.draw(backgroundTexture, Color.PINK, 0, 0, backgroundTexture.getRegionWidth(),
-					backgroundTexture.getRegionHeight());
+			System.out.println(backgroundTexture.getRegionWidth());
+			canvas.draw(backgroundTexture, Color.PINK, 0, 0, canvas.getWidth(), canvas.getHeight());
 		} else {
-			canvas.draw(backgroundTexture, 0, 0);
+			canvas.draw(backgroundTexture, Color.WHITE, 0, 0, canvas.getWidth(), canvas.getHeight());
 		}
 
 		drawObjectInWorld();
