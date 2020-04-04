@@ -1,11 +1,11 @@
 {
   "textures": {
     "earth": {
-      "file": "textures/earthtile.png",
+      "file": "textures/platform/platform_rectangle_lv_1.png",
       "wrap": true
     },
     "goal": {
-      "file": "textures/goaldoor.png",
+      "file": "textures/general/goaldoor.png",
       "wrap": true
     },
     "dude": {
@@ -17,27 +17,35 @@
       "wrap": false
     },
     "bullet": {
-      "file": "textures/bullet.png",
+      "file": "textures/enemy/projectile/projectile_stationary_lv_1.png",
       "wrap": false
     },
     "bulletbig":{
-      "file": "textures/bulletbig.png",
+      "file": "textures/enemy/projectile/projectile_big_stationary_lv_1.png",
+      "wrap": false
+    },
+    "projpresentcaught":{
+      "file": "textures/enemy/projectile/projectile_present_caught_lv_1.png",
+      "wrap": false
+    },
+    "projpastcaught":{
+      "file": "textures/enemy/projectile/projectile_past_caught_lv_1.png",
       "wrap": false
     },
     "turret": {
-      "file": "textures/turret.png",
-      "wrap": false,
+      "file": "textures/enemy/turret/turret_present_lv_1.png",
+      "wrap": false
     },
     "background": {
-      "file": "textures/ice.png",
+      "file": "textures/background/bg_present_lv_1.png",
       "wrap": false
     },
     "enemypresent": {
-      "file": "textures/enemy_present.png",
+      "file": "textures/enemy/creature/enemy_present_alive_lv_1.png",
       "wrap": false
     },
     "enemypast": {
-      "file": "textures/enemy_past.png",
+      "file": "textures/enemy/creature/enemy_past_alive_lv_1.png",
       "wrap": false
     }
   },
@@ -69,10 +77,10 @@
       "size": 1
     },
     "avatarcrouching": {
-      "file": "filmstrips/bird_crouching.png",
+      "file": "filmstrips/bird_crouching_v2.png",
       "rows": 1,
-      "cols": 3,
-      "size": 3
+      "cols": 4,
+      "size": 4
     },
     "avatardashing": {
       "file": "filmstrips/bird_dashing.png",

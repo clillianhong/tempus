@@ -236,12 +236,15 @@ public class CollisionController implements ContactListener {
             Obstacle bd2 = (Obstacle)objB;
 
             // Test bullet collision with world
-            if (bd1.getName().equals("bullet") && bd2 != avatar) {
-                removeBullet(bd1);
+            if (bd1.getSpace() != 3 && bd2.getSpace() != 3 && bd1.getSpace() != bd2.getSpace()) {
+                return;
             }
-            if (bd2.getName().equals("bullet") && bd1 != avatar) {
-                removeBullet(bd2);
-            }
+                if (bd1.getName().equals("bullet") && bd2 != avatar) {
+                    removeBullet(bd1);
+                }
+                if (bd2.getName().equals("bullet") && bd1 != avatar) {
+                    removeBullet(bd2);
+                }
 
 
             //handle platform-avatar collisions first (outside of processcontact

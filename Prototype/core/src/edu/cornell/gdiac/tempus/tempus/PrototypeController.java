@@ -49,52 +49,11 @@ import static edu.cornell.gdiac.tempus.tempus.models.EntityType.PRESENT;
  * multiple instances place nicely with the static assets.
  */
 public class PrototypeController extends WorldController {
-	// TODO: change path for textures.
-	/** The texture file for the character avatar (no animation) */
-	private static final String DUDE_FILE = "texture/dude.png";
-
-	/** The reference for the avatar movement textures */
-	private static final String AVATAR_STANDING_TEXTURE = "filmstrips/dude.png";
-	private static final String AVATAR_CROUCHING_TEXTURE = "filmstrips/bird_crouching.png";
-	private static final String AVATAR_DASHING_TEXTURE = "filmstrips/bird_dashing.png";
-	private static final String AVATAR_FALLING_TEXTURE = "filmstrips/dude.png";
-
-	/** The texture file for the spinning barrier */
-	private static final String BARRIER_FILE = "textures/barrier.png";
-
-	/** The texture file for the bullet */
-	private static final String BULLET_FILE = "textures/bullet.png";
-	/** The texture file for the big bullet */
-	private static final String BULLET_BIG_FILE = "textures/bulletbig.png";
-
-	/** The texture file for the turret */
-	private static final String TURRET_FILE = "textures/turret.png";
-	/** The texture file for the background */
-	private static final String BACKGROUND_FILE = "textures/ice.png";
-
-	/** The texture file for present enemy */
-	private static final String ENEMY_PRESENT_FILE = "textures/enemy_present.png";
-	/** The texture file for past enemy */
-	private static final String ENEMY_PAST_FILE = "textures/enemy_past.png";
-
 	/** Checks if did debug */
 	private boolean debug;
 
-	/** The sound file for a jump */
-	private static final String JUMP_FILE = "sounds/jump.mp3";
 	/** The sound file for a bullet fire */
 	private static final String PEW_FILE = "sounds/pew.mp3";
-	/** The sound file for a bullet collision */
-	private static final String POP_FILE = "sounds/plop.mp3";
-
-	// Pathnames to shared assets
-	/** File to texture for walls and platforms */
-	private static String EARTH_FILE = "textures/earthtile.png";
-	/** File to texture for the win door */
-	private static String GOAL_FILE = "textures/goaldoor.png";
-	/** Retro font for displaying messages */
-	private static String FONT_FILE = "fonts/RetroGame.ttf";
-	private static int FONT_SIZE = 64;
 
 	/** The texture for walls and platforms */
 	protected TextureRegion earthTile;
@@ -113,14 +72,12 @@ public class PrototypeController extends WorldController {
 	/** Texture filmstrip for avatar falling */
 	private FilmStrip avatarFallingTexture;
 
-	/** Texture asset for the spinning barrier */
-	private TextureRegion barrierTexture;
-	/** Texture asset for the bullet */
-	private TextureRegion bulletTexture;
 	/** Texture asset for the big bullet */
 	private TextureRegion bulletBigTexture;
-	/** Texture asset for the bridge plank */
-	private TextureRegion bridgeTexture;
+	/** Texture asset for the caught proj of type present */
+	private TextureRegion projPresentCaughtTexture;
+	/** Texture asset for the caught proj of type past */
+	private TextureRegion projPastCaughtTexture;
 	/** Texture asset for the turret */
 	private TextureRegion turretTexture;
 	/** Texture asset for present enemy */
@@ -165,46 +122,6 @@ public class PrototypeController extends WorldController {
 		JsonAssetManager.getInstance().loadDirectory(assetDirectory);
 
 		// super.preLoadContent(manager);
-		// TODO: Delete
-		// Entity files
-//		platformAssetState = AssetState.LOADING;
-//		manager.load(DUDE_FILE, Texture.class);
-//		assets.add(DUDE_FILE);
-//		manager.load(AVATAR_STANDING_TEXTURE, Texture.class);
-//		assets.add(AVATAR_STANDING_TEXTURE);
-//		manager.load(AVATAR_CROUCHING_TEXTURE, Texture.class);
-//		assets.add(AVATAR_CROUCHING_TEXTURE);
-//		manager.load(AVATAR_DASHING_TEXTURE, Texture.class);
-//		assets.add(AVATAR_DASHING_TEXTURE);
-//		manager.load(AVATAR_FALLING_TEXTURE, Texture.class);
-//		assets.add(AVATAR_FALLING_TEXTURE);
-//
-//		manager.load(BARRIER_FILE, Texture.class);
-//		assets.add(BARRIER_FILE);
-//		manager.load(BULLET_FILE, Texture.class);
-//		assets.add(BULLET_FILE);
-//		manager.load(BULLET_BIG_FILE, Texture.class);
-//		assets.add(BULLET_BIG_FILE);
-//		manager.load(TURRET_FILE, Texture.class);
-//		assets.add(TURRET_FILE);
-//		manager.load(ENEMY_PRESENT_FILE, Texture.class);
-//		assets.add(ENEMY_PRESENT_FILE);
-//		manager.load(ENEMY_PAST_FILE, Texture.class);
-//		assets.add(ENEMY_PAST_FILE);
-//
-//		// Background files
-//		manager.load(BACKGROUND_FILE, Texture.class);
-//		assets.add(BACKGROUND_FILE);
-//
-//		// Sound files
-//		manager.load(JUMP_FILE, Sound.class);
-//		assets.add(JUMP_FILE);
-//		manager.load(PEW_FILE, Sound.class);
-//		assets.add(PEW_FILE);
-//		manager.load(POP_FILE, Sound.class);
-//		assets.add(POP_FILE);
-//
-//		super.preLoadContent(manager);
 	}
 
 	/**
@@ -214,7 +131,8 @@ public class PrototypeController extends WorldController {
 	 * this time. However, we still want the assets themselves to be static. So we
 	 * have an AssetState that determines the current loading state. If the assets
 	 * are already loaded, this method will do nothing.
-	 * 
+	 *
+	 * @param Reference to global asset manager.
 	 */
 	public void loadContent() {
 		if (platformAssetState != AssetState.LOADING) {
@@ -222,25 +140,6 @@ public class PrototypeController extends WorldController {
 		}
 		JsonAssetManager.getInstance().allocateDirectory();
 		displayFont = JsonAssetManager.getInstance().getEntry("display", BitmapFont.class);
-		// TODO: Delete
-//		avatarStandingTexture = createFilmStrip(manager, AVATAR_STANDING_TEXTURE, 1, 1, 1);
-//		avatarCrouchingTexture = createFilmStrip(manager, AVATAR_CROUCHING_TEXTURE, 1, 3, 3);
-//		avatarDashingTexture = createFilmStrip(manager, AVATAR_DASHING_TEXTURE, 1, 4, 4);
-//		avatarFallingTexture = createFilmStrip(manager, AVATAR_FALLING_TEXTURE, 1, 1, 1);
-//
-//		barrierTexture = createTexture(manager, BARRIER_FILE, false);
-//		bulletTexture = createTexture(manager, BULLET_FILE, false);
-//		bulletBigTexture = createTexture(manager, BULLET_BIG_FILE, false);
-//		turretTexture = createTexture(manager, TURRET_FILE, false);
-//		backgroundTexture = createTexture(manager, BACKGROUND_FILE, false);
-//		enemyPresentTexture = createTexture(manager, ENEMY_PRESENT_FILE, false);
-//		enemyPastTexture = createTexture(manager, ENEMY_PAST_FILE, false);
-//
-//		SoundController sounds = SoundController.getInstance();
-//		sounds.allocate(manager, JUMP_FILE);
-//		sounds.allocate(manager, PEW_FILE);
-//		sounds.allocate(manager, POP_FILE);
-//		super.loadContent(manager);
 		platformAssetState = AssetState.COMPLETE;
 	}
 
@@ -256,7 +155,7 @@ public class PrototypeController extends WorldController {
 	/** The restitution for all physics objects */
 	private static final float BASIC_RESTITUTION = 0.1f;
 	/** Offset for bullet when firing */
-	private static final float BULLET_OFFSET = 1.0f;
+	private static final float BULLET_OFFSET = 0.6f;
 	/** The volume for sound effects */
 	private static final float EFFECT_VOLUME = 0.8f;
 
@@ -312,7 +211,8 @@ public class PrototypeController extends WorldController {
 	/** The information of all the turrets */
 	private int NUMBER_TURRETS = 2;
 	private EntityType[] TYPE_TURRETS = { PRESENT, PAST };
-	private float[][] COOR_TURRETS = { { TURRET_POS.x + 10.0f, TURRET_POS.y }, { TURRET_POS.x, TURRET_POS.y - 5.0f } };
+	private float[][] COOR_TURRETS = { { TURRET_POS.x + 10.0f, TURRET_POS.y + 0.4f },
+			{ TURRET_POS.x, TURRET_POS.y - 5.0f } };
 	private float[][] DIR_TURRETS = { // direction of proj which the turrets shoot
 			{ -3.0f, 0 }, { 0, 2.0f } };
 	private int[] CD_TURRETS = { 90, 120 };
@@ -419,27 +319,37 @@ public class PrototypeController extends WorldController {
 			addObject(obj);
 		}
 
-		// Create dude
+		// Create avatar
 		avatarTexture = JsonAssetManager.getInstance().getEntry("dude", TextureRegion.class);
-		avatarStandingTexture = JsonAssetManager.getInstance().getEntry("avatarstanding",FilmStrip.class);
-		avatarCrouchingTexture = JsonAssetManager.getInstance().getEntry("avatarcrouching",FilmStrip.class);
-		avatarDashingTexture = JsonAssetManager.getInstance().getEntry("avatardashing",FilmStrip.class);
-		avatarFallingTexture = JsonAssetManager.getInstance().getEntry("avatarfalling",FilmStrip.class);
 		dwidth = avatarTexture.getRegionWidth() / scale.x;
 		dheight = avatarTexture.getRegionHeight() / scale.y;
-		avatar = new Avatar(DUDE_POS.x, DUDE_POS.y, dwidth, dheight);
+		avatar = new Avatar(DUDE_POS.x, DUDE_POS.y, dwidth * 2, dheight * 2);
 		avatar.setDrawScale(scale);
 		avatar.setTexture(avatarTexture);
 		avatar.setBodyType(BodyDef.BodyType.DynamicBody);
 		avatar.setName("avatar");
+
+		// Set film strips to animate avatar states
+		avatarStandingTexture = JsonAssetManager.getInstance().getEntry("avatarstanding", FilmStrip.class);
+		avatarCrouchingTexture = JsonAssetManager.getInstance().getEntry("avatarcrouching", FilmStrip.class);
+		avatarDashingTexture = JsonAssetManager.getInstance().getEntry("avatardashing", FilmStrip.class);
+		avatarFallingTexture = JsonAssetManager.getInstance().getEntry("avatarfalling", FilmStrip.class);
+
 		avatar.setFilmStrip(Avatar.AvatarState.STANDING, avatarStandingTexture);
 		avatar.setFilmStrip(Avatar.AvatarState.CROUCHING, avatarCrouchingTexture);
 		avatar.setFilmStrip(Avatar.AvatarState.DASHING, avatarDashingTexture);
 		avatar.setFilmStrip(Avatar.AvatarState.FALLING, avatarFallingTexture);
+
+		// Set textures for caught projectiles
+		projPresentCaughtTexture = JsonAssetManager.getInstance().getEntry("projpresentcaught", TextureRegion.class);
+		projPastCaughtTexture = JsonAssetManager.getInstance().getEntry("projpastcaught", TextureRegion.class);
+		avatar.setCaughtProjTexture(PRESENT, projPresentCaughtTexture);
+		avatar.setCaughtProjTexture(PAST, projPastCaughtTexture);
+
 		addObject(avatar);
 
-		enemyPresentTexture = JsonAssetManager.getInstance().getEntry("enemypresent",TextureRegion.class);
-		enemyPastTexture = JsonAssetManager.getInstance().getEntry("enemypast",TextureRegion.class);
+		enemyPresentTexture = JsonAssetManager.getInstance().getEntry("enemypresent", TextureRegion.class);
+		enemyPastTexture = JsonAssetManager.getInstance().getEntry("enemypast", TextureRegion.class);
 		for (int ii = 0; ii < NUMBER_ENEMIES; ii++) {
 			TextureRegion texture;
 			if (TYPE_ENEMIES[ii] == PRESENT)
@@ -592,6 +502,7 @@ public class PrototypeController extends WorldController {
 				avatar.setHolding(false);
 				avatar.setCurrentPlatform(null);
 				createRedirectedProj();
+				avatar.setHeldBullet(null); // NOTE: gives error if called before createRedirectedProj()
 			}
 		}
 		if (InputController.getInstance().pressedShiftKey()) {
@@ -620,22 +531,22 @@ public class PrototypeController extends WorldController {
 		// prototype: Dash
 		boolean dashAttempt = InputController.getInstance().releasedLeftMouseButton();
 		if (dashAttempt) {
-			avatar.dash(); //handles checking if dashing is possible
+			avatar.dash(); // handles checking if dashing is possible
 		}
-//		if (dashAttempt && !avatar.isDashing() && avatar.isSticking()) {
-//			// check valid direction
-//			Vector2 mousePos = InputController.getInstance().getMousePosition();
-//			avatar.setBodyType(BodyDef.BodyType.DynamicBody);
-//			avatar.setSticking(false);
-//			avatar.setWasSticking(false);
-//			avatar.setDashing(true);
-//			avatar.setDashStartPos(avatar.getPosition().cpy());
-//			avatar.setDashDistance(avatar.getDashRange());
-//			// avatar.setDashDistance(Math.min(avatar.getDashRange(),
-//			// avatar.getPosition().dst(mousePos)));
-//			avatar.setDashForceDirection(mousePos.sub(avatar.getPosition()));
-//			avatar.setStartedDashing(1);
-//		}
+		// if (dashAttempt && !avatar.isDashing() && avatar.isSticking()) {
+		// // check valid direction
+		// Vector2 mousePos = InputController.getInstance().getMousePosition();
+		// avatar.setBodyType(BodyDef.BodyType.DynamicBody);
+		// avatar.setSticking(false);
+		// avatar.setWasSticking(false);
+		// avatar.setDashing(true);
+		// avatar.setDashStartPos(avatar.getPosition().cpy());
+		// avatar.setDashDistance(avatar.getDashRange());
+		// // avatar.setDashDistance(Math.min(avatar.getDashRange(),
+		// // avatar.getPosition().dst(mousePos)));
+		// avatar.setDashForceDirection(mousePos.sub(avatar.getPosition()));
+		// avatar.setStartedDashing(1);
+		// }
 
 		// Process actions in object model
 		avatar.setMovement(InputController.getInstance().getHorizontal() * avatar.getForce());
@@ -662,12 +573,10 @@ public class PrototypeController extends WorldController {
 		if (InputController.getInstance().pressedLeftMouseButton()
 				|| InputController.getInstance().pressedRightMouseButton()) {
 			// If either mouse button is held, set animation to be crouching
-			avatar.animate(Avatar.AvatarState.CROUCHING, false);
+			avatar.animate(Avatar.AvatarState.CROUCHING, true);
 		} else if (avatar.isSticking()) {
 			// Default animation if player is stationary
 			avatar.animate(Avatar.AvatarState.STANDING, false);
-		} else if (avatar.isDashing()) {
-			avatar.animate(Avatar.AvatarState.DASHING, false);
 		} else {
 			avatar.animate(Avatar.AvatarState.FALLING, false);
 		}
@@ -711,7 +620,6 @@ public class PrototypeController extends WorldController {
 			avatar.setWasSticking(true);
 			System.out.println("new angle " + avatar.getNewAngle());
 			avatar.setAngle(avatar.getNewAngle());
-
 		}
 	}
 
@@ -867,10 +775,10 @@ public class PrototypeController extends WorldController {
 		canvas.clear();
 		canvas.begin();
 		if (shifted) {
-			canvas.draw(backgroundTexture, Color.PINK, 0, 0, backgroundTexture.getRegionWidth(),
-					backgroundTexture.getRegionHeight());
+			System.out.println(backgroundTexture.getRegionWidth());
+			canvas.draw(backgroundTexture, Color.PINK, 0, 0, canvas.getWidth(), canvas.getHeight());
 		} else {
-			canvas.draw(backgroundTexture, 0, 0);
+			canvas.draw(backgroundTexture, Color.WHITE, 0, 0, canvas.getWidth(), canvas.getHeight());
 		}
 
 		drawObjectInWorld();
