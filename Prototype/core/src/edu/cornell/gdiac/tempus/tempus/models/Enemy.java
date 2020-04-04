@@ -313,6 +313,17 @@ public class Enemy extends CapsuleObstacle {
         canvas.drawPhysics(sensorShapeLeft, Color.RED,getX(),getY(),getAngle(),drawScale.x,drawScale.y);
         canvas.drawPhysics(sensorShapeRight,Color.RED,getX(),getY(),getAngle(),drawScale.x,drawScale.y);
     }
+
+    /**
+     * Draws the physics object.
+     *
+     * @param canvas Drawing context
+     */
+    public void draw(GameCanvas canvas) {
+        if (texture != null) {
+            canvas.draw(texture,Color.WHITE,origin.x,origin.y,getX()*drawScale.x,getY()*drawScale.y,getAngle(),1,1);
+        }
+    }
 }
 
 class LineOfSight implements RayCastCallback {
