@@ -1,7 +1,9 @@
 package edu.cornell.gdiac.tempus.tempus.models;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import edu.cornell.gdiac.tempus.GameCanvas;
 import edu.cornell.gdiac.tempus.obstacle.BoxObstacle;
 
 public class Door extends BoxObstacle {
@@ -23,6 +25,18 @@ public class Door extends BoxObstacle {
     public void initialize(){
 
     }
+
+    /**
+     * Draws the physics object.
+     *
+     * @param canvas Drawing context
+     */
+    public void draw(GameCanvas canvas) {
+        if (texture != null) {
+            canvas.draw(texture,Color.WHITE,origin.x,origin.y,getX()*drawScale.x,getY()*drawScale.y,getAngle(),1,1);
+        }
+    }
+
 //    public void initialize(){
 //        setName
 //    }
