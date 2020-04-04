@@ -712,7 +712,8 @@ public class Avatar extends CapsuleObstacle {
             if(getPosition().dst(getDashStartPos()) > getDashDistance()){
 //                System.out.println("DASHED TOO FAR");
                 setDashing(false);
-                setLinearVelocity(getLinearVelocity().cpy().scl(0.2f));
+//                setLinearVelocity(getLinearVelocity().cpy().scl(0.2f));
+                setLinearVelocity(new Vector2(0,0));
             }
         }
 
