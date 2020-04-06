@@ -182,6 +182,7 @@ public class CollisionController implements ContactListener {
             Obstacle obs = (Obstacle) enemyBody.getUserData();
             obs.markRemoved(true);
         }
+        removeBullet(proj);
     }
     private void processProjProjContact(Fixture projectile1, Fixture projectile2){
         //TODO: projectile projectile contact
