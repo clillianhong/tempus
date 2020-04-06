@@ -58,7 +58,7 @@ public class Avatar extends CapsuleObstacle {
     private static final String SENSOR_NAME = "DudeGroundSensor";
     //added for prototype
     /** Distance for dashing across screen */
-    private static final float DASH_RANGE = 4;
+    private static final float DASH_RANGE = 6;
     /** Dash force multiplier */
     private static float dashForce = 2000;
     /** Array containing orientation vectors based on the enums for orientation */
@@ -712,7 +712,7 @@ public class Avatar extends CapsuleObstacle {
             if(getPosition().dst(getDashStartPos()) > getDashDistance()){
 //                System.out.println("DASHED TOO FAR");
                 setDashing(false);
-                setLinearVelocity(getLinearVelocity().cpy().scl(0.01f));
+                setLinearVelocity(getLinearVelocity().cpy().scl(0.2f));
 //                setLinearVelocity(new Vector2(0,0));
             }
         }
@@ -826,7 +826,7 @@ public class Avatar extends CapsuleObstacle {
 
         // Draw avatar body
         canvas.draw(currentStrip, Color.WHITE,origin.x,origin.y,
-                getX()*drawScale.x,getY()*drawScale.y, getAngle(),2.0f,2.0f);
+                getX()*drawScale.x,getY()*drawScale.y, getAngle(),1.5f,1.5f);
 
         // If player is holding a projectile then draw the held projectile
         // Caught projectile should be drawn at the center of the player's horns
@@ -836,11 +836,11 @@ public class Avatar extends CapsuleObstacle {
             switch (projType) {
                 case PRESENT:
                     canvas.draw(projPresentCaughtTexture, Color.WHITE,origin.x + 10,origin.y,
-                            getX()*drawScale.x + 10,getY()*drawScale.y, getAngle(),2.0f,2.0f);
+                            getX()*drawScale.x + 10,getY()*drawScale.y, getAngle(),1.5f,1.5f);
                     break;
                 case PAST:
                     canvas.draw(projPastCaughtTexture, Color.WHITE,origin.x,origin.y,
-                            getX()*drawScale.x,getY()*drawScale.y, getAngle(),2.0f,2.0f);
+                            getX()*drawScale.x,getY()*drawScale.y, getAngle(),1.5f,1.5f);
                     break;
                 default:
                     assert false : "Invalid projectile type";

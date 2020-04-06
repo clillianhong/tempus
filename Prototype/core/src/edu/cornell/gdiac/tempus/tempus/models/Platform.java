@@ -54,7 +54,7 @@ public class Platform extends PolygonObstacle {
         float[] scaled = new float[vertices.length];
         for (int ii = 0; ii < scaled.length; ii++) {
             if (ii % 2 == 0) {
-                scaled[ii] = (vertices[ii] + getX()) * drawScale.x;
+                scaled[ii] = (vertices[ii]  + getX()) * drawScale.x;
             } else {
                 scaled[ii] = (vertices[ii] + getY()) * drawScale.y;
             }
@@ -198,4 +198,10 @@ public class Platform extends PolygonObstacle {
         setTexture(texture);
     }
 
+    public void draw(GameCanvas canvas) {
+        if (region != null) {
+            if (getName() == "wall") super.draw(canvas);
+            else canvas.draw(texture,Color.WHITE, 0, 0, getX() * drawScale.x,getY() * drawScale.y, getAngle(), 0.008f * drawScale.x, 0.0075f * drawScale.y);
+        }
+    }
 }

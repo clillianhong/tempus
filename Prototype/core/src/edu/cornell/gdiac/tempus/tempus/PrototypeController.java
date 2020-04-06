@@ -131,8 +131,6 @@ public class PrototypeController extends WorldController {
 	 * this time. However, we still want the assets themselves to be static. So we
 	 * have an AssetState that determines the current loading state. If the assets
 	 * are already loaded, this method will do nothing.
-	 *
-	 * @param Reference to global asset manager.
 	 */
 	public void loadContent() {
 		if (platformAssetState != AssetState.LOADING) {
@@ -155,7 +153,7 @@ public class PrototypeController extends WorldController {
 	/** The restitution for all physics objects */
 	private static final float BASIC_RESTITUTION = 0.1f;
 	/** Offset for bullet when firing */
-	private static final float BULLET_OFFSET = 0.6f;
+	private static final float BULLET_OFFSET = 0.7f;
 	/** The volume for sound effects */
 	private static final float EFFECT_VOLUME = 0.8f;
 
@@ -174,7 +172,7 @@ public class PrototypeController extends WorldController {
 	/** The outlines of all of the platforms */
 	private static final float[][] PLATFORMS = {
 
-			{ 1.0f, 4.0f, 3.0f, 4.0f, 3.0f, 2.5f, 1.0f, 2.5f }, { 3.0f, 8.0f, 5.0f, 8.0f, 5.0f, 7.5f, 3.0f, 7.5f },
+			{ 1.0f, 4.0f, 3.0f, 4.0f, 3.0f, 2.5f, 1.0f, 2.5f }, //{ 3.0f, 8.0f, 5.0f, 8.0f, 5.0f, 7.5f, 3.0f, 7.5f },
 			{ 5.5f, 4.5f, 7.5f, 4.5f, 7.5f, 5.0f, 5.5f, 5.0f }, // downwards diagonal
 			{ 9.0f, 6.0f, 9.0f, 7.5f, 9.5f, 7.5f, 9.5f, 6.0f }, { 7.0f, 9.0f, 7.0f, 10.5f, 7.5f, 10.5f, 7.5f, 9.0f },
 			{ 9.0f, 11.5f, 9.0f, 13.0f, 9.5f, 13.0f, 9.5f, 11.5f }, { 7.0f, 15.5f, 7.5f, 15.5f, 7.5f, 14.0f, 7.0f, 14.0f },
@@ -185,6 +183,19 @@ public class PrototypeController extends WorldController {
 			{ 25.5f, 10.0f, 25.5f, 11.5f, 26.0f, 11.5f, 26.0f, 10.0f },
 			{ 23.5f, 13.0f, 23.5f, 14.5f, 24.0f, 14.5f, 24.0f, 13.0f },
 			{ 26.5f, 13.0f, 26.5f, 14.0f, 31.0f, 14.0f, 31.0f, 13.0f } };
+
+	/** The positions of all present capsule platforms */
+	private static final float[][] PRESENT_CAPSULES = {{3.0f, 7.0f}, {6.0f, 4.0f}, {24.0f, 11.5f}};
+	/** The positions of all present diamond platforms */
+	private static final float[][] PRESENT_DIAMONDS = {{1.0f, 2.0f}, {11.0f, 7.0f}};
+	/** The positions of all present rounded platforms */
+	private static final float[][] PRESENT_ROUNDS = {{11.5f, 2.0f}, {9.5f, 13.0f}};
+	/** The positions of all past capsule platforms */
+	private static final float[][] PAST_CAPSULES = {{4.5f, 1.0f}, {14.5f, 9.0f}};
+	/** The positions of all past diamond platforms */
+	private static final float[][] PAST_DIAMONDS = {{13.5f, 3.0f}, {20.0f, 5.0f}};
+	/** The positions of all past rounded platforms */
+	private static final float[][] PAST_ROUNDS = {{2.0f, 13.0f}, {18.5f, 13.0f}};
 
 	// Other game objects
 	/** The goal door position */
@@ -205,13 +216,13 @@ public class PrototypeController extends WorldController {
 	/** The information of all the enemies */
 	private int NUMBER_ENEMIES = 2;
 	private EntityType[] TYPE_ENEMIES = { PRESENT, PAST };
-	private float[][] COOR_ENEMIES = { { 13.0f, 7.5f }, { 15.625f, 11.03125f } };
+	private float[][] COOR_ENEMIES = { { 13.0f, 6.0f }, { 15.625f, 11.03125f } };
 	private int[] CD_ENEMIES = { 80, 80 };
 
 	/** The information of all the turrets */
 	private int NUMBER_TURRETS = 2;
 	private EntityType[] TYPE_TURRETS = { PRESENT, PAST };
-	private float[][] COOR_TURRETS = { { TURRET_POS.x + 10.0f, TURRET_POS.y + 0.4f },
+	private float[][] COOR_TURRETS = { { TURRET_POS.x + 10.0f, TURRET_POS.y + 0.3f },
 			{ TURRET_POS.x, TURRET_POS.y - 5.0f } };
 	private float[][] DIR_TURRETS = { // direction of proj which the turrets shoot
 			{ -3.0f, 0 }, { 0, 2.0f } };
@@ -316,14 +327,97 @@ public class PrototypeController extends WorldController {
 			if (ii > PLATFORMS.length / 2) {
 				obj.setSpace(2);
 			}
+			//addObject(obj);
+		}
+		float[] newPlatCapsule = { 0.2f, 1.1f, 2.9f, 1.1f, 2.9f, 0.6f, 1.7f, 0.1f, 0.2f, 0.6f };
+		float[] newPlatDiamond = { 0.2f, 1.8f,  2.4f, 1.8f, 1.4f, 0.1f };
+		float[] newPlatRounded = { 0.1f, 1.4f, 0.5f, 1.7f,  2.4f, 1.7f, 2.7f, 1.4f,  2.6f, 0.8f, 2.0f, 0.2f, 0.8f, 0.2f };
+		for (int ii = 0; ii < PRESENT_CAPSULES.length; ii++) {
+			PolygonObstacle obj;
+			obj = new Platform(newPlatCapsule, PRESENT_CAPSULES[ii][0], PRESENT_CAPSULES[ii][1]);
+			obj.setBodyType(BodyDef.BodyType.StaticBody);
+			obj.setDensity(BASIC_DENSITY);
+			obj.setFriction(BASIC_FRICTION);
+			obj.setRestitution(BASIC_RESTITUTION);
+			obj.setDrawScale(scale);
+			obj.setTexture(JsonAssetManager.getInstance().getEntry("present_capsule", TextureRegion.class));
+			obj.setName("present_capsule");
+			obj.setSpace(1);
+			addObject(obj);
+		}
+		for (int ii = 0; ii < PRESENT_DIAMONDS.length; ii++) {
+			PolygonObstacle obj;
+			obj = new Platform(newPlatDiamond, PRESENT_DIAMONDS[ii][0], PRESENT_DIAMONDS[ii][1]);
+			obj.setBodyType(BodyDef.BodyType.StaticBody);
+			obj.setDensity(BASIC_DENSITY);
+			obj.setFriction(BASIC_FRICTION);
+			obj.setRestitution(BASIC_RESTITUTION);
+			obj.setDrawScale(scale);
+			obj.setTexture(JsonAssetManager.getInstance().getEntry("present_diamond", TextureRegion.class));
+			obj.setName("present_diamond");
+			obj.setSpace(1);
+			addObject(obj);
+		}
+		for (int ii = 0; ii < PRESENT_ROUNDS.length; ii++) {
+			PolygonObstacle obj;
+			obj = new Platform(newPlatRounded, PRESENT_ROUNDS[ii][0], PRESENT_ROUNDS[ii][1]);
+			obj.setBodyType(BodyDef.BodyType.StaticBody);
+			obj.setDensity(BASIC_DENSITY);
+			obj.setFriction(BASIC_FRICTION);
+			obj.setRestitution(BASIC_RESTITUTION);
+			obj.setDrawScale(scale);
+			obj.setTexture(JsonAssetManager.getInstance().getEntry("present_round", TextureRegion.class));
+			obj.setName("present_round");
+			obj.setSpace(1);
+			addObject(obj);
+		}
+		for (int ii = 0; ii < PAST_ROUNDS.length; ii++) {
+			PolygonObstacle obj;
+			obj = new Platform(newPlatRounded, PAST_ROUNDS[ii][0], PAST_ROUNDS[ii][1]);
+			obj.setBodyType(BodyDef.BodyType.StaticBody);
+			obj.setDensity(BASIC_DENSITY);
+			obj.setFriction(BASIC_FRICTION);
+			obj.setRestitution(BASIC_RESTITUTION);
+			obj.setDrawScale(scale);
+			obj.setTexture(JsonAssetManager.getInstance().getEntry("past_round", TextureRegion.class));
+			obj.setName("past_round");
+			obj.setSpace(2);
+			addObject(obj);
+		}
+		for (int ii = 0; ii < PAST_DIAMONDS.length; ii++) {
+			PolygonObstacle obj;
+			obj = new Platform(newPlatDiamond, PAST_DIAMONDS[ii][0], PAST_DIAMONDS[ii][1]);
+			obj.setBodyType(BodyDef.BodyType.StaticBody);
+			obj.setDensity(BASIC_DENSITY);
+			obj.setFriction(BASIC_FRICTION);
+			obj.setRestitution(BASIC_RESTITUTION);
+			obj.setDrawScale(scale);
+			obj.setTexture(JsonAssetManager.getInstance().getEntry("past_diamond", TextureRegion.class));
+			obj.setName("past_diamond");
+			obj.setSpace(2);
+			addObject(obj);
+		}
+		for (int ii = 0; ii < PAST_CAPSULES.length; ii++) {
+			PolygonObstacle obj;
+			obj = new Platform(newPlatCapsule, PAST_CAPSULES[ii][0], PAST_CAPSULES[ii][1]);
+			obj.setBodyType(BodyDef.BodyType.StaticBody);
+			obj.setDensity(BASIC_DENSITY);
+			obj.setFriction(BASIC_FRICTION);
+			obj.setRestitution(BASIC_RESTITUTION);
+			obj.setDrawScale(scale);
+			obj.setTexture(JsonAssetManager.getInstance().getEntry("past_capsule", TextureRegion.class));
+			obj.setName("past_capsule");
+			obj.setSpace(2);
 			addObject(obj);
 		}
 
+		//{ 1.0f, 4.0f, 3.0f, 4.0f, 3.0f, 2.5f, 1.0f, 2.5f }, { 3.0f, 8.0f, 5.0f, 8.0f, 5.0f, 7.5f, 3.0f, 7.5f },
+		//{ 5.5f, 4.5f, 7.5f, 4.5f, 7.5f, 5.0f, 5.5f, 5.0f }
 		// Create avatar
 		avatarTexture = JsonAssetManager.getInstance().getEntry("dude", TextureRegion.class);
 		dwidth = avatarTexture.getRegionWidth() / scale.x;
 		dheight = avatarTexture.getRegionHeight() / scale.y;
-		avatar = new Avatar(DUDE_POS.x, DUDE_POS.y, dwidth * 2, dheight * 2);
+		avatar = new Avatar(DUDE_POS.x, DUDE_POS.y, dwidth * 1.5f, dheight * 1.5f);
 		avatar.setDrawScale(scale);
 		avatar.setTexture(avatarTexture);
 		avatar.setBodyType(BodyDef.BodyType.DynamicBody);
@@ -771,13 +865,14 @@ public class PrototypeController extends WorldController {
 	 * @param delta The drawing context
 	 */
 	public void draw(float delta) {
-		backgroundTexture = JsonAssetManager.getInstance().getEntry("background", TextureRegion.class);
 		canvas.clear();
 		canvas.begin();
 		if (shifted) {
-			System.out.println(backgroundTexture.getRegionWidth());
-			canvas.draw(backgroundTexture, Color.PINK, 0, 0, canvas.getWidth(), canvas.getHeight());
+			//System.out.println(backgroundTexture.getRegionWidth());
+			backgroundTexture = JsonAssetManager.getInstance().getEntry("past_background", TextureRegion.class);
+			canvas.draw(backgroundTexture, Color.WHITE, 0, 0, canvas.getWidth(), canvas.getHeight());
 		} else {
+			backgroundTexture = JsonAssetManager.getInstance().getEntry("present_background", TextureRegion.class);
 			canvas.draw(backgroundTexture, Color.WHITE, 0, 0, canvas.getWidth(), canvas.getHeight());
 		}
 
