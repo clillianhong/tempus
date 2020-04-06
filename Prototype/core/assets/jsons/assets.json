@@ -4,6 +4,30 @@
       "file": "textures/platform/platform_rectangle_lv_1.png",
       "wrap": true
     },
+    "present_capsule": {
+      "file": "textures/platform/platform_capsule_lv_2_present.png",
+      "wrap": false
+    },
+    "past_capsule": {
+      "file": "textures/platform/platform_capsule_lv_2_past.png",
+      "wrap": false
+    },
+    "present_diamond": {
+      "file": "textures/platform/platform_diamond_lv_2_present.png",
+      "wrap": false
+    },
+    "past_diamond": {
+      "file": "textures/platform/platform_diamond_lv_2_past.png",
+      "wrap": false
+    },
+    "present_round": {
+      "file": "textures/platform/platform_rounded_lv_2_present.png",
+      "wrap": false
+    },
+    "past_round": {
+      "file": "textures/platform/platform_rounded_lv_2_past.png",
+      "wrap": false
+    },
     "goal": {
       "file": "textures/general/goaldoor.png",
       "wrap": true
@@ -38,6 +62,14 @@
     },
     "background": {
       "file": "textures/background/bg_present_lv_1.png",
+      "wrap": false
+    },
+    "past_background": {
+      "file": "textures/background/past_room2.png",
+      "wrap": false
+    },
+    "present_background": {
+      "file": "textures/background/present_room2.png",
       "wrap": false
     },
     "enemypresent": {
