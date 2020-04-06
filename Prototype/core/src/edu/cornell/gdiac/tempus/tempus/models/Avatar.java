@@ -60,7 +60,7 @@ public class Avatar extends CapsuleObstacle {
     /** Distance for dashing across screen */
     private static final float DASH_RANGE = 6;
     /** Dash force multiplier */
-    private static float dashForce = 2000;
+    private static float dashForce = 1000;
     /** Array containing orientation vectors based on the enums for orientation */
     private static final Vector2 [] orients =
             {new Vector2(0,1), new Vector2(0,-1), new Vector2(-1,0), new Vector2(1,0)};
@@ -826,7 +826,7 @@ public class Avatar extends CapsuleObstacle {
 
         // Draw avatar body
         canvas.draw(currentStrip, Color.WHITE,origin.x,origin.y,
-                getX()*drawScale.x,getY()*drawScale.y, getAngle(),1.5f,1.5f);
+                getX()*drawScale.x,getY()*drawScale.y, getAngle(), 0.024f * drawScale.x,0.0225f * drawScale.y);
 
         // If player is holding a projectile then draw the held projectile
         // Caught projectile should be drawn at the center of the player's horns
@@ -836,11 +836,11 @@ public class Avatar extends CapsuleObstacle {
             switch (projType) {
                 case PRESENT:
                     canvas.draw(projPresentCaughtTexture, Color.WHITE,origin.x + 10,origin.y,
-                            getX()*drawScale.x + 10,getY()*drawScale.y, getAngle(),1.5f,1.5f);
+                            getX()*drawScale.x + 10,getY()*drawScale.y, getAngle(),0.024f * drawScale.x,0.0225f * drawScale.y);
                     break;
                 case PAST:
                     canvas.draw(projPastCaughtTexture, Color.WHITE,origin.x,origin.y,
-                            getX()*drawScale.x,getY()*drawScale.y, getAngle(),1.5f,1.5f);
+                            getX()*drawScale.x,getY()*drawScale.y, getAngle(),0.024f * drawScale.x,0.0225f * drawScale.y);
                     break;
                 default:
                     assert false : "Invalid projectile type";
