@@ -272,6 +272,7 @@ public class PrototypeController extends WorldController {
 		// world.setContactListener(this);
 		setComplete(false);
 		setFailure(false);
+		levelFormat =jsonReader.parse(Gdx.files.internal("jsons/level_1.json"));
 		populateLevel();
 		timeFreeze = false;
 	}
@@ -775,8 +776,8 @@ public class PrototypeController extends WorldController {
 		else
 			bullet.setSpace(1); // present world
 		addQueuedObject(bullet);
-
-		SoundController.getInstance().play(PEW_FILE, PEW_FILE, false, EFFECT_VOLUME);
+		JsonValue pew = assetDirectory.get("sounds").get("pew");
+		SoundController.getInstance().play(pew.get("file").asString() ,pew.get("file").asString(), false, EFFECT_VOLUME);
 	}
 
 	/**
