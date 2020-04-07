@@ -179,11 +179,10 @@ public class Avatar extends CapsuleObstacle {
      * @param value left/right movement of this character.
      */
     public void setMovement(float value) {
-        movement = value;
-        // Change facing if appropriate
-        if (movement < 0) {
+//         Change facing if appropriate
+        if (value < 0) {
             faceRight = false;
-        } else if (movement > 0) {
+        } else if (value > 0) {
             faceRight = true;
         }
     }
@@ -821,12 +820,18 @@ public class Avatar extends CapsuleObstacle {
      * @param canvas Drawing context
      */
     public void draw(GameCanvas canvas) {
-        float effect = faceRight ? 1.0f : -1.0f;
-//        System.out.println("draw angle: " + getAngle());;
+        // Note: Restrict angle to the top horizontal because
+        // flipping the avatar when they are sticking
+        // below a platform looks off
+        float faceDirection = 1.0f;
+        if (getAngle() > -0.3 && getAngle() < 0.3) {
+            faceDirection = faceRight ? 1.0f : -1.0f;
+        }
 
         // Draw avatar body
         canvas.draw(currentStrip, Color.WHITE,origin.x,origin.y,
-                getX()*drawScale.x,getY()*drawScale.y, getAngle(), 0.024f * drawScale.x,0.0225f * drawScale.y);
+                getX()*drawScale.x,getY()*drawScale.y, getAngle(),
+                0.024f * drawScale.x * faceDirection,0.0225f * drawScale.y);
 
         // If player is holding a projectile then draw the held projectile
         // Caught projectile should be drawn at the center of the player's horns
