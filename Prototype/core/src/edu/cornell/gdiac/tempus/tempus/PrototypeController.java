@@ -671,6 +671,8 @@ public class PrototypeController extends WorldController {
 		} else if (avatar.isSticking()) {
 			// Default animation if player is stationary
 			avatar.animate(Avatar.AvatarState.STANDING, false);
+		} else if (avatar.isDashing()) {
+			avatar.animate(Avatar.AvatarState.DASHING, false);
 		} else {
 			avatar.animate(Avatar.AvatarState.FALLING, false);
 		}
