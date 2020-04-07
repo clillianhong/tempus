@@ -282,18 +282,21 @@ public class PrototypeController extends WorldController {
 	 */
 	private void populateLevel() {
 		// Add level goal
-		goalTile = JsonAssetManager.getInstance().getEntry("goal", TextureRegion.class);
-		float dwidth = goalTile.getRegionWidth() / scale.x;
-		float dheight = goalTile.getRegionHeight() / scale.y;
-		goalDoor = new Door(GOAL_POS.x, GOAL_POS.y, dwidth, dheight, 0);
-		goalDoor.setBodyType(BodyDef.BodyType.StaticBody);
-		goalDoor.setDensity(0.0f);
-		goalDoor.setFriction(0.0f);
-		goalDoor.setRestitution(0.0f);
-		goalDoor.setSensor(true);
+		JsonValue key = levelFormat.get("door");
+		goalDoor = new Door();
+		goalDoor.initialize(key);
+//		goalTile = JsonAssetManager.getInstance().getEntry(key.get("texture").asString(), TextureRegion.class);
+//		float [] pos = key.get("pos").asFloatArray();
+//		goalDoor = new Door(pos[0], pos[1], dwidth, dheight, 0);
+//
+//		goalDoor.setBodyType(key.get("bodytype").asString().equals("static")?BodyDef.BodyType.StaticBody : BodyDef.BodyType.DynamicBody);
+//		goalDoor.setDensity(key.get("density").asFloat());
+//		goalDoor.setFriction(key.get("friction").asFloat());
+//		goalDoor.setRestitution(key.get("restitution").asFloat());
+//		goalDoor.setSensor(key.getBoolean("sensor"));
 		goalDoor.setDrawScale(scale);
-		goalDoor.setTexture(goalTile);
-		goalDoor.setName("goal");
+//		goalDoor.setTexture(goalTile);
+//		goalDoor.setName("goal");
 		addObject(goalDoor);
 
 		earthTile = JsonAssetManager.getInstance().getEntry("earth", TextureRegion.class);
@@ -416,8 +419,8 @@ public class PrototypeController extends WorldController {
 		//{ 5.5f, 4.5f, 7.5f, 4.5f, 7.5f, 5.0f, 5.5f, 5.0f }
 		// Create avatar
 		avatarTexture = JsonAssetManager.getInstance().getEntry("dude", TextureRegion.class);
-		dwidth = avatarTexture.getRegionWidth() / scale.x;
-		dheight = avatarTexture.getRegionHeight() / scale.y;
+		float dwidth = avatarTexture.getRegionWidth() / scale.x;
+		float dheight = avatarTexture.getRegionHeight() / scale.y;
 		avatar = new Avatar(DUDE_POS.x, DUDE_POS.y, dwidth, dheight);
 		avatar.setDrawScale(scale);
 		avatar.setTexture(avatarTexture);
