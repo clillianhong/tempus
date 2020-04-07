@@ -8,9 +8,9 @@
   "bullet_offset": 0.7,
   "effect_volume": 0.8,
   "door": {
-    "texture": "goal",
     "pos": [29.5, 15.5],
     "size": [1.6, 1.6],
+    "texture": "goal",
     "bodytype": "static",
     "density": 0.0,
     "friction": 0.0,

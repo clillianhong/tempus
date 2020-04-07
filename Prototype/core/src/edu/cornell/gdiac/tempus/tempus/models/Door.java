@@ -12,7 +12,6 @@ import edu.cornell.gdiac.util.*;
 public class Door extends BoxObstacle {
 
     private int NEXT_LEVEL;
-    private TextureRegion goalTile;
     private Vector2 scale;
     /** The goal door position */
     private static Vector2 GOAL_POS = new Vector2(29.5f,15.5f);
@@ -27,7 +26,7 @@ public class Door extends BoxObstacle {
         setSensor(true);
     }
     public void initialize(JsonValue key){
-        goalTile = JsonAssetManager.getInstance().getEntry(key.get("texture").asString(), TextureRegion.class);
+        TextureRegion goalTile = JsonAssetManager.getInstance().getEntry(key.get("texture").asString(), TextureRegion.class);
         float [] pos = key.get("pos").asFloatArray();
         float [] size = key.get("size").asFloatArray();
         setPosition(pos[0],pos[1]);
@@ -38,6 +37,7 @@ public class Door extends BoxObstacle {
         setRestitution(key.get("restitution").asFloat());
         setTexture(goalTile);
         setName("goal");
+        NEXT_LEVEL = key.get("nextlevel").asInt();
     }
 
     /**
