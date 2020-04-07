@@ -643,9 +643,15 @@ public class PrototypeController extends WorldController {
 		// }
 
 		// Process actions in object model
-		avatar.setMovement(InputController.getInstance().getHorizontal() * avatar.getForce());
 		avatar.setJumping(InputController.getInstance().didPrimary());
 		avatar.setShooting(InputController.getInstance().didSecondary());
+
+		// Sets which direction the avatar is facing (left or right)
+		if (InputController.getInstance().pressedLeftMouseButton()) {
+			Vector2 mousePos = InputController.getInstance().getMousePosition();
+			Vector2 avatarPos = avatar.getPosition().cpy();
+			avatar.setMovement(mousePos.x - avatarPos.x);
+		}
 
 		// Add bullet if enemy can fire
 		for (Obstacle o : objects) {
