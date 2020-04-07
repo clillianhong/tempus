@@ -282,9 +282,9 @@ public class PrototypeController extends WorldController {
 	 */
 	private void populateLevel() {
 		// Add level goal
-		JsonValue key = levelFormat.get("door");
 		goalDoor = new Door();
-		goalDoor.initialize(key);
+		goalDoor.initialize(levelFormat.get("door"));
+		//TODO: Delete
 //		goalTile = JsonAssetManager.getInstance().getEntry(key.get("texture").asString(), TextureRegion.class);
 //		float [] pos = key.get("pos").asFloatArray();
 //		goalDoor = new Door(pos[0], pos[1], dwidth, dheight, 0);
@@ -294,9 +294,9 @@ public class PrototypeController extends WorldController {
 //		goalDoor.setFriction(key.get("friction").asFloat());
 //		goalDoor.setRestitution(key.get("restitution").asFloat());
 //		goalDoor.setSensor(key.getBoolean("sensor"));
-		goalDoor.setDrawScale(scale);
 //		goalDoor.setTexture(goalTile);
 //		goalDoor.setName("goal");
+		goalDoor.setDrawScale(scale);
 		addObject(goalDoor);
 
 		earthTile = JsonAssetManager.getInstance().getEntry("earth", TextureRegion.class);
