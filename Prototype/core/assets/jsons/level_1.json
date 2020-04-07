@@ -1,9 +1,24 @@
 {
+  "scale": [1.0,1.0],
   "gravity": -14.7,
   "density": 0.0,
   "heavy_density": 10.0,
   "friction": 0.6,
   "restitution": 0.1,
   "bullet_offset": 0.7,
-  "effect_volume": 0.8
+  "effect_volume": 0.8,
+  "door": {
+    "texture": "goal",
+    "pos": [29.5, 15.5],
+    "size": [96.0,96.0],
+    "bodytype": "static",
+    "density": 0.0,
+    "friction": 0.0,
+    "restitution": 0.0,
+    "sensor": true,
+    "nextlevel": 0
+  },
+  "avatar": {
+    "pos": []
+  }
 }
