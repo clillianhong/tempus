@@ -71,9 +71,9 @@ public class Avatar extends CapsuleObstacle {
 
     // This is to fit the image to a tigher hitbox
     /** The amount to shrink the body fixture (vertically) relative to the image */
-    private static final float VSHRINK = 0.95f;
+    private static final float VSHRINK = 0.0225f * 0.5f;
     /** The amount to shrink the body fixture (horizontally) relative to the image */
-    private static final float HSHRINK = 0.7f;
+    private static final float HSHRINK = 0.024f * 0.9f;
     /** The amount to shrink the sensor fixture (horizontally) relative to the image */
     private static final float SSHRINK = 0.6f;
 
@@ -212,7 +212,7 @@ public class Avatar extends CapsuleObstacle {
      *
      * @return true if there the player did a dash (still has dashes left) **/
     public boolean dash() {
-        if(numDashes == 0 && isSticking){
+        if(isSticking){
             this.setDashing(false);
             numDashes = maxDashes;
         }
@@ -565,8 +565,8 @@ public class Avatar extends CapsuleObstacle {
      * @param width		The object width in physics units
      * @param height	The object width in physics units
      */
-    public Avatar(float x, float y, float width, float height) {
-        super(x,y,width*HSHRINK,height*VSHRINK);
+    public Avatar(float x, float y, float width, float height, Vector2 scale) {
+        super(x,y, width*HSHRINK * scale.x,height*VSHRINK * scale.y);
         setDensity(DENSITY);
 //        setFriction(FRICTION);  /// HE WILL STICK TO WALLS IF YOU FORGET
         setFixedRotation(true);

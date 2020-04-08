@@ -15,8 +15,8 @@ public class Door extends BoxObstacle {
     private static Vector2 GOAL_POS = new Vector2(29.5f,15.5f);
 
 
-    public Door(float x, float y, float width, float height, int next_level) {
-        super(x, y, width, height);
+    public Door(float x, float y, float width, float height, int next_level, Vector2 scale) {
+        super(x, y,0.024f *scale.x *  width , 0.0225f * scale.y *  height);
         NEXT_LEVEL = next_level;
     }
     public Door() {
@@ -33,7 +33,7 @@ public class Door extends BoxObstacle {
      */
     public void draw(GameCanvas canvas) {
         if (texture != null) {
-            canvas.draw(texture,Color.WHITE,origin.x,origin.y,getX()*drawScale.x,getY()*drawScale.y,getAngle(),1,1);
+            canvas.draw(texture,Color.WHITE,origin.x,origin.y,getX()*drawScale.x,getY()*drawScale.y,getAngle(),0.03f * drawScale.x,0.03f * drawScale.y);
         }
     }
 
