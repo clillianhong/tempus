@@ -18,6 +18,12 @@
     "sensor": true,
     "nextlevel": 0
   },
+  "walls": {
+    "wall1": {
+      "verts": [0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 18.0f, 0.0f, 18.0f],
+
+    }
+  },
   "avatar": {
     "pos": []
   }

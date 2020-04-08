@@ -16,13 +16,19 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.utils.Json;
-import com.badlogic.gdx.utils.JsonReader;
-import com.badlogic.gdx.utils.JsonValue;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.*;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import edu.cornell.gdiac.tempus.InputController;
 import edu.cornell.gdiac.tempus.WorldController;
 import edu.cornell.gdiac.util.JsonAssetManager;
@@ -32,9 +38,6 @@ import edu.cornell.gdiac.tempus.tempus.models.*;
 import edu.cornell.gdiac.util.FilmStrip;
 import edu.cornell.gdiac.util.PooledList;
 import edu.cornell.gdiac.util.SoundController;
-
-import java.util.Iterator;
-import java.util.Vector;
 
 import static edu.cornell.gdiac.tempus.tempus.models.EntityType.PAST;
 import static edu.cornell.gdiac.tempus.tempus.models.EntityType.PRESENT;
@@ -48,7 +51,8 @@ import static edu.cornell.gdiac.tempus.tempus.models.EntityType.PRESENT;
  * be static. This is the purpose of our AssetState variable; it ensures that
  * multiple instances place nicely with the static assets.
  */
-public class PrototypeController extends WorldController {
+public class LevelController extends WorldController {
+
 	/** Checks if did debug */
 	private boolean debug;
 
@@ -78,7 +82,7 @@ public class PrototypeController extends WorldController {
 	private TextureRegion projPresentCaughtTexture;
 	/** Texture asset for the caught proj of type past */
 	private TextureRegion projPastCaughtTexture;
-	/** Texture asset for the turret */
+	/** Texture aobjects.sset for the turret */
 	private TextureRegion turretTexture;
 	/** Texture asset for present enemy */
 	private TextureRegion enemyPresentTexture;
@@ -153,7 +157,7 @@ public class PrototypeController extends WorldController {
 	/** The restitution for all physics objects */
 	private static final float BASIC_RESTITUTION = 0.1f;
 	/** Offset for bullet when firing */
-	private static final float BULLET_OFFSET = 0.7f;
+	private static final float BULLET_OFFSET = 0.03f;
 	/** The volume for sound effects */
 	private static final float EFFECT_VOLUME = 0.8f;
 
@@ -172,7 +176,7 @@ public class PrototypeController extends WorldController {
 	/** The outlines of all of the platforms */
 	private static final float[][] PLATFORMS = {
 
-			{ 1.0f, 4.0f, 3.0f, 4.0f, 3.0f, 2.5f, 1.0f, 2.5f }, //{ 3.0f, 8.0f, 5.0f, 8.0f, 5.0f, 7.5f, 3.0f, 7.5f },
+			{ 1.0f, 4.0f, 3.0f, 4.0f, 3.0f, 2.5f, 1.0f, 2.5f }, // { 3.0f, 8.0f, 5.0f, 8.0f, 5.0f, 7.5f, 3.0f, 7.5f },
 			{ 5.5f, 4.5f, 7.5f, 4.5f, 7.5f, 5.0f, 5.5f, 5.0f }, // downwards diagonal
 			{ 9.0f, 6.0f, 9.0f, 7.5f, 9.5f, 7.5f, 9.5f, 6.0f }, { 7.0f, 9.0f, 7.0f, 10.5f, 7.5f, 10.5f, 7.5f, 9.0f },
 			{ 9.0f, 11.5f, 9.0f, 13.0f, 9.5f, 13.0f, 9.5f, 11.5f }, { 7.0f, 15.5f, 7.5f, 15.5f, 7.5f, 14.0f, 7.0f, 14.0f },
@@ -185,17 +189,17 @@ public class PrototypeController extends WorldController {
 			{ 26.5f, 13.0f, 26.5f, 14.0f, 31.0f, 14.0f, 31.0f, 13.0f } };
 
 	/** The positions of all present capsule platforms */
-	private static final float[][] PRESENT_CAPSULES = {{3.0f, 7.0f}, {6.0f, 4.0f}, {24.0f, 11.5f}};
+	private static final float[][] PRESENT_CAPSULES = { { 3.0f, 7.0f }, { 6.0f, 4.0f }, { 24.0f, 11.5f } };
 	/** The positions of all present diamond platforms */
-	private static final float[][] PRESENT_DIAMONDS = {{1.0f, 2.0f}, {11.0f, 7.0f}};
+	private static final float[][] PRESENT_DIAMONDS = { { 1.0f, 2.0f }, { 11.0f, 7.0f } };
 	/** The positions of all present rounded platforms */
-	private static final float[][] PRESENT_ROUNDS = {{11.5f, 2.0f}, {9.5f, 13.0f}};
+	private static final float[][] PRESENT_ROUNDS = { { 11.5f, 2.0f }, { 9.5f, 13.0f } };
 	/** The positions of all past capsule platforms */
-	private static final float[][] PAST_CAPSULES = {{4.5f, 1.0f}, {14.5f, 9.0f}};
+	private static final float[][] PAST_CAPSULES = { { 4.5f, 1.0f }, { 14.5f, 9.0f } };
 	/** The positions of all past diamond platforms */
-	private static final float[][] PAST_DIAMONDS = {{13.5f, 3.0f}, {20.0f, 5.0f}};
+	private static final float[][] PAST_DIAMONDS = { { 13.5f, 3.0f }, { 20.0f, 5.0f } };
 	/** The positions of all past rounded platforms */
-	private static final float[][] PAST_ROUNDS = {{2.0f, 13.0f}, {18.5f, 13.0f}};
+	private static final float[][] PAST_ROUNDS = { { 2.0f, 13.0f }, { 18.5f, 13.0f } };
 
 	// Other game objects
 	/** The goal door position */
@@ -241,7 +245,7 @@ public class PrototypeController extends WorldController {
 	 *
 	 * The game has default gravity and other settings
 	 */
-	public PrototypeController() {
+	public LevelController() {
 		super(DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_GRAVITY);
 		setDebug(false);
 		setComplete(false);
@@ -250,6 +254,7 @@ public class PrototypeController extends WorldController {
 		shifted = false;
 		debug = false;
 		timeFreeze = false;
+
 	}
 
 	/**
@@ -272,30 +277,67 @@ public class PrototypeController extends WorldController {
 		// world.setContactListener(this);
 		setComplete(false);
 		setFailure(false);
-		levelFormat =jsonReader.parse(Gdx.files.internal("jsons/level_1.json"));
+		levelFormat = jsonReader.parse(Gdx.files.internal("jsons/level_1.json"));
 		populateLevel();
 		timeFreeze = false;
+	}
+
+	private Skin skin;
+	private Stage stage;
+
+	private Table table;
+	private TextButton startButton;
+	private TextButton quitButton;
+
+	private void exitGame() {
+		listener.exitScreen(this, EXIT_QUIT);
 	}
 
 	/**
 	 * Lays out the game geography.
 	 */
 	private void populateLevel() {
+
+		// tester stage!
+		skin = new Skin(Gdx.files.internal("jsons/uiskin.json"));
+		stage = new Stage(new ScreenViewport());
+		table = new Table();
+		table.setWidth(stage.getWidth());
+		table.align(Align.center | Align.top);
+		table.setPosition(0, Gdx.graphics.getHeight());
+		startButton = new TextButton("New Game", skin);
+		quitButton = new TextButton("Quit Game", skin);
+		quitButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				exitGame();
+			}
+		});
+		table.padTop(30);
+		table.add(startButton).padBottom(30);
+		table.row();
+		table.add(quitButton);
+		stage.addActor(table);
+		Gdx.input.setInputProcessor(stage);
+
 		// Add level goal
 		goalDoor = new Door();
 		goalDoor.initialize(levelFormat.get("door"));
-		//TODO: Delete
-//		goalTile = JsonAssetManager.getInstance().getEntry(key.get("texture").asString(), TextureRegion.class);
-//		float [] pos = key.get("pos").asFloatArray();
-//		goalDoor = new Door(pos[0], pos[1], dwidth, dheight, 0);
-//
-//		goalDoor.setBodyType(key.get("bodytype").asString().equals("static")?BodyDef.BodyType.StaticBody : BodyDef.BodyType.DynamicBody);
-//		goalDoor.setDensity(key.get("density").asFloat());
-//		goalDoor.setFriction(key.get("friction").asFloat());
-//		goalDoor.setRestitution(key.get("restitution").asFloat());
-//		goalDoor.setSensor(key.getBoolean("sensor"));
-//		goalDoor.setTexture(goalTile);
-//		goalDoor.setName("goal");
+		// TODO: Delete
+		// goalTile =
+		// JsonAssetManager.getInstance().getEntry(key.get("texture").asString(),
+		// TextureRegion.class);
+		// float [] pos = key.get("pos").asFloatArray();
+		// goalDoor = new Door(pos[0], pos[1], dwidth, dheight, 0);
+		//
+		// goalDoor.setBodyType(key.get("bodytype").asString().equals("static")?BodyDef.BodyType.StaticBody
+		// : BodyDef.BodyType.DynamicBody);
+		// goalDoor.setDensity(key.get("density").asFloat());
+		// goalDoor.setFriction(key.get("friction").asFloat());
+		// goalDoor.setRestitution(key.get("restitution").asFloat());
+		// goalDoor.setSensor(key.getBoolean("sensor"));
+		// goalDoor.setTexture(goalTile);
+		// goalDoor.setName("goal");
 		goalDoor.setDrawScale(scale);
 		addObject(goalDoor);
 
@@ -311,7 +353,7 @@ public class PrototypeController extends WorldController {
 			obj.setDrawScale(scale);
 			obj.setTexture(earthTile);
 			obj.setName(nameWall);
-			addObject(obj);
+			// addObject(obj);
 		}
 
 		String namePlatform = "platform";
@@ -331,11 +373,11 @@ public class PrototypeController extends WorldController {
 			if (ii > PLATFORMS.length / 2) {
 				obj.setSpace(2);
 			}
-			//addObject(obj);
+			// addObject(obj);
 		}
 		float[] newPlatCapsule = { 0.2f, 1.1f, 2.9f, 1.1f, 2.9f, 0.6f, 1.7f, 0.1f, 0.2f, 0.6f };
-		float[] newPlatDiamond = { 0.2f, 1.8f,  2.4f, 1.8f, 1.4f, 0.1f };
-		float[] newPlatRounded = { 0.1f, 1.4f, 0.5f, 1.7f,  2.4f, 1.7f, 2.7f, 1.4f,  2.6f, 0.8f, 2.0f, 0.2f, 0.8f, 0.2f };
+		float[] newPlatDiamond = { 0.2f, 1.8f, 2.4f, 1.8f, 1.4f, 0.1f };
+		float[] newPlatRounded = { 0.1f, 1.4f, 0.5f, 1.7f, 2.4f, 1.7f, 2.7f, 1.4f, 2.6f, 0.8f, 2.0f, 0.2f, 0.8f, 0.2f };
 		for (int ii = 0; ii < PRESENT_CAPSULES.length; ii++) {
 			PolygonObstacle obj;
 			obj = new Platform(newPlatCapsule, PRESENT_CAPSULES[ii][0], PRESENT_CAPSULES[ii][1]);
@@ -415,8 +457,9 @@ public class PrototypeController extends WorldController {
 			addObject(obj);
 		}
 
-		//{ 1.0f, 4.0f, 3.0f, 4.0f, 3.0f, 2.5f, 1.0f, 2.5f }, { 3.0f, 8.0f, 5.0f, 8.0f, 5.0f, 7.5f, 3.0f, 7.5f },
-		//{ 5.5f, 4.5f, 7.5f, 4.5f, 7.5f, 5.0f, 5.5f, 5.0f }
+		// { 1.0f, 4.0f, 3.0f, 4.0f, 3.0f, 2.5f, 1.0f, 2.5f }, { 3.0f, 8.0f, 5.0f, 8.0f,
+		// 5.0f, 7.5f, 3.0f, 7.5f },
+		// { 5.5f, 4.5f, 7.5f, 4.5f, 7.5f, 5.0f, 5.5f, 5.0f }
 		// Create avatar
 		avatarTexture = JsonAssetManager.getInstance().getEntry("dude", TextureRegion.class);
 		float dwidth = avatarTexture.getRegionWidth() / scale.x;
@@ -457,7 +500,7 @@ public class PrototypeController extends WorldController {
 			dwidth = texture.getRegionWidth() / scale.x;
 			dheight = texture.getRegionHeight() / scale.y;
 			Enemy enemy = new Enemy(TYPE_ENEMIES[ii], COOR_ENEMIES[ii][0], COOR_ENEMIES[ii][1], dwidth, dheight, texture,
-					CD_ENEMIES[ii], avatar);
+					CD_ENEMIES[ii], avatar, scale);
 			enemy.setBodyType(BodyDef.BodyType.DynamicBody);
 			enemy.setDrawScale(scale);
 			enemy.setName("enemy");
@@ -471,7 +514,7 @@ public class PrototypeController extends WorldController {
 			dheight = texture.getRegionHeight() / scale.y;
 			Vector2 projDir = new Vector2(DIR_TURRETS[ii][0], DIR_TURRETS[ii][1]);
 			Enemy turret = new Enemy(TYPE_TURRETS[ii], COOR_TURRETS[ii][0], COOR_TURRETS[ii][1], dwidth, dheight, texture,
-					CD_TURRETS[ii], projDir);
+					CD_TURRETS[ii], projDir, scale);
 			turret.setBodyType(BodyDef.BodyType.StaticBody);
 			turret.setDrawScale(scale);
 			turret.setName("turret");
@@ -735,9 +778,9 @@ public class PrototypeController extends WorldController {
 	 * @param enemy enemy
 	 */
 	private void createBullet(Enemy enemy) {
-		float offset = BULLET_OFFSET;
+		float offset = BULLET_OFFSET * scale.y;
 		bulletBigTexture = JsonAssetManager.getInstance().getEntry("bulletbig", TextureRegion.class);
-		float radius = bulletBigTexture.getRegionWidth() / (2.0f * scale.x);
+		float radius = bulletBigTexture.getRegionWidth() / (90.0f);
 		Projectile bullet = new Projectile(enemy.getType(), enemy.getX(), enemy.getY() + offset, radius);
 
 		bullet.setName("bullet");
@@ -788,7 +831,7 @@ public class PrototypeController extends WorldController {
 			bullet.setSpace(1); // present world
 		addQueuedObject(bullet);
 		JsonValue pew = assetDirectory.get("sounds").get("pew");
-		SoundController.getInstance().play(pew.get("file").asString() ,pew.get("file").asString(), false, EFFECT_VOLUME);
+		SoundController.getInstance().play(pew.get("file").asString(), pew.get("file").asString(), false, EFFECT_VOLUME);
 	}
 
 	/**
@@ -828,7 +871,7 @@ public class PrototypeController extends WorldController {
 		// Do not draw while player is dashing or not holding a projectile
 		if (avatar.isDashing() && !avatar.isHolding())
 			return;
-		if (!avatar.isHolding && !avatar.isSticking())
+		if (!avatar.canDash())
 			return;
 		// Draw dynamic dash indicator
 		Vector2 avPos = avatar.getPosition();
@@ -880,7 +923,7 @@ public class PrototypeController extends WorldController {
 		canvas.clear();
 		canvas.begin();
 		if (shifted) {
-			//System.out.println(backgroundTexture.getRegionWidth());
+			// System.out.println(backgroundTexture.getRegionWidth());
 			backgroundTexture = JsonAssetManager.getInstance().getEntry("past_background", TextureRegion.class);
 			canvas.draw(backgroundTexture, Color.WHITE, 0, 0, canvas.getWidth(), canvas.getHeight());
 		} else {
@@ -898,6 +941,10 @@ public class PrototypeController extends WorldController {
 			drawDebugInWorld();
 			canvas.endDebug();
 		}
+
+		stage.act(Gdx.graphics.getDeltaTime());
+		stage.draw();
+
 		// Final message
 		if (complete && !failed) {
 			displayFont.setColor(Color.YELLOW);

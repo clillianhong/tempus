@@ -23,6 +23,12 @@ import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.glutils.*;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 /**
  * Primary view class for the game, abstracting the basic graphics calls.
@@ -90,6 +96,8 @@ public class GameCanvas {
 	/** Cache object to handle raw textures */
 	private TextureRegion holder;
 
+
+
 	/**
 	 * Creates a new GameCanvas determined by the application configuration.
 	 * 
@@ -107,6 +115,10 @@ public class GameCanvas {
 		camera.setToOrtho(false);
 		spriteBatch.setProjectionMatrix(camera.combined);
 		debugRender.setProjectionMatrix(camera.combined);
+		System.out.println(
+				"SCREEN WIDTH: " + getWidth() + "\n" +
+						"SCREEN HEIGHT: " + getHeight()
+		);
 
 		// Initialize the cache objects
 		holder = new TextureRegion();
@@ -375,7 +387,9 @@ public class GameCanvas {
     public void end() {
     	spriteBatch.end();
     	active = DrawPass.INACTIVE;
-    }
+
+
+	}
 
 	/**
 	 * Draws the tinted texture at the given position.
