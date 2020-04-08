@@ -20,17 +20,9 @@ import com.badlogic.gdx.graphics.g2d.freetype.*;
 import com.badlogic.gdx.assets.loaders.*;
 import com.badlogic.gdx.assets.loaders.resolvers.*;
 
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import edu.cornell.gdiac.tempus.tempus.MainMenuMode;
-import edu.cornell.gdiac.tempus.tempus.PrototypeController;
+import edu.cornell.gdiac.tempus.tempus.LevelController;
 import edu.cornell.gdiac.util.*;
-
-import java.lang.management.ManagementFactory;
 
 /**
  * Root class for a LibGDX.  
@@ -86,7 +78,7 @@ public class GDXRoot extends Game implements ScreenListener {
 		// Initialize the three game worlds
 
 		controllers = new WorldController[1];
-		controllers[0] = new PrototypeController();
+		controllers[0] = new LevelController();
 		controllers[0].preLoadContent(manager);
 
 		menu = new MainMenuMode();

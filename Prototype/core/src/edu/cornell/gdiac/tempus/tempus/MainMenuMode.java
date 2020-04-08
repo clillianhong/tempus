@@ -3,10 +3,13 @@ package edu.cornell.gdiac.tempus.tempus;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -21,6 +24,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import edu.cornell.gdiac.tempus.GameCanvas;
+import edu.cornell.gdiac.util.JsonAssetManager;
 import edu.cornell.gdiac.util.ScreenListener;
 
 import static edu.cornell.gdiac.tempus.WorldController.EXIT_NEXT;
@@ -37,6 +41,8 @@ public class MainMenuMode implements Screen {
     /** Listener that will update the player mode when we are done */
     protected ScreenListener listener;
     private boolean active;
+    /** background texture region */
+    TextureRegion backgroundTexture;
 
 
     /** Reference to the game canvas */
@@ -106,6 +112,8 @@ public class MainMenuMode implements Screen {
 
         float cw = sw * 0.7f;
         float ch = sh * 0.5f;
+
+        backgroundTexture = new TextureRegion(JsonAssetManager.getInstance().get("textures/background/past_room2.png", Texture.class));
 
         Container<Table> tableContainer = new Container<Table>();
         tableContainer.setSize(cw, ch);
@@ -177,6 +185,13 @@ public class MainMenuMode implements Screen {
         if(active){
             Gdx.gl.glClearColor(.1f, .12f, .16f, 1);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+            canvas.clear();
+            canvas.begin();
+
+            canvas.draw(backgroundTexture, Color.WHITE, 0, 0, canvas.getWidth(), canvas.getHeight());
+
+            canvas.end();
 
             stage.act();
             stage.draw();
