@@ -14,11 +14,9 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Container;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -78,7 +76,7 @@ public class MainMenuMode implements Screen {
 
     public void createMode(){
 //        atlas = new TextureAtlas("skin.atlas");
-        skin = new Skin(Gdx.files.internal("jsons/uiskin.json"));
+        skin = new Skin(Gdx.files.internal("skins/flat_earth_skin/flat-earth-ui.json"));
 
         batch = new SpriteBatch();
         camera = new OrthographicCamera();
@@ -115,33 +113,35 @@ public class MainMenuMode implements Screen {
 
         backgroundTexture = new TextureRegion(JsonAssetManager.getInstance().get("textures/background/past_room2.png", Texture.class));
 
+        //table container to center main table
         Container<Table> tableContainer = new Container<Table>();
         tableContainer.setSize(cw, ch);
         tableContainer.setPosition((sw - cw) / 2.0f, (sh - ch) / 2.0f);
         tableContainer.fillX();
 
-
         //Stage should controller input:
         Gdx.input.setInputProcessor(stage);
 
-        //Create Table
         Table mainTable = new Table(skin);
-//        mainTable.setPosition(Gdx.graphics.getWidth()/2f,Gdx.graphics.getHeight()/2f);
 
-        //Set table to fill stage
         mainTable.setWidth(stage.getWidth());
-//        mainTable.align(Align.center | Align.top);
-//        mainTable.center();
-//        mainTable.setFillParent(true);
-        //Set alignment of contents in the table.
-//        mainTable.top();
 
+        //Create header
+        Image header = new Image( new TextureRegion(new Texture(Gdx.files.internal("textures/gui/header.png"))));
+        
         //Create buttons
-        TextButton startButton = new TextButton("Start", skin);
-        TextButton exitButton = new TextButton("Exit", skin);
-        TextButton helpButton = new TextButton("Help", skin);
-        TextButton aboutButton = new TextButton("About", skin);
-
+        ImageButton startButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/start_button.png")))));
+//        startButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/start_button.png"))));
+//        startButton.getStyle().imageDown = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/start_button.png"))));
+        ImageButton exitButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/quit_button.png")))));
+//        exitButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/quit_button.png"))));
+//        exitButton.getStyle().imageDown = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/quit_button.png"))));
+        ImageButton helpButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/help_button.png")))));
+//        helpButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/help_button.png"))));
+//        helpButton.getStyle().imageDown = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/help_button.png"))));
+        ImageButton aboutButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/about_button.png")))));
+//        aboutButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/about_button.png"))));
+//        aboutButton.getStyle().imageDown = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/about_button.png"))));
 
         //Add listeners to buttons
         startButton.addListener(new ClickListener(){
@@ -157,22 +157,19 @@ public class MainMenuMode implements Screen {
             }
         });
 
-//        startButton.setSize(col_width*8, row_height);
-//        startButton.setTransform(true);
-//        startButton.scaleBy(3f);
-//
-//        exitButton.setSize(col_width*8, row_height);
-//        exitButton.setTransform(true);
-//        exitButton.scaleBy(3f);
         mainTable.debugAll();
-        mainTable.row().colspan(4).expandX().fillX();
 
-//        mainTable.row().expandX().fillX();
+        //add header
+        mainTable.row();
+        mainTable.add(header).height(header.getHeight()*4).width(header.getWidth()*4).colspan(4);
+        mainTable.row();
+        mainTable.row().expandX().fillX();
+
+        //add buttons
         mainTable.add(startButton).pad(50).expandX().fillX();
         mainTable.add(exitButton).pad(50).expandX().fillX();
         mainTable.add(helpButton).pad(50).expandX().fillX();
         mainTable.add(aboutButton).pad(50).expandX().fillX();
-//        mainTable.row().expandX().fillX();
 
 
         tableContainer.setActor(mainTable);
