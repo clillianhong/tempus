@@ -417,7 +417,7 @@ public class PrototypeController extends WorldController {
 		avatarTexture = JsonAssetManager.getInstance().getEntry("dude", TextureRegion.class);
 		dwidth = avatarTexture.getRegionWidth() / scale.x;
 		dheight = avatarTexture.getRegionHeight() / scale.y;
-		avatar = new Avatar(DUDE_POS.x, DUDE_POS.y, dwidth, dheight);
+		avatar = new Avatar(DUDE_POS.x, DUDE_POS.y, dwidth * 1.5f, dheight * 1.5f);
 		avatar.setDrawScale(scale);
 		avatar.setTexture(avatarTexture);
 		avatar.setBodyType(BodyDef.BodyType.DynamicBody);
