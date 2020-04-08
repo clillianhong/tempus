@@ -51,7 +51,7 @@ import static edu.cornell.gdiac.tempus.tempus.models.EntityType.PRESENT;
  * be static. This is the purpose of our AssetState variable; it ensures that
  * multiple instances place nicely with the static assets.
  */
-public class PrototypeController extends WorldController {
+public class LevelController extends WorldController {
 
 
 	/** Checks if did debug */
@@ -84,7 +84,7 @@ public class PrototypeController extends WorldController {
 	private TextureRegion projPresentCaughtTexture;
 	/** Texture asset for the caught proj of type past */
 	private TextureRegion projPastCaughtTexture;
-	/** Texture asset for the turret */
+	/** Texture aobjects.sset for the turret */
 	private TextureRegion turretTexture;
 	/** Texture asset for present enemy */
 	private TextureRegion enemyPresentTexture;
@@ -249,7 +249,7 @@ public class PrototypeController extends WorldController {
 	 *
 	 * The game has default gravity and other settings
 	 */
-	public PrototypeController() {
+	public LevelController() {
 		super(DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_GRAVITY);
 		setDebug(false);
 		setComplete(false);
