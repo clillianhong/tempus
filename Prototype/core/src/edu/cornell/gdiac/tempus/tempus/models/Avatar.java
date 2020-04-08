@@ -67,6 +67,7 @@ public class Avatar extends CapsuleObstacle {
     private static final String LEFT_SENSOR_NAME = "DudeLeftSensor";
     private static final String RIGHT_SENSOR_NAME = "DudeRightSensor";
     private static final String TOP_SENSOR_NAME = "DudeTopSensor";
+    private static final String CORE_SENSOR_NAME = "DudeCenterSensor";
 
     // This is to fit the image to a tigher hitbox
     /** The amount to shrink the body fixture (vertically) relative to the image */
@@ -108,6 +109,9 @@ public class Avatar extends CapsuleObstacle {
     /** Top sensor to determine sticking on the top */
     private Fixture sensorFixtureTop;
     private PolygonShape sensorShapeTop;
+    /** Core sensor for line of sight */
+    private Fixture sensorFixtureCore;
+    private PolygonShape sensorShapeCore;
 
     /** how long ago the character started dashing */
     private int startedDashing;
@@ -519,6 +523,10 @@ public class Avatar extends CapsuleObstacle {
         return TOP_SENSOR_NAME;
     }
 
+    public String getCoreSensorName() {
+        return CORE_SENSOR_NAME;
+    }
+
     /**
      * Returns the height/width of the sensor
      *
@@ -650,6 +658,14 @@ public class Avatar extends CapsuleObstacle {
 
         sensorFixtureTop = body.createFixture(sensorDef);
         sensorFixtureTop.setUserData(getTopSensorName());
+
+        Vector2 sensorCenterCore = new Vector2(0, 0);
+        sensorShapeCore = new PolygonShape();
+        sensorShapeCore.setAsBox(SENSOR_HEIGHT * 4, SENSOR_HEIGHT * 4, sensorCenterCore, 0.0f);
+        sensorDef.shape = sensorShapeCore;
+
+        sensorFixtureCore = body.createFixture(sensorDef);
+        sensorFixtureCore.setUserData(getCoreSensorName());
 
         return true;
     }
