@@ -478,6 +478,8 @@ public class PrototypeController extends WorldController {
 		world.setContactListener(collisionController);
 	}
 
+	public PooledList<Obstacle> getObjects() { return objects;}
+
 	/**
 	 * Returns whether to process the update loop
 	 *
@@ -651,9 +653,15 @@ public class PrototypeController extends WorldController {
 		for (Obstacle o : objects) {
 			if (o instanceof Enemy) {
 				Enemy e = (Enemy) o.getBody().getUserData();
+				if (!e.isTurret()) {
+					e.createLineOfSight(world);
+					e.applyForce();
+				}
 				if (e.canFire()) {
-					if (o.getName() == "enemy")
+					if (o.getName() == "enemy") {
 						e.setVelocity();
+						System.out.println("enemy firing");
+					}
 					createBullet(e);
 				} else
 					e.coolDown(true);
@@ -737,6 +745,7 @@ public class PrototypeController extends WorldController {
 		bullet.setLinearVelocity(enemy.getProjVelocity());
 		bullet.setSpace(enemy.getSpace());
 		addQueuedObject(bullet);
+		System.out.println("new bullet");
 
 		if (shifted && enemy.getSpace() == 2) { // past world
 			JsonValue data = assetDirectory.get("sounds").get("pew");
