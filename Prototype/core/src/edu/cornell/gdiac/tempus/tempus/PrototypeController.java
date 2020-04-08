@@ -16,13 +16,19 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.utils.Json;
-import com.badlogic.gdx.utils.JsonReader;
-import com.badlogic.gdx.utils.JsonValue;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.*;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import edu.cornell.gdiac.tempus.InputController;
 import edu.cornell.gdiac.tempus.WorldController;
 import edu.cornell.gdiac.util.JsonAssetManager;
@@ -32,6 +38,7 @@ import edu.cornell.gdiac.tempus.tempus.models.*;
 import edu.cornell.gdiac.util.FilmStrip;
 import edu.cornell.gdiac.util.PooledList;
 import edu.cornell.gdiac.util.SoundController;
+import sun.awt.X11.Screen;
 
 import java.util.Iterator;
 import java.util.Vector;
@@ -49,6 +56,8 @@ import static edu.cornell.gdiac.tempus.tempus.models.EntityType.PRESENT;
  * multiple instances place nicely with the static assets.
  */
 public class PrototypeController extends WorldController {
+
+
 	/** Checks if did debug */
 	private boolean debug;
 
@@ -71,6 +80,7 @@ public class PrototypeController extends WorldController {
 	private FilmStrip avatarDashingTexture;
 	/** Texture filmstrip for avatar falling */
 	private FilmStrip avatarFallingTexture;
+
 
 	/** Texture asset for the big bullet */
 	private TextureRegion bulletBigTexture;
@@ -236,6 +246,8 @@ public class PrototypeController extends WorldController {
 	/** Collision Controller instance **/
 	protected CollisionController collisionController;
 
+
+
 	/**
 	 * Creates and initialize a new instance of the platformer game
 	 *
@@ -250,6 +262,10 @@ public class PrototypeController extends WorldController {
 		shifted = false;
 		debug = false;
 		timeFreeze = false;
+
+
+
+
 	}
 
 	/**
@@ -276,10 +292,43 @@ public class PrototypeController extends WorldController {
 		timeFreeze = false;
 	}
 
+	private Skin skin;
+	private Stage stage;
+
+	private Table table;
+	private TextButton startButton;
+	private TextButton quitButton;
+
+	private void exitGame(){
+		listener.exitScreen(this, EXIT_QUIT);
+	}
 	/**
 	 * Lays out the game geography.
 	 */
 	private void populateLevel() {
+
+		//tester stage!
+		skin = new Skin(Gdx.files.internal("jsons/uiskin.json"));
+		stage = new Stage(new ScreenViewport());
+		table = new Table();
+		table.setWidth(stage.getWidth());
+		table.align(Align.center | Align.top);
+		table.setPosition(0,Gdx.graphics.getHeight());
+		startButton = new TextButton("New Game",skin);
+		quitButton = new TextButton("Quit Game",skin);
+		quitButton.addListener(new ClickListener(){
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				exitGame();
+			}
+		});
+		table.padTop(30);
+		table.add(startButton).padBottom(30);
+		table.row();
+		table.add(quitButton);
+		stage.addActor(table);
+		Gdx.input.setInputProcessor(stage);
+
 		// Add level goal
 		goalTile = JsonAssetManager.getInstance().getEntry("goal", TextureRegion.class);
 		float dwidth = goalTile.getRegionWidth() / scale.x;
@@ -894,6 +943,10 @@ public class PrototypeController extends WorldController {
 			drawDebugInWorld();
 			canvas.endDebug();
 		}
+
+		stage.act(Gdx.graphics.getDeltaTime());
+		stage.draw();
+
 		// Final message
 		if (complete && !failed) {
 			displayFont.setColor(Color.YELLOW);
