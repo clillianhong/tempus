@@ -184,7 +184,7 @@ public abstract class WorldController implements Screen {
 	/** Queue for adding objects */
 	protected PooledList<Obstacle> addQueue = new PooledList<Obstacle>();
 	/** Listener that will update the player mode when we are done */
-	private ScreenListener listener;
+	protected ScreenListener listener;
 
 	/** The Box2D world */
 	protected World world;

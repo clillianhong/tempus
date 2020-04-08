@@ -20,6 +20,12 @@ import com.badlogic.gdx.graphics.g2d.freetype.*;
 import com.badlogic.gdx.assets.loaders.*;
 import com.badlogic.gdx.assets.loaders.resolvers.*;
 
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import edu.cornell.gdiac.tempus.tempus.PrototypeController;
 import edu.cornell.gdiac.util.*;
 
@@ -43,7 +49,8 @@ public class GDXRoot extends Game implements ScreenListener {
 	private int current;
 	/** List of all WorldControllers */
 	private WorldController[] controllers;
-	
+
+
 	/**
 	 * Creates a new game from the configuration settings.
 	 *
@@ -58,6 +65,8 @@ public class GDXRoot extends Game implements ScreenListener {
 		FileHandleResolver resolver = new InternalFileHandleResolver();
 		manager.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(resolver));
 		manager.setLoader(BitmapFont.class, ".ttf", new FreetypeFontLoader(resolver));
+
+
 	}
 
 	/** 

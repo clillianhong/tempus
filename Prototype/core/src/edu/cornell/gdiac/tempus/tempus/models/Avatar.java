@@ -34,8 +34,9 @@ public class Avatar extends CapsuleObstacle {
     };
 
     // Physics constants
-    /** The density of the character */
+    /** The density of the avatar */
     private static final float DENSITY = 1.0f;
+
     /** The factor to multiply by the input */
     private static final float FORCE = 20.0f;
     /** The amount to slow the character down */
@@ -80,6 +81,8 @@ public class Avatar extends CapsuleObstacle {
     private int lives;
     /** The current state of the avatar **/
     AvatarState state;
+    /** The avatar of the character at the end of the dash*/
+    private Vector2 endDashVelocity;
     /** Number of dashes left*/
     private int numDashes;
     /** The current horizontal movement of the character */
@@ -582,6 +585,7 @@ public class Avatar extends CapsuleObstacle {
         dashStartPos = new Vector2(x,y);
         startedDashing = 0;
         numDashes = maxDashes;
+        endDashVelocity = new Vector2(0f,0f);
 
         shootCooldown = 0;
         jumpCooldown = 0;
@@ -708,13 +712,18 @@ public class Avatar extends CapsuleObstacle {
 
         //check if dash must end
         if(isDashing){
-            if(getPosition().dst(getDashStartPos()) > getDashDistance()){
+            float dist = getPosition().dst(getDashStartPos());
+            if(dist > getDashDistance()){
 //                System.out.println("DASHED TOO FAR");
                 setDashing(false);
+                System.out.println("VELOCITY: " + getLinearVelocity());
+                endDashVelocity = getPosition();
+//                this.setLinearVelocity(new Vector2(0,0));
                 setLinearVelocity(getLinearVelocity().cpy().nor().scl(7.0f));
 //                setLinearVelocity(new Vector2(0,0));
             }
         }
+
 
         if (isJumping()) {
             jumpCooldown = JUMP_COOLDOWN;
