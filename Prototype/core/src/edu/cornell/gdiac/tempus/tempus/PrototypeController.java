@@ -159,7 +159,7 @@ public class PrototypeController extends WorldController {
 	/** The restitution for all physics objects */
 	private static final float BASIC_RESTITUTION = 0.1f;
 	/** Offset for bullet when firing */
-	private static final float BULLET_OFFSET = 0.7f;
+	private static final float BULLET_OFFSET = 0.03f;
 	/** The volume for sound effects */
 	private static final float EFFECT_VOLUME = 0.8f;
 
@@ -329,7 +329,7 @@ public class PrototypeController extends WorldController {
 		goalTile = JsonAssetManager.getInstance().getEntry("goal", TextureRegion.class);
 		float dwidth = goalTile.getRegionWidth() / scale.x;
 		float dheight = goalTile.getRegionHeight() / scale.y;
-		goalDoor = new Door(GOAL_POS.x, GOAL_POS.y, dwidth, dheight, 0);
+		goalDoor = new Door(GOAL_POS.x, GOAL_POS.y, dwidth, dheight, 0, scale);
 		goalDoor.setBodyType(BodyDef.BodyType.StaticBody);
 		goalDoor.setDensity(0.0f);
 		goalDoor.setFriction(0.0f);
@@ -352,7 +352,7 @@ public class PrototypeController extends WorldController {
 			obj.setDrawScale(scale);
 			obj.setTexture(earthTile);
 			obj.setName(nameWall);
-			addObject(obj);
+			//addObject(obj);
 		}
 
 		String namePlatform = "platform";
@@ -462,7 +462,7 @@ public class PrototypeController extends WorldController {
 		avatarTexture = JsonAssetManager.getInstance().getEntry("dude", TextureRegion.class);
 		dwidth = avatarTexture.getRegionWidth() / scale.x;
 		dheight = avatarTexture.getRegionHeight() / scale.y;
-		avatar = new Avatar(DUDE_POS.x, DUDE_POS.y, dwidth * 1.5f, dheight * 1.5f);
+		avatar = new Avatar(DUDE_POS.x, DUDE_POS.y, dwidth, dheight, scale);
 		avatar.setDrawScale(scale);
 		avatar.setTexture(avatarTexture);
 		avatar.setBodyType(BodyDef.BodyType.DynamicBody);
@@ -498,7 +498,7 @@ public class PrototypeController extends WorldController {
 			dwidth = texture.getRegionWidth() / scale.x;
 			dheight = texture.getRegionHeight() / scale.y;
 			Enemy enemy = new Enemy(TYPE_ENEMIES[ii], COOR_ENEMIES[ii][0], COOR_ENEMIES[ii][1], dwidth, dheight, texture,
-					CD_ENEMIES[ii], avatar);
+					CD_ENEMIES[ii], avatar, scale);
 			enemy.setBodyType(BodyDef.BodyType.DynamicBody);
 			enemy.setDrawScale(scale);
 			enemy.setName("enemy");
@@ -512,7 +512,7 @@ public class PrototypeController extends WorldController {
 			dheight = texture.getRegionHeight() / scale.y;
 			Vector2 projDir = new Vector2(DIR_TURRETS[ii][0], DIR_TURRETS[ii][1]);
 			Enemy turret = new Enemy(TYPE_TURRETS[ii], COOR_TURRETS[ii][0], COOR_TURRETS[ii][1], dwidth, dheight, texture,
-					CD_TURRETS[ii], projDir);
+					CD_TURRETS[ii], projDir, scale);
 			turret.setBodyType(BodyDef.BodyType.StaticBody);
 			turret.setDrawScale(scale);
 			turret.setName("turret");
@@ -776,9 +776,9 @@ public class PrototypeController extends WorldController {
 	 * @param enemy enemy
 	 */
 	private void createBullet(Enemy enemy) {
-		float offset = BULLET_OFFSET;
+		float offset = BULLET_OFFSET * scale.y;
 		bulletBigTexture = JsonAssetManager.getInstance().getEntry("bulletbig", TextureRegion.class);
-		float radius = bulletBigTexture.getRegionWidth() / (2.0f * scale.x);
+		float radius = bulletBigTexture.getRegionWidth() / (90.0f);
 		Projectile bullet = new Projectile(enemy.getType(), enemy.getX(), enemy.getY() + offset, radius);
 
 		bullet.setName("bullet");
@@ -869,7 +869,7 @@ public class PrototypeController extends WorldController {
 		// Do not draw while player is dashing or not holding a projectile
 		if (avatar.isDashing() && !avatar.isHolding())
 			return;
-		if (!avatar.isHolding && !avatar.isSticking())
+		if (!avatar.canDash())
 			return;
 		// Draw dynamic dash indicator
 		Vector2 avPos = avatar.getPosition();
