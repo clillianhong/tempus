@@ -115,9 +115,10 @@ public class GameCanvas {
 		camera.setToOrtho(false);
 		spriteBatch.setProjectionMatrix(camera.combined);
 		debugRender.setProjectionMatrix(camera.combined);
-
-
-
+		System.out.println(
+				"SCREEN WIDTH: " + getWidth() + "\n" +
+						"SCREEN HEIGHT: " + getHeight()
+		);
 
 		// Initialize the cache objects
 		holder = new TextureRegion();

@@ -34,10 +34,13 @@ public class DesktopLauncher {
 	 */
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.width  = 1024;
-		config.height = 576;
+		int lillian_width = 3840;
+		int lillian_height = 2160;
+		int resolution_mulitplier = 1;
+		config.width  = lillian_width * resolution_mulitplier;
+		config.height = lillian_height * resolution_mulitplier;
 		config.resizable = false;
-		config.fullscreen = true;
+//		config.fullscreen = true;
 		new LwjglApplication(new GDXRoot(), config);
 	}
 }

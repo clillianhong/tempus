@@ -38,10 +38,6 @@ import edu.cornell.gdiac.tempus.tempus.models.*;
 import edu.cornell.gdiac.util.FilmStrip;
 import edu.cornell.gdiac.util.PooledList;
 import edu.cornell.gdiac.util.SoundController;
-import sun.awt.X11.Screen;
-
-import java.util.Iterator;
-import java.util.Vector;
 
 import static edu.cornell.gdiac.tempus.tempus.models.EntityType.PAST;
 import static edu.cornell.gdiac.tempus.tempus.models.EntityType.PRESENT;
