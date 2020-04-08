@@ -16,13 +16,19 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.utils.Json;
-import com.badlogic.gdx.utils.JsonReader;
-import com.badlogic.gdx.utils.JsonValue;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.*;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import edu.cornell.gdiac.tempus.InputController;
 import edu.cornell.gdiac.tempus.WorldController;
 import edu.cornell.gdiac.util.JsonAssetManager;
@@ -32,9 +38,6 @@ import edu.cornell.gdiac.tempus.tempus.models.*;
 import edu.cornell.gdiac.util.FilmStrip;
 import edu.cornell.gdiac.util.PooledList;
 import edu.cornell.gdiac.util.SoundController;
-
-import java.util.Iterator;
-import java.util.Vector;
 
 import static edu.cornell.gdiac.tempus.tempus.models.EntityType.PAST;
 import static edu.cornell.gdiac.tempus.tempus.models.EntityType.PRESENT;
@@ -48,7 +51,9 @@ import static edu.cornell.gdiac.tempus.tempus.models.EntityType.PRESENT;
  * be static. This is the purpose of our AssetState variable; it ensures that
  * multiple instances place nicely with the static assets.
  */
-public class PrototypeController extends WorldController {
+public class LevelController extends WorldController {
+
+
 	/** Checks if did debug */
 	private boolean debug;
 
@@ -72,13 +77,14 @@ public class PrototypeController extends WorldController {
 	/** Texture filmstrip for avatar falling */
 	private FilmStrip avatarFallingTexture;
 
+
 	/** Texture asset for the big bullet */
 	private TextureRegion bulletBigTexture;
 	/** Texture asset for the caught proj of type present */
 	private TextureRegion projPresentCaughtTexture;
 	/** Texture asset for the caught proj of type past */
 	private TextureRegion projPastCaughtTexture;
-	/** Texture asset for the turret */
+	/** Texture aobjects.sset for the turret */
 	private TextureRegion turretTexture;
 	/** Texture asset for present enemy */
 	private TextureRegion enemyPresentTexture;
@@ -153,7 +159,7 @@ public class PrototypeController extends WorldController {
 	/** The restitution for all physics objects */
 	private static final float BASIC_RESTITUTION = 0.1f;
 	/** Offset for bullet when firing */
-	private static final float BULLET_OFFSET = 0.7f;
+	private static final float BULLET_OFFSET = 0.03f;
 	/** The volume for sound effects */
 	private static final float EFFECT_VOLUME = 0.8f;
 
@@ -236,12 +242,14 @@ public class PrototypeController extends WorldController {
 	/** Collision Controller instance **/
 	protected CollisionController collisionController;
 
+
+
 	/**
 	 * Creates and initialize a new instance of the platformer game
 	 *
 	 * The game has default gravity and other settings
 	 */
-	public PrototypeController() {
+	public LevelController() {
 		super(DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_GRAVITY);
 		setDebug(false);
 		setComplete(false);
@@ -250,6 +258,10 @@ public class PrototypeController extends WorldController {
 		shifted = false;
 		debug = false;
 		timeFreeze = false;
+
+
+
+
 	}
 
 	/**
@@ -276,15 +288,48 @@ public class PrototypeController extends WorldController {
 		timeFreeze = false;
 	}
 
+	private Skin skin;
+	private Stage stage;
+
+	private Table table;
+	private TextButton startButton;
+	private TextButton quitButton;
+
+	private void exitGame(){
+		listener.exitScreen(this, EXIT_QUIT);
+	}
 	/**
 	 * Lays out the game geography.
 	 */
 	private void populateLevel() {
+
+		//tester stage!
+		skin = new Skin(Gdx.files.internal("jsons/uiskin.json"));
+		stage = new Stage(new ScreenViewport());
+		table = new Table();
+		table.setWidth(stage.getWidth());
+		table.align(Align.center | Align.top);
+		table.setPosition(0,Gdx.graphics.getHeight());
+		startButton = new TextButton("New Game",skin);
+		quitButton = new TextButton("Quit Game",skin);
+		quitButton.addListener(new ClickListener(){
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				exitGame();
+			}
+		});
+		table.padTop(30);
+		table.add(startButton).padBottom(30);
+		table.row();
+		table.add(quitButton);
+		stage.addActor(table);
+		Gdx.input.setInputProcessor(stage);
+
 		// Add level goal
 		goalTile = JsonAssetManager.getInstance().getEntry("goal", TextureRegion.class);
 		float dwidth = goalTile.getRegionWidth() / scale.x;
 		float dheight = goalTile.getRegionHeight() / scale.y;
-		goalDoor = new Door(GOAL_POS.x, GOAL_POS.y, dwidth, dheight, 0);
+		goalDoor = new Door(GOAL_POS.x, GOAL_POS.y, dwidth, dheight, 0, scale);
 		goalDoor.setBodyType(BodyDef.BodyType.StaticBody);
 		goalDoor.setDensity(0.0f);
 		goalDoor.setFriction(0.0f);
@@ -307,7 +352,7 @@ public class PrototypeController extends WorldController {
 			obj.setDrawScale(scale);
 			obj.setTexture(earthTile);
 			obj.setName(nameWall);
-			addObject(obj);
+			//addObject(obj);
 		}
 
 		String namePlatform = "platform";
@@ -417,7 +462,7 @@ public class PrototypeController extends WorldController {
 		avatarTexture = JsonAssetManager.getInstance().getEntry("dude", TextureRegion.class);
 		dwidth = avatarTexture.getRegionWidth() / scale.x;
 		dheight = avatarTexture.getRegionHeight() / scale.y;
-		avatar = new Avatar(DUDE_POS.x, DUDE_POS.y, dwidth * 1.5f, dheight * 1.5f);
+		avatar = new Avatar(DUDE_POS.x, DUDE_POS.y, dwidth, dheight, scale);
 		avatar.setDrawScale(scale);
 		avatar.setTexture(avatarTexture);
 		avatar.setBodyType(BodyDef.BodyType.DynamicBody);
@@ -453,7 +498,7 @@ public class PrototypeController extends WorldController {
 			dwidth = texture.getRegionWidth() / scale.x;
 			dheight = texture.getRegionHeight() / scale.y;
 			Enemy enemy = new Enemy(TYPE_ENEMIES[ii], COOR_ENEMIES[ii][0], COOR_ENEMIES[ii][1], dwidth, dheight, texture,
-					CD_ENEMIES[ii], avatar);
+					CD_ENEMIES[ii], avatar, scale);
 			enemy.setBodyType(BodyDef.BodyType.DynamicBody);
 			enemy.setDrawScale(scale);
 			enemy.setName("enemy");
@@ -467,7 +512,7 @@ public class PrototypeController extends WorldController {
 			dheight = texture.getRegionHeight() / scale.y;
 			Vector2 projDir = new Vector2(DIR_TURRETS[ii][0], DIR_TURRETS[ii][1]);
 			Enemy turret = new Enemy(TYPE_TURRETS[ii], COOR_TURRETS[ii][0], COOR_TURRETS[ii][1], dwidth, dheight, texture,
-					CD_TURRETS[ii], projDir);
+					CD_TURRETS[ii], projDir, scale);
 			turret.setBodyType(BodyDef.BodyType.StaticBody);
 			turret.setDrawScale(scale);
 			turret.setName("turret");
@@ -739,9 +784,9 @@ public class PrototypeController extends WorldController {
 	 * @param enemy enemy
 	 */
 	private void createBullet(Enemy enemy) {
-		float offset = BULLET_OFFSET;
+		float offset = BULLET_OFFSET * scale.y;
 		bulletBigTexture = JsonAssetManager.getInstance().getEntry("bulletbig", TextureRegion.class);
-		float radius = bulletBigTexture.getRegionWidth() / (2.0f * scale.x);
+		float radius = bulletBigTexture.getRegionWidth() / (90.0f);
 		Projectile bullet = new Projectile(enemy.getType(), enemy.getX(), enemy.getY() + offset, radius);
 
 		bullet.setName("bullet");
@@ -833,7 +878,7 @@ public class PrototypeController extends WorldController {
 		// Do not draw while player is dashing or not holding a projectile
 		if (avatar.isDashing() && !avatar.isHolding())
 			return;
-		if (!avatar.isHolding && !avatar.isSticking())
+		if (!avatar.canDash())
 			return;
 		// Draw dynamic dash indicator
 		Vector2 avPos = avatar.getPosition();
@@ -903,6 +948,10 @@ public class PrototypeController extends WorldController {
 			drawDebugInWorld();
 			canvas.endDebug();
 		}
+
+		stage.act(Gdx.graphics.getDeltaTime());
+		stage.draw();
+
 		// Final message
 		if (complete && !failed) {
 			displayFont.setColor(Color.YELLOW);
