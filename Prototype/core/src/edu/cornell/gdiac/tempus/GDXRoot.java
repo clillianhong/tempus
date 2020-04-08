@@ -26,8 +26,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import edu.cornell.gdiac.tempus.tempus.MainMenuMode;
 import edu.cornell.gdiac.tempus.tempus.PrototypeController;
 import edu.cornell.gdiac.util.*;
+
+import java.lang.management.ManagementFactory;
 
 /**
  * Root class for a LibGDX.  
@@ -49,7 +52,8 @@ public class GDXRoot extends Game implements ScreenListener {
 	private int current;
 	/** List of all WorldControllers */
 	private WorldController[] controllers;
-
+	/** Main Menu mode */
+	private MainMenuMode menu;
 
 	/**
 	 * Creates a new game from the configuration settings.
@@ -80,9 +84,13 @@ public class GDXRoot extends Game implements ScreenListener {
 		loading = new LoadingMode(canvas,1);
 		
 		// Initialize the three game worlds
+
 		controllers = new WorldController[1];
 		controllers[0] = new PrototypeController();
 		controllers[0].preLoadContent(manager);
+
+		menu = new MainMenuMode();
+
 
 //		for(int ii = 0; ii < controllers.length; ii++) {
 //			controllers[ii].preLoadContent(manager);
@@ -105,6 +113,8 @@ public class GDXRoot extends Game implements ScreenListener {
 			controllers[ii].unloadContent();
 			controllers[ii].dispose();
 		}
+
+
 
 		canvas.dispose();
 		canvas = null;
@@ -139,16 +149,25 @@ public class GDXRoot extends Game implements ScreenListener {
 	 */
 	public void exitScreen(Screen screen, int exitCode) {
 		if (screen == loading) {
-			for(int ii = 0; ii < controllers.length; ii++) {
+
+			menu.createMode();
+			menu.setScreenListener(this);
+			menu.setCanvas(canvas);
+			setScreen(menu);
+			
+			loading.dispose();
+			loading = null;
+		} else if(screen == menu){
+						for(int ii = 0; ii < controllers.length; ii++) {
 				controllers[ii].loadContent();
 				controllers[ii].setScreenListener(this);
 				controllers[ii].setCanvas(canvas);
 			}
 			controllers[current].reset();
 			setScreen(controllers[current]);
-			
-			loading.dispose();
-			loading = null;
+			menu.dispose();
+			menu = null;
+
 		} else if (exitCode == WorldController.EXIT_NEXT) {
 			current = (current+1) % controllers.length;
 			controllers[current].reset();
