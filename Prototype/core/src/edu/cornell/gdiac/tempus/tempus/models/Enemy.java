@@ -15,9 +15,9 @@ public class Enemy extends CapsuleObstacle {
 
     // This is to fit the image to a tighter hitbox
     /** The amount to shrink the body fixture (vertically) relative to the image */
-    private static final float VSHRINK = 0.95f;
+    private static final float VSHRINK = 0.0225f * 0.95f;
     /** The amount to shrink the body fixture (horizontally) relative to the image */
-    private static final float HSHRINK = 0.7f;
+    private static final float HSHRINK = 0.024f * 0.7f;
     /** The density of the enemy */
     private static final float ENEMY_DENSITY = 1.0f;
     /** The factor to multiply by the input */
@@ -74,8 +74,8 @@ public class Enemy extends CapsuleObstacle {
     // Immobile enemy (turret)
     public Enemy(
             EntityType type, float x, float y, float width, float height,
-            TextureRegion texture, int cooldown, Vector2 projVel) {
-        super(x,y,width*HSHRINK,height*VSHRINK);
+            TextureRegion texture, int cooldown, Vector2 projVel, Vector2 scale) {
+        super(x,y,width*HSHRINK * scale.x,height*VSHRINK * scale.y);
 
         this.setTexture(texture);
         // set body space so that createBullet sets the
@@ -95,8 +95,8 @@ public class Enemy extends CapsuleObstacle {
     // Moving enemy
     public Enemy(
             EntityType type, float x, float y, float width, float height,
-            TextureRegion texture, int cooldown, final Avatar target) {
-        super(x,y,width*HSHRINK,height*VSHRINK);
+            TextureRegion texture, int cooldown, final Avatar target, Vector2 scale) {
+        super(x,y,width*HSHRINK * scale.x,height*VSHRINK * scale.y);
 
         this.setTexture(texture);
         if (type == PRESENT) this.setSpace(1);
@@ -333,7 +333,7 @@ public class Enemy extends CapsuleObstacle {
      */
     public void draw(GameCanvas canvas) {
         if (texture != null) {
-            canvas.draw(texture,Color.WHITE,origin.x,origin.y,getX()*drawScale.x,getY()*drawScale.y,getAngle(),1,1);
+            canvas.draw(texture,Color.WHITE,origin.x,origin.y,getX()*drawScale.x,getY()*drawScale.y,getAngle(),0.024f * drawScale.x,0.0225f * drawScale.y);
         }
     }
 }

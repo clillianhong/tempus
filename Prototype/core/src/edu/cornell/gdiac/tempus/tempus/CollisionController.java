@@ -1,18 +1,14 @@
 package edu.cornell.gdiac.tempus.tempus;
 
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.ObjectSet;
 import edu.cornell.gdiac.tempus.InputController;
 import edu.cornell.gdiac.tempus.obstacle.Obstacle;
 import edu.cornell.gdiac.tempus.tempus.models.*;
-import edu.cornell.gdiac.util.PooledList;
-
-import java.util.Iterator;
 
 public class CollisionController implements ContactListener {
-    private PrototypeController controller;
+    private LevelController controller;
     private ObjectMap<Short, ObjectMap<Short, ContactListener>> listeners;
     private Avatar avatar;
     private PooledList<Obstacle> obstacles;
@@ -64,7 +60,7 @@ public class CollisionController implements ContactListener {
      * Creates instance of the collision handler
      * @param w
      */
-    public CollisionController(PrototypeController w)
+    public CollisionController(LevelController w)
     {
         controller = w;
         avatar = w.getAvatar();
@@ -131,7 +127,7 @@ public class CollisionController implements ContactListener {
         //TODO: avatar turret contact (die)
     }
     private void processAvatarProjectileContact(Fixture av, Fixture projectile){
-        if (!avatar.isHolding() && InputController.getInstance().pressedRightMouseButton()) {
+        if (!avatar.isHolding() && avatar.isDashing() && InputController.getInstance().pressedRightMouseButton()) {
             avatar.setHolding(true);
             Obstacle bullet = (Obstacle) projectile.getBody().getUserData();
             avatar.setHeldBullet((Projectile) bullet);
