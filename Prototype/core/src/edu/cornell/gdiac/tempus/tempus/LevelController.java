@@ -788,8 +788,7 @@ public class LevelController extends WorldController {
 				}
 				if (e.canFire()) {
 					if (o.getName() == "enemy") {
-						e.setVelocity(BULLET_OFFSET * scale.y);
-						System.out.println("enemy firing");
+						e.setVelocity(BULLET_OFFSET);
 					}
 					createBullet(e);
 				} else

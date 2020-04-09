@@ -169,7 +169,7 @@ public class Enemy extends CapsuleObstacle {
         setDensity(json.get("density").asFloat());
         this.target = target;
         this.cooldown = json.get("cooldown").asInt();
-        projVel = new Vector2(0,0).sub(getPosition().sub(target.getPosition()));
+//        projVel = new Vector2(0,0).sub(getPosition().sub(target.getPosition()));
         isActive = false;
         framesTillFire = 0;
         movement = -1;
@@ -181,13 +181,32 @@ public class Enemy extends CapsuleObstacle {
         setName("enemy");
     }
 
-
+    /**
+     * Returns the platform fixture that the enemy's left sensor is connected to
+     *
+     * @return platform fixture the enemy stands on
+     */
     public Fixture getLeftFixture() { return leftFixture; }
 
+    /**
+     * Sets the platform fixture the enemy's left sensor detects
+     *
+     * @param f the platform fixture
+     */
     public void setLeftFixture(Fixture f) { leftFixture = f; }
 
+    /**
+     * Returns the platform fixture that the enemy's right sensor is connected to
+     *
+     * @return platform fixture the enemy stands on
+     */
     public Fixture getRightFixture() { return rightFixture; }
 
+    /**
+     * Sets the platform fixture the enemy's right sensor detects
+     *
+     * @param f the platform fixture
+     */
     public void setRightFixture(Fixture f) { rightFixture = f;}
 
     public boolean isTurret() { return isTurret; }
@@ -204,6 +223,12 @@ public class Enemy extends CapsuleObstacle {
      * @param t the type of enemy
      */
     public void setType (EntityType t){type = t;}
+
+    /**
+     * Sets the velocity of the bullet to aim at the target
+     *
+     * @param offset float of the offset from the enemy's center that bullet shoots from
+     */
     public void setVelocity(float offset) {
         projVel = target.getPosition().sub(getPosition());
         projVel.y -= offset;
@@ -216,6 +241,11 @@ public class Enemy extends CapsuleObstacle {
      */
     public Vector2 getProjVelocity() { return projVel; }
 
+    /**
+     * Sets whether the is active to fire bullets
+     *
+     * @param a boolean of whether the enemy is active
+     */
     public void setIsActive(boolean a) {
         isActive = a;
     }
@@ -315,6 +345,9 @@ public class Enemy extends CapsuleObstacle {
         return ENEMY_MAXSPEED;
     }
 
+    /**
+     * Moves the enemy left and right
+     */
     public void applyForce() {
         if (!isActive()) {
             return;
@@ -382,9 +415,14 @@ public class Enemy extends CapsuleObstacle {
         return true;
     }
 
+    /**
+     * Updates the enemies line of sight to check if it can see the target
+     * @param world
+     * @param offset offset from the enemy center to where the bullet shoots from
+     */
     public void createLineOfSight(World world, float offset) {
         Vector2 shootPos = getPosition().add(0f, offset);
-        world.rayCast(sight, getPosition(), target.getPosition());
+        world.rayCast(sight, shootPos, target.getPosition());
     }
 
     /**
@@ -427,11 +465,7 @@ class LineOfSight implements RayCastCallback {
         this.point = point;
         this.normal = normal;
 
-        System.out.println(fixture.getBody().getUserData().getClass());
-        System.out.println(fixture.getBody().getUserData() instanceof Avatar);
-
         if (fixture.getBody().getUserData() instanceof Avatar) {
-            System.out.println("sees target");
             enemy.setIsActive(true);
             enemy.setMovement(0);
         } else if (fixture.getBody().getUserData() instanceof Enemy ||
