@@ -705,12 +705,15 @@ public class LevelController extends WorldController {
 			if (o instanceof Enemy) {
 				Enemy e = (Enemy) o.getBody().getUserData();
 				if (!e.isTurret()) {
-					e.createLineOfSight(world);
+					if (e.getLeftFixture() == null || e.getRightFixture() == null) {
+						break;
+					}
+					e.createLineOfSight(world, BULLET_OFFSET);
 					e.applyForce();
 				}
 				if (e.canFire()) {
 					if (o.getName() == "enemy") {
-						e.setVelocity();
+						e.setVelocity(BULLET_OFFSET * scale.y);
 						System.out.println("enemy firing");
 					}
 					createBullet(e);
@@ -798,7 +801,6 @@ public class LevelController extends WorldController {
 		bullet.setLinearVelocity(enemy.getProjVelocity());
 		bullet.setSpace(enemy.getSpace());
 		addQueuedObject(bullet);
-		System.out.println("new bullet");
 
 		if (shifted && enemy.getSpace() == 2) { // past world
 			JsonValue data = assetDirectory.get("sounds").get("pew");
