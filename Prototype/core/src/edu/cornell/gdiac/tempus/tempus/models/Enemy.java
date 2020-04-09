@@ -2,9 +2,11 @@ package edu.cornell.gdiac.tempus.tempus.models;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.JsonValue;
+import com.badlogic.gdx.utils.ObjectSet;
 import edu.cornell.gdiac.tempus.GameCanvas;
 import edu.cornell.gdiac.tempus.obstacle.CapsuleObstacle;
 import edu.cornell.gdiac.util.JsonAssetManager;
@@ -38,9 +40,11 @@ public class Enemy extends CapsuleObstacle {
     /** Left sensor to determine enemy position on platform*/
     private Fixture sensorFixtureLeft;
     private PolygonShape sensorShapeLeft;
+    private Fixture leftFixture;
     /** Right sensor to determine enemy position on platform*/
     private Fixture sensorFixtureRight;
     private PolygonShape sensorShapeRight;
+    private Fixture rightFixture;
 
     /** Line of sight to the avatar */
     private RayCastCallback sight;
@@ -134,9 +138,9 @@ public class Enemy extends CapsuleObstacle {
 
         this.type = type;
         this.target = target;
-        this.cooldown = cooldown;
+        this.cooldown = cooldown * 4;
         projVel = new Vector2(0,0).sub(getPosition().sub(target.getPosition()));
-        isActive = false;
+        isActive = true;
         framesTillFire = 0;
         movement = -1;
         nextDirection = -1;
@@ -178,6 +182,15 @@ public class Enemy extends CapsuleObstacle {
     }
 
 
+    public Fixture getLeftFixture() { return leftFixture; }
+
+    public void setLeftFixture(Fixture f) { leftFixture = f; }
+
+    public Fixture getRightFixture() { return rightFixture; }
+
+    public void setRightFixture(Fixture f) { rightFixture = f;}
+
+    public boolean isTurret() { return isTurret; }
 
     /**
      * Returns the type of enemy.
@@ -186,14 +199,9 @@ public class Enemy extends CapsuleObstacle {
      */
     public EntityType getType() { return type; }
 
-    /**
-     * Sets the type of enemy
-     * @param type the type of enemy.
-     */
-    public void setType(EntityType type){ this.type = type;}
-
-    public void setVelocity() {
-        projVel = new Vector2(0,0).sub(getPosition().sub(target.getPosition()));
+    public void setVelocity(float offset) {
+        projVel = target.getPosition().sub(getPosition());
+        projVel.y -= offset;
     }
 
     /**
@@ -213,7 +221,7 @@ public class Enemy extends CapsuleObstacle {
      * @return whether or not enemy can fire.
      */
     public boolean canFire() {
-        if (isTurret){
+        if (isTurret || isActive){
             return framesTillFire <= 0;
         } else {
             return false;
@@ -369,7 +377,8 @@ public class Enemy extends CapsuleObstacle {
         return true;
     }
 
-    public void createLineOfSight(World world) {
+    public void createLineOfSight(World world, float offset) {
+        Vector2 shootPos = getPosition().add(0f, offset);
         world.rayCast(sight, getPosition(), target.getPosition());
     }
 
@@ -401,6 +410,8 @@ public class Enemy extends CapsuleObstacle {
 class LineOfSight implements RayCastCallback {
 
     private Enemy enemy;
+    private Vector2 point;
+    private Vector2 normal;
 
     public LineOfSight(Enemy enemy) {
         this.enemy = enemy;
@@ -408,13 +419,26 @@ class LineOfSight implements RayCastCallback {
 
     public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction) {
 
-        if (fixture.getUserData() != null) {
+        this.point = point;
+        this.normal = normal;
+
+        System.out.println(fixture.getBody().getUserData().getClass());
+        System.out.println(fixture.getBody().getUserData() instanceof Avatar);
+
+        if (fixture.getBody().getUserData() instanceof Avatar) {
+            System.out.println("sees target");
             enemy.setIsActive(true);
             enemy.setMovement(0);
+        } else if (fixture.getBody().getUserData() instanceof Enemy ||
+                fixture.getBody().getUserData() instanceof Projectile) {
+            return 1;
         } else {
             enemy.setIsActive(false);
-            enemy.setMovement(enemy.getNextDirection());
+            if (enemy.getMovement() == 0) {
+                enemy.setMovement(enemy.getNextDirection());
+            }
         }
-        return 0;
+
+        return fraction;
     }
 }

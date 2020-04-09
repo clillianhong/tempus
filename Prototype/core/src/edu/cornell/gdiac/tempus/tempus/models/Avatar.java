@@ -73,6 +73,7 @@ public class Avatar extends CapsuleObstacle {
     private static final String LEFT_SENSOR_NAME = "DudeLeftSensor";
     private static final String RIGHT_SENSOR_NAME = "DudeRightSensor";
     private static final String TOP_SENSOR_NAME = "DudeTopSensor";
+    private static final String CORE_SENSOR_NAME = "DudeCenterSensor";
 
     // This is to fit the image to a tigher hitbox
     /** The amount to shrink the body fixture (vertically) relative to the image */
@@ -116,6 +117,9 @@ public class Avatar extends CapsuleObstacle {
     /** Top sensor to determine sticking on the top */
     private Fixture sensorFixtureTop;
     private PolygonShape sensorShapeTop;
+    /** Core sensor for line of sight */
+    private Fixture sensorFixtureCore;
+    private PolygonShape sensorShapeCore;
 
     /** how long ago the character started dashing */
     private int startedDashing;
@@ -535,6 +539,10 @@ public class Avatar extends CapsuleObstacle {
         return TOP_SENSOR_NAME;
     }
 
+    public String getCoreSensorName() {
+        return CORE_SENSOR_NAME;
+    }
+
     /**
      * Returns the height/width of the sensor
      *
@@ -695,46 +703,56 @@ public class Avatar extends CapsuleObstacle {
         // To determine whether or not the dude is on the ground,
         // we create a thin sensor under his feet, which reports
         // collisions with the world but has no collision response.
-        Vector2 sensorCenter = new Vector2(0, -getHeight() / 2);
-        FixtureDef sensorDef = new FixtureDef();
-        sensorDef.density = DENSITY;
-        sensorDef.isSensor = true;
-        sensorShape = new PolygonShape();
-        sensorShape.setAsBox(getWidth() / 4.0f - 2.0f * SENSOR_HEIGHT, SENSOR_HEIGHT, sensorCenter, 0.0f);
-        sensorDef.shape = sensorShape;
-
-        sensorFixture = body.createFixture(sensorDef);
-        sensorFixture.setUserData(getSensorName());
-
-        // To determine whether the body collides on the left side
-        Vector2 sensorCenterLeft = new Vector2(-getWidth() / 2, 0);
-        sensorShapeLeft = new PolygonShape();
-        sensorShapeLeft.setAsBox(SENSOR_HEIGHT, getHeight() / 5.0f - 2.0f * SENSOR_HEIGHT, sensorCenterLeft, 0.0f);
-        sensorDef.shape = sensorShapeLeft;
-
-        sensorFixtureLeft = body.createFixture(sensorDef);
-        sensorFixtureLeft.setUserData(getLeftSensorName());
-
-        // To determine whether the body collides on the right side
-        Vector2 sensorCenterRight = new Vector2(getWidth() / 2, 0);
-        sensorShapeRight = new PolygonShape();
-        sensorShapeRight.setAsBox(SENSOR_HEIGHT, getHeight() / 5.0f - 2.0f * SENSOR_HEIGHT, sensorCenterRight, 0.0f);
-        sensorDef.shape = sensorShapeRight;
-
-        sensorFixtureRight = body.createFixture(sensorDef);
-        sensorFixtureRight.setUserData(getRightSensorName());
-
-        // To determine whether the body collides on the top side
-        Vector2 sensorCenterTop = new Vector2(0, getHeight() / 2);
-        sensorShapeTop = new PolygonShape();
-        sensorShapeTop.setAsBox(getWidth() / 4.0f - 2.0f * SENSOR_HEIGHT, SENSOR_HEIGHT, sensorCenterTop, 0.0f);
-        sensorDef.shape = sensorShapeTop;
-
-        sensorFixtureTop = body.createFixture(sensorDef);
-        sensorFixtureTop.setUserData(getTopSensorName());
+//        Vector2 sensorCenter = new Vector2(0, -getHeight() / 2);
+//        FixtureDef sensorDef = new FixtureDef();
+//        sensorDef.density = DENSITY;
+//        sensorDef.isSensor = true;
+//        sensorShape = new PolygonShape();
+//        sensorShape.setAsBox(getWidth() / 4.0f - 2.0f * SENSOR_HEIGHT, SENSOR_HEIGHT, sensorCenter, 0.0f);
+//        sensorDef.shape = sensorShape;
+//
+//        sensorFixture = body.createFixture(sensorDef);
+//        sensorFixture.setUserData(getSensorName());
+//
+//        // To determine whether the body collides on the left side
+//        Vector2 sensorCenterLeft = new Vector2(-getWidth() / 2, 0);
+//        sensorShapeLeft = new PolygonShape();
+//        sensorShapeLeft.setAsBox(SENSOR_HEIGHT, getHeight() / 5.0f - 2.0f * SENSOR_HEIGHT, sensorCenterLeft, 0.0f);
+//        sensorDef.shape = sensorShapeLeft;
+//
+//        sensorFixtureLeft = body.createFixture(sensorDef);
+//        sensorFixtureLeft.setUserData(getLeftSensorName());
+//
+//        // To determine whether the body collides on the right side
+//        Vector2 sensorCenterRight = new Vector2(getWidth() / 2, 0);
+//        sensorShapeRight = new PolygonShape();
+//        sensorShapeRight.setAsBox(SENSOR_HEIGHT, getHeight() / 5.0f - 2.0f * SENSOR_HEIGHT, sensorCenterRight, 0.0f);
+//        sensorDef.shape = sensorShapeRight;
+//
+//        sensorFixtureRight = body.createFixture(sensorDef);
+//        sensorFixtureRight.setUserData(getRightSensorName());
+//
+//        // To determine whether the body collides on the top side
+//        Vector2 sensorCenterTop = new Vector2(0, getHeight() / 2);
+//        sensorShapeTop = new PolygonShape();
+//        sensorShapeTop.setAsBox(getWidth() / 4.0f - 2.0f * SENSOR_HEIGHT, SENSOR_HEIGHT, sensorCenterTop, 0.0f);
+//        sensorDef.shape = sensorShapeTop;
+//
+//        sensorFixtureTop = body.createFixture(sensorDef);
+//        sensorFixtureTop.setUserData(getTopSensorName());
+//
+//        Vector2 sensorCenterCore = new Vector2(0, 0);
+//        sensorShapeCore = new PolygonShape();
+//        sensorShapeCore.setAsBox(SENSOR_HEIGHT * 4, SENSOR_HEIGHT * 4, sensorCenterCore, 0.0f);
+//        sensorDef.shape = sensorShapeCore;
+//
+//        sensorFixtureCore = body.createFixture(sensorDef);
+//        sensorFixtureCore.setUserData(getCoreSensorName());
 
         return true;
     }
+
+    public Fixture getSensorFixtureCore() { return sensorFixtureCore; }
 
     /**
      * Applies the force to the body of this dude
@@ -950,9 +968,9 @@ public class Avatar extends CapsuleObstacle {
      */
     public void drawDebug(GameCanvas canvas) {
         super.drawDebug(canvas);
-        canvas.drawPhysics(sensorShape,Color.RED,getX(),getY(),getAngle(),drawScale.x,drawScale.y);
-        canvas.drawPhysics(sensorShapeLeft,Color.RED,getX(),getY(),getAngle(),drawScale.x,drawScale.y);
-        canvas.drawPhysics(sensorShapeRight,Color.RED,getX(),getY(),getAngle(),drawScale.x,drawScale.y);
-        canvas.drawPhysics(sensorShapeTop,Color.RED,getX(),getY(),getAngle(),drawScale.x,drawScale.y);
+//        canvas.drawPhysics(sensorShape,Color.RED,getX(),getY(),getAngle(),drawScale.x,drawScale.y);
+//        canvas.drawPhysics(sensorShapeLeft,Color.RED,getX(),getY(),getAngle(),drawScale.x,drawScale.y);
+//        canvas.drawPhysics(sensorShapeRight,Color.RED,getX(),getY(),getAngle(),drawScale.x,drawScale.y);
+//        canvas.drawPhysics(sensorShapeTop,Color.RED,getX(),getY(),getAngle(),drawScale.x,drawScale.y);
     }
 }

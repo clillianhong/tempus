@@ -6,12 +6,13 @@ import com.badlogic.gdx.utils.ObjectSet;
 import edu.cornell.gdiac.tempus.InputController;
 import edu.cornell.gdiac.tempus.obstacle.Obstacle;
 import edu.cornell.gdiac.tempus.tempus.models.*;
+import edu.cornell.gdiac.util.PooledList;
 
 public class CollisionController implements ContactListener {
     private LevelController controller;
     private ObjectMap<Short, ObjectMap<Short, ContactListener>> listeners;
     private Avatar avatar;
-    private Enemy enemy;
+    private PooledList<Obstacle> obstacles;
     private float cur_normal;
     private CollisionPair prevCollisionPair;
     /** Mark set to handle more sophisticated collision callbacks */
@@ -64,7 +65,7 @@ public class CollisionController implements ContactListener {
     {
         controller = w;
         avatar = w.getAvatar();
-        enemy = w.getEnemy();
+        obstacles = w.getObjects();
         cur_normal = 0;
         listeners = new ObjectMap<Short, ObjectMap<Short, ContactListener>>();
         sensorFixtures = new ObjectSet<Fixture>();
@@ -183,18 +184,6 @@ public class CollisionController implements ContactListener {
     private void processProjProjContact(Fixture projectile1, Fixture projectile2){
         //TODO: projectile projectile contact
     }
-    
-
-    public void beginEnemyContactHelper(Object sensor, Object fd1, Object fd2,
-                                   Obstacle bd1, Obstacle bd2, Fixture fix1, Fixture fix2){
-        if ((sensor.equals(fd2) && enemy != bd1) ||
-                (sensor.equals(fd1) && enemy != bd2)) {
-            if ((sensor.equals(fd2) && !bd1.getName().equals("bullet")) ||
-                    (sensor.equals(fd1) && !bd2.getName().equals("bullet"))){
-                sensorFixtures.add(enemy == bd1 ? fix2 : fix1); // Could have more than one ground
-            }
-        }
-    }
 
     /**
      * Remove a new bullet from the world.
@@ -303,8 +292,29 @@ public class CollisionController implements ContactListener {
 
             }
 
-//            beginEnemyContactHelper(enemy.getLeftSensorName(), fd1, fd2, bd1, bd2, fix1, fix2);
-//            beginEnemyContactHelper(enemy.getRightSensorName(), fd1, fd2, bd1, bd2, fix1, fix2);
+            for (Obstacle obj: obstacles) {
+                if (obj instanceof Enemy) {
+                    Enemy enemy = (Enemy) obj;
+                    if ((enemy.getLeftSensorName().equals(fd2) && enemy != bd1 && !bd1.getName().equals("bullet")) ||
+                            (enemy.getLeftSensorName().equals(fd1) && enemy != bd2 && !bd2.getName().equals("bullet"))) {
+                        if (enemy.getLeftFixture() == null) {
+                            enemy.setLeftFixture(enemy == bd1 ? fix2 : fix1);
+                        } else if (fix1 != enemy.getLeftFixture() && fix2 != enemy.getLeftFixture()) {
+                            enemy.setMovement(0);
+                            enemy.setNextDirection(1);
+                        }
+                    }
+                    if ((enemy.getRightSensorName().equals(fd2) && enemy != bd1 && !bd1.getName().equals("bullet")) ||
+                            (enemy.getRightSensorName().equals(fd1) && enemy != bd2 && !bd2.getName().equals("bullet"))) {
+                        if (enemy.getRightFixture() == null) {
+                            enemy.setRightFixture(enemy == bd1 ? fix2 : fix1);
+                        } else if (fix1 != enemy.getRightFixture() && fix2 != enemy.getRightFixture()) {
+                            enemy.setMovement(0);
+                            enemy.setNextDirection(-1);
+                        }
+                    }
+                }
+            }
 
             // Check for win condition
             if ((bd1 == avatar   && bd2 == controller.getGoalDoor()) ||
@@ -348,19 +358,26 @@ public class CollisionController implements ContactListener {
             }
         }
 
-//        if ((enemy.getLeftSensorName().equals(fd2) && enemy != bd1) ||
-//                (enemy.getLeftSensorName().equals(fd1) && enemy != bd2)) {
-//            sensorFixtures.remove(enemy == bd1 ? fix2 : fix1);
-//            enemy.setMovement(0);
-//            enemy.setNextDirection(1);
-//        }
-//
-//        if ((enemy.getRightSensorName().equals(fd2) && enemy != bd1) ||
-//                (enemy.getRightSensorName().equals(fd1) && enemy != bd2)) {
-//            sensorFixtures.remove(enemy == bd1 ? fix2 : fix1);
-//            enemy.setMovement(0);
-//            enemy.setNextDirection(-1);
-//        }
+        for (Obstacle obj: obstacles) {
+            if (obj instanceof Enemy) {
+                Enemy enemy = (Enemy) obj;
+                if ((enemy.getLeftSensorName().equals(fd2) && enemy != bd1) ||
+                        (enemy.getLeftSensorName().equals(fd1) && enemy != bd2)) {
+                    if (enemy.getLeftFixture() == fix2 || enemy.getLeftFixture() == fix1) {
+                        enemy.setMovement(0);
+                        enemy.setNextDirection(1);
+                    }
+                }
+
+                if ((enemy.getRightSensorName().equals(fd2) && enemy != bd1) ||
+                        (enemy.getRightSensorName().equals(fd1) && enemy != bd2)) {
+                    if (enemy.getRightFixture() == fix2 || enemy.getRightFixture() == fix1) {
+                        enemy.setMovement(0);
+                        enemy.setNextDirection(-1);
+                    }
+                }
+            }
+        }
     }
 
     @Override
