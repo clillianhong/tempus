@@ -128,7 +128,7 @@ public class MainMenuMode implements Screen {
 
         //Create header
         Image header = new Image( new TextureRegion(new Texture(Gdx.files.internal("textures/gui/header.png"))));
-        
+
         //Create buttons
         ImageButton startButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/start_button.png")))));
 //        startButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/start_button.png"))));
