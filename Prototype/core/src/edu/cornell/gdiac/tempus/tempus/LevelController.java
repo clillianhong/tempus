@@ -598,6 +598,8 @@ public class LevelController extends WorldController {
 		world.setContactListener(collisionController);
 	}
 
+	public PooledList<Obstacle> getObjects() { return objects;}
+
 	/**
 	 * Returns whether to process the update loop
 	 *
@@ -777,9 +779,18 @@ public class LevelController extends WorldController {
 		for (Obstacle o : objects) {
 			if (o instanceof Enemy) {
 				Enemy e = (Enemy) o.getBody().getUserData();
+				if (!e.isTurret()) {
+					if (e.getLeftFixture() == null || e.getRightFixture() == null) {
+						break;
+					}
+					e.createLineOfSight(world, BULLET_OFFSET);
+					e.applyForce();
+				}
 				if (e.canFire()) {
-					if (o.getName() == "enemy")
-						e.setVelocity();
+					if (o.getName() == "enemy") {
+						e.setVelocity(BULLET_OFFSET * scale.y);
+						System.out.println("enemy firing");
+					}
 					createBullet(e);
 				} else
 					e.coolDown(true);
