@@ -4,10 +4,15 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.gdiac.tempus.GameCanvas;
 import edu.cornell.gdiac.tempus.InputController;
 import edu.cornell.gdiac.tempus.obstacle.CapsuleObstacle;
 import edu.cornell.gdiac.util.FilmStrip;
+import edu.cornell.gdiac.util.JsonAssetManager;
+
+import static edu.cornell.gdiac.tempus.tempus.models.EntityType.PAST;
+import static edu.cornell.gdiac.tempus.tempus.models.EntityType.PRESENT;
 
 
 /**
@@ -68,6 +73,7 @@ public class Avatar extends CapsuleObstacle {
     private static final String LEFT_SENSOR_NAME = "DudeLeftSensor";
     private static final String RIGHT_SENSOR_NAME = "DudeRightSensor";
     private static final String TOP_SENSOR_NAME = "DudeTopSensor";
+    private static final String CORE_SENSOR_NAME = "DudeCenterSensor";
 
     // This is to fit the image to a tigher hitbox
     /** The amount to shrink the body fixture (vertically) relative to the image */
@@ -111,6 +117,9 @@ public class Avatar extends CapsuleObstacle {
     /** Top sensor to determine sticking on the top */
     private Fixture sensorFixtureTop;
     private PolygonShape sensorShapeTop;
+    /** Core sensor for line of sight */
+    private Fixture sensorFixtureCore;
+    private PolygonShape sensorShapeCore;
 
     /** how long ago the character started dashing */
     private int startedDashing;
@@ -139,6 +148,15 @@ public class Avatar extends CapsuleObstacle {
 
     /** Cache for internal force calculations */
     private Vector2 forceCache = new Vector2();
+
+    /** Texture filmstrip for avatar standing */
+    private FilmStrip avatarStandingTexture;
+    /** Texture filmstrip for avatar dashing */
+    private FilmStrip avatarCrouchingTexture;
+    /** Texture filmstrip for avatar dashing */
+    private FilmStrip avatarDashingTexture;
+    /** Texture filmstrip for avatar falling */
+    private FilmStrip avatarFallingTexture;
 
     // ANIMATION FIELDS
     /** The texture filmstrip for the current animation */
@@ -521,6 +539,10 @@ public class Avatar extends CapsuleObstacle {
         return TOP_SENSOR_NAME;
     }
 
+    public String getCoreSensorName() {
+        return CORE_SENSOR_NAME;
+    }
+
     /**
      * Returns the height/width of the sensor
      *
@@ -553,6 +575,33 @@ public class Avatar extends CapsuleObstacle {
      */
     public Projectile getHeldBullet() { return heldBullet; }
 
+    /**
+     * Creates a new dude avatar with degenerate settings.
+     */
+    public Avatar (){
+        super(0,0,1.0f,0.5f);
+//        setFriction(FRICTION);  /// HE WILL STICK TO WALLS IF YOU FORGET
+        setFixedRotation(true);
+
+        // Gameplay attributes
+        lives = 3;
+        state = AvatarState.STANDING;
+        isGrounded = false;
+        isShooting = false;
+        isJumping = false;
+        faceRight = true;
+        isDashing = false;
+        newAngle = 0;
+        isSticking = false;
+        dashDistance = DASH_RANGE;
+        startedDashing = 0;
+        numDashes = maxDashes;
+        endDashVelocity = new Vector2(0f,0f);
+
+        shootCooldown = 0;
+        jumpCooldown = 0;
+        isHolding = false;
+    }
     /**
      * Creates a new dude avatar at the given position.
      *
@@ -594,6 +643,44 @@ public class Avatar extends CapsuleObstacle {
     }
 
     /**
+     * Initializes the avatar via the given JSON value
+     *
+     * The JSON value has been parsed and is part of a bigger level file.  However,
+     * this JSON value is limited to the dude subtree
+     *
+     * @param json	the JSON subtree defining the dude
+     */
+    public void initialize(JsonValue json) {
+        float [] shrink = json.get("shrink").asFloatArray();
+        float [] pos = json.get("pos").asFloatArray();
+        TextureRegion avatarTexture = JsonAssetManager.getInstance().getEntry(json.get("texture").asString(), TextureRegion.class);
+        setPosition(pos[0],pos[1]);
+        setDashStartPos(new Vector2 (pos[0],pos[1]));
+        float dwidth = avatarTexture.getRegionWidth();
+		float dheight = avatarTexture.getRegionHeight();
+		setDimension(dwidth*shrink[0],dheight*shrink[1]);
+		setTexture(avatarTexture);
+        setDensity(json.get("density").asFloat());
+        setBodyType(json.get("bodytype").asString().equals("static") ? BodyDef.BodyType.StaticBody : BodyDef.BodyType.DynamicBody);
+
+        avatarStandingTexture = JsonAssetManager.getInstance().getEntry(json.get("avatarstanding").asString(), FilmStrip.class);
+        avatarCrouchingTexture = JsonAssetManager.getInstance().getEntry(json.get("avatarcrouching").asString(), FilmStrip.class);
+        avatarDashingTexture = JsonAssetManager.getInstance().getEntry(json.get("avatardashing").asString(), FilmStrip.class);
+        avatarFallingTexture = JsonAssetManager.getInstance().getEntry(json.get("avatarfalling").asString(), FilmStrip.class);
+
+        setFilmStrip(Avatar.AvatarState.STANDING, avatarStandingTexture);
+        setFilmStrip(Avatar.AvatarState.CROUCHING, avatarCrouchingTexture);
+        setFilmStrip(Avatar.AvatarState.DASHING, avatarDashingTexture);
+        setFilmStrip(Avatar.AvatarState.FALLING, avatarFallingTexture);
+
+        projPresentCaughtTexture = JsonAssetManager.getInstance().getEntry("projpresentcaught", TextureRegion.class);
+        projPastCaughtTexture = JsonAssetManager.getInstance().getEntry("projpastcaught", TextureRegion.class);
+        setCaughtProjTexture(PRESENT, projPresentCaughtTexture);
+        setCaughtProjTexture(PAST, projPastCaughtTexture);
+		setName(json.name());
+    }
+
+    /**
      * Creates the physics Body(s) for this object, adding them to the world.
      *
      * This method overrides the base method to keep your ship from spinning.
@@ -616,46 +703,56 @@ public class Avatar extends CapsuleObstacle {
         // To determine whether or not the dude is on the ground,
         // we create a thin sensor under his feet, which reports
         // collisions with the world but has no collision response.
-        Vector2 sensorCenter = new Vector2(0, -getHeight() / 2);
-        FixtureDef sensorDef = new FixtureDef();
-        sensorDef.density = DENSITY;
-        sensorDef.isSensor = true;
-        sensorShape = new PolygonShape();
-        sensorShape.setAsBox(getWidth() / 4.0f - 2.0f * SENSOR_HEIGHT, SENSOR_HEIGHT, sensorCenter, 0.0f);
-        sensorDef.shape = sensorShape;
-
-        sensorFixture = body.createFixture(sensorDef);
-        sensorFixture.setUserData(getSensorName());
-
-        // To determine whether the body collides on the left side
-        Vector2 sensorCenterLeft = new Vector2(-getWidth() / 2, 0);
-        sensorShapeLeft = new PolygonShape();
-        sensorShapeLeft.setAsBox(SENSOR_HEIGHT, getHeight() / 5.0f - 2.0f * SENSOR_HEIGHT, sensorCenterLeft, 0.0f);
-        sensorDef.shape = sensorShapeLeft;
-
-        sensorFixtureLeft = body.createFixture(sensorDef);
-        sensorFixtureLeft.setUserData(getLeftSensorName());
-
-        // To determine whether the body collides on the right side
-        Vector2 sensorCenterRight = new Vector2(getWidth() / 2, 0);
-        sensorShapeRight = new PolygonShape();
-        sensorShapeRight.setAsBox(SENSOR_HEIGHT, getHeight() / 5.0f - 2.0f * SENSOR_HEIGHT, sensorCenterRight, 0.0f);
-        sensorDef.shape = sensorShapeRight;
-
-        sensorFixtureRight = body.createFixture(sensorDef);
-        sensorFixtureRight.setUserData(getRightSensorName());
-
-        // To determine whether the body collides on the top side
-        Vector2 sensorCenterTop = new Vector2(0, getHeight() / 2);
-        sensorShapeTop = new PolygonShape();
-        sensorShapeTop.setAsBox(getWidth() / 4.0f - 2.0f * SENSOR_HEIGHT, SENSOR_HEIGHT, sensorCenterTop, 0.0f);
-        sensorDef.shape = sensorShapeTop;
-
-        sensorFixtureTop = body.createFixture(sensorDef);
-        sensorFixtureTop.setUserData(getTopSensorName());
+//        Vector2 sensorCenter = new Vector2(0, -getHeight() / 2);
+//        FixtureDef sensorDef = new FixtureDef();
+//        sensorDef.density = DENSITY;
+//        sensorDef.isSensor = true;
+//        sensorShape = new PolygonShape();
+//        sensorShape.setAsBox(getWidth() / 4.0f - 2.0f * SENSOR_HEIGHT, SENSOR_HEIGHT, sensorCenter, 0.0f);
+//        sensorDef.shape = sensorShape;
+//
+//        sensorFixture = body.createFixture(sensorDef);
+//        sensorFixture.setUserData(getSensorName());
+//
+//        // To determine whether the body collides on the left side
+//        Vector2 sensorCenterLeft = new Vector2(-getWidth() / 2, 0);
+//        sensorShapeLeft = new PolygonShape();
+//        sensorShapeLeft.setAsBox(SENSOR_HEIGHT, getHeight() / 5.0f - 2.0f * SENSOR_HEIGHT, sensorCenterLeft, 0.0f);
+//        sensorDef.shape = sensorShapeLeft;
+//
+//        sensorFixtureLeft = body.createFixture(sensorDef);
+//        sensorFixtureLeft.setUserData(getLeftSensorName());
+//
+//        // To determine whether the body collides on the right side
+//        Vector2 sensorCenterRight = new Vector2(getWidth() / 2, 0);
+//        sensorShapeRight = new PolygonShape();
+//        sensorShapeRight.setAsBox(SENSOR_HEIGHT, getHeight() / 5.0f - 2.0f * SENSOR_HEIGHT, sensorCenterRight, 0.0f);
+//        sensorDef.shape = sensorShapeRight;
+//
+//        sensorFixtureRight = body.createFixture(sensorDef);
+//        sensorFixtureRight.setUserData(getRightSensorName());
+//
+//        // To determine whether the body collides on the top side
+//        Vector2 sensorCenterTop = new Vector2(0, getHeight() / 2);
+//        sensorShapeTop = new PolygonShape();
+//        sensorShapeTop.setAsBox(getWidth() / 4.0f - 2.0f * SENSOR_HEIGHT, SENSOR_HEIGHT, sensorCenterTop, 0.0f);
+//        sensorDef.shape = sensorShapeTop;
+//
+//        sensorFixtureTop = body.createFixture(sensorDef);
+//        sensorFixtureTop.setUserData(getTopSensorName());
+//
+//        Vector2 sensorCenterCore = new Vector2(0, 0);
+//        sensorShapeCore = new PolygonShape();
+//        sensorShapeCore.setAsBox(SENSOR_HEIGHT * 4, SENSOR_HEIGHT * 4, sensorCenterCore, 0.0f);
+//        sensorDef.shape = sensorShapeCore;
+//
+//        sensorFixtureCore = body.createFixture(sensorDef);
+//        sensorFixtureCore.setUserData(getCoreSensorName());
 
         return true;
     }
+
+    public Fixture getSensorFixtureCore() { return sensorFixtureCore; }
 
     /**
      * Applies the force to the body of this dude
@@ -871,9 +968,9 @@ public class Avatar extends CapsuleObstacle {
      */
     public void drawDebug(GameCanvas canvas) {
         super.drawDebug(canvas);
-        canvas.drawPhysics(sensorShape,Color.RED,getX(),getY(),getAngle(),drawScale.x,drawScale.y);
-        canvas.drawPhysics(sensorShapeLeft,Color.RED,getX(),getY(),getAngle(),drawScale.x,drawScale.y);
-        canvas.drawPhysics(sensorShapeRight,Color.RED,getX(),getY(),getAngle(),drawScale.x,drawScale.y);
-        canvas.drawPhysics(sensorShapeTop,Color.RED,getX(),getY(),getAngle(),drawScale.x,drawScale.y);
+//        canvas.drawPhysics(sensorShape,Color.RED,getX(),getY(),getAngle(),drawScale.x,drawScale.y);
+//        canvas.drawPhysics(sensorShapeLeft,Color.RED,getX(),getY(),getAngle(),drawScale.x,drawScale.y);
+//        canvas.drawPhysics(sensorShapeRight,Color.RED,getX(),getY(),getAngle(),drawScale.x,drawScale.y);
+//        canvas.drawPhysics(sensorShapeTop,Color.RED,getX(),getY(),getAngle(),drawScale.x,drawScale.y);
     }
 }

@@ -2,10 +2,14 @@ package edu.cornell.gdiac.tempus.tempus.models;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.utils.JsonValue;
+import com.badlogic.gdx.utils.ObjectSet;
 import edu.cornell.gdiac.tempus.GameCanvas;
 import edu.cornell.gdiac.tempus.obstacle.CapsuleObstacle;
+import edu.cornell.gdiac.util.JsonAssetManager;
 
 import static edu.cornell.gdiac.tempus.tempus.models.EntityType.PAST;
 import static edu.cornell.gdiac.tempus.tempus.models.EntityType.PRESENT;
@@ -36,9 +40,11 @@ public class Enemy extends CapsuleObstacle {
     /** Left sensor to determine enemy position on platform*/
     private Fixture sensorFixtureLeft;
     private PolygonShape sensorShapeLeft;
+    private Fixture leftFixture;
     /** Right sensor to determine enemy position on platform*/
     private Fixture sensorFixtureRight;
     private PolygonShape sensorShapeRight;
+    private Fixture rightFixture;
 
     /** Line of sight to the avatar */
     private RayCastCallback sight;
@@ -68,6 +74,11 @@ public class Enemy extends CapsuleObstacle {
 
     private boolean isTurret;
 
+    /** Texture asset for present enemy */
+    private TextureRegion enemyPresentTexture;
+    /** Texture asset for past enemy */
+    private TextureRegion enemyPastTexture;
+
     // Immobile enemy (turret)
     public Enemy(
             EntityType type, float x, float y, float width, float height,
@@ -89,6 +100,32 @@ public class Enemy extends CapsuleObstacle {
         limiter = 4;
     }
 
+    /**
+     * Creates a turret with the provided json value
+     * @param json The params for the turret
+     */
+    public Enemy(JsonValue json){
+        super(0,0,0.5f,1.0f);
+        float [] pos = json.get("pos").asFloatArray();
+        float [] shrink = json.get("shrink").asFloatArray();
+        TextureRegion texture = JsonAssetManager.getInstance().getEntry(json.get("texture").asString(), TextureRegion.class);
+        setTexture(texture);
+        setPosition(pos[0],pos[1]);
+        setDimension(texture.getRegionWidth()*shrink[0],texture.getRegionHeight()*shrink[1]);
+        setType(json.get("entitytype").asString().equals("present")?EntityType.PRESENT: PAST);
+        setSpace(getType()==PRESENT?1:2);
+        setBodyType(json.get("bodytype").asString().equals("static") ? BodyDef.BodyType.StaticBody : BodyDef.BodyType.DynamicBody);
+        setDensity(json.get("density").asFloat());
+        isTurret = true;
+        this.cooldown = json.get("cooldown").asInt();
+        float [] dir = json.get("direction").asFloatArray();
+        this.projVel = new Vector2 (dir[0],dir[1]);
+        isActive = true;
+        framesTillFire = 0;
+        limiter = 4;
+        setName("turret");
+    }
+
     // Moving enemy
     public Enemy(
             EntityType type, float x, float y, float width, float height,
@@ -101,9 +138,9 @@ public class Enemy extends CapsuleObstacle {
 
         this.type = type;
         this.target = target;
-        this.cooldown = cooldown;
+        this.cooldown = cooldown * 4;
         projVel = new Vector2(0,0).sub(getPosition().sub(target.getPosition()));
-        isActive = false;
+        isActive = true;
         framesTillFire = 0;
         movement = -1;
         nextDirection = -1;
@@ -113,6 +150,67 @@ public class Enemy extends CapsuleObstacle {
         isTurret = false;
     }
 
+    /**Creates a moving enemy
+     *
+     * @param target the target the enemy is aiming for
+     * @param json the json storing enemy properties
+     */
+    public Enemy(final Avatar target, JsonValue json) {
+        super(0,0,0.5f,1.0f);
+        float [] pos = json.get("pos").asFloatArray();
+        float [] shrink = json.get("shrink").asFloatArray();
+        TextureRegion texture = JsonAssetManager.getInstance().getEntry(json.get("texture").asString(), TextureRegion.class);
+        setTexture(texture);
+        setPosition(pos[0],pos[1]);
+        setDimension(texture.getRegionWidth()*shrink[0],texture.getRegionHeight()*shrink[1]);
+        setType(json.get("entitytype").asString().equals("present")?EntityType.PRESENT: PAST);
+        setBodyType(json.get("bodytype").asString().equals("static") ? BodyDef.BodyType.StaticBody : BodyDef.BodyType.DynamicBody);
+        setSpace(getType()==PRESENT?1:2);
+        setDensity(json.get("density").asFloat());
+        this.target = target;
+        this.cooldown = json.get("cooldown").asInt();
+//        projVel = new Vector2(0,0).sub(getPosition().sub(target.getPosition()));
+        isActive = false;
+        framesTillFire = 0;
+        movement = -1;
+        nextDirection = -1;
+        setFixedRotation(true);
+        sight = new LineOfSight(this);
+        limiter = 4;
+        isTurret = false;
+        setName("enemy");
+    }
+
+    /**
+     * Returns the platform fixture that the enemy's left sensor is connected to
+     *
+     * @return platform fixture the enemy stands on
+     */
+    public Fixture getLeftFixture() { return leftFixture; }
+
+    /**
+     * Sets the platform fixture the enemy's left sensor detects
+     *
+     * @param f the platform fixture
+     */
+    public void setLeftFixture(Fixture f) { leftFixture = f; }
+
+    /**
+     * Returns the platform fixture that the enemy's right sensor is connected to
+     *
+     * @return platform fixture the enemy stands on
+     */
+    public Fixture getRightFixture() { return rightFixture; }
+
+    /**
+     * Sets the platform fixture the enemy's right sensor detects
+     *
+     * @param f the platform fixture
+     */
+    public void setRightFixture(Fixture f) { rightFixture = f;}
+
+    public boolean isTurret() { return isTurret; }
+
     /**
      * Returns the type of enemy.
      *
@@ -120,8 +218,20 @@ public class Enemy extends CapsuleObstacle {
      */
     public EntityType getType() { return type; }
 
-    public void setVelocity() {
-        projVel = new Vector2(0,0).sub(getPosition().sub(target.getPosition()));
+    /**
+     * Sets the entity type of enemy
+     * @param t the type of enemy
+     */
+    public void setType (EntityType t){type = t;}
+
+    /**
+     * Sets the velocity of the bullet to aim at the target
+     *
+     * @param offset float of the offset from the enemy's center that bullet shoots from
+     */
+    public void setVelocity(float offset) {
+        projVel = target.getPosition().sub(getPosition());
+        projVel.y -= offset;
     }
 
     /**
@@ -131,6 +241,11 @@ public class Enemy extends CapsuleObstacle {
      */
     public Vector2 getProjVelocity() { return projVel; }
 
+    /**
+     * Sets whether the is active to fire bullets
+     *
+     * @param a boolean of whether the enemy is active
+     */
     public void setIsActive(boolean a) {
         isActive = a;
     }
@@ -141,7 +256,7 @@ public class Enemy extends CapsuleObstacle {
      * @return whether or not enemy can fire.
      */
     public boolean canFire() {
-        if (isTurret){
+        if (isTurret || isActive){
             return framesTillFire <= 0;
         } else {
             return false;
@@ -230,6 +345,9 @@ public class Enemy extends CapsuleObstacle {
         return ENEMY_MAXSPEED;
     }
 
+    /**
+     * Moves the enemy left and right
+     */
     public void applyForce() {
         if (!isActive()) {
             return;
@@ -297,8 +415,14 @@ public class Enemy extends CapsuleObstacle {
         return true;
     }
 
-    public void createLineOfSight(World world) {
-        world.rayCast(sight, getPosition(), target.getPosition());
+    /**
+     * Updates the enemies line of sight to check if it can see the target
+     * @param world
+     * @param offset offset from the enemy center to where the bullet shoots from
+     */
+    public void createLineOfSight(World world, float offset) {
+        Vector2 shootPos = getPosition().add(0f, offset);
+        world.rayCast(sight, shootPos, target.getPosition());
     }
 
     /**
@@ -329,6 +453,8 @@ public class Enemy extends CapsuleObstacle {
 class LineOfSight implements RayCastCallback {
 
     private Enemy enemy;
+    private Vector2 point;
+    private Vector2 normal;
 
     public LineOfSight(Enemy enemy) {
         this.enemy = enemy;
@@ -336,13 +462,22 @@ class LineOfSight implements RayCastCallback {
 
     public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction) {
 
-        if (fixture.getUserData() != null) {
+        this.point = point;
+        this.normal = normal;
+
+        if (fixture.getBody().getUserData() instanceof Avatar) {
             enemy.setIsActive(true);
             enemy.setMovement(0);
+        } else if (fixture.getBody().getUserData() instanceof Enemy ||
+                fixture.getBody().getUserData() instanceof Projectile) {
+            return 1;
         } else {
             enemy.setIsActive(false);
-            enemy.setMovement(enemy.getNextDirection());
+            if (enemy.getMovement() == 0) {
+                enemy.setMovement(enemy.getNextDirection());
+            }
         }
-        return 0;
+
+        return fraction;
     }
 }
