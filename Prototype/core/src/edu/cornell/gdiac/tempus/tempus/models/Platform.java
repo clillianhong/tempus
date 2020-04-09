@@ -39,6 +39,12 @@ public class Platform extends PolygonObstacle {
         region = null;
     }
 
+    public Platform(float[] points) {
+        super(points);
+        shape = new PolygonShape();
+        region = null;
+    }
+
     /**
      * Initializes a PolygonRegion to support a tiled texture
      *
@@ -164,38 +170,17 @@ public class Platform extends PolygonObstacle {
      * @param json the JSON subtree defining the dude
      */
     public void initialize(JsonValue json) {
-        setName(json.name());
-        float[] pos = json.get("pos").asFloatArray();
-        float[] size = json.get("size").asFloatArray();
-        setPosition(pos[0], pos[1]);
-        setDimension(size[0], size[1]);
-
-        // Technically, we should do error checking here.
-        // A JSON field might accidentally be missing
-        setBodyType(json.get("bodytype").asString().equals("static") ? BodyDef.BodyType.StaticBody
-                : BodyDef.BodyType.DynamicBody);
+        setName(json.get("name").asString());
+        float[] pos =json.get("pos").asFloatArray();
+        setPosition(pos[0],pos[1]);
+        setBodyType(json.get("bodytype").asString().equals("static") ? BodyDef.BodyType.StaticBody : BodyDef.BodyType.DynamicBody);
         setDensity(json.get("density").asFloat());
         setFriction(json.get("friction").asFloat());
         setRestitution(json.get("restitution").asFloat());
-
-        // Reflection is best way to convert name to color
-        Color debugColor;
-        try {
-            String cname = json.get("debugcolor").asString().toUpperCase();
-            Field field = Class.forName("com.badlogic.gdx.graphics.Color").getField(cname);
-            debugColor = new Color((Color) field.get(null));
-        } catch (Exception e) {
-            debugColor = null; // Not defined
-        }
-        int opacity = json.get("debugopacity").asInt();
-        debugColor.mul(opacity / 255.0f);
-        this.debugColor = debugColor;
-
-        // Now get the texture from the AssetManager singleton
         String key = json.get("texture").asString();
-        // TextureRegion texture = JsonAssetManager.getInstance().getEntry(key,
-        // TextureRegion.class); //TODO : json asset manager!
+        TextureRegion texture = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
         setTexture(texture);
+        setSpace(json.get("space").asInt());
     }
 
     public void draw(GameCanvas canvas) {

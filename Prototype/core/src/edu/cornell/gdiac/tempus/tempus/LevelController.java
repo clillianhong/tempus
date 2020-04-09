@@ -19,6 +19,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -53,7 +54,6 @@ import static edu.cornell.gdiac.tempus.tempus.models.EntityType.PRESENT;
  */
 public class LevelController extends WorldController {
 
-
 	/** Checks if did debug */
 	private boolean debug;
 
@@ -66,24 +66,9 @@ public class LevelController extends WorldController {
 	protected TextureRegion goalTile;
 	/** The font for giving messages to the player */
 	protected BitmapFont displayFont;
-	/** Texture asset for character avatar */
-	private TextureRegion avatarTexture;
-	/** Texture filmstrip for avatar standing */
-	private FilmStrip avatarStandingTexture;
-	/** Texture filmstrip for avatar dashing */
-	private FilmStrip avatarCrouchingTexture;
-	/** Texture filmstrip for avatar dashing */
-	private FilmStrip avatarDashingTexture;
-	/** Texture filmstrip for avatar falling */
-	private FilmStrip avatarFallingTexture;
-
 
 	/** Texture asset for the big bullet */
 	private TextureRegion bulletBigTexture;
-	/** Texture asset for the caught proj of type present */
-	private TextureRegion projPresentCaughtTexture;
-	/** Texture asset for the caught proj of type past */
-	private TextureRegion projPastCaughtTexture;
 	/** Texture aobjects.sset for the turret */
 	private TextureRegion turretTexture;
 	/** Texture asset for present enemy */
@@ -159,7 +144,7 @@ public class LevelController extends WorldController {
 	/** The restitution for all physics objects */
 	private static final float BASIC_RESTITUTION = 0.1f;
 	/** Offset for bullet when firing */
-	private static final float BULLET_OFFSET = 0.03f;
+	private static final float BULLET_OFFSET = 1.0f;
 	/** The volume for sound effects */
 	private static final float EFFECT_VOLUME = 0.8f;
 
@@ -178,7 +163,7 @@ public class LevelController extends WorldController {
 	/** The outlines of all of the platforms */
 	private static final float[][] PLATFORMS = {
 
-			{ 1.0f, 4.0f, 3.0f, 4.0f, 3.0f, 2.5f, 1.0f, 2.5f }, //{ 3.0f, 8.0f, 5.0f, 8.0f, 5.0f, 7.5f, 3.0f, 7.5f },
+			{ 1.0f, 4.0f, 3.0f, 4.0f, 3.0f, 2.5f, 1.0f, 2.5f }, // { 3.0f, 8.0f, 5.0f, 8.0f, 5.0f, 7.5f, 3.0f, 7.5f },
 			{ 5.5f, 4.5f, 7.5f, 4.5f, 7.5f, 5.0f, 5.5f, 5.0f }, // downwards diagonal
 			{ 9.0f, 6.0f, 9.0f, 7.5f, 9.5f, 7.5f, 9.5f, 6.0f }, { 7.0f, 9.0f, 7.0f, 10.5f, 7.5f, 10.5f, 7.5f, 9.0f },
 			{ 9.0f, 11.5f, 9.0f, 13.0f, 9.5f, 13.0f, 9.5f, 11.5f }, { 7.0f, 15.5f, 7.5f, 15.5f, 7.5f, 14.0f, 7.0f, 14.0f },
@@ -191,17 +176,17 @@ public class LevelController extends WorldController {
 			{ 26.5f, 13.0f, 26.5f, 14.0f, 31.0f, 14.0f, 31.0f, 13.0f } };
 
 	/** The positions of all present capsule platforms */
-	private static final float[][] PRESENT_CAPSULES = {{3.0f, 7.0f}, {6.0f, 4.0f}, {24.0f, 11.5f}};
+	private static final float[][] PRESENT_CAPSULES = { { 3.0f, 7.0f }, { 6.0f, 4.0f }, { 24.0f, 11.5f } };
 	/** The positions of all present diamond platforms */
-	private static final float[][] PRESENT_DIAMONDS = {{1.0f, 2.0f}, {11.0f, 7.0f}};
+	private static final float[][] PRESENT_DIAMONDS = { { 1.0f, 2.0f }, { 11.0f, 7.0f } };
 	/** The positions of all present rounded platforms */
-	private static final float[][] PRESENT_ROUNDS = {{11.5f, 2.0f}, {9.5f, 13.0f}};
+	private static final float[][] PRESENT_ROUNDS = { { 11.5f, 2.0f }, { 9.5f, 13.0f } };
 	/** The positions of all past capsule platforms */
-	private static final float[][] PAST_CAPSULES = {{4.5f, 1.0f}, {14.5f, 9.0f}};
+	private static final float[][] PAST_CAPSULES = { { 4.5f, 1.0f }, { 14.5f, 9.0f } };
 	/** The positions of all past diamond platforms */
-	private static final float[][] PAST_DIAMONDS = {{13.5f, 3.0f}, {20.0f, 5.0f}};
+	private static final float[][] PAST_DIAMONDS = { { 13.5f, 3.0f }, { 20.0f, 5.0f } };
 	/** The positions of all past rounded platforms */
-	private static final float[][] PAST_ROUNDS = {{2.0f, 13.0f}, {18.5f, 13.0f}};
+	private static final float[][] PAST_ROUNDS = { { 2.0f, 13.0f }, { 18.5f, 13.0f } };
 
 	// Other game objects
 	/** The goal door position */
@@ -242,8 +227,6 @@ public class LevelController extends WorldController {
 	/** Collision Controller instance **/
 	protected CollisionController collisionController;
 
-
-
 	/**
 	 * Creates and initialize a new instance of the platformer game
 	 *
@@ -258,9 +241,6 @@ public class LevelController extends WorldController {
 		shifted = false;
 		debug = false;
 		timeFreeze = false;
-
-
-
 
 	}
 
@@ -284,6 +264,7 @@ public class LevelController extends WorldController {
 		// world.setContactListener(this);
 		setComplete(false);
 		setFailure(false);
+		levelFormat = jsonReader.parse(Gdx.files.internal("jsons/level_1.json"));
 		populateLevel();
 		timeFreeze = false;
 	}
@@ -295,24 +276,25 @@ public class LevelController extends WorldController {
 	private TextButton startButton;
 	private TextButton quitButton;
 
-	private void exitGame(){
+	private void exitGame() {
 		listener.exitScreen(this, EXIT_QUIT);
 	}
+
 	/**
 	 * Lays out the game geography.
 	 */
 	private void populateLevel() {
 
-		//tester stage!
+		// tester stage!
 		skin = new Skin(Gdx.files.internal("jsons/uiskin.json"));
 		stage = new Stage(new ScreenViewport());
 		table = new Table();
 		table.setWidth(stage.getWidth());
 		table.align(Align.center | Align.top);
-		table.setPosition(0,Gdx.graphics.getHeight());
-		startButton = new TextButton("New Game",skin);
-		quitButton = new TextButton("Quit Game",skin);
-		quitButton.addListener(new ClickListener(){
+		table.setPosition(0, Gdx.graphics.getHeight());
+		startButton = new TextButton("New Game", skin);
+		quitButton = new TextButton("Quit Game", skin);
+		quitButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				exitGame();
@@ -324,20 +306,31 @@ public class LevelController extends WorldController {
 		table.add(quitButton);
 		stage.addActor(table);
 		Gdx.input.setInputProcessor(stage);
+		float gravity = levelFormat.getFloat("gravity");
+		float[] pSize = levelFormat.get("bounds").asFloatArray();
+
+		world = new World (new Vector2(0,gravity),false);
+		bounds = new Rectangle(0,0,pSize[0],pSize[1]);
 
 		// Add level goal
-		goalTile = JsonAssetManager.getInstance().getEntry("goal", TextureRegion.class);
-		float dwidth = goalTile.getRegionWidth() / scale.x;
-		float dheight = goalTile.getRegionHeight() / scale.y;
-		goalDoor = new Door(GOAL_POS.x, GOAL_POS.y, dwidth, dheight, 0, scale);
-		goalDoor.setBodyType(BodyDef.BodyType.StaticBody);
-		goalDoor.setDensity(0.0f);
-		goalDoor.setFriction(0.0f);
-		goalDoor.setRestitution(0.0f);
-		goalDoor.setSensor(true);
+		goalDoor = new Door();
+		goalDoor.initialize(levelFormat.get("door"));
+		// TODO: Delete
+		// goalTile =
+		// JsonAssetManager.getInstance().getEntry(key.get("texture").asString(),
+		// TextureRegion.class);
+		// float [] pos = key.get("pos").asFloatArray();
+		// goalDoor = new Door(pos[0], pos[1], dwidth, dheight, 0);
+		//
+		// goalDoor.setBodyType(key.get("bodytype").asString().equals("static")?BodyDef.BodyType.StaticBody
+		// : BodyDef.BodyType.DynamicBody);
+		// goalDoor.setDensity(key.get("density").asFloat());
+		// goalDoor.setFriction(key.get("friction").asFloat());
+		// goalDoor.setRestitution(key.get("restitution").asFloat());
+		// goalDoor.setSensor(key.getBoolean("sensor"));
+		// goalDoor.setTexture(goalTile);
+		// goalDoor.setName("goal");
 		goalDoor.setDrawScale(scale);
-		goalDoor.setTexture(goalTile);
-		goalDoor.setName("goal");
 		addObject(goalDoor);
 
 		earthTile = JsonAssetManager.getInstance().getEntry("earth", TextureRegion.class);
@@ -352,7 +345,7 @@ public class LevelController extends WorldController {
 			obj.setDrawScale(scale);
 			obj.setTexture(earthTile);
 			obj.setName(nameWall);
-			//addObject(obj);
+			// addObject(obj);
 		}
 
 		String namePlatform = "platform";
@@ -372,156 +365,240 @@ public class LevelController extends WorldController {
 			if (ii > PLATFORMS.length / 2) {
 				obj.setSpace(2);
 			}
-			//addObject(obj);
+			// addObject(obj);
 		}
-		float[] newPlatCapsule = { 0.2f, 1.1f, 2.9f, 1.1f, 2.9f, 0.6f, 1.7f, 0.1f, 0.2f, 0.6f };
-		float[] newPlatDiamond = { 0.2f, 1.8f,  2.4f, 1.8f, 1.4f, 0.1f };
-		float[] newPlatRounded = { 0.1f, 1.4f, 0.5f, 1.7f,  2.4f, 1.7f, 2.7f, 1.4f,  2.6f, 0.8f, 2.0f, 0.2f, 0.8f, 0.2f };
-		for (int ii = 0; ii < PRESENT_CAPSULES.length; ii++) {
-			PolygonObstacle obj;
-			obj = new Platform(newPlatCapsule, PRESENT_CAPSULES[ii][0], PRESENT_CAPSULES[ii][1]);
-			obj.setBodyType(BodyDef.BodyType.StaticBody);
-			obj.setDensity(BASIC_DENSITY);
-			obj.setFriction(BASIC_FRICTION);
-			obj.setRestitution(BASIC_RESTITUTION);
+		float[] newPlatCapsule = levelFormat.get("capsuleshape").asFloatArray();
+		float[] newPlatDiamond = levelFormat.get("diamondshape").asFloatArray();
+		float[] newPlatRounded = levelFormat.get("roundshape").asFloatArray();
+		JsonValue presentcapsule = levelFormat.get("presentcapsules").child();
+		while (presentcapsule!=null){
+			Platform obj = new Platform (newPlatCapsule);
+			obj.initialize(presentcapsule);
 			obj.setDrawScale(scale);
-			obj.setTexture(JsonAssetManager.getInstance().getEntry("present_capsule", TextureRegion.class));
-			obj.setName("present_capsule");
-			obj.setSpace(1);
 			addObject(obj);
+			presentcapsule = presentcapsule.next();
 		}
-		for (int ii = 0; ii < PRESENT_DIAMONDS.length; ii++) {
-			PolygonObstacle obj;
-			obj = new Platform(newPlatDiamond, PRESENT_DIAMONDS[ii][0], PRESENT_DIAMONDS[ii][1]);
-			obj.setBodyType(BodyDef.BodyType.StaticBody);
-			obj.setDensity(BASIC_DENSITY);
-			obj.setFriction(BASIC_FRICTION);
-			obj.setRestitution(BASIC_RESTITUTION);
+		//TODO: Delete
+//		for (int ii = 0; ii < PRESENT_CAPSULES.length; ii++) {
+//			PolygonObstacle obj;
+//			obj = new Platform(newPlatCapsule, PRESENT_CAPSULES[ii][0], PRESENT_CAPSULES[ii][1]);
+//			obj.setBodyType(BodyDef.BodyType.StaticBody);
+//			obj.setDensity(BASIC_DENSITY);
+//			obj.setFriction(BASIC_FRICTION);
+//			obj.setRestitution(BASIC_RESTITUTION);
+//			obj.setDrawScale(scale);
+//			obj.setTexture(JsonAssetManager.getInstance().getEntry("present_capsule", TextureRegion.class));
+//			obj.setName("present_capsule");
+//			obj.setSpace(1);
+//			addObject(obj);
+//		}
+		JsonValue presentdiamond = levelFormat.get("presentdiamonds").child();
+		while (presentdiamond!=null){
+			Platform obj = new Platform (newPlatDiamond);
+			obj.initialize(presentdiamond);
 			obj.setDrawScale(scale);
-			obj.setTexture(JsonAssetManager.getInstance().getEntry("present_diamond", TextureRegion.class));
-			obj.setName("present_diamond");
-			obj.setSpace(1);
 			addObject(obj);
+			presentdiamond = presentdiamond.next();
 		}
-		for (int ii = 0; ii < PRESENT_ROUNDS.length; ii++) {
-			PolygonObstacle obj;
-			obj = new Platform(newPlatRounded, PRESENT_ROUNDS[ii][0], PRESENT_ROUNDS[ii][1]);
-			obj.setBodyType(BodyDef.BodyType.StaticBody);
-			obj.setDensity(BASIC_DENSITY);
-			obj.setFriction(BASIC_FRICTION);
-			obj.setRestitution(BASIC_RESTITUTION);
+		//TODO:Delete
+//		for (int ii = 0; ii < PRESENT_DIAMONDS.length; ii++) {
+//			PolygonObstacle obj;
+//			obj = new Platform(newPlatDiamond, PRESENT_DIAMONDS[ii][0], PRESENT_DIAMONDS[ii][1]);
+//			obj.setBodyType(BodyDef.BodyType.StaticBody);
+//			obj.setDensity(BASIC_DENSITY);
+//			obj.setFriction(BASIC_FRICTION);
+//			obj.setRestitution(BASIC_RESTITUTION);
+//			obj.setDrawScale(scale);
+//			obj.setTexture(JsonAssetManager.getInstance().getEntry("present_diamond", TextureRegion.class));
+//			obj.setName("present_diamond");
+//			obj.setSpace(1);
+//			addObject(obj);
+//		}
+		JsonValue presentround = levelFormat.get("presentrounds").child();
+		while (presentround!=null){
+			Platform obj = new Platform (newPlatRounded);
+			obj.initialize(presentround);
 			obj.setDrawScale(scale);
-			obj.setTexture(JsonAssetManager.getInstance().getEntry("present_round", TextureRegion.class));
-			obj.setName("present_round");
-			obj.setSpace(1);
 			addObject(obj);
+			presentround = presentround.next();
 		}
-		for (int ii = 0; ii < PAST_ROUNDS.length; ii++) {
-			PolygonObstacle obj;
-			obj = new Platform(newPlatRounded, PAST_ROUNDS[ii][0], PAST_ROUNDS[ii][1]);
-			obj.setBodyType(BodyDef.BodyType.StaticBody);
-			obj.setDensity(BASIC_DENSITY);
-			obj.setFriction(BASIC_FRICTION);
-			obj.setRestitution(BASIC_RESTITUTION);
+		//TODO:Delete
+//		for (int ii = 0; ii < PRESENT_ROUNDS.length; ii++) {
+//			PolygonObstacle obj;
+//			obj = new Platform(newPlatRounded, PRESENT_ROUNDS[ii][0], PRESENT_ROUNDS[ii][1]);
+//			obj.setBodyType(BodyDef.BodyType.StaticBody);
+//			obj.setDensity(BASIC_DENSITY);
+//			obj.setFriction(BASIC_FRICTION);
+//			obj.setRestitution(BASIC_RESTITUTION);
+//			obj.setDrawScale(scale);
+//			obj.setTexture(JsonAssetManager.getInstance().getEntry("present_round", TextureRegion.class));
+//			obj.setName("present_round");
+//			obj.setSpace(1);
+//			addObject(obj);
+//		}
+		JsonValue pastround = levelFormat.get("pastrounds").child();
+		while (pastround!=null){
+			Platform obj = new Platform (newPlatRounded);
+			obj.initialize(pastround);
 			obj.setDrawScale(scale);
-			obj.setTexture(JsonAssetManager.getInstance().getEntry("past_round", TextureRegion.class));
-			obj.setName("past_round");
-			obj.setSpace(2);
 			addObject(obj);
-		}
-		for (int ii = 0; ii < PAST_DIAMONDS.length; ii++) {
-			PolygonObstacle obj;
-			obj = new Platform(newPlatDiamond, PAST_DIAMONDS[ii][0], PAST_DIAMONDS[ii][1]);
-			obj.setBodyType(BodyDef.BodyType.StaticBody);
-			obj.setDensity(BASIC_DENSITY);
-			obj.setFriction(BASIC_FRICTION);
-			obj.setRestitution(BASIC_RESTITUTION);
-			obj.setDrawScale(scale);
-			obj.setTexture(JsonAssetManager.getInstance().getEntry("past_diamond", TextureRegion.class));
-			obj.setName("past_diamond");
-			obj.setSpace(2);
-			addObject(obj);
-		}
-		for (int ii = 0; ii < PAST_CAPSULES.length; ii++) {
-			PolygonObstacle obj;
-			obj = new Platform(newPlatCapsule, PAST_CAPSULES[ii][0], PAST_CAPSULES[ii][1]);
-			obj.setBodyType(BodyDef.BodyType.StaticBody);
-			obj.setDensity(BASIC_DENSITY);
-			obj.setFriction(BASIC_FRICTION);
-			obj.setRestitution(BASIC_RESTITUTION);
-			obj.setDrawScale(scale);
-			obj.setTexture(JsonAssetManager.getInstance().getEntry("past_capsule", TextureRegion.class));
-			obj.setName("past_capsule");
-			obj.setSpace(2);
-			addObject(obj);
+			pastround = pastround.next();
 		}
 
-		//{ 1.0f, 4.0f, 3.0f, 4.0f, 3.0f, 2.5f, 1.0f, 2.5f }, { 3.0f, 8.0f, 5.0f, 8.0f, 5.0f, 7.5f, 3.0f, 7.5f },
-		//{ 5.5f, 4.5f, 7.5f, 4.5f, 7.5f, 5.0f, 5.5f, 5.0f }
+		//TODO:Delete
+//		for (int ii = 0; ii < PAST_ROUNDS.length; ii++) {
+//			PolygonObstacle obj;
+//			obj = new Platform(newPlatRounded, PAST_ROUNDS[ii][0], PAST_ROUNDS[ii][1]);
+//			obj.setBodyType(BodyDef.BodyType.StaticBody);
+//			obj.setDensity(BASIC_DENSITY);
+//			obj.setFriction(BASIC_FRICTION);
+//			obj.setRestitution(BASIC_RESTITUTION);
+//			obj.setDrawScale(scale);
+//			obj.setTexture(JsonAssetManager.getInstance().getEntry("past_round", TextureRegion.class));
+//			obj.setName("past_round");
+//			obj.setSpace(2);
+//			addObject(obj);
+//		}
+		JsonValue pastdiamond = levelFormat.get("pastdiamonds").child();
+		while (pastdiamond!=null){
+			Platform obj = new Platform (newPlatDiamond);
+			obj.initialize(pastdiamond);
+			obj.setDrawScale(scale);
+			addObject(obj);
+			pastdiamond = pastdiamond.next();
+		}
+		//TODO:Delete
+//		for (int ii = 0; ii < PAST_DIAMONDS.length; ii++) {
+//			PolygonObstacle obj;
+//			obj = new Platform(newPlatDiamond, PAST_DIAMONDS[ii][0], PAST_DIAMONDS[ii][1]);
+//			obj.setBodyType(BodyDef.BodyType.StaticBody);
+//			obj.setDensity(BASIC_DENSITY);
+//			obj.setFriction(BASIC_FRICTION);
+//			obj.setRestitution(BASIC_RESTITUTION);
+//			obj.setDrawScale(scale);
+//			obj.setTexture(JsonAssetManager.getInstance().getEntry("past_diamond", TextureRegion.class));
+//			obj.setName("past_diamond");
+//			obj.setSpace(2);
+//			addObject(obj);
+//		}
+		JsonValue pastcapsule = levelFormat.get("pastcapsules").child();
+		while (pastcapsule!=null){
+			Platform obj = new Platform (newPlatCapsule);
+			obj.initialize(pastcapsule);
+			obj.setDrawScale(scale);
+			addObject(obj);
+			pastcapsule = pastcapsule.next();
+		}
+		// TODO: Delete
+//		for (int ii = 0; ii < PAST_CAPSULES.length; ii++) {
+//			PolygonObstacle obj;
+//			obj = new Platform(newPlatCapsule, PAST_CAPSULES[ii][0], PAST_CAPSULES[ii][1]);
+//			obj.setBodyType(BodyDef.BodyType.StaticBody);
+//			obj.setDensity(BASIC_DENSITY);
+//			obj.setFriction(BASIC_FRICTION);
+//			obj.setRestitution(BASIC_RESTITUTION);
+//			obj.setDrawScale(scale);
+//			obj.setTexture(JsonAssetManager.getInstance().getEntry("past_capsule", TextureRegion.class));
+//			obj.setName("past_capsule");
+//			obj.setSpace(2);
+//			addObject(obj);
+//		}
+
+		// { 1.0f, 4.0f, 3.0f, 4.0f, 3.0f, 2.5f, 1.0f, 2.5f }, { 3.0f, 8.0f, 5.0f, 8.0f,
+		// 5.0f, 7.5f, 3.0f, 7.5f },
+		// { 5.5f, 4.5f, 7.5f, 4.5f, 7.5f, 5.0f, 5.5f, 5.0f }
+
+
 		// Create avatar
-		avatarTexture = JsonAssetManager.getInstance().getEntry("dude", TextureRegion.class);
-		dwidth = avatarTexture.getRegionWidth() / scale.x;
-		dheight = avatarTexture.getRegionHeight() / scale.y;
-		avatar = new Avatar(DUDE_POS.x, DUDE_POS.y, dwidth, dheight, scale);
+		JsonValue json = levelFormat.get("avatar");
+		avatar = new Avatar();
+		avatar.initialize(json);
 		avatar.setDrawScale(scale);
-		avatar.setTexture(avatarTexture);
-		avatar.setBodyType(BodyDef.BodyType.DynamicBody);
-		avatar.setName("avatar");
-
-		// Set film strips to animate avatar states
-		avatarStandingTexture = JsonAssetManager.getInstance().getEntry("avatarstanding", FilmStrip.class);
-		avatarCrouchingTexture = JsonAssetManager.getInstance().getEntry("avatarcrouching", FilmStrip.class);
-		avatarDashingTexture = JsonAssetManager.getInstance().getEntry("avatardashing", FilmStrip.class);
-		avatarFallingTexture = JsonAssetManager.getInstance().getEntry("avatarfalling", FilmStrip.class);
-
-		avatar.setFilmStrip(Avatar.AvatarState.STANDING, avatarStandingTexture);
-		avatar.setFilmStrip(Avatar.AvatarState.CROUCHING, avatarCrouchingTexture);
-		avatar.setFilmStrip(Avatar.AvatarState.DASHING, avatarDashingTexture);
-		avatar.setFilmStrip(Avatar.AvatarState.FALLING, avatarFallingTexture);
-
-		// Set textures for caught projectiles
-		projPresentCaughtTexture = JsonAssetManager.getInstance().getEntry("projpresentcaught", TextureRegion.class);
-		projPastCaughtTexture = JsonAssetManager.getInstance().getEntry("projpastcaught", TextureRegion.class);
-		avatar.setCaughtProjTexture(PRESENT, projPresentCaughtTexture);
-		avatar.setCaughtProjTexture(PAST, projPastCaughtTexture);
-
 		addObject(avatar);
 
-		enemyPresentTexture = JsonAssetManager.getInstance().getEntry("enemypresent", TextureRegion.class);
-		enemyPastTexture = JsonAssetManager.getInstance().getEntry("enemypast", TextureRegion.class);
-		for (int ii = 0; ii < NUMBER_ENEMIES; ii++) {
-			TextureRegion texture;
-			if (TYPE_ENEMIES[ii] == PRESENT)
-				texture = enemyPresentTexture;
-			else
-				texture = enemyPastTexture;
-			dwidth = texture.getRegionWidth() / scale.x;
-			dheight = texture.getRegionHeight() / scale.y;
-			Enemy enemy = new Enemy(TYPE_ENEMIES[ii], COOR_ENEMIES[ii][0], COOR_ENEMIES[ii][1], dwidth, dheight, texture,
-					CD_ENEMIES[ii], avatar, scale);
-			enemy.setBodyType(BodyDef.BodyType.DynamicBody);
-			enemy.setDrawScale(scale);
-			enemy.setName("enemy");
-			addObject(enemy);
+		//TODO: Delete
+//		avatarTexture = JsonAssetManager.getInstance().getEntry(json.get("texture").asString(), TextureRegion.class);
+//		float dwidth = avatarTexture.getRegionWidth() / scale.x;
+//		float dheight = avatarTexture.getRegionHeight() / scale.y;
+
+//		avatar = new Avatar(DUDE_POS.x, DUDE_POS.y, dwidth, dheight, scale);
+
+//		avatar.setTexture(avatarTexture);
+//		avatar.setBodyType(BodyDef.BodyType.DynamicBody);
+//		avatar.setName("avatar");
+
+		// Set film strips to animate avatar states
+//		avatarStandingTexture = JsonAssetManager.getInstance().getEntry("avatarstanding", FilmStrip.class);
+//		avatarCrouchingTexture = JsonAssetManager.getInstance().getEntry("avatarcrouching", FilmStrip.class);
+//		avatarDashingTexture = JsonAssetManager.getInstance().getEntry("avatardashing", FilmStrip.class);
+//		avatarFallingTexture = JsonAssetManager.getInstance().getEntry("avatarfalling", FilmStrip.class);
+//
+//		avatar.setFilmStrip(Avatar.AvatarState.STANDING, avatarStandingTexture);
+//		avatar.setFilmStrip(Avatar.AvatarState.CROUCHING, avatarCrouchingTexture);
+//		avatar.setFilmStrip(Avatar.AvatarState.DASHING, avatarDashingTexture);
+//		avatar.setFilmStrip(Avatar.AvatarState.FALLING, avatarFallingTexture);
+
+		// Set textures for caught projectiles
+//		projPresentCaughtTexture = JsonAssetManager.getInstance().getEntry("projpresentcaught", TextureRegion.class);
+//		projPastCaughtTexture = JsonAssetManager.getInstance().getEntry("projpastcaught", TextureRegion.class);
+//		avatar.setCaughtProjTexture(PRESENT, projPresentCaughtTexture);
+//		avatar.setCaughtProjTexture(PAST, projPastCaughtTexture);
+
+
+		JsonValue enemy = levelFormat.get("enemies").child();
+		while(enemy!= null){
+			Enemy obj = new Enemy (avatar,enemy);
+			obj.setDrawScale(scale);
+			addObject(obj);
+			enemy = enemy.next();
 		}
 
-		turretTexture = JsonAssetManager.getInstance().getEntry("turret", TextureRegion.class);
-		for (int ii = 0; ii < NUMBER_TURRETS; ii++) {
-			TextureRegion texture = turretTexture;
-			dwidth = texture.getRegionWidth() / scale.x;
-			dheight = texture.getRegionHeight() / scale.y;
-			Vector2 projDir = new Vector2(DIR_TURRETS[ii][0], DIR_TURRETS[ii][1]);
-			Enemy turret = new Enemy(TYPE_TURRETS[ii], COOR_TURRETS[ii][0], COOR_TURRETS[ii][1], dwidth, dheight, texture,
-					CD_TURRETS[ii], projDir, scale);
-			turret.setBodyType(BodyDef.BodyType.StaticBody);
-			turret.setDrawScale(scale);
-			turret.setName("turret");
-			addObject(turret);
+		//TODO: Delete
+
+		// enemyPresentTexture = JsonAssetManager.getInstance().getEntry("enemypresent", TextureRegion.class);
+//		enemyPastTexture = JsonAssetManager.getInstance().getEntry("enemypast", TextureRegion.class);
+//		for (int ii = 0; ii < NUMBER_ENEMIES; ii++) {
+//			TextureRegion texture;
+//			if (TYPE_ENEMIES[ii] == PRESENT)
+//				texture = enemyPresentTexture;
+//			else
+//				texture = enemyPastTexture;
+//			float dwidth = texture.getRegionWidth() / scale.x;
+//			float dheight = texture.getRegionHeight() / scale.y;
+//			Enemy enemy = new Enemy(TYPE_ENEMIES[ii], COOR_ENEMIES[ii][0], COOR_ENEMIES[ii][1], dwidth, dheight, texture,
+//					CD_ENEMIES[ii], avatar, scale);
+//			enemy.setBodyType(BodyDef.BodyType.DynamicBody);
+//			enemy.setDrawScale(scale);
+//			enemy.setName("enemy");
+//			addObject(enemy);
+//		}
+
+		JsonValue turret = levelFormat.get("turrets").child();
+		while(turret!=null){
+			Enemy obj = new Enemy(turret);
+			obj.setDrawScale(scale);
+			addObject(obj);
+			turret = turret.next();
 		}
+//		turretTexture = JsonAssetManager.getInstance().getEntry("turret", TextureRegion.class);
+//		for (int ii = 0; ii < NUMBER_TURRETS; ii++) {
+//			TextureRegion texture = turretTexture;
+//			float dwidth = texture.getRegionWidth() / scale.x;
+//			float dheight = texture.getRegionHeight() / scale.y;
+//			Vector2 projDir = new Vector2(DIR_TURRETS[ii][0], DIR_TURRETS[ii][1]);
+//			Enemy turret = new Enemy(TYPE_TURRETS[ii], COOR_TURRETS[ii][0], COOR_TURRETS[ii][1], dwidth, dheight, texture,
+//					CD_TURRETS[ii], projDir, scale);
+//			turret.setBodyType(BodyDef.BodyType.StaticBody);
+//			turret.setDrawScale(scale);
+//			turret.setName("turret");
+//			addObject(turret);
+//		}
 
 		collisionController = new CollisionController(this);
 		world.setContactListener(collisionController);
 	}
+
+	public PooledList<Obstacle> getObjects() { return objects;}
 
 	/**
 	 * Returns whether to process the update loop
@@ -702,9 +779,17 @@ public class LevelController extends WorldController {
 		for (Obstacle o : objects) {
 			if (o instanceof Enemy) {
 				Enemy e = (Enemy) o.getBody().getUserData();
+				if (!e.isTurret()) {
+					if (e.getLeftFixture() == null || e.getRightFixture() == null) {
+						break;
+					}
+					e.createLineOfSight(world, BULLET_OFFSET);
+					e.applyForce();
+				}
 				if (e.canFire()) {
-					if (o.getName() == "enemy")
-						e.setVelocity();
+					if (o.getName() == "enemy") {
+						e.setVelocity(BULLET_OFFSET);
+					}
 					createBullet(e);
 				} else
 					e.coolDown(true);
@@ -776,7 +861,7 @@ public class LevelController extends WorldController {
 	 * @param enemy enemy
 	 */
 	private void createBullet(Enemy enemy) {
-		float offset = BULLET_OFFSET * scale.y;
+		float offset = BULLET_OFFSET;
 		bulletBigTexture = JsonAssetManager.getInstance().getEntry("bulletbig", TextureRegion.class);
 		float radius = bulletBigTexture.getRegionWidth() / (90.0f);
 		Projectile bullet = new Projectile(enemy.getType(), enemy.getX(), enemy.getY() + offset, radius);
@@ -828,8 +913,8 @@ public class LevelController extends WorldController {
 		else
 			bullet.setSpace(1); // present world
 		addQueuedObject(bullet);
-
-		SoundController.getInstance().play(PEW_FILE, PEW_FILE, false, EFFECT_VOLUME);
+		JsonValue pew = assetDirectory.get("sounds").get("pew");
+		SoundController.getInstance().play(pew.get("file").asString(), pew.get("file").asString(), false, EFFECT_VOLUME);
 	}
 
 	/**
@@ -869,7 +954,7 @@ public class LevelController extends WorldController {
 		// Do not draw while player is dashing or not holding a projectile
 		if (avatar.isDashing() && !avatar.isHolding())
 			return;
-		if (!avatar.canDash())
+		if (!avatar.canDash() && !avatar.isHolding())
 			return;
 		// Draw dynamic dash indicator
 		Vector2 avPos = avatar.getPosition();
@@ -886,6 +971,7 @@ public class LevelController extends WorldController {
 		// If player is holding a projectile, draw projectile indicator
 		// TODO: need to fix - line is a bit off
 		Vector2 projDir = startPos.cpy().sub(mousePos).scl(scale);
+		System.out.println("HOLDING: " + avatar.isHolding());
 		if (avatar.isHolding()) {
 			canvas.drawLine(startPos.x, startPos.y, projDir.x, projDir.y, 1, 1, 1, 0.5f);
 		}
@@ -921,7 +1007,7 @@ public class LevelController extends WorldController {
 		canvas.clear();
 		canvas.begin();
 		if (shifted) {
-			//System.out.println(backgroundTexture.getRegionWidth());
+			// System.out.println(backgroundTexture.getRegionWidth());
 			backgroundTexture = JsonAssetManager.getInstance().getEntry("past_background", TextureRegion.class);
 			canvas.draw(backgroundTexture, Color.WHITE, 0, 0, canvas.getWidth(), canvas.getHeight());
 		} else {
