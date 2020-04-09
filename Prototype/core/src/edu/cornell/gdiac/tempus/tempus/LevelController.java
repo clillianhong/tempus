@@ -144,7 +144,7 @@ public class LevelController extends WorldController {
 	/** The restitution for all physics objects */
 	private static final float BASIC_RESTITUTION = 0.1f;
 	/** Offset for bullet when firing */
-	private static final float BULLET_OFFSET = 0.03f;
+	private static final float BULLET_OFFSET = 1.0f;
 	/** The volume for sound effects */
 	private static final float EFFECT_VOLUME = 0.8f;
 
@@ -862,7 +862,7 @@ public class LevelController extends WorldController {
 	 * @param enemy enemy
 	 */
 	private void createBullet(Enemy enemy) {
-		float offset = BULLET_OFFSET * scale.y;
+		float offset = BULLET_OFFSET;
 		bulletBigTexture = JsonAssetManager.getInstance().getEntry("bulletbig", TextureRegion.class);
 		float radius = bulletBigTexture.getRegionWidth() / (90.0f);
 		Projectile bullet = new Projectile(enemy.getType(), enemy.getX(), enemy.getY() + offset, radius);
@@ -955,7 +955,7 @@ public class LevelController extends WorldController {
 		// Do not draw while player is dashing or not holding a projectile
 		if (avatar.isDashing() && !avatar.isHolding())
 			return;
-		if (!avatar.canDash())
+		if (!avatar.canDash() && !avatar.isHolding())
 			return;
 		// Draw dynamic dash indicator
 		Vector2 avPos = avatar.getPosition();
@@ -972,6 +972,7 @@ public class LevelController extends WorldController {
 		// If player is holding a projectile, draw projectile indicator
 		// TODO: need to fix - line is a bit off
 		Vector2 projDir = startPos.cpy().sub(mousePos).scl(scale);
+		System.out.println("HOLDING: " + avatar.isHolding());
 		if (avatar.isHolding()) {
 			canvas.drawLine(startPos.x, startPos.y, projDir.x, projDir.y, 1, 1, 1, 0.5f);
 		}
