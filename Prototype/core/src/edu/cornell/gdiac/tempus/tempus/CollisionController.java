@@ -6,6 +6,7 @@ import com.badlogic.gdx.utils.ObjectSet;
 import edu.cornell.gdiac.tempus.InputController;
 import edu.cornell.gdiac.tempus.obstacle.Obstacle;
 import edu.cornell.gdiac.tempus.tempus.models.*;
+import edu.cornell.gdiac.util.PooledList;
 
 public class CollisionController implements ContactListener {
     private LevelController controller;
@@ -296,11 +297,21 @@ public class CollisionController implements ContactListener {
                     Enemy enemy = (Enemy) obj;
                     if ((enemy.getLeftSensorName().equals(fd2) && enemy != bd1 && !bd1.getName().equals("bullet")) ||
                             (enemy.getLeftSensorName().equals(fd1) && enemy != bd2 && !bd2.getName().equals("bullet"))) {
-                        enemy.getLeftFixtures().add(enemy == bd1 ? fix2 : fix1);
+                        if (enemy.getLeftFixture() == null) {
+                            enemy.setLeftFixture(enemy == bd1 ? fix2 : fix1);
+                        } else if (fix1 != enemy.getLeftFixture() && fix2 != enemy.getLeftFixture()) {
+                            enemy.setMovement(0);
+                            enemy.setNextDirection(1);
+                        }
                     }
                     if ((enemy.getRightSensorName().equals(fd2) && enemy != bd1 && !bd1.getName().equals("bullet")) ||
                             (enemy.getRightSensorName().equals(fd1) && enemy != bd2 && !bd2.getName().equals("bullet"))) {
-                        enemy.getRightFixtures().add(enemy == bd1 ? fix2 : fix1);
+                        if (enemy.getRightFixture() == null) {
+                            enemy.setRightFixture(enemy == bd1 ? fix2 : fix1);
+                        } else if (fix1 != enemy.getRightFixture() && fix2 != enemy.getRightFixture()) {
+                            enemy.setMovement(0);
+                            enemy.setNextDirection(-1);
+                        }
                     }
                 }
             }
@@ -352,8 +363,7 @@ public class CollisionController implements ContactListener {
                 Enemy enemy = (Enemy) obj;
                 if ((enemy.getLeftSensorName().equals(fd2) && enemy != bd1) ||
                         (enemy.getLeftSensorName().equals(fd1) && enemy != bd2)) {
-                    enemy.getLeftFixtures().remove(enemy == bd1 ? fix2 : fix1);
-                    if (enemy.getLeftFixtures().size == 0) {
+                    if (enemy.getLeftFixture() == fix2 || enemy.getLeftFixture() == fix1) {
                         enemy.setMovement(0);
                         enemy.setNextDirection(1);
                     }
@@ -361,8 +371,7 @@ public class CollisionController implements ContactListener {
 
                 if ((enemy.getRightSensorName().equals(fd2) && enemy != bd1) ||
                         (enemy.getRightSensorName().equals(fd1) && enemy != bd2)) {
-                    enemy.getRightFixtures().remove(enemy == bd1 ? fix2 : fix1);
-                    if (enemy.getRightFixtures().size == 0) {
+                    if (enemy.getRightFixture() == fix2 || enemy.getRightFixture() == fix1) {
                         enemy.setMovement(0);
                         enemy.setNextDirection(-1);
                     }

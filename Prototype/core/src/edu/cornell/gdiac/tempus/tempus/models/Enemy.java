@@ -2,6 +2,7 @@ package edu.cornell.gdiac.tempus.tempus.models;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.ObjectSet;
@@ -37,11 +38,11 @@ public class Enemy extends CapsuleObstacle {
     /** Left sensor to determine enemy position on platform*/
     private Fixture sensorFixtureLeft;
     private PolygonShape sensorShapeLeft;
-    private ObjectSet<Fixture> leftFixtures;
+    private Fixture leftFixture;
     /** Right sensor to determine enemy position on platform*/
     private Fixture sensorFixtureRight;
     private PolygonShape sensorShapeRight;
-    private ObjectSet<Fixture> rightFixtures;
+    private Fixture rightFixture;
 
     /** Line of sight to the avatar */
     private RayCastCallback sight;
@@ -104,9 +105,9 @@ public class Enemy extends CapsuleObstacle {
 
         this.type = type;
         this.target = target;
-        this.cooldown = cooldown;
+        this.cooldown = cooldown * 4;
         projVel = new Vector2(0,0).sub(getPosition().sub(target.getPosition()));
-        isActive = false;
+        isActive = true;
         framesTillFire = 0;
         movement = -1;
         nextDirection = -1;
@@ -116,9 +117,13 @@ public class Enemy extends CapsuleObstacle {
         isTurret = false;
     }
 
-    public ObjectSet<Fixture> getLeftFixtures() { return leftFixtures; }
+    public Fixture getLeftFixture() { return leftFixture; }
 
-    public ObjectSet<Fixture> getRightFixtures() { return rightFixtures; }
+    public void setLeftFixture(Fixture f) { leftFixture = f; }
+
+    public Fixture getRightFixture() { return rightFixture; }
+
+    public void setRightFixture(Fixture f) { rightFixture = f;}
 
     public boolean isTurret() { return isTurret; }
 
@@ -129,9 +134,9 @@ public class Enemy extends CapsuleObstacle {
      */
     public EntityType getType() { return type; }
 
-    public void setVelocity() {
-        projVel = new Vector2(0,0).sub(getPosition().sub(target.getPosition()));
-        System.out.println(projVel);
+    public void setVelocity(float offset) {
+        projVel = target.getPosition().sub(getPosition());
+        projVel.y -= offset;
     }
 
     /**
@@ -295,7 +300,6 @@ public class Enemy extends CapsuleObstacle {
 
         sensorFixtureLeft = body.createFixture(sensorDef);
         sensorFixtureLeft.setUserData(LEFT_SENSOR_NAME);
-        leftFixtures = new ObjectSet<>();
 
         Vector2 sensorCenterRight = new Vector2(getWidth() / 2, 0);
         sensorShapeRight = new PolygonShape();
@@ -304,12 +308,12 @@ public class Enemy extends CapsuleObstacle {
 
         sensorFixtureRight = body.createFixture(sensorDef);
         sensorFixtureRight.setUserData(RIGHT_SENSOR_NAME);
-        rightFixtures = new ObjectSet<>();
 
         return true;
     }
 
-    public void createLineOfSight(World world) {
+    public void createLineOfSight(World world, float offset) {
+        Vector2 shootPos = getPosition().add(0f, offset);
         world.rayCast(sight, getPosition(), target.getPosition());
     }
 
@@ -341,6 +345,8 @@ public class Enemy extends CapsuleObstacle {
 class LineOfSight implements RayCastCallback {
 
     private Enemy enemy;
+    private Vector2 point;
+    private Vector2 normal;
 
     public LineOfSight(Enemy enemy) {
         this.enemy = enemy;
@@ -348,18 +354,18 @@ class LineOfSight implements RayCastCallback {
 
     public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction) {
 
-//        System.out.println(fixture.getBody().getPosition());
+        this.point = point;
+        this.normal = normal;
 
-        if (fixture.getUserData() == null) {
-            enemy.setIsActive(false);
-            if (enemy.getMovement() == 0) {
-                enemy.setMovement(enemy.getNextDirection());
-            }
-        } else if (fixture.getUserData().toString().substring(0,4).equals("Dude")) {
+        System.out.println(fixture.getBody().getUserData().getClass());
+        System.out.println(fixture.getBody().getUserData() instanceof Avatar);
+
+        if (fixture.getBody().getUserData() instanceof Avatar) {
             System.out.println("sees target");
             enemy.setIsActive(true);
             enemy.setMovement(0);
-        } else if (fixture.getUserData().toString().substring(0,5).equals("Enemy")) {
+        } else if (fixture.getBody().getUserData() instanceof Enemy ||
+                fixture.getBody().getUserData() instanceof Projectile) {
             return 1;
         } else {
             enemy.setIsActive(false);
@@ -368,6 +374,6 @@ class LineOfSight implements RayCastCallback {
             }
         }
 
-        return 0;
+        return fraction;
     }
 }
