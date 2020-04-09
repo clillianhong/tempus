@@ -5,9 +5,11 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.ObjectSet;
 import edu.cornell.gdiac.tempus.GameCanvas;
 import edu.cornell.gdiac.tempus.obstacle.CapsuleObstacle;
+import edu.cornell.gdiac.util.JsonAssetManager;
 
 import static edu.cornell.gdiac.tempus.tempus.models.EntityType.PAST;
 import static edu.cornell.gdiac.tempus.tempus.models.EntityType.PRESENT;
@@ -72,6 +74,11 @@ public class Enemy extends CapsuleObstacle {
 
     private boolean isTurret;
 
+    /** Texture asset for present enemy */
+    private TextureRegion enemyPresentTexture;
+    /** Texture asset for past enemy */
+    private TextureRegion enemyPastTexture;
+
     // Immobile enemy (turret)
     public Enemy(
             EntityType type, float x, float y, float width, float height,
@@ -91,6 +98,32 @@ public class Enemy extends CapsuleObstacle {
         isActive = true;
         framesTillFire = 0;
         limiter = 4;
+    }
+
+    /**
+     * Creates a turret with the provided json value
+     * @param json The params for the turret
+     */
+    public Enemy(JsonValue json){
+        super(0,0,0.5f,1.0f);
+        float [] pos = json.get("pos").asFloatArray();
+        float [] shrink = json.get("shrink").asFloatArray();
+        TextureRegion texture = JsonAssetManager.getInstance().getEntry(json.get("texture").asString(), TextureRegion.class);
+        setTexture(texture);
+        setPosition(pos[0],pos[1]);
+        setDimension(texture.getRegionWidth()*shrink[0],texture.getRegionHeight()*shrink[1]);
+        setType(json.get("entitytype").asString().equals("present")?EntityType.PRESENT: PAST);
+        setSpace(getType()==PRESENT?1:2);
+        setBodyType(json.get("bodytype").asString().equals("static") ? BodyDef.BodyType.StaticBody : BodyDef.BodyType.DynamicBody);
+        setDensity(json.get("density").asFloat());
+        isTurret = true;
+        this.cooldown = json.get("cooldown").asInt();
+        float [] dir = json.get("direction").asFloatArray();
+        this.projVel = new Vector2 (dir[0],dir[1]);
+        isActive = true;
+        framesTillFire = 0;
+        limiter = 4;
+        setName("turret");
     }
 
     // Moving enemy
@@ -117,6 +150,38 @@ public class Enemy extends CapsuleObstacle {
         isTurret = false;
     }
 
+    /**Creates a moving enemy
+     *
+     * @param target the target the enemy is aiming for
+     * @param json the json storing enemy properties
+     */
+    public Enemy(final Avatar target, JsonValue json) {
+        super(0,0,0.5f,1.0f);
+        float [] pos = json.get("pos").asFloatArray();
+        float [] shrink = json.get("shrink").asFloatArray();
+        TextureRegion texture = JsonAssetManager.getInstance().getEntry(json.get("texture").asString(), TextureRegion.class);
+        setTexture(texture);
+        setPosition(pos[0],pos[1]);
+        setDimension(texture.getRegionWidth()*shrink[0],texture.getRegionHeight()*shrink[1]);
+        setType(json.get("entitytype").asString().equals("present")?EntityType.PRESENT: PAST);
+        setBodyType(json.get("bodytype").asString().equals("static") ? BodyDef.BodyType.StaticBody : BodyDef.BodyType.DynamicBody);
+        setSpace(getType()==PRESENT?1:2);
+        setDensity(json.get("density").asFloat());
+        this.target = target;
+        this.cooldown = json.get("cooldown").asInt();
+        projVel = new Vector2(0,0).sub(getPosition().sub(target.getPosition()));
+        isActive = false;
+        framesTillFire = 0;
+        movement = -1;
+        nextDirection = -1;
+        setFixedRotation(true);
+        sight = new LineOfSight(this);
+        limiter = 4;
+        isTurret = false;
+        setName("enemy");
+    }
+
+
     public Fixture getLeftFixture() { return leftFixture; }
 
     public void setLeftFixture(Fixture f) { leftFixture = f; }
@@ -134,6 +199,11 @@ public class Enemy extends CapsuleObstacle {
      */
     public EntityType getType() { return type; }
 
+    /**
+     * Sets the entity type of enemy
+     * @param t the type of enemy
+     */
+    public void setType (EntityType t){type = t;}
     public void setVelocity(float offset) {
         projVel = target.getPosition().sub(getPosition());
         projVel.y -= offset;
