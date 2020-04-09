@@ -199,6 +199,11 @@ public class Enemy extends CapsuleObstacle {
      */
     public EntityType getType() { return type; }
 
+    /**
+     * Sets the entity type of enemy
+     * @param t the type of enemy
+     */
+    public void setType (EntityType t){type = t;}
     public void setVelocity(float offset) {
         projVel = target.getPosition().sub(getPosition());
         projVel.y -= offset;

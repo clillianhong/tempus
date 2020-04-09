@@ -186,7 +186,7 @@
       "shrink": [0.0168, 0.021375],
       "texture": "enemypresent",
       "entitytype": "present",
-      "cooldown": 80,
+      "cooldown": 120,
       "bodytype": "dynamic",
       "density": 1.0
     },
@@ -195,7 +195,7 @@
       "shrink": [0.0168, 0.021375],
       "texture": "enemypast",
       "entitytype": "past",
-      "cooldown": 80,
+      "cooldown": 120,
       "bodytype": "dynamic",
       "density": 1.0
     }
