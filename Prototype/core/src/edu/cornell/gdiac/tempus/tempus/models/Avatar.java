@@ -4,10 +4,15 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.gdiac.tempus.GameCanvas;
 import edu.cornell.gdiac.tempus.InputController;
 import edu.cornell.gdiac.tempus.obstacle.CapsuleObstacle;
 import edu.cornell.gdiac.util.FilmStrip;
+import edu.cornell.gdiac.util.JsonAssetManager;
+
+import static edu.cornell.gdiac.tempus.tempus.models.EntityType.PAST;
+import static edu.cornell.gdiac.tempus.tempus.models.EntityType.PRESENT;
 
 
 /**
@@ -139,6 +144,15 @@ public class Avatar extends CapsuleObstacle {
 
     /** Cache for internal force calculations */
     private Vector2 forceCache = new Vector2();
+
+    /** Texture filmstrip for avatar standing */
+    private FilmStrip avatarStandingTexture;
+    /** Texture filmstrip for avatar dashing */
+    private FilmStrip avatarCrouchingTexture;
+    /** Texture filmstrip for avatar dashing */
+    private FilmStrip avatarDashingTexture;
+    /** Texture filmstrip for avatar falling */
+    private FilmStrip avatarFallingTexture;
 
     // ANIMATION FIELDS
     /** The texture filmstrip for the current animation */
@@ -554,6 +568,33 @@ public class Avatar extends CapsuleObstacle {
     public Projectile getHeldBullet() { return heldBullet; }
 
     /**
+     * Creates a new dude avatar with degenerate settings.
+     */
+    public Avatar (){
+        super(0,0,1.0f,0.5f);
+//        setFriction(FRICTION);  /// HE WILL STICK TO WALLS IF YOU FORGET
+        setFixedRotation(true);
+
+        // Gameplay attributes
+        lives = 3;
+        state = AvatarState.STANDING;
+        isGrounded = false;
+        isShooting = false;
+        isJumping = false;
+        faceRight = true;
+        isDashing = false;
+        newAngle = 0;
+        isSticking = false;
+        dashDistance = DASH_RANGE;
+        startedDashing = 0;
+        numDashes = maxDashes;
+        endDashVelocity = new Vector2(0f,0f);
+
+        shootCooldown = 0;
+        jumpCooldown = 0;
+        isHolding = false;
+    }
+    /**
      * Creates a new dude avatar at the given position.
      *
      * The size is expressed in physics units NOT pixels.  In order for
@@ -591,6 +632,44 @@ public class Avatar extends CapsuleObstacle {
         jumpCooldown = 0;
         setName("dude");
         isHolding = false;
+    }
+
+    /**
+     * Initializes the avatar via the given JSON value
+     *
+     * The JSON value has been parsed and is part of a bigger level file.  However,
+     * this JSON value is limited to the dude subtree
+     *
+     * @param json	the JSON subtree defining the dude
+     */
+    public void initialize(JsonValue json) {
+        float [] shrink = json.get("shrink").asFloatArray();
+        float [] pos = json.get("pos").asFloatArray();
+        TextureRegion avatarTexture = JsonAssetManager.getInstance().getEntry(json.get("texture").asString(), TextureRegion.class);
+        setPosition(pos[0],pos[1]);
+        setDashStartPos(new Vector2 (pos[0],pos[1]));
+        float dwidth = avatarTexture.getRegionWidth();
+		float dheight = avatarTexture.getRegionHeight();
+		setDimension(dwidth*shrink[0],dheight*shrink[1]);
+		setTexture(avatarTexture);
+        setDensity(json.get("density").asFloat());
+        setBodyType(json.get("bodytype").asString().equals("static") ? BodyDef.BodyType.StaticBody : BodyDef.BodyType.DynamicBody);
+
+        avatarStandingTexture = JsonAssetManager.getInstance().getEntry(json.get("avatarstanding").asString(), FilmStrip.class);
+        avatarCrouchingTexture = JsonAssetManager.getInstance().getEntry(json.get("avatarcrouching").asString(), FilmStrip.class);
+        avatarDashingTexture = JsonAssetManager.getInstance().getEntry(json.get("avatardashing").asString(), FilmStrip.class);
+        avatarFallingTexture = JsonAssetManager.getInstance().getEntry(json.get("avatarfalling").asString(), FilmStrip.class);
+
+        setFilmStrip(Avatar.AvatarState.STANDING, avatarStandingTexture);
+        setFilmStrip(Avatar.AvatarState.CROUCHING, avatarCrouchingTexture);
+        setFilmStrip(Avatar.AvatarState.DASHING, avatarDashingTexture);
+        setFilmStrip(Avatar.AvatarState.FALLING, avatarFallingTexture);
+
+        projPresentCaughtTexture = JsonAssetManager.getInstance().getEntry("projpresentcaught", TextureRegion.class);
+        projPastCaughtTexture = JsonAssetManager.getInstance().getEntry("projpastcaught", TextureRegion.class);
+        setCaughtProjTexture(PRESENT, projPresentCaughtTexture);
+        setCaughtProjTexture(PAST, projPastCaughtTexture);
+		setName(json.name());
     }
 
     /**
