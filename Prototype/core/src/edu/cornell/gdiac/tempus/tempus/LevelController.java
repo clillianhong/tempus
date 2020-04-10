@@ -250,7 +250,7 @@ public class LevelController extends WorldController {
 	 * This method disposes of the world and creates a new one.
 	 */
 	public void reset() {
-		Vector2 gravity = new Vector2(world.getGravity());
+		//Vector2 gravity = new Vector2(world.getGravity());
 
 		for (Obstacle obj : objects) {
 			obj.deactivatePhysics(world);
@@ -259,7 +259,7 @@ public class LevelController extends WorldController {
 		addQueue.clear();
 		world.dispose();
 		shifted = false;
-		world = new World(gravity, false);
+		//world = new World(gravity, false);
 		world.setContactListener(collisionController);
 		// world.setContactListener(this);
 		setComplete(false);
@@ -306,12 +306,14 @@ public class LevelController extends WorldController {
 		table.add(quitButton);
 		stage.addActor(table);
 		Gdx.input.setInputProcessor(stage);
+
+		//Initializes the world
 		float gravity = levelFormat.getFloat("gravity");
 		float[] pSize = levelFormat.get("bounds").asFloatArray();
-
 		world = new World (new Vector2(0,gravity),false);
 		bounds = new Rectangle(0,0,pSize[0],pSize[1]);
-
+		scale.x = canvas.getWidth()/pSize[0];
+		scale.y = canvas.getHeight()/pSize[1];
 		// Add level goal
 		goalDoor = new Door();
 		goalDoor.initialize(levelFormat.get("door"));
