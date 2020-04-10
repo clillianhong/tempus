@@ -36,6 +36,7 @@ public class Door extends BoxObstacle {
         setFriction(key.get("friction").asFloat());
         setRestitution(key.get("restitution").asFloat());
         setTexture(goalTile);
+        setSpace(key.get("space").asInt());
         setName("goal");
         NEXT_LEVEL = key.get("nextlevel").asInt();
     }

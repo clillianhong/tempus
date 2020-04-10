@@ -24,7 +24,7 @@ public class Enemy extends CapsuleObstacle {
     /** The density of the enemy */
     private static final float ENEMY_DENSITY = 1.0f;
     /** The factor to multiply by the input */
-    private static final float FORCE = 2.0f;
+    private static final float FORCE = 10.0f;
     /** The amount to slow the enemy down */
     private static final float ENEMY_DAMPING = 10.0f;
     /** The maximum enemy speed */
