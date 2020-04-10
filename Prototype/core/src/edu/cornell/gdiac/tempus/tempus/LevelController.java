@@ -1009,10 +1009,10 @@ public class LevelController extends WorldController {
 		canvas.begin();
 		if (shifted) {
 			// System.out.println(backgroundTexture.getRegionWidth());
-			backgroundTexture = JsonAssetManager.getInstance().getEntry("past_background", TextureRegion.class);
+			backgroundTexture = JsonAssetManager.getInstance().getEntry(levelFormat.get("past_background").asString(), TextureRegion.class);
 			canvas.draw(backgroundTexture, Color.WHITE, 0, 0, canvas.getWidth(), canvas.getHeight());
 		} else {
-			backgroundTexture = JsonAssetManager.getInstance().getEntry("present_background", TextureRegion.class);
+			backgroundTexture = JsonAssetManager.getInstance().getEntry(levelFormat.get("present_background").asString(), TextureRegion.class);
 			canvas.draw(backgroundTexture, Color.WHITE, 0, 0, canvas.getWidth(), canvas.getHeight());
 		}
 
