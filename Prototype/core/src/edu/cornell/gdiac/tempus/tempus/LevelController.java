@@ -370,13 +370,13 @@ public class LevelController extends WorldController {
 		float[] newPlatCapsule = levelFormat.get("capsuleshape").asFloatArray();
 		float[] newPlatDiamond = levelFormat.get("diamondshape").asFloatArray();
 		float[] newPlatRounded = levelFormat.get("roundshape").asFloatArray();
-		JsonValue presentcapsule = levelFormat.get("presentcapsules").child();
-		while (presentcapsule!=null){
+		JsonValue capsule = levelFormat.get("capsules").child();
+		while (capsule!=null){
 			Platform obj = new Platform (newPlatCapsule);
-			obj.initialize(presentcapsule);
+			obj.initialize(capsule);
 			obj.setDrawScale(scale);
 			addObject(obj);
-			presentcapsule = presentcapsule.next();
+			capsule = capsule.next();
 		}
 		//TODO: Delete
 //		for (int ii = 0; ii < PRESENT_CAPSULES.length; ii++) {
@@ -392,13 +392,13 @@ public class LevelController extends WorldController {
 //			obj.setSpace(1);
 //			addObject(obj);
 //		}
-		JsonValue presentdiamond = levelFormat.get("presentdiamonds").child();
-		while (presentdiamond!=null){
+		JsonValue diamond = levelFormat.get("diamonds").child();
+		while (diamond!=null){
 			Platform obj = new Platform (newPlatDiamond);
-			obj.initialize(presentdiamond);
+			obj.initialize(diamond);
 			obj.setDrawScale(scale);
 			addObject(obj);
-			presentdiamond = presentdiamond.next();
+			diamond = diamond.next();
 		}
 		//TODO:Delete
 //		for (int ii = 0; ii < PRESENT_DIAMONDS.length; ii++) {
@@ -414,13 +414,13 @@ public class LevelController extends WorldController {
 //			obj.setSpace(1);
 //			addObject(obj);
 //		}
-		JsonValue presentround = levelFormat.get("presentrounds").child();
-		while (presentround!=null){
+		JsonValue round = levelFormat.get("rounds").child();
+		while (round!=null){
 			Platform obj = new Platform (newPlatRounded);
-			obj.initialize(presentround);
+			obj.initialize(round);
 			obj.setDrawScale(scale);
 			addObject(obj);
-			presentround = presentround.next();
+			round = round.next();
 		}
 		//TODO:Delete
 //		for (int ii = 0; ii < PRESENT_ROUNDS.length; ii++) {
@@ -436,14 +436,6 @@ public class LevelController extends WorldController {
 //			obj.setSpace(1);
 //			addObject(obj);
 //		}
-		JsonValue pastround = levelFormat.get("pastrounds").child();
-		while (pastround!=null){
-			Platform obj = new Platform (newPlatRounded);
-			obj.initialize(pastround);
-			obj.setDrawScale(scale);
-			addObject(obj);
-			pastround = pastround.next();
-		}
 
 		//TODO:Delete
 //		for (int ii = 0; ii < PAST_ROUNDS.length; ii++) {
@@ -459,14 +451,6 @@ public class LevelController extends WorldController {
 //			obj.setSpace(2);
 //			addObject(obj);
 //		}
-		JsonValue pastdiamond = levelFormat.get("pastdiamonds").child();
-		while (pastdiamond!=null){
-			Platform obj = new Platform (newPlatDiamond);
-			obj.initialize(pastdiamond);
-			obj.setDrawScale(scale);
-			addObject(obj);
-			pastdiamond = pastdiamond.next();
-		}
 		//TODO:Delete
 //		for (int ii = 0; ii < PAST_DIAMONDS.length; ii++) {
 //			PolygonObstacle obj;
@@ -481,14 +465,6 @@ public class LevelController extends WorldController {
 //			obj.setSpace(2);
 //			addObject(obj);
 //		}
-		JsonValue pastcapsule = levelFormat.get("pastcapsules").child();
-		while (pastcapsule!=null){
-			Platform obj = new Platform (newPlatCapsule);
-			obj.initialize(pastcapsule);
-			obj.setDrawScale(scale);
-			addObject(obj);
-			pastcapsule = pastcapsule.next();
-		}
 		// TODO: Delete
 //		for (int ii = 0; ii < PAST_CAPSULES.length; ii++) {
 //			PolygonObstacle obj;
