@@ -81,7 +81,7 @@
       "restitution": 0.1,
       "texture": "present_capsule",
       "space": 1
-    }
+    },
   "pastcapsule1": {
     "name": "past_capsule",
     "pos": [
