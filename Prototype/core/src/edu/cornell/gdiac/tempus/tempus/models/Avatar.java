@@ -83,6 +83,8 @@ public class Avatar extends CapsuleObstacle {
     /** The amount to shrink the sensor fixture (horizontally) relative to the image */
     private static final float SSHRINK = 0.6f;
 
+    /** number of frames since avatar took damage from enemy contact */
+    private int ticks;
     /** The current lives the avatar has **/
     private int lives;
     /** The current state of the avatar **/
@@ -121,6 +123,7 @@ public class Avatar extends CapsuleObstacle {
     private Fixture sensorFixtureCore;
     private PolygonShape sensorShapeCore;
 
+    private boolean enemyContact;
     /** how long ago the character started dashing */
     private int startedDashing;
     /** Whether we are actively dashing */
@@ -181,6 +184,11 @@ public class Avatar extends CapsuleObstacle {
     /** The texture for the caught projectile of type past */
     private TextureRegion projPastCaughtTexture;
 
+    /** returns true if the avatar touched an enemy recently */
+    public boolean getEnemyContact() {return enemyContact;}
+
+    /** sets whether the avatar touched an enemy recently */
+    public void setEnemyContact(boolean e) {enemyContact = e;}
     /**
      * Returns left/right movement of this character.
      *
@@ -292,6 +300,11 @@ public class Avatar extends CapsuleObstacle {
      */
     public int getLives() {
         return lives;
+    }
+
+    /** sets the number of lives the avatar has */
+    public void setLives(int lives){
+        this.lives = lives;
     }
 
     /**
@@ -584,7 +597,7 @@ public class Avatar extends CapsuleObstacle {
         setFixedRotation(true);
 
         // Gameplay attributes
-        lives = 3;
+        lives = 5;
         state = AvatarState.STANDING;
         isGrounded = false;
         isShooting = false;
@@ -597,7 +610,7 @@ public class Avatar extends CapsuleObstacle {
         startedDashing = 0;
         numDashes = maxDashes;
         endDashVelocity = new Vector2(0f,0f);
-
+        enemyContact = false;
         shootCooldown = 0;
         jumpCooldown = 0;
         isHolding = false;
@@ -635,7 +648,7 @@ public class Avatar extends CapsuleObstacle {
         startedDashing = 0;
         numDashes = maxDashes;
         endDashVelocity = new Vector2(0f,0f);
-
+        ticks = 0;
         shootCooldown = 0;
         jumpCooldown = 0;
         setName("dude");
@@ -797,6 +810,7 @@ public class Avatar extends CapsuleObstacle {
 //        }
     }
 
+
     /**
      * Updates the object's physics state (NOT GAME LOGIC).
      *
@@ -805,8 +819,18 @@ public class Avatar extends CapsuleObstacle {
      * @param dt Number of seconds since last animation frame
      */
     public void update(float dt) {
+        System.out.println(lives);
         // Apply cooldowns
-
+        if (enemyContact && ticks == 0){
+            ticks = 30;
+        }
+        if (ticks > 0){
+            ticks --;
+        }
+        if (ticks <= 0){
+            ticks = 0;
+            enemyContact = false;
+        }
         //check if dash must end
         if(isDashing){
             float dist = getPosition().dst(getDashStartPos());
