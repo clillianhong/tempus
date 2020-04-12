@@ -105,6 +105,9 @@ public class MainMenuMode implements Screen {
         float sw = Gdx.graphics.getWidth();
         float sh = Gdx.graphics.getHeight();
 
+        System.out.println("SW: " + sw);
+        System.out.println("SH: " + sh);
+
         float row_height = sw / 12;
         float col_width = sh / 12;
 
@@ -161,15 +164,15 @@ public class MainMenuMode implements Screen {
 
         //add header
         mainTable.row();
-        mainTable.add(header).height(header.getHeight()*4).width(header.getWidth()*4).colspan(4);
+        mainTable.add(header).width(cw/2).height(ch/2).colspan(4);
         mainTable.row();
         mainTable.row().expandX().fillX();
 
         //add buttons
-        mainTable.add(startButton).pad(50).expandX().fillX();
-        mainTable.add(exitButton).pad(50).expandX().fillX();
-        mainTable.add(helpButton).pad(50).expandX().fillX();
-        mainTable.add(aboutButton).pad(50).expandX().fillX();
+        mainTable.add(startButton).size(cw/7f).pad(cw/15f).expandX().fillX();
+        mainTable.add(exitButton).size(cw/7f).pad(cw/15f).expandX().fillX();
+        mainTable.add(helpButton).size(cw/7f).pad(cw/15f).expandX().fillX();
+        mainTable.add(aboutButton).size(cw/7f).pad(cw/15f).expandX().fillX();
 
 
         tableContainer.setActor(mainTable);
