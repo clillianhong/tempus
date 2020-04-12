@@ -159,6 +159,7 @@ public class GDXRoot extends Game implements ScreenListener {
 			}
 			controllers[current].reset();
 			setScreen(controllers[current]);
+//
 //			levelselect.createMode();
 //			levelselect.setScreenListener(this);
 //			levelselect.setCanvas(canvas);
