@@ -38,7 +38,7 @@ public class SelectLevelMode implements Screen {
         private String filePressUp;
         private String filePressDown;
         private String filePressLocked;
-        ImageButton button;
+        Button button;
         TextArea textLore;
 
         public Level(boolean l, String preview, String lore, String buttonUp, String buttonDown, String buttonLocked, String textlore){
@@ -50,7 +50,7 @@ public class SelectLevelMode implements Screen {
             filePressLocked = buttonLocked;
             TextureRegionDrawable bup = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal(buttonUp))));
             TextureRegionDrawable bdown = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal(buttonDown))));
-            button = new ImageButton(bup, bdown);
+            button = new Button(bup, bdown);
             textLore = new TextArea(textlore, skin);
         }
 
@@ -202,65 +202,48 @@ public class SelectLevelMode implements Screen {
 
         Table levelTable = new Table();
 
-
+        levelTable.row().padBottom(ch * 0.08f);
         for(Level lev : levels){
-            levelTable.add(lev.button);
-            levelTable.row();
+            levelTable.add(lev.button).size(cw/2*0.9f, ch/3*0.5f).expandX().fillX();
+            levelTable.row().padBottom(ch * 0.08f);
         }
+        levelTable.setDebug(true);
 
-        ScrollPane scroller = new ScrollPane(levelTable);
-        scroller.setWidth(cw/2 - 10);
+        Container<Table> levelTableContainer = new Container<>();
+        levelTableContainer.setActor(levelTable);
+        ScrollPane scroller = new ScrollPane(levelTableContainer);
+
+        //back button
+        TextureRegionDrawable bup = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/selectmode/backbutton.png"))));
+        Button backButton = new Button(bup);
 
 
-
-        //add the preview and lore to right table
+        //preview panel
         Container<Image> pbContainer = new Container<>();
-        pbContainer.size(sw/2f* 0.9f, sh/2f);
-//        pbContainer.fillX();
-//        pbContainer.fillY();
-
-//        pbContainer.setWidth(rightTable.getWidth() * 0.9f);
+        pbContainer.size(sw/2f* 0.8f, sh/2f);
         Image previewBackground = new Image( new TextureRegion(new Texture(Gdx.files.internal("textures/gui/selectmode/preview_bg.png"))));
         pbContainer.setActor(previewBackground);
-//        previewBackground.setWidth(rightTable.getWidth() * 0.5f);
-//        previewBackground.setHeight(rightTable.getRowHeight(0) * 0.5f);
+
         Stack prevStack = new Stack();
 
         Container<Image> pIContainer = new Container<>();
-        pIContainer.size(cw/2f* 0.6f, ch/2f * 0.8f);
-//        pIContainer.fillX();
-//        pIContainer.fillY();
+        pIContainer.size(cw/2f* 0.5f, ch/2f * 0.6f);
+        Texture prevTexture = new Texture(Gdx.files.internal(levels[currentLevel].getFilePreview()));
+        Image previewImg = new Image( new TextureRegion(prevTexture));
 
-        Image previewImg = new Image( new TextureRegion(new Texture(Gdx.files.internal(levels[currentLevel].getFilePreview()))));
-//        previewImg.setWidth(rightTable.getWidth() * 0.7f);
-//        previewImg.setHeight(rightTable.getHeight() / 2.0f * 0.7f);
-//        previewImg.setScale(0.5f);
         pIContainer.setActor(previewImg);
-//        previewImg.setAlign(Align.center);
+
+
+        prevStack.setDebug(true);
         prevStack.add(pbContainer);
         prevStack.add(pIContainer);
-//        prevStack.setWidth(rightTable.getWidth());
 
+
+        //lore panel
         Container<Image> lbContainer = new Container<>();
-        lbContainer.size(sw/2f* 0.9f, sh/2f * 0.9f);
-//        lbContainer.fillX();
-//        lbContainer.fillY();
-
+        lbContainer.size(sw/2f*0.7f, sh/2f*0.6f);
         Image loreImage = new Image( new TextureRegion(new Texture(Gdx.files.internal(levels[currentLevel].getFileLore()))));
         lbContainer.setActor(loreImage);
-
-//        loreBackground.setWidth(sw/2f * 0.5f);
-//        loreBackground.setHeight(sh/2f * 0.5f);
-        Stack loreStack = new Stack();
-        loreStack.add(lbContainer);
-
-        Container<TextArea> textContainer = new Container<>();
-        textContainer.size(cw/2f* 0.4f, ch/2f * 0.6f);
-
-//        textContainer./
-//        levels[currentLevel].textLore.setWidth(rightTable.getWidth() * 0.5f);
-        textContainer.setActor(levels[currentLevel].textLore);
-        loreStack.add(textContainer);
 
         rightTable.add(prevStack);
         rightTable.row();
@@ -270,12 +253,12 @@ public class SelectLevelMode implements Screen {
 
         //add scroller to dual table
         dualTable.add(scroller).size(cw/2, ch).expandX();
-        dualTable.add(rightTable).size(cw/2, ch).expandX();
         //add rightTable to dualTable
+        dualTable.add(rightTable).size(cw/2, ch).expandX();
         //Create top right image preview
 
         edgeContainer.setActor(dualTable);
-        stage.setDebugAll(true);
+//        stage.setDebugAll(true);
         stage.addActor(edgeContainer);
 
 
@@ -344,6 +327,7 @@ public class SelectLevelMode implements Screen {
             canvas.begin();
 
             canvas.draw(backgroundTexture, Color.WHITE, 0, 0, canvas.getWidth(), canvas.getHeight());
+
 
             canvas.end();
 
