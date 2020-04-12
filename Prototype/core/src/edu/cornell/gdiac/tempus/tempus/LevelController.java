@@ -201,6 +201,8 @@ public class LevelController extends WorldController {
 	// Physics objects for the game
 	/** Reference to the character avatar */
 	private Avatar avatar;
+	/** Bucket variable for holding lives across resets */
+	private int lives;
 	/** Reference to the goalDoor (for collision detection) */
 	private Door goalDoor;
 
@@ -241,7 +243,7 @@ public class LevelController extends WorldController {
 		shifted = false;
 		debug = false;
 		timeFreeze = false;
-
+		lives = 0;
 	}
 
 	/**
@@ -269,6 +271,10 @@ public class LevelController extends WorldController {
 
 		populateLevel();
 		timeFreeze = false;
+		if (lives > 0) {
+			avatar.setLives(lives);
+		}
+		lives = 0;
 	}
 
 	private Skin skin;
@@ -595,7 +601,19 @@ public class LevelController extends WorldController {
 			return false;
 		}
 
-		if (!isFailure() && avatar.getY() < -1) {
+		if (!isFailure() && avatar.getY() < -6) {
+			avatar.removeLife();
+			if (avatar.getLives() > 0) {
+				lives = avatar.getLives();
+				reset();
+				return true;
+			} else {
+				lives = 0;
+				setFailure(true);
+			}
+			return false;
+		}
+		if (!isFailure() && avatar.getLives() <= 0){
 			setFailure(true);
 			return false;
 		}
