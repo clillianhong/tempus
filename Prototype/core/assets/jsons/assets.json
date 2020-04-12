@@ -79,6 +79,14 @@
     "enemypast": {
       "file": "textures/enemy/creature/enemy_past_alive_lv_1.png",
       "wrap": false
+    },
+    "life": {
+      "file": "textures/indicators/bird_head.png",
+      "wrap": false
+    },
+    "streak": {
+      "file": "textures/indicators/underlinestreak.png",
+      "wrap": false
     }
   },
   "fonts": {

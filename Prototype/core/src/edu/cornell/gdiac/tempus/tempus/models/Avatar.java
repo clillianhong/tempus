@@ -819,7 +819,7 @@ public class Avatar extends CapsuleObstacle {
      * @param dt Number of seconds since last animation frame
      */
     public void update(float dt) {
-        System.out.println(lives);
+        //System.out.println(lives);
         // Apply cooldowns
         if (enemyContact && ticks == 0){
             ticks = 30;
