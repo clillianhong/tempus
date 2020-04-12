@@ -1,5 +1,6 @@
 package edu.cornell.gdiac.tempus.tempus;
 
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.ObjectSet;
@@ -125,6 +126,19 @@ public class CollisionController implements ContactListener {
         //TODO: avatar platform contact
     }
     private void processAvatarEnemyContact(Fixture av, Fixture turret){
+        if (!avatar.getEnemyContact()) {
+            System.out.println("CONTACT");
+            avatar.removeLife();
+            avatar.setEnemyContact(true);
+        }
+        if (avatar.getPosition().x <= turret.getBody().getPosition().x) {
+            avatar.setLinearVelocity(new Vector2(-2, 6));
+        }
+        else {
+            avatar.setLinearVelocity(new Vector2(2, 6));
+        }
+        turret.getBody().setLinearVelocity(new Vector2(0,0));
+        //avatar.getBody().applyForce(new Vector2(-20, 40), avatar.getPosition(), true);
         //TODO: avatar turret contact (die)
     }
     private void processAvatarProjectileContact(Fixture av, Fixture projectile){
@@ -138,6 +152,7 @@ public class CollisionController implements ContactListener {
             // avatar.setHeldBullet(bullet);
 //            projectile.getBody().setType(BodyDef.BodyType.StaticBody);
         } else {
+            avatar.removeLife();
             Obstacle bullet = (Obstacle) projectile.getBody().getUserData();
             removeBullet(bullet);
             /*else if (avatar.isHolding() && InputController.getInstance().releasedLeftMouseButton()){
