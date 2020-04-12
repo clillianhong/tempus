@@ -20,8 +20,10 @@ import com.badlogic.gdx.graphics.g2d.freetype.*;
 import com.badlogic.gdx.assets.loaders.*;
 import com.badlogic.gdx.assets.loaders.resolvers.*;
 
+import com.badlogic.gdx.utils.Select;
 import edu.cornell.gdiac.tempus.tempus.MainMenuMode;
 import edu.cornell.gdiac.tempus.tempus.LevelController;
+import edu.cornell.gdiac.tempus.tempus.SelectLevelMode;
 import edu.cornell.gdiac.util.*;
 
 /**
@@ -46,6 +48,8 @@ public class GDXRoot extends Game implements ScreenListener {
 	private WorldController[] controllers;
 	/** Main Menu mode */
 	private MainMenuMode menu;
+	/** Main Menu mode */
+	private SelectLevelMode levelselect;
 
 	/**
 	 * Creates a new game from the configuration settings.
@@ -82,7 +86,7 @@ public class GDXRoot extends Game implements ScreenListener {
 		controllers[0].preLoadContent(manager);
 
 		menu = new MainMenuMode();
-
+		levelselect = new SelectLevelMode();
 
 //		for(int ii = 0; ii < controllers.length; ii++) {
 //			controllers[ii].preLoadContent(manager);
@@ -105,8 +109,6 @@ public class GDXRoot extends Game implements ScreenListener {
 			controllers[ii].unloadContent();
 			controllers[ii].dispose();
 		}
-
-
 
 		canvas.dispose();
 		canvas = null;
@@ -150,13 +152,18 @@ public class GDXRoot extends Game implements ScreenListener {
 			loading.dispose();
 			loading = null;
 		} else if(screen == menu){
-						for(int ii = 0; ii < controllers.length; ii++) {
+			for(int ii = 0; ii < controllers.length; ii++) {
 				controllers[ii].loadContent();
 				controllers[ii].setScreenListener(this);
 				controllers[ii].setCanvas(canvas);
 			}
 			controllers[current].reset();
 			setScreen(controllers[current]);
+//			levelselect.createMode();
+//			levelselect.setScreenListener(this);
+//			levelselect.setCanvas(canvas);
+//			setScreen(levelselect);
+
 			menu.dispose();
 			menu = null;
 
