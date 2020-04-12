@@ -975,6 +975,17 @@ public class LevelController extends WorldController {
 		}
 	}
 
+	public void drawLives(GameCanvas canvas){
+		TextureRegion life = JsonAssetManager.getInstance().getEntry("life", TextureRegion.class);
+		TextureRegion streak = JsonAssetManager.getInstance().getEntry("streak", TextureRegion.class);
+		canvas.begin();
+		canvas.draw(streak, Color.WHITE, 0, 0, -0.8f * scale.x, canvas.getHeight()/2 + 2 * scale.y, 9 * scale.x, 9 * scale.y);
+		for (int i = 0; i < avatar.getLives(); i++) {
+			canvas.draw(life, Color.WHITE, 0, 0, life.getRegionWidth() * 0.002f * scale.x + (life.getRegionWidth() * 0.005f * scale.x * i), canvas.getHeight() - life.getRegionHeight() * 0.007f * scale.y, scale.x, scale.y);
+		}
+		canvas.end();
+	}
+
 	/**
 	 * Draws the debug of an object if it is in this world
 	 *
@@ -1017,6 +1028,7 @@ public class LevelController extends WorldController {
 		canvas.end();
 
 		drawIndicator(canvas);
+		drawLives(canvas);
 
 		if (debug) {
 			canvas.beginDebug();
