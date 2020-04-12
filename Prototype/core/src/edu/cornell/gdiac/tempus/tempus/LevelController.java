@@ -265,6 +265,8 @@ public class LevelController extends WorldController {
 		setComplete(false);
 		setFailure(false);
 		levelFormat = jsonReader.parse(Gdx.files.internal("jsons/level_1.json"));
+//		levelFormat = jsonReader.parse(Gdx.files.internal("jsons/test_level_editor.json"));
+
 		populateLevel();
 		timeFreeze = false;
 	}
