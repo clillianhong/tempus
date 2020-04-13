@@ -999,9 +999,11 @@ public class Avatar extends CapsuleObstacle {
         }
 
         // Draw avatar body
-        canvas.draw(currentStrip, Color.WHITE,origin.x,origin.y,
-                getX()*drawScale.x,getY()*drawScale.y, getAngle(),
-                0.024f * drawScale.x * faceDirection,0.0225f * drawScale.y);
+        if (currentStrip != null) {
+            canvas.draw(currentStrip, Color.WHITE, origin.x, origin.y,
+                    getX() * drawScale.x, getY() * drawScale.y, getAngle(),
+                    0.024f * drawScale.x * faceDirection, 0.0225f * drawScale.y);
+        }
 
         // If player is holding a projectile then draw the held projectile
         // Caught projectile should be drawn at the center of the player's horns
