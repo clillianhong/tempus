@@ -36,7 +36,7 @@ public class DesktopLauncher {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		int lillian_width = 3840;
 		int lillian_height = 2160;
-		float resolution_multiplier = 0.3f;
+		float resolution_multiplier = 1.0f;
 		config.width  = (int) (lillian_width * resolution_multiplier);
 		config.height = (int) (lillian_height * resolution_multiplier);
 		config.resizable = false;

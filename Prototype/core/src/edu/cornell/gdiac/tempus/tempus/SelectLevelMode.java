@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -21,6 +22,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import edu.cornell.gdiac.tempus.GameCanvas;
+import edu.cornell.gdiac.tempus.tempus.models.ScreenExitCodes;
 import edu.cornell.gdiac.util.JsonAssetManager;
 import edu.cornell.gdiac.util.ScreenListener;
 
@@ -32,6 +34,7 @@ public class SelectLevelMode implements Screen {
 
     private class Level {
 
+        private int level;
         private boolean unlocked;
         private String filePreview;
         private String fileLore;
@@ -41,7 +44,8 @@ public class SelectLevelMode implements Screen {
         Button button;
         TextArea textLore;
 
-        public Level(boolean l, String preview, String lore, String buttonUp, String buttonDown, String buttonLocked, String textlore){
+        public Level(int lev, boolean l, String preview, String lore, String buttonUp, String buttonDown, String buttonLocked, String textlore){
+            level = lev;
             unlocked = l;
             filePreview = preview;
             fileLore = lore;
@@ -52,7 +56,28 @@ public class SelectLevelMode implements Screen {
             TextureRegionDrawable bdown = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal(buttonDown))));
             button = new Button(bup, bdown);
             textLore = new TextArea(textlore, skin);
+
+            button.addListener(new ClickListener(){
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    exitToLevel(level);
+                }
+
+                @Override
+                public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                    super.enter(event, x, y, pointer, fromActor);
+                    currentLevel = level;
+                    stage.clear();
+                    show();
+                    System.out.println("current level is: " + currentLevel + "!");
+                }
+            });
+
+
+
         }
+
+
 
         public boolean isUnlocked() {
             return unlocked;
@@ -69,6 +94,18 @@ public class SelectLevelMode implements Screen {
         public void setUnlocked(boolean b){
             unlocked = b;
         }
+
+        public int getLevel(){
+            return level;
+        }
+    }
+
+    /** LISTENERS EVENTS TO CHANGE SCREEN **/
+    private void exitToLevel(int level){
+        listener.exitScreen(this, level);
+    }
+    private void exitBack(){
+        listener.exitScreen(this, ScreenExitCodes.EXIT_PREV.ordinal());
     }
 
     private SpriteBatch batch;
@@ -108,18 +145,18 @@ public class SelectLevelMode implements Screen {
         skin = new Skin(Gdx.files.internal("skins/flat_earth_skin/flat-earth-ui.json"));
 
         levels = new Level[numLevels];
-        levels[0] = new Level(true, "textures/gui/selectmode/lv1_preview.png",
+        levels[0] = new Level(0,true, "textures/gui/selectmode/lv1_preview.png",
                 "textures/gui/selectmode/lv1_lore.png",
                 "textures/gui/selectmode/level1_up.png",
                 "textures/gui/selectmode/level1_down.png",
                 "textures/gui/selectmode/level1_locked.png",
                 "this is level 1");
-        levels[1] = new Level(false, "textures/gui/selectmode/lv1_preview.png", "textures/gui/selectmode/lv1_lore.png",
+        levels[1] = new Level(1,false, "textures/gui/selectmode/lv1_preview.png", "textures/gui/selectmode/lore_bg.png",
                 "textures/gui/selectmode/level2_up.png",
                 "textures/gui/selectmode/level2_down.png",
                 "textures/gui/selectmode/level2_locked.png",
                 "this is level 2"); //TODO: CHANGE TO LEVEL 2 AND 3 RESOURCES
-        levels[2] = new Level(false, "textures/gui/selectmode/lv1_preview.png", "textures/gui/selectmode/lv1_lore.png",
+        levels[2] = new Level(2,false, "textures/gui/selectmode/lv1_preview.png", "textures/gui/selectmode/bird_head.png",
                 "textures/gui/selectmode/level3_up.png",
                 "textures/gui/selectmode/level3_down.png",
                 "textures/gui/selectmode/level3_locked.png",
@@ -157,16 +194,10 @@ public class SelectLevelMode implements Screen {
         stage = new Stage(new ScreenViewport());
     }
 
-    private void exitGame(){
-        listener.exitScreen(this, EXIT_QUIT);
-    }
-
-    private void exitNext(){
-        listener.exitScreen(this, EXIT_NEXT);
-    }
 
     @Override
     public void show() {
+
         active = true;
 
         float sw = Gdx.graphics.getWidth();
@@ -178,6 +209,8 @@ public class SelectLevelMode implements Screen {
         float cw = sw * 0.9f;
         float ch = sh * 0.8f;
 
+
+
         backgroundTexture = new TextureRegion(new Texture(Gdx.files.internal("textures/gui/selectmode/background.png")));
 
         //table container to center main table
@@ -186,8 +219,6 @@ public class SelectLevelMode implements Screen {
         edgeContainer.setPosition((sw - cw) / 2.0f, (sh - ch) / 2.0f);
         edgeContainer.fillX();
         edgeContainer.fillY();
-
-
 
         //Stage should controller input:
         Gdx.input.setInputProcessor(stage);
@@ -213,9 +244,30 @@ public class SelectLevelMode implements Screen {
         levelTableContainer.setActor(levelTable);
         ScrollPane scroller = new ScrollPane(levelTableContainer);
 
+        Table overlayBackButton = new Table();
         //back button
         TextureRegionDrawable bup = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/selectmode/backbutton.png"))));
         Button backButton = new Button(bup);
+        backButton.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                exitBack();
+            }
+        });
+        overlayBackButton.add(backButton).width(cw/14f).height(cw/15f).expand().bottom().left();
+
+
+
+        Table overlayPageHeader = new Table();
+        //back button
+        TextureRegionDrawable headerimg = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/selectmode/level_selector_label.png"))));
+        Image header = new Image(headerimg);
+        overlayPageHeader.add(header).width(cw/8f).height(cw/16f).expand().top().left();
+
+        Stack scrollStack = new Stack();
+        scrollStack.add(scroller);
+        scrollStack.add(overlayBackButton);
+        scrollStack.add(overlayPageHeader);
 
 
         //preview panel
@@ -238,7 +290,6 @@ public class SelectLevelMode implements Screen {
         prevStack.add(pbContainer);
         prevStack.add(pIContainer);
 
-
         //lore panel
         Container<Image> lbContainer = new Container<>();
         lbContainer.size(sw/2f*0.7f, sh/2f*0.6f);
@@ -249,17 +300,17 @@ public class SelectLevelMode implements Screen {
         rightTable.row();
         rightTable.add(lbContainer);
 
-
-
         //add scroller to dual table
-        dualTable.add(scroller).size(cw/2, ch).expandX();
+        dualTable.add(scrollStack).size(cw/2, ch).expandX();
         //add rightTable to dualTable
         dualTable.add(rightTable).size(cw/2, ch).expandX();
         //Create top right image preview
 
         edgeContainer.setActor(dualTable);
+
 //        stage.setDebugAll(true);
         stage.addActor(edgeContainer);
+
 
 
 
