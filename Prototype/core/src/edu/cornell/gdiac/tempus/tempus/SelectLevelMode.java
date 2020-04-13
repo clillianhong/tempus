@@ -52,11 +52,11 @@ public class SelectLevelMode implements Screen {
             filePressUp = buttonUp;
             filePressDown = buttonDown;
             filePressLocked = buttonLocked;
-            TextureRegionDrawable bup = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal(buttonUp))));
-            TextureRegionDrawable block = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal(buttonLocked))));
-            TextureRegionDrawable bdown = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal(buttonDown))));
+            final TextureRegionDrawable bup = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal(buttonUp))));
+            final TextureRegionDrawable block = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal(buttonLocked))));
+            final TextureRegionDrawable bdown = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal(buttonDown))));
             if(unlocked){
-                button = new Button(bup, bdown);
+                button = new Button(bup, bdown,bdown);
             }else{
                 button = new Button(block, block);
             }
@@ -73,11 +73,19 @@ public class SelectLevelMode implements Screen {
                 @Override
                 public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
                     super.enter(event, x, y, pointer, fromActor);
+                    button.setChecked(true);
                     if(currentLevel != level){
                         currentLevel = level;
                         stage.clear();
                         show();
                     }
+                }
+
+
+                @Override
+                public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+                    super.exit(event, x, y, pointer, toActor);
+                    button.setChecked(false);
                 }
             });
 

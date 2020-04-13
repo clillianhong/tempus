@@ -254,39 +254,25 @@ public class CollisionController implements ContactListener {
             //handle platform-avatar collisions first (outside of processcontact
             if(((objA instanceof Avatar) && (objB instanceof Platform)) ||((objB instanceof Avatar) && (objA instanceof Platform))){
 
-                if(avatar.isSticking()){
-                    System.out.println("after: " + bd1.getName());
-                    System.out.println("after 1: " + bd2.getName());
-
-                } else{
+                if(!avatar.isSticking()){
                     Float norm_angle = contact.getWorldManifold().getNormal().angle();
 
                     if(!norm_angle.isNaN()){
                         cur_normal = ((norm_angle.intValue()) == 0) ? 0 : (float) Math.toRadians(norm_angle-90);
-                        System.out.println("MANIFOLD ANGLE: " + norm_angle);
                     }
                 }
 
                 if (!avatar.isSticking() && avatar.getStartedDashing() == 0) {
-                    /*System.out.println("previous: " + avatar.getCurrentPlatform());
-                    if (objB instanceof Platform) {
-                        System.out.println("OBject: " + objB);
-                    } else {
-                        System.out.println("OBject: " + objA);
-                    }*/
+
                     if (avatar.getCurrentPlatform() != null && (bd1.getName().equals("wall") || bd2.getName().equals("wall"))) {
-                        //System.out.println("Attempted to stick to wall");
                         if (!avatar.getCurrentPlatform().equals(objA) && !avatar.getCurrentPlatform().equals(objB)) {
-                            //System.out.println("STUCK");
                             avatar.setGrounded(true);
                             avatar.setSticking(true);
                             avatar.setNewAngle(cur_normal);
                             if (objB instanceof Platform) {
                                 avatar.setCurrentPlatform((Platform) objB);
-                                //System.out.println("set current platform to: " + objB);
                             } else {
                                 avatar.setCurrentPlatform((Platform) objA);
-                                //System.out.println("set current platform to: " + objA);
                             }
                         }
                     } else {
@@ -295,18 +281,12 @@ public class CollisionController implements ContactListener {
                         avatar.setNewAngle(cur_normal);
                         if (objB instanceof Platform) {
                             avatar.setCurrentPlatform((Platform) objB);
-                            //System.out.println("set current platform to: " + objB);
                         } else {
                             avatar.setCurrentPlatform((Platform) objA);
-                            //System.out.println("set current platform to: " + objA);
                         }
                     }
                 }
                 sensorFixtures.add(avatar == bd1 ? fix2 : fix1); // Could have more than one ground
-//                beginContactHelper(avatar.getSensorName(), AvatarOrientation.OR_UP, fd1, fd2, bd1, bd2, fix1, fix2);
-//                beginContactHelper(avatar.getLeftSensorName(), AvatarOrientation.OR_RIGHT, fd1, fd2, bd1, bd2, fix1, fix2);
-//                beginContactHelper(avatar.getRightSensorName(), AvatarOrientation.OR_LEFT, fd1, fd2, bd1, bd2, fix1, fix2);
-//                beginContactHelper(avatar.getTopSensorName(), AvatarOrientation.OR_DOWN, fd1, fd2, bd1, bd2, fix1, fix2);
 
             }
 

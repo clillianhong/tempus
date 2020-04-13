@@ -168,9 +168,11 @@ public class GDXRoot extends Game implements ScreenListener {
 					controllers[ii].setScreenListener(this);
 					controllers[ii].setCanvas(canvas);
 				}
+
 				levelselect.createMode();
 				levelselect.setScreenListener(this);
 				levelselect.setCanvas(canvas);
+
 				setScreen(levelselect);
 			}
 			else if(exitCode == ScreenExitCodes.MENU_ABOUT.ordinal()){
@@ -199,9 +201,13 @@ public class GDXRoot extends Game implements ScreenListener {
 
 			levelselect.dispose();
 		}else if (exitCode == WorldController.EXIT_NEXT) {
-			current = (current+1) % controllers.length;
-			controllers[current].reset();
-			setScreen(controllers[current]);
+			if(current+1 == controllers.length){
+				setScreen(levelselect);
+			}else{
+				current = (current+1);
+				controllers[current].reset();
+				setScreen(controllers[current]);
+			}
 		} else if (exitCode == ScreenExitCodes.EXIT_PREV.ordinal()) {
 //			current = (current+controllers.length-1) % controllers.length;
 //			controllers[current].reset();
