@@ -676,7 +676,7 @@ public class LevelController extends WorldController {
 
 		// test slow down time
 		if (timeFreeze) {
-			world.step(WORLD_STEP / 4, WORLD_VELOC, WORLD_POSIT);
+			world.step(WORLD_STEP / 8, WORLD_VELOC, WORLD_POSIT);
 			for (Obstacle o : objects) {
 				if (o instanceof Enemy) {
 					((Enemy) o).slowCoolDown(true);
@@ -950,29 +950,46 @@ public class LevelController extends WorldController {
 				&& !InputController.getInstance().pressedRightMouseButton())
 			return;
 		// Do not draw while player is dashing or not holding a projectile
-		if (avatar.isDashing() && !avatar.isHolding())
-			return;
-		if (!avatar.canDash() && !avatar.isHolding())
+		//if (avatar.isDashing() && !avatar.isHolding())
+		//	return;
+		if (!avatar.canDash() && !avatar.isSticking() && !avatar.isHolding())
 			return;
 		// Draw dynamic dash indicator
-		Vector2 avPos = avatar.getPosition();
+		Vector2 mousePos = InputController.getInstance().getMousePosition();
+		Vector2 redirection = avatar.getPosition().cpy().sub(mousePos).nor();
+		canvas.begin();
+		TextureRegion circle = JsonAssetManager.getInstance().getEntry("circle", TextureRegion.class);
+		TextureRegion arrow = JsonAssetManager.getInstance().getEntry("arrow", TextureRegion.class);
+		//System.out.println(scale);
+		if (!avatar.isHolding()) {
+			canvas.draw(circle, Color.WHITE, circle.getRegionWidth() / 2, circle.getRegionHeight() / 2, avatar.getX() * scale.x, avatar.getY() * scale.y, redirection.angle() / 57, 0.0083f * scale.x, 0.0083f * scale.y);
+		}
+		canvas.draw(arrow, Color.WHITE, 0, arrow.getRegionHeight()/2, avatar.getX() * scale.x, avatar.getY() * scale.y, (180 + redirection.angle())/ 57, 0.016f * scale.x , 0.016f * scale.y);
+		canvas.end();
+		/*Vector2 avPos = avatar.getPosition();
 		Vector2 mPos = InputController.getInstance().getMousePosition();
 		Vector2 startPos = avPos.cpy().scl(scale);
-		Vector2 mousePos = mPos.cpy().scl(scale);
+		mousePos = mPos.cpy().scl(scale);
 		Vector2 alteredPos = mousePos.sub(startPos).nor();
 		float dist = avatar.getDashRange();
 		// float dist = Math.min(avatar.getDashRange(), avPos.dst(mPos));
 		Vector2 endPos = alteredPos.scl(dist).scl(scale);
 		endPos.add(startPos);
-		canvas.drawLine(startPos.x, startPos.y, endPos.x, endPos.y, 0, 1, 0.6f, 1);
+		//canvas.drawLine(startPos.x, startPos.y, endPos.x, endPos.y, 0, 1, 0.6f, 1);
 
 		// If player is holding a projectile, draw projectile indicator
 		// TODO: need to fix - line is a bit off
 		Vector2 projDir = startPos.cpy().sub(mousePos).scl(scale);
-		System.out.println("HOLDING: " + avatar.isHolding());
+		//System.out.println("HOLDING: " + avatar.isHolding());*/
+		TextureRegion projCircle = JsonAssetManager.getInstance().getEntry("projectile_circle", TextureRegion.class);
+		TextureRegion projArrow = JsonAssetManager.getInstance().getEntry("projectile_arrow", TextureRegion.class);
+
+		canvas.begin();
 		if (avatar.isHolding()) {
-			canvas.drawLine(startPos.x, startPos.y, projDir.x, projDir.y, 1, 1, 1, 0.5f);
+			canvas.draw(projCircle, Color.WHITE, projCircle.getRegionWidth()/2, projCircle.getRegionHeight()/2, avatar.getX() * scale.x, avatar.getY() * scale.y, redirection.angle()/ 57, 0.0073f * scale.x , 0.0073f * scale.y);
+			canvas.draw(projArrow, Color.WHITE, 0, projArrow.getRegionHeight()/2, avatar.getX() * scale.x, avatar.getY() * scale.y, (redirection.angle())/ 57, 0.0061f * scale.x , 0.0061f * scale.y);
 		}
+		canvas.end();
 	}
 
 	public void drawLives(GameCanvas canvas){

@@ -87,6 +87,22 @@
     "streak": {
       "file": "textures/indicators/underlinestreak.png",
       "wrap": false
+    },
+    "circle": {
+      "file": "textures/indicators/glowingcircle.png",
+      "wrap": false
+    },
+    "arrow": {
+      "file": "textures/indicators/linearrow2.png",
+      "wrap": false
+    },
+    "projectile_circle": {
+      "file": "textures/indicators/projectile glow.png",
+      "wrap": false
+    },
+    "projectile_arrow": {
+      "file": "textures/indicators/projectilearrow.png",
+      "wrap": false
     }
   },
   "fonts": {
