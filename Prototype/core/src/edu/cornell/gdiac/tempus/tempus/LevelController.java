@@ -281,7 +281,6 @@ public class LevelController extends WorldController {
 	private Stage stage;
 
 	private Table table;
-	private TextButton startButton;
 	private TextButton quitButton;
 
 	private void exitGame() {
@@ -293,6 +292,9 @@ public class LevelController extends WorldController {
 	 */
 	private void populateLevel() {
 
+		float sw = Gdx.graphics.getWidth();
+		float sh = Gdx.graphics.getHeight();
+
 		// tester stage!
 		skin = new Skin(Gdx.files.internal("jsons/uiskin.json"));
 		stage = new Stage(new ScreenViewport());
@@ -300,7 +302,6 @@ public class LevelController extends WorldController {
 		table.setWidth(stage.getWidth());
 		table.align(Align.center | Align.top);
 		table.setPosition(0, Gdx.graphics.getHeight());
-		startButton = new TextButton("New Game", skin);
 		quitButton = new TextButton("Quit Game", skin);
 		quitButton.addListener(new ClickListener() {
 			@Override
@@ -309,9 +310,7 @@ public class LevelController extends WorldController {
 			}
 		});
 		table.padTop(30);
-		table.add(startButton).padBottom(30);
-		table.row();
-		table.add(quitButton);
+		table.add(quitButton).width(sw/5f);
 		stage.addActor(table);
 		Gdx.input.setInputProcessor(stage);
 
