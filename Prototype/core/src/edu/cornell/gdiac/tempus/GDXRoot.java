@@ -24,6 +24,7 @@ import com.badlogic.gdx.utils.Select;
 import edu.cornell.gdiac.tempus.tempus.MainMenuMode;
 import edu.cornell.gdiac.tempus.tempus.LevelController;
 import edu.cornell.gdiac.tempus.tempus.SelectLevelMode;
+import edu.cornell.gdiac.tempus.tempus.models.ScreenExitCodes;
 import edu.cornell.gdiac.util.*;
 
 /**
@@ -152,23 +153,39 @@ public class GDXRoot extends Game implements ScreenListener {
 			loading.dispose();
 			loading = null;
 		} else if(screen == menu){
-			for(int ii = 0; ii < controllers.length; ii++) {
-				controllers[ii].loadContent();
-				controllers[ii].setScreenListener(this);
-				controllers[ii].setCanvas(canvas);
+			if(exitCode == ScreenExitCodes.MENU_START.ordinal()){
+				for(int ii = 0; ii < controllers.length; ii++) {
+					controllers[ii].loadContent();
+					controllers[ii].setScreenListener(this);
+					controllers[ii].setCanvas(canvas);
+				}
+				levelselect.createMode();
+				levelselect.setScreenListener(this);
+				levelselect.setCanvas(canvas);
+				setScreen(levelselect);
 			}
-			controllers[current].reset();
-			setScreen(controllers[current]);
-//
-//			levelselect.createMode();
-//			levelselect.setScreenListener(this);
-//			levelselect.setCanvas(canvas);
-//			setScreen(levelselect);
+			else if(exitCode == ScreenExitCodes.MENU_ABOUT.ordinal()){
+				//TODO about hookup
+			}
+			else if(exitCode == ScreenExitCodes.MENU_HELP.ordinal()){
+				//TODO about hookup
+			}
 
 			menu.dispose();
-			menu = null;
 
-		} else if (exitCode == WorldController.EXIT_NEXT) {
+		} else if(screen == levelselect){
+			if(exitCode == ScreenExitCodes.EXIT_PREV.ordinal()){
+				menu.createMode();
+				menu.setScreenListener(this);
+				menu.setCanvas(canvas);
+				setScreen(menu);
+			}else{ //go to a level
+				controllers[exitCode].reset();
+				setScreen(controllers[exitCode]);
+			}
+
+			levelselect.dispose();
+		}else if (exitCode == WorldController.EXIT_NEXT) {
 			current = (current+1) % controllers.length;
 			controllers[current].reset();
 			setScreen(controllers[current]);

@@ -22,6 +22,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import edu.cornell.gdiac.tempus.GameCanvas;
+import edu.cornell.gdiac.tempus.tempus.models.ScreenExitCodes;
 import edu.cornell.gdiac.util.JsonAssetManager;
 import edu.cornell.gdiac.util.ScreenListener;
 
@@ -94,8 +95,8 @@ public class MainMenuMode implements Screen {
         listener.exitScreen(this, EXIT_QUIT);
     }
 
-    private void exitNext(){
-        listener.exitScreen(this, EXIT_NEXT);
+    private void exitLevelSelector(){
+        listener.exitScreen(this, ScreenExitCodes.MENU_START.ordinal());
     }
 
     @Override
@@ -150,7 +151,7 @@ public class MainMenuMode implements Screen {
         startButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-               exitNext();
+                exitLevelSelector();
             }
         });
         exitButton.addListener(new ClickListener(){
