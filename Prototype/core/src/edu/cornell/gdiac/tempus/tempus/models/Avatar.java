@@ -64,7 +64,7 @@ public class Avatar extends CapsuleObstacle {
     private static final String SENSOR_NAME = "DudeGroundSensor";
     //added for prototype
     /** Distance for dashing across screen */
-    private static final float DASH_RANGE = 6;
+    private static final float DASH_RANGE = 5.5f;
     /** Dash force multiplier */
     private static float dashForce = 1000;
     /** Array containing orientation vectors based on the enums for orientation */

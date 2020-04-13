@@ -92,7 +92,6 @@ public class GDXRoot extends Game implements ScreenListener {
 		controllers[2] = new LevelController("jsons/level_3.json");
 		controllers[2].preLoadContent(manager);
 
-
 		menu = new MainMenuMode();
 		levelselect = new SelectLevelMode();
 
@@ -175,10 +174,10 @@ public class GDXRoot extends Game implements ScreenListener {
 				setScreen(levelselect);
 			}
 			else if(exitCode == ScreenExitCodes.MENU_ABOUT.ordinal()){
-				//TODO about hookup
+				//TODO menu about hookup
 			}
 			else if(exitCode == ScreenExitCodes.MENU_HELP.ordinal()){
-				//TODO about hookup
+				//TODO menu help hookup
 			}
 
 			menu.dispose();
@@ -189,7 +188,11 @@ public class GDXRoot extends Game implements ScreenListener {
 				menu.setScreenListener(this);
 				menu.setCanvas(canvas);
 				setScreen(menu);
-			}else{ //go to a level
+			}
+			else{ //go to a level
+//				Graphics.DisplayMode currentMode = Gdx.graphics.getDisplayMode();
+//				Gdx.graphics.setFullscreenMode(currentMode);
+//				Gdx.graphics.setWindowedMode(currentMode.width, currentMode.height);
 				controllers[exitCode].reset();
 				setScreen(controllers[exitCode]);
 			}
@@ -199,10 +202,12 @@ public class GDXRoot extends Game implements ScreenListener {
 			current = (current+1) % controllers.length;
 			controllers[current].reset();
 			setScreen(controllers[current]);
-		} else if (exitCode == WorldController.EXIT_PREV) {
-			current = (current+controllers.length-1) % controllers.length;
+		} else if (exitCode == ScreenExitCodes.EXIT_PREV.ordinal()) {
+//			current = (current+controllers.length-1) % controllers.length;
+//			controllers[current].reset();
+//			setScreen(controllers[current]);
 			controllers[current].reset();
-			setScreen(controllers[current]);
+			setScreen(levelselect);
 		} else if (exitCode == WorldController.EXIT_QUIT) {
 			// We quit the main application
 			Gdx.app.exit();
