@@ -10,10 +10,13 @@ public class Projectile extends WheelObstacle {
     /** The type of this projectile */
     private EntityType type;
 
+    private float rotation;
+
 
     public Projectile(EntityType type, float x, float y, float radius) {
         super(x, y, radius);
         this.type = type;
+        rotation = 0;
     }
 
     /**
@@ -29,8 +32,21 @@ public class Projectile extends WheelObstacle {
      * @param canvas Drawing context
      */
     public void draw(GameCanvas canvas) {
-        if (texture != null) {
-            canvas.draw(texture, Color.WHITE,origin.x,origin.y,getX()*drawScale.x,getY()*drawScale.y,getAngle(),1.0f,1.0f);
+        if (rotation == 361){
+            rotation = 0;
         }
+        if (texture != null) {
+            if (getLinearVelocity().x >= 0) {
+                canvas.draw(texture, Color.WHITE, origin.x, origin.y, getX() * drawScale.x, getY() * drawScale.y, -1 * rotation, 0.005f * drawScale.x, 0.005f * drawScale.y);
+            } else {
+                canvas.draw(texture, Color.WHITE, origin.x, origin.y, getX() * drawScale.x, getY() * drawScale.y, rotation, 0.005f * drawScale.x, 0.005f * drawScale.y);
+            }
+        }
+        if (type.equals(EntityType.PRESENT)) {
+            rotation += 0.01f;
+        } else {
+            rotation += 1.0f;
+        }
+
     }
 }
