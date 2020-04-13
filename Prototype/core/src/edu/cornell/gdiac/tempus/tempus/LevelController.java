@@ -731,6 +731,8 @@ public class LevelController extends WorldController {
 		}
 		if (InputController.getInstance().pressedShiftKey()) {
 			shifted = !shifted;
+			avatar.resetDashNum();
+			avatar.setPosition(avatar.getPosition().x, avatar.getPosition().y + 0.01f);
 			if (avatar.getCurrentPlatform() != null) {
 				if (avatar.isSticking()) {
 					if (!shifted && (avatar.getCurrentPlatform().getSpace() == 2)) { // past world
