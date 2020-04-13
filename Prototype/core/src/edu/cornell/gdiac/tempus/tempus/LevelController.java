@@ -69,6 +69,8 @@ public class LevelController extends WorldController {
 
 	/** Texture asset for the big bullet */
 	private TextureRegion bulletBigTexture;
+	private TextureRegion presentBullet = JsonAssetManager.getInstance().getEntry("projpresent", TextureRegion.class);
+	private TextureRegion pastBullet = JsonAssetManager.getInstance().getEntry("projpast", TextureRegion.class);
 	/** Texture aobjects.sset for the turret */
 	private TextureRegion turretTexture;
 	/** Texture asset for present enemy */
@@ -630,7 +632,7 @@ public class LevelController extends WorldController {
 	public void sleepIfNotInWorld() {
 		for (Obstacle obj : objects) {
 
-			 if (obj instanceof Enemy) {
+			 if (obj instanceof Enemy && !((Enemy) obj).isTurret()) {
 			 	Enemy e = (Enemy) obj;
 			 	if (e.getSpace() == 3) {
 			 		e.setIsActive(true);
@@ -795,7 +797,12 @@ public class LevelController extends WorldController {
 		for (Obstacle o : objects) {
 			if (o instanceof Enemy) {
 				Enemy e = (Enemy) o.getBody().getUserData();
-				if ((shifted && e.getSpace() == 2) || (!shifted && e.getSpace() == 1)) {
+				if (e.isTurret()){
+					if (e.canFire()) {
+						createBullet(e);
+					} else
+						e.coolDown(true);
+				} else if ((shifted && e.getSpace() == 2) || (!shifted && e.getSpace() == 1)) {
 					if (!e.isTurret()) {
 						if (e.getLeftFixture() == null || e.getRightFixture() == null) {
 							break;
@@ -881,19 +888,25 @@ public class LevelController extends WorldController {
 	private void createBullet(Enemy enemy) {
 		float offset = BULLET_OFFSET;
 		bulletBigTexture = JsonAssetManager.getInstance().getEntry("bulletbig", TextureRegion.class);
-		float radius = bulletBigTexture.getRegionWidth() / (90.0f);
+		presentBullet = JsonAssetManager.getInstance().getEntry("projpresent", TextureRegion.class);
+		pastBullet = JsonAssetManager.getInstance().getEntry("projpast", TextureRegion.class);
+		float radius = bulletBigTexture.getRegionWidth() / (30.0f);
 		Projectile bullet = new Projectile(enemy.getType(), enemy.getX(), enemy.getY() + offset, radius);
 
 		bullet.setName("bullet");
 		bullet.setDensity(HEAVY_DENSITY);
 		bullet.setDrawScale(scale);
-		bullet.setTexture(bulletBigTexture);
+		//bullet.setTexture(bulletBigTexture);
 		bullet.setBullet(true);
 		bullet.setGravityScale(0);
 		bullet.setLinearVelocity(enemy.getProjVelocity());
 		bullet.setSpace(enemy.getSpace());
 		addQueuedObject(bullet);
-
+		if (bullet.getType().equals(PRESENT)){
+			bullet.setTexture(presentBullet);
+		} else {
+			bullet.setTexture(pastBullet);
+		}
 		if (shifted && enemy.getSpace() == 2) { // past world
 			JsonValue data = assetDirectory.get("sounds").get("pew");
 			SoundController.getInstance().play("pew", data.get("file").asString(), false, data.get("volume").asFloat());
@@ -922,7 +935,12 @@ public class LevelController extends WorldController {
 		bullet.setName("bullet");
 		bullet.setDensity(HEAVY_DENSITY);
 		bullet.setDrawScale(scale);
-		bullet.setTexture(bulletBigTexture);
+		//bullet.setTexture(bulletBigTexture);
+		if (bullet.getType() == PRESENT){
+			bullet.setTexture(presentBullet);
+		} else {
+			bullet.setTexture(pastBullet);
+		}
 		bullet.setBullet(true);
 		bullet.setGravityScale(0);
 		bullet.setLinearVelocity(projVel);
