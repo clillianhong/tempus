@@ -40,7 +40,7 @@ public class DesktopLauncher {
 		config.width  = (int) (lillian_width * resolution_multiplier);
 		config.height = (int) (lillian_height * resolution_multiplier);
 		config.resizable = false;
-		config.fullscreen = true;
+//		config.fullscreen = true;
 		new LwjglApplication(new GDXRoot(), config);
 	}
 }
