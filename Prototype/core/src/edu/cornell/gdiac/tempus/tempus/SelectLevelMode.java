@@ -158,7 +158,7 @@ public class SelectLevelMode implements Screen {
                 "textures/gui/selectmode/level1_down.png",
                 "textures/gui/selectmode/level1_up.png",
                 "this is level 1");
-        levels[1] = new Level(1,false, "textures/gui/selectmode/lv1_preview.png", "textures/gui/selectmode/lore_bg.png",
+        levels[1] = new Level(1,true, "textures/gui/selectmode/lv1_preview.png", "textures/gui/selectmode/lore_bg.png",
                 "textures/gui/selectmode/level2_up.png",
                 "textures/gui/selectmode/level2_down.png",
                 "textures/gui/selectmode/level2_locked.png",
@@ -318,57 +318,6 @@ public class SelectLevelMode implements Screen {
 //        stage.setDebugAll(true);
         stage.addActor(edgeContainer);
 
-
-
-
-
-
-        //Create buttons
-//        ImageButton startButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/start_button.png")))));
-////        startButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/start_button.png"))));
-////        startButton.getStyle().imageDown = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/start_button.png"))));
-//        ImageButton exitButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/quit_button.png")))));
-////        exitButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/quit_button.png"))));
-////        exitButton.getStyle().imageDown = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/quit_button.png"))));
-//        ImageButton helpButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/help_button.png")))));
-////        helpButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/help_button.png"))));
-////        helpButton.getStyle().imageDown = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/help_button.png"))));
-//        ImageButton aboutButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/about_button.png")))));
-////        aboutButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/about_button.png"))));
-////        aboutButton.getStyle().imageDown = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/about_button.png"))));
-//
-//        //Add listeners to buttons
-//        startButton.addListener(new ClickListener(){
-//            @Override
-//            public void clicked(InputEvent event, float x, float y) {
-//                exitNext();
-//            }
-//        });
-//        exitButton.addListener(new ClickListener(){
-//            @Override
-//            public void clicked(InputEvent event, float x, float y) {
-//                exitGame();
-//            }
-//        });
-
-//        mainTable.debugAll();
-//
-//        //add header
-//        mainTable.row();
-//        mainTable.add(header).height(header.getHeight()*4).width(header.getWidth()*4).colspan(4);
-//        mainTable.row();
-//        mainTable.row().expandX().fillX();
-//
-//        //add buttons
-//        mainTable.add(startButton).pad(50).expandX().fillX();
-//        mainTable.add(exitButton).pad(50).expandX().fillX();
-//        mainTable.add(helpButton).pad(50).expandX().fillX();
-//        mainTable.add(aboutButton).pad(50).expandX().fillX();
-//
-//
-//        tableContainer.setActor(mainTable);
-//        //Add table to stage
-//        stage.addActor(tableContainer);
     }
 
     public void update(){
