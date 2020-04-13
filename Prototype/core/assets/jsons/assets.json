@@ -52,8 +52,16 @@
       "file": "textures/enemy/projectile/projectile_present_caught_lv_1.png",
       "wrap": false
     },
+    "projpresent": {
+      "file": "textures/enemy/projectile/projectile_present_stationary_lv1.png",
+      "wrap": false
+    },
     "projpastcaught":{
       "file": "textures/enemy/projectile/projectile_past_caught_lv_1.png",
+      "wrap": false
+    },
+    "projpast": {
+      "file": "textures/enemy/projectile/projectile_past_stationary_lv1.png",
       "wrap": false
     },
     "turret": {

@@ -268,7 +268,7 @@ public class Enemy extends CapsuleObstacle {
      * @return whether or not enemy can fire.
      */
     public boolean canFire() {
-        if (isActive){
+        if (isTurret || isActive){
             return framesTillFire <= 0;
         } else {
             return false;
