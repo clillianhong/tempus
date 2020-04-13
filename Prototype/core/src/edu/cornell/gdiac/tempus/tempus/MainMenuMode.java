@@ -134,16 +134,16 @@ public class MainMenuMode implements Screen {
         Image header = new Image( new TextureRegion(new Texture(Gdx.files.internal("textures/gui/header.png"))));
 
         //Create buttons
-        ImageButton startButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/start_button.png")))));
+        Button startButton = new Button(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/start_button.png")))));
 //        startButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/start_button.png"))));
 //        startButton.getStyle().imageDown = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/start_button.png"))));
-        ImageButton exitButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/quit_button.png")))));
+        Button exitButton = new Button(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/quit_button.png")))));
 //        exitButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/quit_button.png"))));
 //        exitButton.getStyle().imageDown = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/quit_button.png"))));
-        ImageButton helpButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/help_button.png")))));
+        Button helpButton = new Button(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/help_button.png")))));
 //        helpButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/help_button.png"))));
 //        helpButton.getStyle().imageDown = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/help_button.png"))));
-        ImageButton aboutButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/about_button.png")))));
+        Button aboutButton = new Button(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/about_button.png")))));
 //        aboutButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/about_button.png"))));
 //        aboutButton.getStyle().imageDown = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/about_button.png"))));
 
@@ -170,10 +170,10 @@ public class MainMenuMode implements Screen {
         mainTable.row().expandX().fillX();
 
         //add buttons
-        mainTable.add(startButton).size(cw/7f).pad(cw/15f).expandX().fillX();
-        mainTable.add(exitButton).size(cw/7f).pad(cw/15f).expandX().fillX();
-        mainTable.add(helpButton).size(cw/7f).pad(cw/15f).expandX().fillX();
-        mainTable.add(aboutButton).size(cw/7f).pad(cw/15f).expandX().fillX();
+        mainTable.add(startButton).width(cw/5f).height(ch/5f).pad(cw/20f).expand().fillX();
+        mainTable.add(exitButton).width(cw/5f).height(ch/5f).pad(cw/15f).expand().fillX();
+        mainTable.add(helpButton).width(cw/5f).height(ch/5f).pad(cw/15f).expand().fillX();
+        mainTable.add(aboutButton).width(cw/5f).height(ch/5f).pad(cw/15f).expand().fillX();
 
 
         tableContainer.setActor(mainTable);
