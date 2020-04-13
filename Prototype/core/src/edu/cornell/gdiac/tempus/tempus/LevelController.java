@@ -1005,8 +1005,8 @@ public class LevelController extends WorldController {
 
 		canvas.begin();
 		if (avatar.isHolding()) {
-			canvas.draw(projCircle, Color.WHITE, projCircle.getRegionWidth()/2, projCircle.getRegionHeight()/2, avatar.getX() * scale.x, avatar.getY() * scale.y, redirection.angle()/ 57, 0.0073f * scale.x , 0.0073f * scale.y);
-			canvas.draw(projArrow, Color.WHITE, 0, projArrow.getRegionHeight()/2, avatar.getX() * scale.x, avatar.getY() * scale.y, (redirection.angle())/ 57, 0.0061f * scale.x , 0.0061f * scale.y);
+			canvas.draw(projCircle, Color.GOLD, projCircle.getRegionWidth()/2, projCircle.getRegionHeight()/2, avatar.getX() * scale.x, avatar.getY() * scale.y, redirection.angle()/ 57, 0.0073f * scale.x , 0.0073f * scale.y);
+			canvas.draw(projArrow, Color.GOLD, 0, projArrow.getRegionHeight()/2, avatar.getX() * scale.x, avatar.getY() * scale.y, (redirection.angle())/ 57, 0.0061f * scale.x , 0.0061f * scale.y);
 		}
 		canvas.end();
 	}
