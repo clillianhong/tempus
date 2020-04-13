@@ -27,6 +27,8 @@ import edu.cornell.gdiac.tempus.tempus.SelectLevelMode;
 import edu.cornell.gdiac.tempus.tempus.models.ScreenExitCodes;
 import edu.cornell.gdiac.util.*;
 
+import java.util.logging.Level;
+
 /**
  * Root class for a LibGDX.  
  * 
@@ -82,9 +84,14 @@ public class GDXRoot extends Game implements ScreenListener {
 		
 		// Initialize the three game worlds
 
-		controllers = new WorldController[1];
-		controllers[0] = new LevelController();
+		controllers = new WorldController[3];
+		controllers[0] = new LevelController("jsons/level_1.json");
 		controllers[0].preLoadContent(manager);
+		controllers[1] = new LevelController("jsons/level_1.json");
+		controllers[1].preLoadContent(manager);
+		controllers[2] = new LevelController("jsons/level_3.json");
+		controllers[2].preLoadContent(manager);
+
 
 		menu = new MainMenuMode();
 		levelselect = new SelectLevelMode();
@@ -110,6 +117,9 @@ public class GDXRoot extends Game implements ScreenListener {
 			controllers[ii].unloadContent();
 			controllers[ii].dispose();
 		}
+
+		menu.dispose();
+		levelselect.dispose();
 
 		canvas.dispose();
 		canvas = null;

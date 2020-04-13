@@ -163,7 +163,7 @@ public class SelectLevelMode implements Screen {
                 "textures/gui/selectmode/level2_down.png",
                 "textures/gui/selectmode/level2_locked.png",
                 "this is level 2"); //TODO: CHANGE TO LEVEL 2 AND 3 RESOURCES
-        levels[2] = new Level(2,false, "textures/gui/selectmode/lv1_preview.png", "textures/gui/selectmode/bird_head.png",
+        levels[2] = new Level(2,true, "textures/gui/selectmode/lv1_preview.png", "textures/gui/selectmode/bird_head.png",
                 "textures/gui/selectmode/level3_up.png",
                 "textures/gui/selectmode/level3_down.png",
                 "textures/gui/selectmode/level3_locked.png",
