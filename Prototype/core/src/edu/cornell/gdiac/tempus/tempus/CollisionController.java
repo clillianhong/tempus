@@ -127,7 +127,6 @@ public class CollisionController implements ContactListener {
     }
     private void processAvatarEnemyContact(Fixture av, Fixture turret){
         if (!avatar.getEnemyContact()) {
-            System.out.println("CONTACT");
             avatar.removeLife();
             avatar.setEnemyContact(true);
         }
@@ -142,7 +141,7 @@ public class CollisionController implements ContactListener {
         //TODO: avatar turret contact (die)
     }
     private void processAvatarProjectileContact(Fixture av, Fixture projectile){
-        if (!avatar.isHolding() && avatar.isDashing() && InputController.getInstance().pressedRightMouseButton()) {
+        if (!avatar.isHolding() && InputController.getInstance().pressedRightMouseButton()) {
             avatar.setHolding(true);
             Obstacle bullet = (Obstacle) projectile.getBody().getUserData();
             avatar.setHeldBullet((Projectile) bullet);
@@ -152,8 +151,12 @@ public class CollisionController implements ContactListener {
             // avatar.setHeldBullet(bullet);
 //            projectile.getBody().setType(BodyDef.BodyType.StaticBody);
         } else {
-            avatar.removeLife();
             Obstacle bullet = (Obstacle) projectile.getBody().getUserData();
+            if (avatar.getStartedDashing() == 0){
+                if (!bullet.equals(avatar.getHeldBullet())) {
+                    avatar.setProjectileContact(true);
+                }
+            }
             removeBullet(bullet);
             /*else if (avatar.isHolding() && InputController.getInstance().releasedLeftMouseButton()){
             Vector2 mousePos = InputController.getInstance().getMousePosition();
