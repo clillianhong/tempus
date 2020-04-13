@@ -53,30 +53,37 @@ public class SelectLevelMode implements Screen {
             filePressDown = buttonDown;
             filePressLocked = buttonLocked;
             TextureRegionDrawable bup = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal(buttonUp))));
+            TextureRegionDrawable block = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal(buttonLocked))));
             TextureRegionDrawable bdown = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal(buttonDown))));
-            button = new Button(bup, bdown);
+            if(unlocked){
+                button = new Button(bup, bdown);
+            }else{
+                button = new Button(block, block);
+            }
             textLore = new TextArea(textlore, skin);
 
             button.addListener(new ClickListener(){
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    exitToLevel(level);
+                    if(unlocked){
+                        exitToLevel(level);
+                    }
                 }
 
                 @Override
                 public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
                     super.enter(event, x, y, pointer, fromActor);
-                    currentLevel = level;
-                    stage.clear();
-                    show();
-                    System.out.println("current level is: " + currentLevel + "!");
+                    if(currentLevel != level){
+                        currentLevel = level;
+                        stage.clear();
+                        show();
+                    }
                 }
             });
 
 
 
         }
-
 
 
         public boolean isUnlocked() {
@@ -149,7 +156,7 @@ public class SelectLevelMode implements Screen {
                 "textures/gui/selectmode/lv1_lore.png",
                 "textures/gui/selectmode/level1_up.png",
                 "textures/gui/selectmode/level1_down.png",
-                "textures/gui/selectmode/level1_locked.png",
+                "textures/gui/selectmode/level1_up.png",
                 "this is level 1");
         levels[1] = new Level(1,false, "textures/gui/selectmode/lv1_preview.png", "textures/gui/selectmode/lore_bg.png",
                 "textures/gui/selectmode/level2_up.png",
