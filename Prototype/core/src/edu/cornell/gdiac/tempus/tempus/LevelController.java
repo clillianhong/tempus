@@ -233,12 +233,15 @@ public class LevelController extends WorldController {
 	/** Collision Controller instance **/
 	protected CollisionController collisionController;
 
+	/** FILEPATH TO JSON RESOURCE FOR THE LEVEL **/
+	private String json_filepath;
+
 	/**
 	 * Creates and initialize a new instance of the platformer game
 	 *
 	 * The game has default gravity and other settings
 	 */
-	public LevelController() {
+	public LevelController(String json) {
 		super(DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_GRAVITY);
 		setDebug(false);
 		setComplete(false);
@@ -248,6 +251,7 @@ public class LevelController extends WorldController {
 		debug = false;
 		timeFreeze = false;
 		lives = 0;
+		json_filepath = json;
 	}
 
 	/**
@@ -270,7 +274,7 @@ public class LevelController extends WorldController {
 		// world.setContactListener(this);
 		setComplete(false);
 		setFailure(false);
-		levelFormat = jsonReader.parse(Gdx.files.internal("jsons/level_1.json"));
+		levelFormat = jsonReader.parse(Gdx.files.internal(json_filepath));
 //		levelFormat = jsonReader.parse(Gdx.files.internal("jsons/test_level_editor.json"));
 
 		populateLevel();
