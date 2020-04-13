@@ -282,6 +282,19 @@ public class Avatar extends CapsuleObstacle {
         return (numDashes > 0);
     }
 
+
+    /**
+     * Resets the dash number to max dashes.
+     *
+     * @return true if the dude is actively dashing.
+     */
+    public void resetDashNum() {
+        numDashes = maxDashes;
+    }
+
+
+
+
     /**
      * Returns the avatar orientation enum
      *
