@@ -661,6 +661,7 @@ public class Avatar extends CapsuleObstacle {
         setName("dude");
         isHolding = false;
         wasDamaged = false;
+        enemyContact = false;
     }
 
     /**
@@ -829,6 +830,9 @@ public class Avatar extends CapsuleObstacle {
     public void update(float dt) {
         //System.out.println(lives);
         // Apply cooldowns
+        if (enemyContact = true){
+            enemyTicks = 10;
+        }
         if (enemyTicks > 0){
             enemyTicks --;
         }
