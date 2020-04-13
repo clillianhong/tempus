@@ -24,10 +24,12 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.*;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import edu.cornell.gdiac.tempus.InputController;
@@ -281,7 +283,7 @@ public class LevelController extends WorldController {
 	private Stage stage;
 
 	private Table table;
-	private TextButton quitButton;
+	private Button quitButton;
 
 	private void exitGame() {
 		listener.exitScreen(this, EXIT_QUIT);
@@ -302,7 +304,8 @@ public class LevelController extends WorldController {
 		table.setWidth(stage.getWidth());
 		table.align(Align.center | Align.top);
 		table.setPosition(0, Gdx.graphics.getHeight());
-		quitButton = new TextButton("Quit Game", skin);
+		TextureRegionDrawable qBuResource = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/white_quit.png"))));
+		quitButton = new Button(qBuResource);
 		quitButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -310,7 +313,7 @@ public class LevelController extends WorldController {
 			}
 		});
 		table.padTop(30);
-		table.add(quitButton).width(sw/5f);
+		table.add(quitButton).width(sw/8f).height(sh/23f).expand().fillX();
 		stage.addActor(table);
 		Gdx.input.setInputProcessor(stage);
 
