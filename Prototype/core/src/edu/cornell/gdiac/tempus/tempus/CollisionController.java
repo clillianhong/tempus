@@ -127,7 +127,6 @@ public class CollisionController implements ContactListener {
     }
     private void processAvatarEnemyContact(Fixture av, Fixture turret){
         if (!avatar.getEnemyContact()) {
-            avatar.removeLife();
             avatar.setEnemyContact(true);
         }
         if (avatar.getPosition().x <= turret.getBody().getPosition().x) {
