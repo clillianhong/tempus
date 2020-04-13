@@ -629,14 +629,22 @@ public class LevelController extends WorldController {
 	 */
 	public void sleepIfNotInWorld() {
 		for (Obstacle obj : objects) {
-			/*
-			 * if (obj instanceof Enemy){ Enemy e = (Enemy) obj; if (e.getSpace() == 3){
-			 * e.setIsActive(true); } else if (!shifted && (e.getSpace()==2))
-			 * {e.setIsActive(false);} else if (shifted && (e.getSpace()==2))
-			 * {e.setIsActive(true);} else if (shifted && (e.getSpace()==1))
-			 * {e.setIsActive(false);} else if (!shifted && (e.getSpace()==1))
-			 * {e.setIsActive(true);} }
-			 */
+
+			 if (obj instanceof Enemy) {
+			 	Enemy e = (Enemy) obj;
+			 	if (e.getSpace() == 3) {
+			 		e.setIsActive(true);
+			 	} else if (!shifted && (e.getSpace()==2)) {
+			 		e.setIsActive(false);
+			 	} else if (shifted && (e.getSpace()==2)) {
+			 		e.setIsActive(e.getShiftedActive());
+			 	} else if (shifted && (e.getSpace()==1)) {
+			 		e.setIsActive(false);
+			 	} else if (!shifted && (e.getSpace()==1)) {
+			 		e.setIsActive(e.getShiftedActive());
+			 	}
+			 }
+
 			if (obj.getName().equals("bullet") || obj.getName().equals("turret")) {
 				obj.setSensor(false);
 				if (obj.getSpace() == 3) {
@@ -734,6 +742,16 @@ public class LevelController extends WorldController {
 					}
 				}
 			}
+			for (Obstacle o: objects) {
+				if (o instanceof Enemy) {
+					Enemy e = (Enemy) o;
+					if (!e.isTurret()) {
+						e.coolDown(false);
+						e.setLeftFixture(null);
+						e.setRightFixture(null);
+					}
+				}
+			}
 		}
 		// Check if the platform is in this world or other world. If in the other world,
 		// make the platform sleep.
@@ -777,20 +795,22 @@ public class LevelController extends WorldController {
 		for (Obstacle o : objects) {
 			if (o instanceof Enemy) {
 				Enemy e = (Enemy) o.getBody().getUserData();
-				if (!e.isTurret()) {
-					if (e.getLeftFixture() == null || e.getRightFixture() == null) {
-						break;
+				if ((shifted && e.getSpace() == 2) || (!shifted && e.getSpace() == 1)) {
+					if (!e.isTurret()) {
+						if (e.getLeftFixture() == null || e.getRightFixture() == null) {
+							break;
+						}
+						e.createLineOfSight(world, BULLET_OFFSET);
+						e.applyForce();
 					}
-					e.createLineOfSight(world, BULLET_OFFSET);
-					e.applyForce();
+					if (e.canFire()) {
+						if (o.getName() == "enemy") {
+							e.setVelocity(BULLET_OFFSET);
+						}
+						createBullet(e);
+					} else
+						e.coolDown(true);
 				}
-				if (e.canFire()) {
-					if (o.getName() == "enemy") {
-						e.setVelocity(BULLET_OFFSET);
-					}
-					createBullet(e);
-				} else
-					e.coolDown(true);
 			}
 		}
 

@@ -65,6 +65,8 @@ public class Enemy extends CapsuleObstacle {
     private int cooldown; // in ticks
     /** The number of frames until the turret can fire again */
     private boolean isActive;
+    /** Saves whether the enemy is active or not when shifting */
+    private boolean shiftedActive;
     /** The velocity of the projectile that this turret fires */
     private Vector2 projVel;
     private int limiter;
@@ -121,7 +123,8 @@ public class Enemy extends CapsuleObstacle {
         float [] dir = json.get("direction").asFloatArray();
         this.projVel = new Vector2 (dir[0],dir[1]);
         isActive = true;
-        framesTillFire = 0;
+        shiftedActive = isActive;
+        framesTillFire = this.cooldown;
         limiter = 4;
         setName("turret");
     }
@@ -171,6 +174,7 @@ public class Enemy extends CapsuleObstacle {
         this.cooldown = json.get("cooldown").asInt();
 //        projVel = new Vector2(0,0).sub(getPosition().sub(target.getPosition()));
         isActive = false;
+        shiftedActive = isActive;
         framesTillFire = 0;
         movement = -1;
         nextDirection = -1;
@@ -250,13 +254,21 @@ public class Enemy extends CapsuleObstacle {
         isActive = a;
     }
 
+    public boolean getShiftedActive() {
+        return shiftedActive;
+    }
+
+    public void setShiftedActive(boolean a) {
+        shiftedActive = a;
+    }
+
     /**
      * Returns whether or not enemy can fire.
      *
      * @return whether or not enemy can fire.
      */
     public boolean canFire() {
-        if (isTurret || isActive){
+        if (isActive){
             return framesTillFire <= 0;
         } else {
             return false;
@@ -467,12 +479,14 @@ class LineOfSight implements RayCastCallback {
 
         if (fixture.getBody().getUserData() instanceof Avatar) {
             enemy.setIsActive(true);
+            enemy.setShiftedActive(true);
             enemy.setMovement(0);
         } else if (fixture.getBody().getUserData() instanceof Enemy ||
                 fixture.getBody().getUserData() instanceof Projectile) {
             return 1;
         } else {
             enemy.setIsActive(false);
+            enemy.setShiftedActive(false);
             if (enemy.getMovement() == 0) {
                 enemy.setMovement(enemy.getNextDirection());
             }
