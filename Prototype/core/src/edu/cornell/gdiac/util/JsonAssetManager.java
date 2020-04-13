@@ -215,51 +215,57 @@ public class JsonAssetManager extends AssetManager {
      * Unloads all textures in the asset directory
      */
     private void unloadTextures() {
-        JsonValue json = directory.getChild(getClassIdentifier(Texture.class));
-        while (json != null) {
-            String file = json.getString("file");
-            if (isLoaded(file)) {
-                unload(file);
-                if (textures.containsKey(file)) {
-                    textures.remove(file);
+        if (directory != null) {
+            JsonValue json = directory.getChild(getClassIdentifier(Texture.class));
+            while (json != null) {
+                String file = json.getString("file");
+                if (isLoaded(file)) {
+                    unload(file);
+                    if (textures.containsKey(file)) {
+                        textures.remove(file);
+                    }
+                    if (regions.containsKey(file)) {
+                        regions.remove(file);
+                    }
                 }
-                if (regions.containsKey(file)) {
-                    regions.remove(file);
-                }
+                json = json.next;
             }
-            json = json.next;
         }
     }
     /**
      * Unloads all filmstrips in the asset directory
      */
     private void unloadFilmstrips() {
-        JsonValue json = directory.getChild(getClassIdentifier(FilmStrip.class));
-        while (json != null) {
-            String file = json.getString("file");
-            if (isLoaded(file)) {
-                unload(file);
-                if (filmstrips.containsKey(file)) {
-                    filmstrips.remove(file);
+        if (directory != null) {
+            JsonValue json = directory.getChild(getClassIdentifier(FilmStrip.class));
+            while (json != null) {
+                String file = json.getString("file");
+                if (isLoaded(file)) {
+                    unload(file);
+                    if (filmstrips.containsKey(file)) {
+                        filmstrips.remove(file);
+                    }
                 }
+                json = json.next;
             }
-            json = json.next;
         }
     }
     /**
      * Unloads all fonts in the asset directory
      */
     private void unloadFonts() {
-        JsonValue json = directory.getChild(getClassIdentifier(BitmapFont.class));
-        while (json != null) {
-            String file = json.getString("file");
-            if (isLoaded(file)) {
-                unload(file);
-                if (fonts.containsKey(file)) {
-                    fonts.remove(file);
+        if (directory != null) {
+            JsonValue json = directory.getChild(getClassIdentifier(BitmapFont.class));
+            while (json != null) {
+                String file = json.getString("file");
+                if (isLoaded(file)) {
+                    unload(file);
+                    if (fonts.containsKey(file)) {
+                        fonts.remove(file);
+                    }
                 }
+                json = json.next;
             }
-            json = json.next;
         }
     }
 
@@ -267,17 +273,19 @@ public class JsonAssetManager extends AssetManager {
      * Unloads all sounds in the asset directory
      */
     private void unloadSounds() {
-        JsonValue json = directory.getChild(getClassIdentifier(Sound.class));
-        while (json != null) {
-            String file = json.getString("file");
-            if (isLoaded(file)) {
-                SoundController controller = SoundController.getInstance();
-                controller.deallocate(this, file);
-                if (sounds.containsKey(file)) {
-                    sounds.remove(file);
+        if (directory != null) {
+            JsonValue json = directory.getChild(getClassIdentifier(Sound.class));
+            while (json != null) {
+                String file = json.getString("file");
+                if (isLoaded(file)) {
+                    SoundController controller = SoundController.getInstance();
+                    controller.deallocate(this, file);
+                    if (sounds.containsKey(file)) {
+                        sounds.remove(file);
+                    }
                 }
+                json = json.next;
             }
-            json = json.next;
         }
     }
 

@@ -94,6 +94,7 @@ public class LevelController extends WorldController {
 	private AssetState platformAssetState = AssetState.EMPTY;
 	/** Freeze time */
 	private boolean timeFreeze;
+	private Vector2 avatarStart;
 
 	/**
 	 * Preloads the assets for this controller.
@@ -205,8 +206,6 @@ public class LevelController extends WorldController {
 	// Physics objects for the game
 	/** Reference to the character avatar */
 	private Avatar avatar;
-	/** Bucket variable for holding lives across resets */
-	private int lives;
 	/** Reference to the goalDoor (for collision detection) */
 	private Door goalDoor;
 
@@ -250,7 +249,6 @@ public class LevelController extends WorldController {
 		shifted = false;
 		debug = false;
 		timeFreeze = false;
-		lives = 0;
 		json_filepath = json;
 	}
 
@@ -279,10 +277,6 @@ public class LevelController extends WorldController {
 
 		populateLevel();
 		timeFreeze = false;
-		if (lives > 0) {
-			avatar.setLives(lives);
-		}
-		lives = 0;
 	}
 
 	private Skin skin;
@@ -509,6 +503,8 @@ public class LevelController extends WorldController {
 		avatar.initialize(json);
 		avatar.setDrawScale(scale);
 		addObject(avatar);
+		float [] pos = json.get("pos").asFloatArray();
+		avatarStart = new Vector2(pos[0],pos[1]);
 
 		//TODO: Delete
 //		avatarTexture = JsonAssetManager.getInstance().getEntry(json.get("texture").asString(), TextureRegion.class);
@@ -605,6 +601,9 @@ public class LevelController extends WorldController {
 	 * @return whether to process the update loop
 	 */
 	public boolean preUpdate(float dt) {
+		if (complete){
+			avatar.setBodyType(BodyDef.BodyType.StaticBody);
+		}
 		if (!super.preUpdate(dt)) {
 			return false;
 		}
@@ -612,11 +611,11 @@ public class LevelController extends WorldController {
 		if (!isFailure() && avatar.getY() < -6) {
 			avatar.removeLife();
 			if (avatar.getLives() > 0) {
-				lives = avatar.getLives();
-				reset();
+				shifted = false;
+				avatar.setPosition(avatarStart);
+				avatar.getBody().setLinearVelocity(0, 0);
 				return true;
 			} else {
-				lives = 0;
 				setFailure(true);
 			}
 			return false;
@@ -737,7 +736,7 @@ public class LevelController extends WorldController {
 		}
 		if (InputController.getInstance().pressedShiftKey()) {
 			shifted = !shifted;
-			avatar.resetDashNum();
+			//avatar.resetDashNum();
 			avatar.setPosition(avatar.getPosition().x, avatar.getPosition().y + 0.01f);
 			if (avatar.getCurrentPlatform() != null) {
 				if (avatar.isSticking()) {
