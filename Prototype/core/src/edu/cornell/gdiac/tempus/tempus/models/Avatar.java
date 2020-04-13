@@ -83,8 +83,11 @@ public class Avatar extends CapsuleObstacle {
     /** The amount to shrink the sensor fixture (horizontally) relative to the image */
     private static final float SSHRINK = 0.6f;
 
+    private boolean wasDamaged;
+    private boolean hitByProjctile;
+    private int projectileTicks;
     /** number of frames since avatar took damage from enemy contact */
-    private int ticks;
+    private int enemyTicks;
     /** The current lives the avatar has **/
     private int lives;
     /** The current state of the avatar **/
@@ -189,6 +192,8 @@ public class Avatar extends CapsuleObstacle {
 
     /** sets whether the avatar touched an enemy recently */
     public void setEnemyContact(boolean e) {enemyContact = e;}
+
+    public void setProjectileContact(boolean p) {hitByProjctile = p;}
     /**
      * Returns left/right movement of this character.
      *
@@ -614,6 +619,7 @@ public class Avatar extends CapsuleObstacle {
         shootCooldown = 0;
         jumpCooldown = 0;
         isHolding = false;
+        wasDamaged = false;
     }
     /**
      * Creates a new dude avatar at the given position.
@@ -648,11 +654,14 @@ public class Avatar extends CapsuleObstacle {
         startedDashing = 0;
         numDashes = maxDashes;
         endDashVelocity = new Vector2(0f,0f);
-        ticks = 0;
+        enemyTicks = 0;
+        projectileTicks = 0;
         shootCooldown = 0;
         jumpCooldown = 0;
         setName("dude");
         isHolding = false;
+        wasDamaged = false;
+        enemyContact = false;
     }
 
     /**
@@ -819,17 +828,34 @@ public class Avatar extends CapsuleObstacle {
      * @param dt Number of seconds since last animation frame
      */
     public void update(float dt) {
-        System.out.println(lives);
+        //System.out.println(lives);
         // Apply cooldowns
-        if (enemyContact && ticks == 0){
-            ticks = 30;
+        if (enemyContact = true){
+            enemyTicks = 10;
         }
-        if (ticks > 0){
-            ticks --;
+        if (enemyTicks > 0){
+            enemyTicks --;
         }
-        if (ticks <= 0){
-            ticks = 0;
+        if (enemyTicks <= 0){
+            enemyTicks = 0;
             enemyContact = false;
+        }
+        if (hitByProjctile && isHolding){
+                removeLife();
+                hitByProjctile = false;
+        }
+        if (hitByProjctile && projectileTicks == 0) {
+            projectileTicks = 10;
+        }
+        if (projectileTicks > 0) {
+            projectileTicks--;
+        }
+        if (projectileTicks == 1) {
+            if (!isHolding()) {
+                removeLife();
+            }
+            projectileTicks = 0;
+            hitByProjctile = false;
         }
         //check if dash must end
         if(isDashing){
