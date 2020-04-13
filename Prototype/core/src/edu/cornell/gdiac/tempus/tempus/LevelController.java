@@ -289,6 +289,11 @@ public class LevelController extends WorldController {
 		listener.exitScreen(this, EXIT_QUIT);
 	}
 
+	private void exitBack() {
+		listener.exitScreen(this, ScreenExitCodes.EXIT_PREV.ordinal());
+	}
+
+
 	/**
 	 * Lays out the game geography.
 	 */
@@ -304,16 +309,23 @@ public class LevelController extends WorldController {
 		table.setWidth(stage.getWidth());
 		table.align(Align.center | Align.top);
 		table.setPosition(0, Gdx.graphics.getHeight());
-		TextureRegionDrawable qBuResource = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/white_quit.png"))));
-		quitButton = new Button(qBuResource);
-		quitButton.addListener(new ClickListener() {
+//		TextureRegionDrawable qBuResource = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/white_quit.png"))));
+//		quitButton = new Button(qBuResource);
+//		quitButton.addListener(new ClickListener() {
+//			@Override
+//			public void clicked(InputEvent event, float x, float y) {
+//				exitGame();
+//			}
+//		});
+		TextureRegionDrawable backButtonResource = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/selectmode/backbutton.png"))));
+		Button backButton = new Button(backButtonResource);
+		backButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				exitGame();
+				exitBack();
 			}
 		});
-		table.padTop(30);
-		table.add(quitButton).width(sw/8f).height(sh/23f).expand().fillX();
+		table.add(backButton).width(sw/15f).height(sw/15f).expand().right();
 		stage.addActor(table);
 		Gdx.input.setInputProcessor(stage);
 
@@ -732,6 +744,7 @@ public class LevelController extends WorldController {
 				avatar.setCurrentPlatform(null);
 				createRedirectedProj();
 				avatar.setHeldBullet(null); // NOTE: gives error if called before createRedirectedProj()
+
 			}
 		}
 		if (InputController.getInstance().pressedShiftKey()) {
