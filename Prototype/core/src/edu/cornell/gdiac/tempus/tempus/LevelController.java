@@ -895,7 +895,6 @@ public class LevelController extends WorldController {
 			avatar.getBody().setAngularVelocity(0);
 			avatar.setBodyType(BodyDef.BodyType.StaticBody);
 			avatar.setWasSticking(true);
-			System.out.println("new angle " + avatar.getNewAngle());
 			avatar.setAngle(avatar.getNewAngle());
 		}
 	}
@@ -922,16 +921,20 @@ public class LevelController extends WorldController {
 		bullet.setLinearVelocity(enemy.getProjVelocity());
 		bullet.setSpace(enemy.getSpace());
 		addQueuedObject(bullet);
+		System.out.println("creating new bullet");
 		if (bullet.getType().equals(PRESENT)){
 			bullet.setTexture(presentBullet);
 		} else {
 			bullet.setTexture(pastBullet);
 		}
+
 		if (shifted && enemy.getSpace() == 2) { // past world
 			JsonValue data = assetDirectory.get("sounds").get("pew");
+//			System.out.println("sound volume: " +  data.get("volume").asFloat());
 			SoundController.getInstance().play("pew", data.get("file").asString(), false, data.get("volume").asFloat());
 		} else if (!shifted && enemy.getSpace() == 1) { // present world
 			JsonValue data = assetDirectory.get("sounds").get("pew");
+//			System.out.println("sound volume: " +    data.get("volume").asFloat());
 			SoundController.getInstance().play("pew", data.get("file").asString(), false, data.get("volume").asFloat());
 		}
 
