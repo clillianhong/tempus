@@ -1,46 +1,18 @@
 {
   "gravity": -14.7,
   "bounds": [
-    32,
-    18
+    32, 18
   ],
   "present_background": "present_background",
   "past_background": "past_background",
   "diamondshape": [
-    0.2,
-    1.8,
-    2.4,
-    1.8,
-    1.4,
-    0.1
+    0.2, 1.8, 2.4, 1.8, 1.4, 0.1
   ],
   "capsuleshape": [
-    0.2,
-    1.1,
-    2.9,
-    1.1,
-    2.9,
-    0.6,
-    1.7,
-    0.1,
-    0.2,
-    0.6
+    0.2, 1.1, 2.9, 1.1, 2.9, 0.6, 1.7, 0.1, 0.2, 0.6
   ],
   "roundshape": [
-    0.1,
-    1.4,
-    0.5,
-    1.7,
-    2.4,
-    1.7,
-    2.7,
-    1.4,
-    2.6,
-    0.8,
-    2,
-    0.2,
-    0.8,
-    0.2
+    0.1, 1.4, 0.5, 1.7, 2.4, 1.7, 2.7, 1.4, 2.6, 0.8, 2, 0.2, 0.8, 0.2
   ],
   "density": 0,
   "heavy_density": 10,
@@ -50,12 +22,10 @@
   "effect_volume": 0.8,
   "door": {
     "pos": [
-      29.692,
-      10.729999999999999
+      29.692, 10.729999999999999
     ],
     "size": [
-      1.92,
-      1.92
+      1.92, 1.92
     ],
     "bodytype": "static",
     "density": 0,
@@ -68,12 +38,10 @@
   },
   "avatar": {
     "pos": [
-      4.996,
-      5.449999999999998
+      4.996, 5.449999999999998
     ],
     "shrink": [
-      0.0216,
-      0.01125
+      0.0216, 0.01125
     ],
     "texture": "dude",
     "density": 1,
@@ -86,12 +54,10 @@
   "turrets": {
     "turret6": {
       "pos": [
-        15.784,
-        8.28
+        15.784, 8.28
       ],
       "shrink": [
-        0.0168,
-        0.021375
+        0.0168, 0.021375
       ],
       "texture": "present_turret",
       "density": 1,
@@ -99,8 +65,7 @@
       "entitytype": "present",
       "cooldown": 360,
       "direction": [
-        -3,
-        0
+        -3, 0
       ]
     }
   },
@@ -108,8 +73,7 @@
     "presentcapsule10": {
       "name": "present_capsule",
       "pos": [
-        3.432,
-        3.6
+        3.432, 3.6
       ],
       "bodytype": "static",
       "density": 0,
@@ -121,8 +85,7 @@
     "pastcapsule11": {
       "name": "past_capsule",
       "pos": [
-        3.464,
-        3.54
+        3.464, 3.54
       ],
       "bodytype": "static",
       "density": 0,
@@ -134,8 +97,7 @@
     "pastcapsule15": {
       "name": "past_capsule",
       "pos": [
-        24.552,
-        13.890000000000002
+        24.552, 13.890000000000002
       ],
       "bodytype": "static",
       "density": 0,
@@ -149,8 +111,7 @@
     "presentdiamond12": {
       "name": "present_diamond",
       "pos": [
-        15.272,
-        6.48
+        15.272, 6.48
       ],
       "bodytype": "static",
       "density": 0,
@@ -164,8 +125,7 @@
     "presentround13": {
       "name": "present_round",
       "pos": [
-        11.656,
-        13.47
+        11.656, 13.47
       ],
       "bodytype": "static",
       "density": 0,
