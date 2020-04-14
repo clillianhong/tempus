@@ -58,6 +58,8 @@ public class LevelController extends WorldController {
 
 	/** Checks if did debug */
 	private boolean debug;
+	/** counts down beginning of game to avoid opening mis-dash*/
+	private int begincount;
 
 	/** The sound file for a bullet fire */
 	private static final String PEW_FILE = "sounds/pew.mp3";
@@ -250,6 +252,7 @@ public class LevelController extends WorldController {
 		timeFreeze = false;
 		json_filepath = json;
 		numEnemies = 0;
+		begincount = 10;
 	}
 
 	/**
@@ -267,6 +270,7 @@ public class LevelController extends WorldController {
 		addQueue.clear();
 		world.dispose();
 		shifted = false;
+		begincount = 10;
 		//world = new World(gravity, false);
 		world.setContactListener(collisionController);
 		// world.setContactListener(this);
@@ -638,6 +642,11 @@ public class LevelController extends WorldController {
 			return false;
 		}
 
+		if(begincount > 0){
+			begincount--;
+			return false;
+		}
+
 		// enemy.createLineOfSight(world);
 
 		return true;
@@ -723,7 +732,7 @@ public class LevelController extends WorldController {
 			t = t - 1;
 			avatar.setStartedDashing(t);
 		}
-		System.out.println(numEnemies);
+//		System.out.println(numEnemies);
 		if (numEnemies == 0){
 			goalDoor.setOpen(true);
 		} else {
