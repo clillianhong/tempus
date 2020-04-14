@@ -194,6 +194,7 @@ public class CollisionController implements ContactListener {
         // then remove enemy
         if (proj.getType() != e.getType() && !e.getName().equals("turret")) {
             Obstacle obs = (Obstacle) enemyBody.getUserData();
+            controller.removeEnemy();
             obs.markRemoved(true);
         }
         removeBullet(proj);
@@ -316,7 +317,12 @@ public class CollisionController implements ContactListener {
             // Check for win condition
             if ((bd1 == avatar   && bd2 == controller.getGoalDoor()) ||
                     (bd1 == controller.getGoalDoor() && bd2 == avatar)) {
+                Door door = (Door) controller.getGoalDoor();
+                if (door.getOpen()) {
                     controller.setComplete(true);
+                } else {
+                    avatar.setLinearVelocity(avatar.getLinearVelocity().scl(-1));
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
