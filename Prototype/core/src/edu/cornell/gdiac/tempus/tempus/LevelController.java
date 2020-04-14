@@ -149,7 +149,7 @@ public class LevelController extends WorldController {
 	/** The restitution for all physics objects */
 	private static final float BASIC_RESTITUTION = 0.1f;
 	/** Offset for bullet when firing */
-	private static final float BULLET_OFFSET = 1.0f;
+	private static final float BULLET_OFFSET = 1.25f;
 	/** The volume for sound effects */
 	private static final float EFFECT_VOLUME = 0.8f;
 
