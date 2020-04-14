@@ -95,6 +95,7 @@ public class LevelController extends WorldController {
 	/** Freeze time */
 	private boolean timeFreeze;
 	private Vector2 avatarStart;
+	private int numEnemies;
 
 	/**
 	 * Preloads the assets for this controller.
@@ -103,8 +104,6 @@ public class LevelController extends WorldController {
 	 * this time. However, we still want the assets themselves to be static. So we
 	 * have an AssetState that determines the current loading state. If the assets
 	 * are already loaded, this method will do nothing.
-	 * 
-	 * @param manager Reference to global asset manager.
 	 */
 	public void preLoadContent() {
 		if (platformAssetState != AssetState.EMPTY) {
@@ -250,6 +249,7 @@ public class LevelController extends WorldController {
 		debug = false;
 		timeFreeze = false;
 		json_filepath = json;
+		numEnemies = 0;
 	}
 
 	/**
@@ -259,7 +259,7 @@ public class LevelController extends WorldController {
 	 */
 	public void reset() {
 		//Vector2 gravity = new Vector2(world.getGravity());
-
+		numEnemies = 0;
 		for (Obstacle obj : objects) {
 			obj.deactivatePhysics(world);
 		}
@@ -552,6 +552,7 @@ public class LevelController extends WorldController {
 			Enemy obj = new Enemy (avatar,enemy);
 			obj.setDrawScale(scale);
 			addObject(obj);
+			numEnemies++;
 			enemy = enemy.next();
 		}
 
@@ -717,11 +718,16 @@ public class LevelController extends WorldController {
 				}
 			}
 		}
-
 		int t = avatar.getStartedDashing();
 		if (t > 0) {
 			t = t - 1;
 			avatar.setStartedDashing(t);
+		}
+		System.out.println(numEnemies);
+		if (numEnemies == 0){
+			goalDoor.setOpen(true);
+		} else {
+			goalDoor.setOpen(false);
 		}
 
 		if (avatar.isHolding()) {
@@ -1164,5 +1170,12 @@ public class LevelController extends WorldController {
 	 */
 	public BoxObstacle getGoalDoor() {
 		return goalDoor;
+	}
+
+	public void removeEnemy() {
+		numEnemies --;
+		if (numEnemies < 0){
+			numEnemies = 0;
+		}
 	}
 }
