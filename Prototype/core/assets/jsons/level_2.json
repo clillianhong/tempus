@@ -93,7 +93,7 @@
         0.0168,
         0.021375
       ],
-      "texture": "turret",
+      "texture": "present_turret",
       "density": 1,
       "bodytype": "static",
       "entitytype": "present",
