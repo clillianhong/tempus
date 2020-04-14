@@ -180,6 +180,8 @@ public class GDXRoot extends Game implements ScreenListener {
 			}
 			else if(exitCode == ScreenExitCodes.MENU_HELP.ordinal()){
 				//TODO menu help hookup
+			}else{
+				Gdx.app.exit();
 			}
 
 			menu.dispose();
