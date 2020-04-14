@@ -160,21 +160,21 @@ public class SelectLevelMode implements Screen {
         skin = new Skin(Gdx.files.internal("skins/flat_earth_skin/flat-earth-ui.json"));
 
         levels = new Level[numLevels];
-        levels[0] = new Level(0,true, "textures/gui/selectmode/lv1_preview.png",
+        levels[0] = new Level(0,true, "textures/gui/selectmode/level1_preview.png",
                 "textures/gui/selectmode/lv1_lore.png",
-                "textures/gui/selectmode/level1_up.png",
-                "textures/gui/selectmode/level1_down.png",
-                "textures/gui/selectmode/level1_up.png",
+                "textures/gui/selectmode/level1unlocked.png",
+                "textures/gui/selectmode/level1pressed.png",
+                "textures/gui/selectmode/level1unlocked.png",
                 "this is level 1");
-        levels[1] = new Level(1,true, "textures/gui/selectmode/lv1_preview.png", "textures/gui/selectmode/lore_bg_lv2.png",
-                "textures/gui/selectmode/level2_up.png",
-                "textures/gui/selectmode/level2_down.png",
-                "textures/gui/selectmode/level2_locked.png",
+        levels[1] = new Level(1,true, "textures/gui/selectmode/level2_preview.png", "textures/gui/selectmode/lore_bg_lv2.png",
+                "textures/gui/selectmode/level2unlocked.png",
+                "textures/gui/selectmode/level2pressed.png",
+                "textures/gui/selectmode/level2locked.png",
                 "this is level 2"); //TODO: CHANGE TO LEVEL 2 AND 3 RESOURCES
-        levels[2] = new Level(2,true, "textures/gui/selectmode/lv1_preview.png", "textures/gui/selectmode/lore_bg_lv3.png",
-                "textures/gui/selectmode/level3_up.png",
-                "textures/gui/selectmode/level3_down.png",
-                "textures/gui/selectmode/level3_locked.png",
+        levels[2] = new Level(2,true, "textures/gui/selectmode/level3_preview.png", "textures/gui/selectmode/lore_bg_lv3.png",
+                "textures/gui/selectmode/level3unlocked.png",
+                "textures/gui/selectmode/level3pressed.png",
+                "textures/gui/selectmode/level3locked.png",
                 "this is level 3");
     }
 
@@ -253,7 +253,6 @@ public class SelectLevelMode implements Screen {
             levelTable.add(lev.button).size(cw/2*0.9f, ch/3*0.5f).expandX().fillX();
             levelTable.row().padBottom(ch * 0.08f);
         }
-        levelTable.setDebug(true);
 
         Container<Table> levelTableContainer = new Container<>();
         levelTableContainer.setActor(levelTable);
@@ -301,7 +300,6 @@ public class SelectLevelMode implements Screen {
         pIContainer.setActor(previewImg);
 
 
-        prevStack.setDebug(true);
         prevStack.add(pbContainer);
         prevStack.add(pIContainer);
 
@@ -323,7 +321,6 @@ public class SelectLevelMode implements Screen {
 
         edgeContainer.setActor(dualTable);
 
-//        stage.setDebugAll(true);
         stage.addActor(edgeContainer);
 
     }

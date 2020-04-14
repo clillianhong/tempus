@@ -92,7 +92,7 @@ public class MainMenuMode implements Screen {
     }
 
     private void exitGame(){
-        listener.exitScreen(this, EXIT_QUIT);
+        listener.exitScreen(this, ScreenExitCodes.EXIT_QUIT.ordinal());
     }
 
     private void exitLevelSelector(){
@@ -161,7 +161,6 @@ public class MainMenuMode implements Screen {
             }
         });
 
-        mainTable.debugAll();
 
         //add header
         mainTable.row();

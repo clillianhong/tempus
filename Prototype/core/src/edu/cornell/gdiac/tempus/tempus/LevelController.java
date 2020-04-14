@@ -726,6 +726,7 @@ public class LevelController extends WorldController {
 
 		if (avatar.isHolding()) {
 			timeFreeze = true;
+			avatar.resetDashNum();
 			if (avatar.getBodyType() != BodyDef.BodyType.StaticBody) {
 				avatar.setBodyType(BodyDef.BodyType.StaticBody);
 			} else if (InputController.getInstance().releasedRightMouseButton()) {
@@ -750,7 +751,7 @@ public class LevelController extends WorldController {
 		if (InputController.getInstance().pressedShiftKey()) {
 			shifted = !shifted;
 			//avatar.resetDashNum();
-			avatar.setPosition(avatar.getPosition().x, avatar.getPosition().y + 0.01f);
+			avatar.setPosition(avatar.getPosition().x, avatar.getPosition().y + 0.0001f * Gdx.graphics.getWidth());
 			if (avatar.getCurrentPlatform() != null) {
 				if (avatar.isSticking()) {
 					if (!shifted && (avatar.getCurrentPlatform().getSpace() == 2)) { // past world
@@ -930,7 +931,6 @@ public class LevelController extends WorldController {
 		bullet.setLinearVelocity(enemy.getProjVelocity());
 		bullet.setSpace(enemy.getSpace());
 		addQueuedObject(bullet);
-		System.out.println("creating new bullet");
 		if (bullet.getType().equals(PRESENT)){
 			bullet.setTexture(presentBullet);
 		} else {
