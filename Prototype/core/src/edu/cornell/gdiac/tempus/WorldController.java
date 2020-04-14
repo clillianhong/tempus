@@ -151,7 +151,7 @@ public abstract class WorldController implements Screen {
 	 */
 	public void unloadContent() {
 		JsonAssetManager.getInstance().unloadDirectory();
-		JsonAssetManager.clearInstance();
+//		JsonAssetManager.clearInstance();
 	}
 	
 	/** Exit code for quitting the game */
