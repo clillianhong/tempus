@@ -114,6 +114,7 @@ public class GDXRoot extends Game implements ScreenListener {
 		setScreen(null);
 		for(int ii = 0; ii < controllers.length; ii++) {
 			controllers[ii].unloadContent();
+			JsonAssetManager.clearInstance();
 			controllers[ii].dispose();
 		}
 
