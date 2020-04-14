@@ -96,9 +96,11 @@ public class SoundController {
 	private static SoundController controller;
 	
 	/** Keeps track of all of the allocated sound resources */
-	private IdentityMap<String,Sound> soundbank;
+	private ObjectMap<String,Sound> soundbank;
+	/** Reverse look up of source files */
+	private IdentityMap<Sound,String> soundsrc;
 	/** Keeps track of all of the "active" sounds */
-	private IdentityMap<String,ActiveSound> actives;
+	private ObjectMap<String,ActiveSound> actives;
 	/** Support class for garbage collection */
 	private Array<String> collection;
 	
@@ -116,8 +118,9 @@ public class SoundController {
 	 * Creates a new SoundController with the default settings.
 	 */
 	private SoundController() {
-		soundbank = new IdentityMap<String,Sound>();
-		actives = new IdentityMap<String,ActiveSound>();
+		soundbank = new ObjectMap<String,Sound>();
+		soundsrc = new IdentityMap<Sound,String>();
+		actives = new ObjectMap<String,ActiveSound>();
 		collection = new Array<String>();
 		cooldown = DEFAULT_COOL;
 		timeLimit = DEFAULT_LIMIT;
@@ -243,12 +246,18 @@ public class SoundController {
 	public void allocate(AssetManager manager, String filename) {
 		Sound sound = manager.get(filename,Sound.class);
 		soundbank.put(filename,sound);
+		soundsrc.put(sound,filename);
 	}
 
 	/**Deallocate all sounds*/
 	public void deallocate(AssetManager manager, String filename) {
 		Sound sound = manager.get(filename,Sound.class);
 		soundbank.remove(filename);
+		soundsrc.remove(sound);
+	}
+
+	public String getSource(Sound sound) {
+		return soundsrc.get(sound);
 	}
 
 	/**
@@ -297,6 +306,7 @@ public class SoundController {
 	 */
 	public boolean play(String key, String filename, boolean loop, float volume) {
 		// Get the sound for the file
+		System.out.println(soundbank.containsKey(filename));
 		if (!soundbank.containsKey(filename) || current >= frameLimit) {
 			return false;
 		}
