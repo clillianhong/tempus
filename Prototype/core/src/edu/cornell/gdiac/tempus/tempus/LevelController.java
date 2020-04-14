@@ -149,7 +149,7 @@ public class LevelController extends WorldController {
 	/** The restitution for all physics objects */
 	private static final float BASIC_RESTITUTION = 0.1f;
 	/** Offset for bullet when firing */
-	private static final float BULLET_OFFSET = 1.25f;
+	private static final float BULLET_OFFSET = 1.3f;
 	/** The volume for sound effects */
 	private static final float EFFECT_VOLUME = 0.8f;
 
@@ -906,6 +906,15 @@ public class LevelController extends WorldController {
 	 */
 	private void createBullet(Enemy enemy) {
 		float offset = BULLET_OFFSET;
+
+		//TODO: quick fix for enemy projectile offsets
+		if (!enemy.isTurret() && enemy.getType() == PAST) {
+			offset = 2.5f;
+		}
+		if (!enemy.isTurret() && enemy.getType() == PRESENT) {
+			offset = 1.5f;
+		}
+
 		bulletBigTexture = JsonAssetManager.getInstance().getEntry("bulletbig", TextureRegion.class);
 		presentBullet = JsonAssetManager.getInstance().getEntry("projpresent", TextureRegion.class);
 		pastBullet = JsonAssetManager.getInstance().getEntry("projpast", TextureRegion.class);
