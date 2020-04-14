@@ -106,7 +106,7 @@ public class LevelController extends WorldController {
 	 * 
 	 * @param manager Reference to global asset manager.
 	 */
-	public void preLoadContent(AssetManager manager) {
+	public void preLoadContent() {
 		if (platformAssetState != AssetState.EMPTY) {
 			return;
 		}
