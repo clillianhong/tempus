@@ -67,7 +67,8 @@
     "present_turret": {
       "file": "textures/enemy/turret/turret_present_lv_1.png",
       "wrap": false
-    },"turret": {
+    },
+    "turret": {
       "file": "textures/enemy/turret/turret_past_lv_1.png",
       "wrap": false
     },

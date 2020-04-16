@@ -150,7 +150,7 @@ public class LevelController extends WorldController {
 	/** The restitution for all physics objects */
 	private static final float BASIC_RESTITUTION = 0.1f;
 	/** Offset for bullet when firing */
-	private static final float BULLET_OFFSET = 1.3f;
+	private static final float BULLET_OFFSET = 1.5f;
 	/** The volume for sound effects */
 	private static final float EFFECT_VOLUME = 0.8f;
 
@@ -516,8 +516,8 @@ public class LevelController extends WorldController {
 		// Create avatar
 		JsonValue json = levelFormat.get("avatar");
 		avatar = new Avatar();
-		avatar.initialize(json);
 		avatar.setDrawScale(scale);
+		avatar.initialize(json);
 		addObject(avatar);
 		float [] pos = json.get("pos").asFloatArray();
 		avatarStart = new Vector2(pos[0],pos[1]);

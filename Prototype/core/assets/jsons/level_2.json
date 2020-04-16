@@ -4,7 +4,7 @@
   "present_background": "present_background",
   "past_background": "past_background",
   "diamondshape": [0.2, 1.8, 2.4, 1.8, 1.4, 0.1],
-  "capsuleshape": [0.2, 1.1, 2.9, 1.1, 2.9, 0.6, 1.7, 0.1, 0.2, 0.6],
+  "capsuleshape": [0.2, 1.1, 2.9, 1.1, 2.9, 0.6, 2.0, 0.2, 1.1, 0.2, 0.2, 0.6],
   "roundshape": [0.1, 1.4, 0.5, 1.7, 2.4, 1.7, 2.7, 1.4, 2.6, 0.8, 2, 0.2, 0.8, 0.2],
   "density": 0,
   "heavy_density": 10,
@@ -13,7 +13,7 @@
   "bullet_offset": 0.7,
   "effect_volume": 0.8,
   "door": {
-    "pos": [24.956, 14.96],
+    "pos": [29.5, 15.5],
     "size": [1.92, 1.92],
     "bodytype": "static",
     "density": 0,
@@ -35,33 +35,34 @@
     "avatardashing": "avatardashing",
     "avatarfalling": "avatarfalling"
   },
-  "turrets": {},
+  "turrets": {
+    "turret7": {
+      "pos": [11.368, 8.069999999999999],
+      "shrink": [0.0168, 0.021375],
+      "texture": "turret",
+      "density": 1,
+      "bodytype": "static",
+      "entitytype": "past",
+      "cooldown": 360,
+      "direction": [0, 1]
+    }
+  },
   "capsules": {
-    "presentcapsule15": {
+    "presentcapsule17": {
       "name": "present_capsule",
-      "pos": [0.872, 3.54],
+      "pos": [23.368, 9.24],
       "bodytype": "static",
       "density": 0,
       "friction": 0.6,
       "restitution": 0.1,
       "texture": "present_capsule",
       "space": 1
-    },
-    "pastcapsule17": {
-      "name": "past_capsule",
-      "pos": [11.144, 9.99],
-      "bodytype": "static",
-      "density": 0,
-      "friction": 0.6,
-      "restitution": 0.1,
-      "texture": "past_capsule",
-      "space": 2
     }
   },
   "diamonds": {
     "presentdiamond11": {
       "name": "present_diamond",
-      "pos": [5.576, 7.050000000000002],
+      "pos": [5.352, 6.69],
       "bodytype": "static",
       "density": 0,
       "friction": 0.6,
@@ -69,9 +70,9 @@
       "texture": "present_diamond",
       "space": 1
     },
-    "presentdiamond13": {
+    "presentdiamond14": {
       "name": "present_diamond",
-      "pos": [5.352, 12.96],
+      "pos": [1.256, 10.02],
       "bodytype": "static",
       "density": 0,
       "friction": 0.6,
@@ -79,9 +80,9 @@
       "texture": "present_diamond",
       "space": 1
     },
-    "pastdiamond20": {
+    "pastdiamond15": {
       "name": "past_diamond",
-      "pos": [19.944, 9.39],
+      "pos": [1.256, 10.02],
       "bodytype": "static",
       "density": 0,
       "friction": 0.6,
@@ -93,33 +94,13 @@
   "rounds": {
     "presentround10": {
       "name": "present_round",
-      "pos": [0.328, 9.3],
+      "pos": [1, 2.91],
       "bodytype": "static",
       "density": 0,
       "friction": 0.6,
       "restitution": 0.1,
       "texture": "present_round",
       "space": 1
-    },
-    "pastround16": {
-      "name": "past_round",
-      "pos": [0.328, 9.3],
-      "bodytype": "static",
-      "density": 0,
-      "friction": 0.6,
-      "restitution": 0.1,
-      "texture": "past_round",
-      "space": 2
-    },
-    "pastround18": {
-      "name": "past_round",
-      "pos": [15.88, 14.010000000000003],
-      "bodytype": "static",
-      "density": 0,
-      "friction": 0.6,
-      "restitution": 0.1,
-      "texture": "past_round",
-      "space": 2
     }
   },
   "enemies": {}
