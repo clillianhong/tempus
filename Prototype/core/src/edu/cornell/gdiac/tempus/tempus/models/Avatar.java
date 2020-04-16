@@ -64,7 +64,7 @@ public class Avatar extends CapsuleObstacle {
     private static final String SENSOR_NAME = "DudeGroundSensor";
     //added for prototype
     /** Distance for dashing across screen */
-    private static final float DASH_RANGE = 5f;
+    private static final float DASH_RANGE = 2.5f;
     /** Dash force multiplier */
     private static float dashForce = 1000;
     /** Array containing orientation vectors based on the enums for orientation */
@@ -689,10 +689,10 @@ public class Avatar extends CapsuleObstacle {
         float [] shrink = json.get("shrink").asFloatArray();
         float [] pos = json.get("pos").asFloatArray();
         TextureRegion avatarTexture = JsonAssetManager.getInstance().getEntry(json.get("texture").asString(), TextureRegion.class);
-        setPosition(pos[0],pos[1]);
         setDashStartPos(new Vector2 (pos[0],pos[1]));
         float dwidth = avatarTexture.getRegionWidth();
 		float dheight = avatarTexture.getRegionHeight();
+        setPosition(pos[0],pos[1]);
 		setDimension(dwidth*shrink[0],dheight*shrink[1]);
 		setTexture(avatarTexture);
         setDensity(json.get("density").asFloat());
