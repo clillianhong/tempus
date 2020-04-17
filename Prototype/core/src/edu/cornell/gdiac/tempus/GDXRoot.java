@@ -200,6 +200,7 @@ public class GDXRoot extends Game implements ScreenListener {
 //				Gdx.graphics.setWindowedMode(currentMode.width, currentMode.height);
 				controllers[exitCode].reset();
 				setScreen(controllers[exitCode]);
+				current = exitCode;
 			}
 
 			levelselect.dispose();
