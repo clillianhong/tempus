@@ -60,7 +60,7 @@ public class Enemy extends CapsuleObstacle {
     private int nextDirection;
 
     /** The number of frames until we can fire again */
-    private int framesTillFire;
+    private float framesTillFire;
     /** How long the turret must wait until it can fire again */
     private int cooldown; // in ticks
     /** The number of frames until the turret can fire again */
@@ -69,7 +69,7 @@ public class Enemy extends CapsuleObstacle {
     private boolean shiftedActive;
     /** The velocity of the projectile that this turret fires */
     private Vector2 projVel;
-    private int limiter;
+    private float limiter;
 
     /** Type of enemy */
     private EntityType type;
@@ -295,7 +295,7 @@ public class Enemy extends CapsuleObstacle {
 
     public void slowCoolDown(boolean flag) {
         if (flag){
-            limiter = 1;
+            limiter = 0.5f;
         }
         else {
             limiter = 4;
