@@ -22,9 +22,9 @@ public class Enemy extends CapsuleObstacle {
     /** The amount to shrink the body fixture (horizontally) relative to the image */
     private static final float HSHRINK = 0.024f * 0.7f;
     /** The density of the enemy */
-    private static final float ENEMY_DENSITY = 1.0f;
+    private static final float ENEMY_MASS = 1.0f;
     /** The factor to multiply by the input */
-    private static final float FORCE = 10.0f;
+    private static final float FORCE = 125.0f;
     /** The amount to slow the enemy down */
     private static final float ENEMY_DAMPING = 10.0f;
     /** The maximum enemy speed */
@@ -170,14 +170,15 @@ public class Enemy extends CapsuleObstacle {
         setBodyType(json.get("bodytype").asString().equals("static") ? BodyDef.BodyType.StaticBody : BodyDef.BodyType.DynamicBody);
         setSpace(getType()==PRESENT?1:2);
         setDensity(json.get("density").asFloat());
+        setMass(ENEMY_MASS);
         this.target = target;
         this.cooldown = json.get("cooldown").asInt();
 //        projVel = new Vector2(0,0).sub(getPosition().sub(target.getPosition()));
         isActive = false;
         shiftedActive = isActive;
         framesTillFire = 0;
-        movement = -1;
-        nextDirection = -1;
+        movement = 0;
+        nextDirection = 0;
         setFixedRotation(true);
         sight = new LineOfSight(this);
         limiter = 4;
@@ -375,6 +376,7 @@ public class Enemy extends CapsuleObstacle {
         if (Math.abs(getVX()) >= getMaxSpeed()) {
             setVX(Math.signum(getVX())*getMaxSpeed());
         } else {
+            System.out.println(getMovement());
             forceCache.set(getMovement(),0);
             body.applyForce(forceCache,getPosition(),true);
         }
@@ -405,20 +407,20 @@ public class Enemy extends CapsuleObstacle {
             return false;
         }
 
-        Vector2 sensorCenterLeft = new Vector2(-getWidth() / 2, 0);
+        Vector2 sensorCenterLeft = new Vector2(-getWidth() / 2, -getHeight() / 2);
         FixtureDef sensorDef = new FixtureDef();
         sensorDef.density = DENSITY;
         sensorDef.isSensor = true;
         sensorShapeLeft = new PolygonShape();
-        sensorShapeLeft.setAsBox(SENSOR_HEIGHT / 2, getHeight() / 2.0f + SENSOR_HEIGHT, sensorCenterLeft, 0.0f);
+        sensorShapeLeft.setAsBox(SENSOR_HEIGHT / 2, SENSOR_HEIGHT, sensorCenterLeft, 0.0f);
         sensorDef.shape = sensorShapeLeft;
 
         sensorFixtureLeft = body.createFixture(sensorDef);
         sensorFixtureLeft.setUserData(LEFT_SENSOR_NAME);
 
-        Vector2 sensorCenterRight = new Vector2(getWidth() / 2, 0);
+        Vector2 sensorCenterRight = new Vector2(getWidth() / 2, -getHeight() / 2);
         sensorShapeRight = new PolygonShape();
-        sensorShapeRight.setAsBox(SENSOR_HEIGHT / 2, getHeight() / 2.0f + SENSOR_HEIGHT, sensorCenterRight, 0.0f);
+        sensorShapeRight.setAsBox(SENSOR_HEIGHT / 2, SENSOR_HEIGHT, sensorCenterRight, 0.0f);
         sensorDef.shape = sensorShapeRight;
 
         sensorFixtureRight = body.createFixture(sensorDef);
