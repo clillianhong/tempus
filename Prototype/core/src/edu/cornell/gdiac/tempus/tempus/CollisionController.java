@@ -297,6 +297,8 @@ public class CollisionController implements ContactListener {
                             (enemy.getLeftSensorName().equals(fd1) && enemy != bd2 && !bd2.getName().equals("bullet"))) {
                         if (enemy.getLeftFixture() == null) {
                             enemy.setLeftFixture(enemy == bd1 ? fix2 : fix1);
+                            enemy.setMovement(-1);
+                            enemy.setNextDirection(-1);
                         } else if (fix1 != enemy.getLeftFixture() && fix2 != enemy.getLeftFixture()) {
                             enemy.setMovement(0);
                             enemy.setNextDirection(1);
@@ -306,6 +308,8 @@ public class CollisionController implements ContactListener {
                             (enemy.getRightSensorName().equals(fd1) && enemy != bd2 && !bd2.getName().equals("bullet"))) {
                         if (enemy.getRightFixture() == null) {
                             enemy.setRightFixture(enemy == bd1 ? fix2 : fix1);
+                            enemy.setMovement(-1);
+                            enemy.setNextDirection(-1);
                         } else if (fix1 != enemy.getRightFixture() && fix2 != enemy.getRightFixture()) {
                             enemy.setMovement(0);
                             enemy.setNextDirection(-1);
