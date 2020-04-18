@@ -191,6 +191,7 @@ public class GDXRoot extends Game implements ScreenListener {
 			else{ //go to a level
 				controllers[exitCode].reset();
 				setScreen(controllers[exitCode]);
+				current = exitCode;
 			}
 
 			levelselect.dispose();
