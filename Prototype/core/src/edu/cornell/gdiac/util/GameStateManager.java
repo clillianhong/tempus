@@ -167,12 +167,19 @@ public class GameStateManager {
         return currentLevel.getCurrentRoom();
     }
 
+    /**
+     * Method called to step game progress, which involves either:
+     * 1. Moving to the next room
+     * 2. Finishing last room in level and finishing level/moving on to next level
+     * 3. Finishing the game
+     */
     public void stepGame(){
         boolean level_finished = currentLevel.stepLevel();
-        if(level_finished){
+        if(level_finished){ // LEVEL HAS FINISHED
+            //TODO: Finish level announcement/screen
             currentLevel.finishLevel();
             if(current_level_idx == last_level_idx){
-                endGameState();
+                endGameState(); //TODO: end game state accouncement/screen
             }
             else{
                 current_level_idx++;
