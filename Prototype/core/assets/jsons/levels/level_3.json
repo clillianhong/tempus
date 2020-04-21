@@ -1,0 +1,13 @@
+{
+  "level": 3,
+  "room_count": 3,
+  "unlocked": false,
+  "finished": false,
+  "resume_room_index": 0,
+  "rooms" : [
+    "jsons/rooms/lv3_room1.json",
+    "jsons/rooms/lv3_room2.json",
+    "jsons/rooms/lv3_room3.json"
+  ]
+}
+

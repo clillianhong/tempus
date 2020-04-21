@@ -197,7 +197,6 @@ public class EnemyController {
                     ((!shifted && ob.getSpace() == 1) || (shifted && ob.getSpace() == 2))) {
                 Platform p = (Platform) ob;
                 teleportLineOfSight(p, e);
-                System.out.println(e.getFramesTillFire());
                 if (e.getTeleportTo() != null && e.canFire()
                         && e.getTeleportTo().getBody().getUserData() != target.getCurrentPlatform()
                         && e.getCurrPlatform() != e.getTeleportTo()) {

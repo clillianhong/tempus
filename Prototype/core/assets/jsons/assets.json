@@ -134,7 +134,7 @@
     },
     "pew": {
       "file": "sounds/pew.mp3",
-      "volume": 0.8,
+      "volume": 0.4,
     },
     "pop": {
       "file": "sounds/plop.mp3",
