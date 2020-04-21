@@ -1,0 +1,11 @@
+{
+  "level": 1,
+  "room_count": 1,
+  "unlocked": true,
+  "finished": true,
+  "resume_room_index": 0,
+  "rooms" : [
+    "jsons/rooms/lv1_room1.json"
+  ]
+}
+

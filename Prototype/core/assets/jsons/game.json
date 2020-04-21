@@ -1,0 +1,11 @@
+{
+  "highest_level": 1,
+  "room_unlocked" : 1,
+  "num_levels": 4,
+  "level_jsons": [
+    "jsons/levels/tutorial.json",
+    "jsons/levels/level_1.json",
+    "jsons/levels/level_2.json",
+    "jsons/levels/level_3.json"
+  ]
+}

@@ -204,10 +204,7 @@ public class CollisionController implements ContactListener {
             obs.markRemoved(true);
         }
 
-        System.out.println(e.getName());
-        System.out.println(((Enemy) proj.getSourceData()).getName());
         if (e.getBody().getUserData() != proj.getSourceData()) {
-            System.out.println("removing bullet");
             removeBullet(proj);
         }
     }
@@ -314,7 +311,7 @@ public class CollisionController implements ContactListener {
 
             if (objA instanceof Enemy || objB instanceof Enemy) {
                 Enemy enemy = (objA instanceof Enemy ? (Enemy) objA : (Enemy) objB);
-                if (enemy.getAi().equals(Enemy.EnemyType.WALK)) {
+                if (enemy.getAi() == Enemy.EnemyType.WALK) {
                     if ((enemy != bd1 && !bd1.getName().equals("bullet")) ||
                             (enemy != bd2 && !bd2.getName().equals("bullet"))) {
                         if (enemy.getLeftFixture() == null) {
@@ -339,7 +336,6 @@ public class CollisionController implements ContactListener {
                             (enemy != bd2 && !bd2.getName().equals("bullet"))) {
                         if (fix1 == enemy.getSensorFixtureCenter() || fix2 == enemy.getSensorFixtureCenter()) {
                             enemy.setFlyAngle(contact.getWorldManifold().getNormal().angle());
-                            System.out.println(enemy.getFlyAngle());
                         }
                     }
                 }
@@ -432,10 +428,10 @@ public class CollisionController implements ContactListener {
                         enemy.setNextDirection(-1);
                     }
                 }
-            } else if (enemy.getAi() == Enemy.EnemyType.FLY) {
-                if (enemy.getSensorFixtureCenter().equals(fix1) || enemy.getSensorFixtureCenter().equals(fix2)) {
-                    enemy.setFlyAngle(-1f);
-                }
+//            } else if (enemy.getAi() == Enemy.EnemyType.FLY) {
+//                if (enemy.getSensorFixtureCenter().equals(fix1) || enemy.getSensorFixtureCenter().equals(fix2)) {
+//                    enemy.setFlyAngle(-1f);
+//                }
             }
         }
     }

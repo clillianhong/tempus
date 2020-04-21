@@ -7,12 +7,22 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.gdiac.tempus.GameCanvas;
 import edu.cornell.gdiac.tempus.obstacle.CapsuleObstacle;
+import edu.cornell.gdiac.util.FilmStrip;
 import edu.cornell.gdiac.util.JsonAssetManager;
 
 import static edu.cornell.gdiac.tempus.tempus.models.EntityType.PAST;
 import static edu.cornell.gdiac.tempus.tempus.models.EntityType.PRESENT;
 
 public class Enemy extends CapsuleObstacle {
+    /**
+     * Enumeration to identify the state of the enemy
+     */
+    public enum EnemyState {
+        /** When enemy is chilling */
+        NEUTRAL,
+        /** When enemy is attacking */
+        ATTACKING
+    };
 
     public enum EnemyType {
         /** Moves on platform */
@@ -46,6 +56,24 @@ public class Enemy extends CapsuleObstacle {
     private static final String RIGHT_SENSOR_NAME = "EnemyRightSensor";
     private static final String CENTER_SENSOR_NAME = "EnemyCenterSensor";
 
+    // ANIMATION FIELDS
+    /** Texture filmstrip for avatar dashing */
+    private FilmStrip neutralTexture;
+    /** Texture filmstrip for avatar falling */
+    private FilmStrip attackingTexture;
+
+    /** The texture filmstrip for the current animation */
+    private FilmStrip currentStrip;
+    /** The texture filmstrip for the neutral animation */
+    private FilmStrip neutralStrip;
+    /** The texture filmstrip for the attacking animation */
+    private FilmStrip attackingStrip;
+
+    /** The frame rate for the animation */
+    private static final float FRAME_RATE = 10;
+    /** The frame cooldown for the animation */
+    private static float frame_cooldown = FRAME_RATE;
+
     /** Left sensor to determine enemy position on platform*/
     private Fixture sensorFixtureLeft;
     private PolygonShape sensorShapeLeft;
@@ -73,7 +101,7 @@ public class Enemy extends CapsuleObstacle {
     private int nextDirection;
 
     /** The number of frames until we can fire again */
-    private int framesTillFire;
+    private float framesTillFire;
     /** How long the turret must wait until it can fire again */
     private int cooldown; // in ticks
     /** The number of frames until the turret can fire again */
@@ -82,7 +110,7 @@ public class Enemy extends CapsuleObstacle {
     private boolean shiftedActive;
     /** The velocity of the projectile that this turret fires */
     private Vector2 projVel;
-    private int limiter;
+    private float limiter;
 
     /** Type of enemy */
     private EntityType type;
@@ -134,7 +162,14 @@ public class Enemy extends CapsuleObstacle {
         float [] pos = json.get("pos").asFloatArray();
         float [] shrink = json.get("shrink").asFloatArray();
         TextureRegion texture = JsonAssetManager.getInstance().getEntry(json.get("texture").asString(), TextureRegion.class);
+
+        //TODO 1: set filmstrips
+        //neutralTexture = JsonAssetManager.getInstance().getEntry(json.get("texture").asString(), FilmStrip.class);
+        //setFilmStrip(EnemyState.NEUTRAL, neutralTexture);
+        //attackingTexture = JsonAssetManager.getInstance().getEntry(json.get("texture").asString(), FilmStrip.class);
+        //setFilmStrip(EnemyState.ATTACKING, attackingTexture);
         setTexture(texture);
+
         setPosition(pos[0],pos[1]);
         setDimension(texture.getRegionWidth()*shrink[0],texture.getRegionHeight()*shrink[1]);
         setType(json.get("entitytype").asString().equals("present")?EntityType.PRESENT: PAST);
@@ -226,6 +261,7 @@ public class Enemy extends CapsuleObstacle {
             sight = new LineOfSight(this);
             setName("enemy");
             isFiring = false;
+            setActive(false);
         } else if (ai.equals(EnemyType.TELEPORT)) {
             sight = new TeleportLineOfSight(this);
             teleportTo = null;
@@ -364,7 +400,7 @@ public class Enemy extends CapsuleObstacle {
         }
     }
 
-    public int getFramesTillFire() {
+    public float getFramesTillFire() {
         return framesTillFire;
     }
 
@@ -386,8 +422,9 @@ public class Enemy extends CapsuleObstacle {
 
     public void slowCoolDown(boolean flag) {
         if (flag){
-            limiter = 1;
-        } else {
+            limiter = 0.5f;
+        }
+        else {
             limiter = 4;
         }
     }
@@ -546,6 +583,58 @@ public class Enemy extends CapsuleObstacle {
 //    }
 
     /**
+     * Sets the animation node for the given state
+     *
+     * @param state enumeration to identify the state
+     * @param strip the animation for the given state
+     */
+    public void setFilmStrip(EnemyState state, FilmStrip strip) {
+        switch (state) {
+            case NEUTRAL:
+                neutralStrip = strip;
+                break;
+            case ATTACKING:
+                attackingStrip = strip;
+                break;
+            default:
+                assert false : "Invalid EnemyState enumeration";
+        }
+    }
+
+    /**
+     * Animates the given state.
+     *
+     * @param state The reference to the rocket burner
+     * @param shouldLoop Whether the animation should loop
+     */
+    public void animate(EnemyState state, boolean shouldLoop) {
+        switch (state) {
+            case NEUTRAL:
+                currentStrip = neutralStrip;
+                break;
+            case ATTACKING:
+                currentStrip = attackingStrip;
+                break;
+            default:
+                assert false : "Invalid EnemyState enumeration";
+        }
+
+        // Adjust animation speed
+        if (frame_cooldown > 0) {
+            frame_cooldown--;
+            return;
+        } else frame_cooldown = FRAME_RATE;
+
+        // Manage current frame to draw
+        if (currentStrip.getFrame() < currentStrip.getSize()-1) {
+            currentStrip.setFrame(currentStrip.getFrame() + 1);
+        } else {
+            if (shouldLoop) currentStrip.setFrame(0); // loop animation
+            else return; // play animation once
+        }
+    }
+
+    /**
      * Draws the outline of the physics body.
      *
      * This method can be helpful for understanding issues with collisions.
@@ -568,6 +657,15 @@ public class Enemy extends CapsuleObstacle {
      * @param canvas Drawing context
      */
     public void draw(GameCanvas canvas) {
+        //TODO 2: uncomment this after [TODO 1] has been done
+        // Draw enemy filmstrip
+//        if (currentStrip != null) {
+//            canvas.draw(currentStrip, Color.WHITE, origin.x, origin.y,
+//                    getX() * drawScale.x, getY() * drawScale.y, getAngle(),
+//                    0.024f * drawScale.x, 0.0225f * drawScale.y);
+//        }
+
+        // Old draw texture method
         if (texture != null) {
             canvas.draw(texture,Color.WHITE,origin.x,origin.y,getX()*drawScale.x,getY()*drawScale.y,getAngle(),0.024f * drawScale.x,0.0225f * drawScale.y);
         }

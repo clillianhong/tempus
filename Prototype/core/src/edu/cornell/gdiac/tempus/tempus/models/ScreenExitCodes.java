@@ -1,6 +1,7 @@
 package edu.cornell.gdiac.tempus.tempus.models;
 
 public enum ScreenExitCodes {
+    TUTORIAL,
     LEVEL_ONE,
     LEVEL_TWO,
     LEVEL_THREE,
@@ -10,5 +11,4 @@ public enum ScreenExitCodes {
     MENU_START,
     MENU_HELP,
     MENU_ABOUT
-
 }

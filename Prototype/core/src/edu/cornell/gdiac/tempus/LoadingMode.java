@@ -178,7 +178,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
 	 * frame is ~16 milliseconds. So if the budget is 10, you have 6 milliseconds to 
 	 * do something else.  This is how game companies animate their loading screens.
 	 *
-	 * @param manager The AssetManager to load in the background
+	 * @param canvas The AssetManager to load in the background
 	 * @param millis The loading budget in milliseconds
 	 */
 	public LoadingMode(GameCanvas canvas, int millis) {
@@ -496,7 +496,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
 	/** 
 	 * Called when a key is typed (UNSUPPORTED)
 	 *
-	 * @param keycode the key typed
+	 * @param character the key typed
 	 * @return whether to hand the event to other listeners. 
 	 */
 	public boolean keyTyped(char character) { 
