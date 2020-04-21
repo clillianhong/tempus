@@ -53,6 +53,8 @@ public class GDXRoot extends Game implements ScreenListener {
 	private MainMenuMode menu;
 	/** Main Menu mode */
 	private SelectLevelMode levelselect;
+	/** Game State Manager **/
+	private GameStateManager gameManager;
 
 	/**
 	 * Creates a new game from the configuration settings.
@@ -61,6 +63,9 @@ public class GDXRoot extends Game implements ScreenListener {
 	 * or assign any screen.
 	 */
 	public GDXRoot() {
+		gameManager = new GameStateManager();
+
+
 		// Start loading with the asset manager
 //		manager = new AssetManager();
 		
@@ -81,7 +86,11 @@ public class GDXRoot extends Game implements ScreenListener {
 	public void create() {
 		canvas  = new GameCanvas();
 		loading = new LoadingMode(canvas,1);
-		
+
+		gameManager.loadGameState("jsons/game.json");
+		gameManager.setCanvas(canvas);
+		gameManager.setListener(this);
+
 		// Initialize the three game worlds
 
 		controllers = new WorldController[3];
@@ -157,12 +166,11 @@ public class GDXRoot extends Game implements ScreenListener {
 			loading.dispose();
 			loading = null;
 		} else if(screen == menu){
+			gameManager.printGameState();
+
 			if(exitCode == ScreenExitCodes.MENU_START.ordinal()){
-				for(int ii = 0; ii < controllers.length; ii++) {
-					controllers[ii].loadContent();
-					controllers[ii].setScreenListener(this);
-					controllers[ii].setCanvas(canvas);
-				}
+
+				gameManager.readyLevels();
 
 				levelselect.createMode();
 				levelselect.setScreenListener(this);
@@ -182,6 +190,7 @@ public class GDXRoot extends Game implements ScreenListener {
 			menu.dispose();
 
 		} else if(screen == levelselect){
+
 			if(exitCode == ScreenExitCodes.EXIT_PREV.ordinal()){
 				menu.createMode();
 				menu.setScreenListener(this);
@@ -189,24 +198,27 @@ public class GDXRoot extends Game implements ScreenListener {
 				setScreen(menu);
 			}
 			else{ //go to a level
-				controllers[exitCode].reset();
-				setScreen(controllers[exitCode]);
+				gameManager.setCurrentLevel(exitCode);
+				LevelController room = gameManager.getCurrentRoom();
+				room.reset();
+				gameManager.printGameState();
+
+				setScreen(room);
 				current = exitCode;
 			}
 
 			levelselect.dispose();
-		}else if (exitCode == WorldController.EXIT_NEXT) {
-			if(current+1 == controllers.length){
-				setScreen(levelselect);
-			}else{
-				current = (current+1);
-				controllers[current].reset();
-				setScreen(controllers[current]);
-			}
+		}else if (exitCode == ScreenExitCodes.EXIT_NEXT.ordinal()) {
+			System.out.println("TRYING TO EXIT LEVEL");
+			gameManager.stepGame();
+			LevelController room = gameManager.getCurrentRoom();
+			gameManager.printGameState();
+			room.reset();
+			setScreen(room);
 		} else if (exitCode == ScreenExitCodes.EXIT_PREV.ordinal()) {
-			controllers[current].reset();
+			gameManager.getCurrentRoom().reset();
 			setScreen(levelselect);
-		} else if (exitCode == WorldController.EXIT_QUIT) {
+		} else if (exitCode == ScreenExitCodes.EXIT_QUIT.ordinal()) {
 			// We quit the main application
 			Gdx.app.exit();
 		}

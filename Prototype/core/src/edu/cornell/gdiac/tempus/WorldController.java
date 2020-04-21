@@ -26,6 +26,7 @@ import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.graphics.g2d.freetype.*;
+import edu.cornell.gdiac.tempus.tempus.models.ScreenExitCodes;
 import edu.cornell.gdiac.util.*;
 import edu.cornell.gdiac.tempus.obstacle.*;
 
@@ -71,7 +72,6 @@ public abstract class WorldController implements Screen {
 	 * we have an AssetState that determines the current loading state.  If the
 	 * assets are already loaded, this method will do nothing.
 	 * 
-	 * @param manager Reference to global asset manager.
 	 */
 	public void preLoadContent() {
 		if (worldAssetState != AssetState.EMPTY) {
@@ -454,13 +454,13 @@ public abstract class WorldController implements Screen {
 		
 		// Now it is time to maybe switch screens.
 		if (input.didExit()) {
-			listener.exitScreen(this, EXIT_QUIT);
+			listener.exitScreen(this, ScreenExitCodes.EXIT_QUIT.ordinal());
 			return false;
 		} else if (input.didAdvance()) {
-			listener.exitScreen(this, EXIT_NEXT);
+			listener.exitScreen(this, ScreenExitCodes.EXIT_NEXT.ordinal());
 			return false;
 		} else if (input.didRetreat()) {
-			listener.exitScreen(this, EXIT_PREV);
+			listener.exitScreen(this, ScreenExitCodes.EXIT_PREV.ordinal());
 			return false;
 		} else if (countdown > 0) {
 			countdown--;
@@ -468,7 +468,7 @@ public abstract class WorldController implements Screen {
 			if (failed) {
 				reset();
 			} else if (complete) {
-				listener.exitScreen(this, EXIT_NEXT);
+				listener.exitScreen(this, ScreenExitCodes.EXIT_NEXT.ordinal());
 				return false;
 			}
 		}

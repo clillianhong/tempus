@@ -56,6 +56,7 @@ import static edu.cornell.gdiac.tempus.tempus.models.EntityType.PRESENT;
  */
 public class LevelController extends WorldController {
 
+
 	/** Checks if did debug */
 	private boolean debug;
 	/** counts down beginning of game to avoid opening mis-dash*/
@@ -290,7 +291,7 @@ public class LevelController extends WorldController {
 	private Button quitButton;
 
 	private void exitGame() {
-		listener.exitScreen(this, EXIT_QUIT);
+		listener.exitScreen(this, ScreenExitCodes.EXIT_QUIT.ordinal());
 	}
 
 	private void exitBack() {
