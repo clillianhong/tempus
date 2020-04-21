@@ -12,11 +12,18 @@ public class Projectile extends WheelObstacle {
 
     private float rotation;
 
+    private Object sourceData;
 
-    public Projectile(EntityType type, float x, float y, float radius) {
+
+    public Projectile(EntityType type, float x, float y, float radius, Object sourceData) {
         super(x, y, radius);
         this.type = type;
         rotation = 0;
+        this.sourceData = sourceData;
+    }
+
+    public Object getSourceData() {
+        return sourceData;
     }
 
     /**

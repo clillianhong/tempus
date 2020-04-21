@@ -306,7 +306,7 @@ public class SoundController {
 	 */
 	public boolean play(String key, String filename, boolean loop, float volume) {
 		// Get the sound for the file
-		System.out.println(soundbank.containsKey(filename));
+//		System.out.println(soundbank.containsKey(filename));
 		if (!soundbank.containsKey(filename) || current >= frameLimit) {
 			return false;
 		}

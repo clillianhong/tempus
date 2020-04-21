@@ -26,6 +26,7 @@ import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.graphics.g2d.freetype.*;
+import edu.cornell.gdiac.tempus.tempus.models.Enemy;
 import edu.cornell.gdiac.util.*;
 import edu.cornell.gdiac.tempus.obstacle.*;
 
@@ -181,6 +182,8 @@ public abstract class WorldController implements Screen {
 	protected GameCanvas canvas;
 	/** All the objects in the world. */
 	protected PooledList<Obstacle> objects  = new PooledList<Obstacle>();
+	/** All the objects in the world. */
+	protected PooledList<Enemy> enemies = new PooledList<Enemy>();
 	/** Queue for adding objects */
 	protected PooledList<Obstacle> addQueue = new PooledList<Obstacle>();
 	/** Listener that will update the player mode when we are done */
@@ -358,7 +361,7 @@ public abstract class WorldController implements Screen {
 		active = false;
 		countdown = -1;
 	}
-	
+
 	/**
 	 * Dispose of all (non-static) resources allocated to this mode.
 	 */
@@ -366,9 +369,14 @@ public abstract class WorldController implements Screen {
 		for(Obstacle obj : objects) {
 			obj.deactivatePhysics(world);
 		}
+		for (Enemy e: enemies) {
+			e.deactivatePhysics(world);
+		}
+		enemies.clear();
 		objects.clear();
 		addQueue.clear();
 		world.dispose();
+		enemies = null;
 		objects = null;
 		addQueue = null;
 		bounds = null;
@@ -381,7 +389,7 @@ public abstract class WorldController implements Screen {
 	 *
 	 * Adds a physics object in to the insertion queue.
 	 *
-	 * Objects on the queue are added just before collision processing.  We do this to 
+	 * Objects on the queue are added just before collision processing.  We do this to
 	 * control object creation.
 	 *
 	 * param obj The object to add
@@ -400,6 +408,17 @@ public abstract class WorldController implements Screen {
 		assert inBounds(obj) : "Object is not in bounds";
 		objects.add(obj);
 		obj.activatePhysics(world);
+	}
+
+	/**
+	 * Immediately adds the enemy to the physics world
+	 *
+	 * param obj The object to add
+	 */
+	protected void addEnemy(Enemy enemy) {
+		assert inBounds(enemy) : "Object is not in bounds";
+		enemies.add(enemy);
+		enemy.activatePhysics(world);
 	}
 
 	/**
@@ -518,6 +537,18 @@ public abstract class WorldController implements Screen {
 				obj.update(dt);
 			}
 		}
+		Iterator<PooledList<Enemy>.Entry> iterator2 = enemies.entryIterator();
+		while (iterator2.hasNext()) {
+			PooledList<Enemy>.Entry entry = iterator2.next();
+			Enemy e = entry.getValue();
+			if (e.isRemoved()) {
+				e.deactivatePhysics(world);
+				entry.remove();
+			} else {
+				// Note that update is called last!
+				e.update(dt);
+			}
+		}
 	}
 	
 	/**
@@ -537,12 +568,18 @@ public abstract class WorldController implements Screen {
 		for(Obstacle obj : objects) {
 			obj.draw(canvas);
 		}
+		for (Enemy e : enemies){
+			e.draw(canvas);
+		}
 		canvas.end();
 		
 		if (debug) {
 			canvas.beginDebug();
 			for(Obstacle obj : objects) {
 				obj.drawDebug(canvas);
+			}
+			for (Enemy e : enemies){
+				e.drawDebug(canvas);
 			}
 			canvas.endDebug();
 		}

@@ -1,7 +1,7 @@
 /*
  * PlatformController.java
  *
- * This is one of the files that you are expected to modify. Please limit changes to 
+ * This is one of the files that you are expected to modify. Please limit changes to
  * the regions that say INSERT CODE HERE.
  *
  * Author: Walker M. White
@@ -47,7 +47,7 @@ import static edu.cornell.gdiac.tempus.tempus.models.EntityType.PRESENT;
 
 /**
  * Gameplay specific controller for the platformer game.
- *
+ * <p>
  * You will notice that asset loading is not done with static methods this time.
  * Instance asset loading makes it easier to process our game modes in a loop,
  * which is much more scalable. However, we still want the assets themselves to
@@ -149,8 +149,8 @@ public class LevelController extends WorldController {
 	private static final float BASIC_FRICTION = 0.6f;
 	/** The restitution for all physics objects */
 	private static final float BASIC_RESTITUTION = 0.1f;
-	/** Offset for bullet when firing */
-	private static final float BULLET_OFFSET = 1.5f;
+//	/** Offset for bullet when firing */
+//	private static final float BULLET_OFFSET = 1.5f;
 	/** The volume for sound effects */
 	private static final float EFFECT_VOLUME = 0.8f;
 
@@ -225,13 +225,15 @@ public class LevelController extends WorldController {
 			{ -3.0f, 0 }, { 0, 2.0f } };
 	private int[] CD_TURRETS = { 90, 120 };
 
-	private Enemy enemy;
+    private Enemy enemy;
 
 	/** Whether the avatar is shifted to the other world or not */
 	private boolean shifted;
 
 	/** Collision Controller instance **/
 	protected CollisionController collisionController;
+    /** Enemy Controller instance */
+    protected EnemyController enemyController;
 
 	/** FILEPATH TO JSON RESOURCE FOR THE LEVEL **/
 	private String json_filepath;
@@ -253,6 +255,7 @@ public class LevelController extends WorldController {
 		json_filepath = json;
 		numEnemies = 0;
 		begincount = 10;
+		enemyController = new EnemyController(enemies, objects, avatar, world, scale, this);
 	}
 
 	/**
@@ -263,6 +266,7 @@ public class LevelController extends WorldController {
 	public void reset() {
 		//Vector2 gravity = new Vector2(world.getGravity());
 		numEnemies = 0;
+		enemyController.reset();
 		for (Obstacle obj : objects) {
 			obj.deactivatePhysics(world);
 		}
@@ -465,7 +469,7 @@ public class LevelController extends WorldController {
 //			addObject(obj);
 //		}
 
-		//TODO:Delete
+        //TODO:Delete
 //		for (int ii = 0; ii < PAST_ROUNDS.length; ii++) {
 //			PolygonObstacle obj;
 //			obj = new Platform(newPlatRounded, PAST_ROUNDS[ii][0], PAST_ROUNDS[ii][1]);
@@ -479,7 +483,7 @@ public class LevelController extends WorldController {
 //			obj.setSpace(2);
 //			addObject(obj);
 //		}
-		//TODO:Delete
+        //TODO:Delete
 //		for (int ii = 0; ii < PAST_DIAMONDS.length; ii++) {
 //			PolygonObstacle obj;
 //			obj = new Platform(newPlatDiamond, PAST_DIAMONDS[ii][0], PAST_DIAMONDS[ii][1]);
@@ -493,7 +497,7 @@ public class LevelController extends WorldController {
 //			obj.setSpace(2);
 //			addObject(obj);
 //		}
-		// TODO: Delete
+        // TODO: Delete
 //		for (int ii = 0; ii < PAST_CAPSULES.length; ii++) {
 //			PolygonObstacle obj;
 //			obj = new Platform(newPlatCapsule, PAST_CAPSULES[ii][0], PAST_CAPSULES[ii][1]);
@@ -508,9 +512,9 @@ public class LevelController extends WorldController {
 //			addObject(obj);
 //		}
 
-		// { 1.0f, 4.0f, 3.0f, 4.0f, 3.0f, 2.5f, 1.0f, 2.5f }, { 3.0f, 8.0f, 5.0f, 8.0f,
-		// 5.0f, 7.5f, 3.0f, 7.5f },
-		// { 5.5f, 4.5f, 7.5f, 4.5f, 7.5f, 5.0f, 5.5f, 5.0f }
+        // { 1.0f, 4.0f, 3.0f, 4.0f, 3.0f, 2.5f, 1.0f, 2.5f }, { 3.0f, 8.0f, 5.0f, 8.0f,
+        // 5.0f, 7.5f, 3.0f, 7.5f },
+        // { 5.5f, 4.5f, 7.5f, 4.5f, 7.5f, 5.0f, 5.5f, 5.0f }
 
 
 		// Create avatar
@@ -522,7 +526,7 @@ public class LevelController extends WorldController {
 		float [] pos = json.get("pos").asFloatArray();
 		avatarStart = new Vector2(pos[0],pos[1]);
 
-		//TODO: Delete
+        //TODO: Delete
 //		avatarTexture = JsonAssetManager.getInstance().getEntry(json.get("texture").asString(), TextureRegion.class);
 //		float dwidth = avatarTexture.getRegionWidth() / scale.x;
 //		float dheight = avatarTexture.getRegionHeight() / scale.y;
@@ -533,7 +537,7 @@ public class LevelController extends WorldController {
 //		avatar.setBodyType(BodyDef.BodyType.DynamicBody);
 //		avatar.setName("avatar");
 
-		// Set film strips to animate avatar states
+        // Set film strips to animate avatar states
 //		avatarStandingTexture = JsonAssetManager.getInstance().getEntry("avatarstanding", FilmStrip.class);
 //		avatarCrouchingTexture = JsonAssetManager.getInstance().getEntry("avatarcrouching", FilmStrip.class);
 //		avatarDashingTexture = JsonAssetManager.getInstance().getEntry("avatardashing", FilmStrip.class);
@@ -544,7 +548,7 @@ public class LevelController extends WorldController {
 //		avatar.setFilmStrip(Avatar.AvatarState.DASHING, avatarDashingTexture);
 //		avatar.setFilmStrip(Avatar.AvatarState.FALLING, avatarFallingTexture);
 
-		// Set textures for caught projectiles
+        // Set textures for caught projectiles
 //		projPresentCaughtTexture = JsonAssetManager.getInstance().getEntry("projpresentcaught", TextureRegion.class);
 //		projPastCaughtTexture = JsonAssetManager.getInstance().getEntry("projpastcaught", TextureRegion.class);
 //		avatar.setCaughtProjTexture(PRESENT, projPresentCaughtTexture);
@@ -555,14 +559,14 @@ public class LevelController extends WorldController {
 		while(enemy!= null){
 			Enemy obj = new Enemy (avatar,enemy);
 			obj.setDrawScale(scale);
-			addObject(obj);
+			addEnemy(obj);
 			numEnemies++;
 			enemy = enemy.next();
 		}
 
-		//TODO: Delete
+        //TODO: Delete
 
-		// enemyPresentTexture = JsonAssetManager.getInstance().getEntry("enemypresent", TextureRegion.class);
+        // enemyPresentTexture = JsonAssetManager.getInstance().getEntry("enemypresent", TextureRegion.class);
 //		enemyPastTexture = JsonAssetManager.getInstance().getEntry("enemypast", TextureRegion.class);
 //		for (int ii = 0; ii < NUMBER_ENEMIES; ii++) {
 //			TextureRegion texture;
@@ -584,7 +588,7 @@ public class LevelController extends WorldController {
 		while(turret!=null){
 			Enemy obj = new Enemy(turret);
 			obj.setDrawScale(scale);
-			addObject(obj);
+			addEnemy(obj);
 			turret = turret.next();
 		}
 //		turretTexture = JsonAssetManager.getInstance().getEntry("turret", TextureRegion.class);
@@ -601,9 +605,10 @@ public class LevelController extends WorldController {
 //			addObject(turret);
 //		}
 
-		collisionController = new CollisionController(this);
-		world.setContactListener(collisionController);
-	}
+        collisionController = new CollisionController(this);
+        world.setContactListener(collisionController);
+        enemyController = new EnemyController(enemies, objects, avatar, world, scale, this);
+    }
 
 	public PooledList<Obstacle> getObjects() { return objects;}
 
@@ -628,7 +633,10 @@ public class LevelController extends WorldController {
 		if (!isFailure() && avatar.getY() < -6) {
 			avatar.removeLife();
 			if (avatar.getLives() > 0) {
-				shifted = false;
+				if (shifted) {
+                    shifted = false;
+                    enemyController.shift();
+                }
 				avatar.setPosition(avatarStart);
 				avatar.getBody().setLinearVelocity(0, 0);
 				return true;
@@ -657,24 +665,27 @@ public class LevelController extends WorldController {
 	 *
 	 */
 	public void sleepIfNotInWorld() {
+	    enemyController.sleepIfNotInWorld();
+
 		for (Obstacle obj : objects) {
 
-			 if (obj instanceof Enemy && !((Enemy) obj).isTurret()) {
-			 	Enemy e = (Enemy) obj;
-			 	if (e.getSpace() == 3) {
-			 		e.setIsActive(true);
-			 	} else if (!shifted && (e.getSpace()==2)) {
-			 		e.setIsActive(false);
-			 	} else if (shifted && (e.getSpace()==2)) {
-			 		e.setIsActive(e.getShiftedActive());
-			 	} else if (shifted && (e.getSpace()==1)) {
-			 		e.setIsActive(false);
-			 	} else if (!shifted && (e.getSpace()==1)) {
-			 		e.setIsActive(e.getShiftedActive());
-			 	}
-			 }
+//			 if (obj instanceof Enemy && !((Enemy) obj).isTurret()) {
+//			 	Enemy e = (Enemy) obj;
+//			 	if (e.getSpace() == 3) {
+//			 		e.setIsActive(true);
+//			 	} else if (!shifted && (e.getSpace()==2)) {
+//			 		e.setIsActive(false);
+//			 	} else if (shifted && (e.getSpace()==2)) {
+//			 		e.setIsActive(e.getShiftedActive());
+//			 	} else if (shifted && (e.getSpace()==1)) {
+//			 		e.setIsActive(false);
+//			 	} else if (!shifted && (e.getSpace()==1)) {
+//			 		e.setIsActive(e.getShiftedActive());
+//			 	}
+//			 }
 
-			if (obj.getName().equals("bullet") || obj.getName().equals("turret")) {
+//			if (obj.getName().equals("bullet") || obj.getName().equals("turret")) {
+            if (obj.getName().equals("bullet")) {
 				obj.setSensor(false);
 				if (obj.getSpace() == 3) {
 					obj.setSensor(false);
@@ -713,19 +724,22 @@ public class LevelController extends WorldController {
 
 		// test slow down time
 		if (timeFreeze) {
-			world.step(WORLD_STEP / 8, WORLD_VELOC, WORLD_POSIT);
-			for (Obstacle o : objects) {
-				if (o instanceof Enemy) {
-					((Enemy) o).slowCoolDown(true);
-				}
-			}
+            world.step(WORLD_STEP / 8, WORLD_VELOC, WORLD_POSIT);
+//			for (Obstacle o : objects) {
+//				if (o instanceof Enemy) {
+//					((Enemy) o).slowCoolDown(true);
+//				}
+//          }
+            enemyController.slowCoolDown(true);
+
 		} else {
 			world.step(WORLD_STEP, WORLD_VELOC, WORLD_POSIT);
-			for (Obstacle o : objects) {
-				if (o instanceof Enemy) {
-					((Enemy) o).slowCoolDown(false);
-				}
-			}
+//			for (Obstacle o : objects) {
+//				if (o instanceof Enemy) {
+//					((Enemy) o).slowCoolDown(false);
+//				}
+//			}
+            enemyController.slowCoolDown(false);
 		}
 		int t = avatar.getStartedDashing();
 		if (t > 0) {
@@ -780,16 +794,17 @@ public class LevelController extends WorldController {
 					}
 				}
 			}
-			for (Obstacle o: objects) {
-				if (o instanceof Enemy) {
-					Enemy e = (Enemy) o;
-					if (!e.isTurret()) {
-						e.coolDown(false);
-						e.setLeftFixture(null);
-						e.setRightFixture(null);
-					}
-				}
-			}
+//			for (Obstacle o: objects) {
+//				if (o instanceof Enemy) {
+//					Enemy e = (Enemy) o;
+//					if (!e.isTurret()) {
+//						e.coolDown(false);
+//						e.setLeftFixture(null);
+//						e.setRightFixture(null);
+//					}
+//				}
+//			}
+            enemyController.shift();
 		}
 		// Check if the platform is in this world or other world. If in the other world,
 		// make the platform sleep.
@@ -829,33 +844,32 @@ public class LevelController extends WorldController {
 			avatar.setMovement(mousePos.x - avatarPos.x);
 		}
 
-		// Add bullet if enemy can fire
-		for (Obstacle o : objects) {
-			if (o instanceof Enemy) {
-				Enemy e = (Enemy) o.getBody().getUserData();
-				if (e.isTurret()){
-					if (e.canFire()) {
-						createBullet(e);
-					} else
-						e.coolDown(true);
-				} else if ((shifted && e.getSpace() == 2) || (!shifted && e.getSpace() == 1)) {
-					if (!e.isTurret()) {
-						if (e.getLeftFixture() == null || e.getRightFixture() == null) {
-							break;
-						}
-						e.createLineOfSight(world, BULLET_OFFSET);
-						e.applyForce();
-					}
-					if (e.canFire()) {
-						if (o.getName() == "enemy") {
-							e.setVelocity(BULLET_OFFSET);
-						}
-						createBullet(e);
-					} else
-						e.coolDown(true);
-				}
-			}
-		}
+		enemyController.processAction();
+
+        // Add bullet if enemy can fire
+//        for (Obstacle o : objects) {
+//            if (o instanceof Enemy) {
+//                Enemy e = (Enemy) o.getBody().getUserData();
+//                if (e.isTurret()) {
+//                    if (e.canFire()) {
+//                        createBullet(e);
+//                    } else
+//                        e.coolDown(true);
+//                } else if ((shifted && e.getSpace() == 2) || (!shifted && e.getSpace() == 1)) {
+//                    if (!e.isTurret() && e.getLeftFixture() != null && e.getRightFixture() != null) {
+//                        e.createLineOfSight(world, BULLET_OFFSET);
+//                        e.applyForce();
+//                        if (e.canFire()) {
+//                            if (o.getName() == "enemy") {
+//                                e.setVelocity(BULLET_OFFSET);
+//                            }
+//                            createBullet(e);
+//                        } else
+//                            e.coolDown(true);
+//                    }
+//                }
+//            }
+//        }
 
 		avatar.applyForce();
 		// enemy.applyForce();
@@ -915,56 +929,62 @@ public class LevelController extends WorldController {
 		}
 	}
 
-	/**
-	 * Add a new bullet to the world and send it in the right direction.
-	 *
-	 * @param enemy enemy
-	 */
-	private void createBullet(Enemy enemy) {
-		float offset = BULLET_OFFSET;
-
-		//TODO: quick fix for enemy projectile offsets
-		if (!enemy.isTurret() && enemy.getType() == PAST) {
-			offset = 2.5f;
-		}
-		if (!enemy.isTurret() && enemy.getType() == PRESENT) {
-			offset = 1.5f;
-		}
-
-		bulletBigTexture = JsonAssetManager.getInstance().getEntry("bulletbig", TextureRegion.class);
-		presentBullet = JsonAssetManager.getInstance().getEntry("projpresent", TextureRegion.class);
-		pastBullet = JsonAssetManager.getInstance().getEntry("projpast", TextureRegion.class);
-		float radius = bulletBigTexture.getRegionWidth() / (30.0f);
-		Projectile bullet = new Projectile(enemy.getType(), enemy.getX(), enemy.getY() + offset, radius);
-
-		bullet.setName("bullet");
-		bullet.setDensity(HEAVY_DENSITY);
-		bullet.setDrawScale(scale);
-		//bullet.setTexture(bulletBigTexture);
-		bullet.setBullet(true);
-		bullet.setGravityScale(0);
-		bullet.setLinearVelocity(enemy.getProjVelocity());
-		bullet.setSpace(enemy.getSpace());
-		addQueuedObject(bullet);
-		if (bullet.getType().equals(PRESENT)){
-			bullet.setTexture(presentBullet);
-		} else {
-			bullet.setTexture(pastBullet);
-		}
-
-		if (shifted && enemy.getSpace() == 2) { // past world
-			JsonValue data = assetDirectory.get("sounds").get("pew");
-//			System.out.println("sound volume: " +  data.get("volume").asFloat());
-			SoundController.getInstance().play("pew", data.get("file").asString(), false, data.get("volume").asFloat());
-		} else if (!shifted && enemy.getSpace() == 1) { // present world
-			JsonValue data = assetDirectory.get("sounds").get("pew");
-//			System.out.println("sound volume: " +    data.get("volume").asFloat());
-			SoundController.getInstance().play("pew", data.get("file").asString(), false, data.get("volume").asFloat());
-		}
-
-		// Reset the firing cooldown.
-		enemy.coolDown(false);
-	}
+//	/**
+//	 * Add a new bullet to the world and send it in the right direction.
+//	 *
+//	 * @param enemy enemy
+//	 */
+//	private void createBullet(Enemy enemy) {
+//		float offset = BULLET_OFFSET;
+//
+////		//TODO: quick fix for enemy projectile offsets
+////		if (!enemy.isTurret() && enemy.getType() == PAST) {
+////			offset = 2.5f;
+////		}
+////		if (!enemy.isTurret() && enemy.getType() == PRESENT) {
+////			offset = 1.5f;
+////		}
+//
+//        bulletBigTexture = JsonAssetManager.getInstance().getEntry("bulletbig", TextureRegion.class);
+//        presentBullet = JsonAssetManager.getInstance().getEntry("projpresent", TextureRegion.class);
+//        pastBullet = JsonAssetManager.getInstance().getEntry("projpast", TextureRegion.class);
+//        float radius = bulletBigTexture.getRegionWidth() / (30.0f);
+//        Projectile bullet = new Projectile(enemy.getType(), enemy.getX(), enemy.getY() + offset, radius,
+//                enemy.getBody().getUserData());
+//
+//        Filter f = new Filter();
+//        f.groupIndex = -1;
+//        enemy.setFilterData(f);
+//        bullet.setFilterData(f);
+//
+//		bullet.setName("bullet");
+//		bullet.setDensity(HEAVY_DENSITY);
+//		bullet.setDrawScale(scale);
+//		//bullet.setTexture(bulletBigTexture);
+//		bullet.setBullet(true);
+//		bullet.setGravityScale(0);
+//		bullet.setLinearVelocity(enemy.getProjVelocity());
+//		bullet.setSpace(enemy.getSpace());
+//		addQueuedObject(bullet);
+//		if (bullet.getType().equals(PRESENT)){
+//			bullet.setTexture(presentBullet);
+//		} else {
+//			bullet.setTexture(pastBullet);
+//		}
+//
+//		if (shifted && enemy.getSpace() == 2) { // past world
+//			JsonValue data = assetDirectory.get("sounds").get("pew");
+////			System.out.println("sound volume: " +  data.get("volume").asFloat());
+//			SoundController.getInstance().play("pew", data.get("file").asString(), false, data.get("volume").asFloat());
+//		} else if (!shifted && enemy.getSpace() == 1) { // present world
+//			JsonValue data = assetDirectory.get("sounds").get("pew");
+////			System.out.println("sound volume: " +    data.get("volume").asFloat());
+//			SoundController.getInstance().play("pew", data.get("file").asString(), false, data.get("volume").asFloat());
+//		}
+//
+//		// Reset the firing cooldown.
+//		enemy.coolDown(false);
+//	}
 
 	/**
 	 * Add a new bullet to the world and send it in the right direction.
@@ -974,18 +994,21 @@ public class LevelController extends WorldController {
 		Vector2 redirection = avatar.getPosition().cpy().sub(mousePos).nor();
 		float x0 = avatar.getX() + (redirection.x * avatar.getWidth());
 		float y0 = avatar.getY() + (redirection.y * avatar.getHeight());
+		bulletBigTexture = JsonAssetManager.getInstance().getEntry("bulletbig", TextureRegion.class);
 		float radius = bulletBigTexture.getRegionWidth() / (2.0f * scale.x);
 		Vector2 projVel = redirection.cpy().scl(12);
 		EntityType projType = avatar.getHeldBullet().getType();
 
-		Projectile bullet = new Projectile(projType, x0, y0, radius);
+        Projectile bullet = new Projectile(projType, x0, y0, radius, avatar.getBody().getUserData());
 		bullet.setName("bullet");
 		bullet.setDensity(HEAVY_DENSITY);
 		bullet.setDrawScale(scale);
 		//bullet.setTexture(bulletBigTexture);
 		if (bullet.getType() == PRESENT){
+            presentBullet = JsonAssetManager.getInstance().getEntry("projpresent", TextureRegion.class);
 			bullet.setTexture(presentBullet);
 		} else {
+            pastBullet = JsonAssetManager.getInstance().getEntry("projpast", TextureRegion.class);
 			bullet.setTexture(pastBullet);
 		}
 		bullet.setBullet(true);
@@ -1025,6 +1048,8 @@ public class LevelController extends WorldController {
 				obj.draw(canvas);
 			}
 		}
+
+		enemyController.drawEnemiesInWorld();
 	}
 
 	/**
@@ -1102,6 +1127,8 @@ public class LevelController extends WorldController {
 				obj.drawDebug(canvas);
 			}
 		}
+
+		enemyController.drawEnemiesDebugInWorld();
 	}
 
 	/**
@@ -1170,8 +1197,8 @@ public class LevelController extends WorldController {
 		return avatar;
 	}
 
-	public Enemy getEnemy() {
-		return enemy;
+	public PooledList<Enemy> getEnemies() {
+		return enemies;
 	}
 
 	/**
