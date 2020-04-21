@@ -91,6 +91,13 @@ public class Platform extends PolygonObstacle {
     }
 
     /**
+     * Gets the current position for this physics body
+     *
+     * @return the current position for this physics body
+     */
+    public Vector2 getPosition () { return super.getPosition(); }
+
+    /**
      * Sets the current position for this physics body
      *
      * @param x the x-coordinate for this physics body

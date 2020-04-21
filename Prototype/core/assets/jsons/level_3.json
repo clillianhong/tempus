@@ -203,7 +203,8 @@
       "entitytype": "present",
       "cooldown": 120,
       "bodytype": "dynamic",
-      "density": 1.0
+      "density": 1.0,
+      "aitype": 1
     },
     "enemy2": {
       "pos": [15.625, 11.03125],
@@ -212,7 +213,8 @@
       "entitytype": "past",
       "cooldown": 120,
       "bodytype": "dynamic",
-      "density": 1.0
+      "density": 1.0,
+      "aitype": 1
     }
   },
   "turrets": {

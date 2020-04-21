@@ -110,21 +110,21 @@ public class Avatar extends CapsuleObstacle {
     private boolean isGrounded;
     /** Whether we are actively shooting */
     private boolean isShooting;
-    /** Ground sensor to represent our feet */
-    private Fixture sensorFixture;
-    private PolygonShape sensorShape;
-    /** Left sensor to determine sticking on the left side */
-    private Fixture sensorFixtureLeft;
-    private PolygonShape sensorShapeLeft;
-    /** Right sensor to determine sticking on the right side */
-    private Fixture sensorFixtureRight;
-    private PolygonShape sensorShapeRight;
-    /** Top sensor to determine sticking on the top */
-    private Fixture sensorFixtureTop;
-    private PolygonShape sensorShapeTop;
-    /** Core sensor for line of sight */
-    private Fixture sensorFixtureCore;
-    private PolygonShape sensorShapeCore;
+//    /** Ground sensor to represent our feet */
+//    private Fixture sensorFixture;
+//    private PolygonShape sensorShape;
+//    /** Left sensor to determine sticking on the left side */
+//    private Fixture sensorFixtureLeft;
+//    private PolygonShape sensorShapeLeft;
+//    /** Right sensor to determine sticking on the right side */
+//    private Fixture sensorFixtureRight;
+//    private PolygonShape sensorShapeRight;
+//    /** Top sensor to determine sticking on the top */
+//    private Fixture sensorFixtureTop;
+//    private PolygonShape sensorShapeTop;
+//    /** Core sensor for line of sight */
+//    private Fixture sensorFixtureCore;
+//    private PolygonShape sensorShapeCore;
 
     private boolean enemyContact;
     /** how long ago the character started dashing */
@@ -787,7 +787,7 @@ public class Avatar extends CapsuleObstacle {
         return true;
     }
 
-    public Fixture getSensorFixtureCore() { return sensorFixtureCore; }
+//    public Fixture getSensorFixtureCore() { return sensorFixtureCore; }
 
     /**
      * Applies the force to the body of this dude
