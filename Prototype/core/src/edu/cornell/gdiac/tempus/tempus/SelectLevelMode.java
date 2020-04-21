@@ -155,23 +155,23 @@ public class SelectLevelMode implements Screen {
         canvas = null;
         scale = new Vector2();
         active = false;
-        currentLevel = 0;
+        currentLevel = 1;
         int numLevels = 3;
         skin = new Skin(Gdx.files.internal("skins/flat_earth_skin/flat-earth-ui.json"));
 
         levels = new Level[numLevels];
-        levels[0] = new Level(0,true, "textures/gui/selectmode/level1_preview.png",
+        levels[0] = new Level(1,true, "textures/gui/selectmode/level1_preview.png",
                 "textures/gui/selectmode/lv1_lore.png",
                 "textures/gui/selectmode/level1unlocked.png",
                 "textures/gui/selectmode/level1pressed.png",
                 "textures/gui/selectmode/level1unlocked.png",
                 "this is level 1");
-        levels[1] = new Level(1,true, "textures/gui/selectmode/level2_preview.png", "textures/gui/selectmode/lore_bg_lv2.png",
+        levels[1] = new Level(2,true, "textures/gui/selectmode/level2_preview.png", "textures/gui/selectmode/lore_bg_lv2.png",
                 "textures/gui/selectmode/level2unlocked.png",
                 "textures/gui/selectmode/level2pressed.png",
                 "textures/gui/selectmode/level2locked.png",
                 "this is level 2"); //TODO: CHANGE TO LEVEL 2 AND 3 RESOURCES
-        levels[2] = new Level(2,true, "textures/gui/selectmode/level3_preview.png", "textures/gui/selectmode/lore_bg_lv3.png",
+        levels[2] = new Level(3,true, "textures/gui/selectmode/level3_preview.png", "textures/gui/selectmode/lore_bg_lv3.png",
                 "textures/gui/selectmode/level3unlocked.png",
                 "textures/gui/selectmode/level3pressed.png",
                 "textures/gui/selectmode/level3locked.png",
@@ -294,7 +294,7 @@ public class SelectLevelMode implements Screen {
 
         Container<Image> pIContainer = new Container<>();
         pIContainer.size(cw/2f* 0.5f, ch/2f * 0.6f);
-        Texture prevTexture = new Texture(Gdx.files.internal(levels[currentLevel].getFilePreview()));
+        Texture prevTexture = new Texture(Gdx.files.internal(levels[currentLevel-1].getFilePreview()));
         Image previewImg = new Image( new TextureRegion(prevTexture));
 
         pIContainer.setActor(previewImg);
@@ -306,7 +306,7 @@ public class SelectLevelMode implements Screen {
         //lore panel
         Container<Image> lbContainer = new Container<>();
         lbContainer.size(sw/2f*0.7f, sh/2f*0.6f);
-        Image loreImage = new Image( new TextureRegion(new Texture(Gdx.files.internal(levels[currentLevel].getFileLore()))));
+        Image loreImage = new Image( new TextureRegion(new Texture(Gdx.files.internal(levels[currentLevel-1].getFileLore()))));
         lbContainer.setActor(loreImage);
 
         rightTable.add(prevStack);
