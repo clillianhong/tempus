@@ -22,7 +22,9 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import edu.cornell.gdiac.tempus.GameCanvas;
+import edu.cornell.gdiac.tempus.tempus.models.LevelModel;
 import edu.cornell.gdiac.tempus.tempus.models.ScreenExitCodes;
+import edu.cornell.gdiac.util.GameStateManager;
 import edu.cornell.gdiac.util.JsonAssetManager;
 import edu.cornell.gdiac.util.ScreenListener;
 
@@ -43,6 +45,9 @@ public class SelectLevelMode implements Screen {
         private String filePressLocked;
         Button button;
         TextArea textLore;
+        private TextureRegionDrawable bup;
+        private TextureRegionDrawable block;
+        private  TextureRegionDrawable bdown;
 
         public Level(int lev, boolean l, String preview, String lore, String buttonUp, String buttonDown, String buttonLocked, String textlore){
             level = lev;
@@ -52,15 +57,32 @@ public class SelectLevelMode implements Screen {
             filePressUp = buttonUp;
             filePressDown = buttonDown;
             filePressLocked = buttonLocked;
-            final TextureRegionDrawable bup = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal(buttonUp))));
-            final TextureRegionDrawable block = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal(buttonLocked))));
-            final TextureRegionDrawable bdown = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal(buttonDown))));
+            bup = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal(buttonUp))));
+            block = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal(buttonLocked))));
+            bdown = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal(buttonDown))));
+
+        }
+
+
+        public boolean isUnlocked() {
+            return unlocked;
+        }
+
+        public String getFilePreview() {
+            return filePreview;
+        }
+
+        public String getFileLore() {
+            return fileLore;
+        }
+
+        public void setUnlocked(boolean b){
+            unlocked = b;
             if(unlocked){
-                button = new Button(bup, bdown,bdown);
+                button = new Button(bup, bdown ,bdown);
             }else{
                 button = new Button(block, block);
             }
-            textLore = new TextArea(textlore, skin);
 
             button.addListener(new ClickListener(){
                 @Override
@@ -81,34 +103,14 @@ public class SelectLevelMode implements Screen {
                     }
                 }
 
-
                 @Override
                 public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
                     super.exit(event, x, y, pointer, toActor);
                     button.setChecked(false);
                 }
             });
-
-
-
         }
 
-
-        public boolean isUnlocked() {
-            return unlocked;
-        }
-
-        public String getFilePreview() {
-            return filePreview;
-        }
-
-        public String getFileLore() {
-            return fileLore;
-        }
-
-        public void setUnlocked(boolean b){
-            unlocked = b;
-        }
 
         public int getLevel(){
             return level;
@@ -176,6 +178,7 @@ public class SelectLevelMode implements Screen {
                 "textures/gui/selectmode/level3pressed.png",
                 "textures/gui/selectmode/level3locked.png",
                 "this is level 3");
+
     }
 
 
@@ -207,11 +210,20 @@ public class SelectLevelMode implements Screen {
         camera.update();
 
         stage = new Stage(new ScreenViewport());
+
+
+
     }
 
 
     @Override
     public void show() {
+
+        GameStateManager gameManager = GameStateManager.getInstance();
+        for(Level l : levels){
+            LevelModel mod = gameManager.getLevel(l.getLevel());
+            l.setUnlocked(mod.isUnlocked());
+        }
 
         active = true;
 
