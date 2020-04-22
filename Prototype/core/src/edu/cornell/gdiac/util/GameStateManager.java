@@ -48,6 +48,7 @@ public class GameStateManager {
         currentLevel = null;
         current_level_idx = 0;
         last_level_idx = 3;
+        levelloader = this;
     }
 
     public void setCanvas(GameCanvas canvas){
@@ -120,6 +121,7 @@ public class GameStateManager {
             levels[i] = loadLevel(levelDirectories[i]);
             levels[i].preloadLevel();
         }
+
 
         currentLevel = levels[1];
 
