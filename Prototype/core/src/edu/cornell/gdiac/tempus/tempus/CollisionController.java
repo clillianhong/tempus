@@ -96,6 +96,10 @@ public class CollisionController implements ContactListener {
         } else if ((objB instanceof Avatar) && (objA instanceof Projectile)) {
             processAvatarProjectileContact(fixB, fixA);
         }
+        //projectile-projectile
+        else if ((objB instanceof Projectile) && (objA instanceof Projectile)) {
+            return;
+        }
         //avatar-platform
         else if ((objA instanceof Avatar) && (objB instanceof Platform)) {
             processAvatarPlatformContact(fixA, fixB);
@@ -128,6 +132,10 @@ public class CollisionController implements ContactListener {
         //TODO: avatar platform contact
     }
 
+    private void processProjectileProjectileContact(Fixture proj1, Fixture proj2) {
+        return;
+    }
+
     private void processAvatarEnemyContact(Fixture av, Fixture turret) {
         if (!avatar.getEnemyContact()) {
             avatar.setEnemyContact(true);
@@ -143,6 +151,7 @@ public class CollisionController implements ContactListener {
     }
 
     private void processAvatarProjectileContact(Fixture av, Fixture projectile) {
+        System.out.println("fieuwbfiwe");
         if (!avatar.isHolding() && InputController.getInstance().pressedRightMouseButton()) {
             avatar.setHolding(true);
             Obstacle bullet = (Obstacle) projectile.getBody().getUserData();
@@ -257,16 +266,20 @@ public class CollisionController implements ContactListener {
             if (bd1.getName().equals("bullet") && bd2 != avatar) {
                 if (bd2.getBody().getUserData() instanceof Enemy) {
                     processProjEnemyContact(fix1, fix2);
-                } else {
+                } else if (!bd2.getName().equals("bullet")){
                     removeBullet(bd1);
                 }
+            } else if ((bd1.getName().equals("bullet") && bd2 == avatar)){
+                processAvatarProjectileContact(fix2, fix1);
             }
             if (bd2.getName().equals("bullet") && bd1 != avatar) {
                 if (bd1.getBody().getUserData() instanceof Enemy) {
                     processProjEnemyContact(fix2, fix1);
-                } else {
+                } else if (!bd1.getName().equals("bullet")){
                     removeBullet(bd2);
                 }
+            } else if (bd2.getName().equals("bullet") && bd1 == avatar){
+                processAvatarProjectileContact(fix1, fix2);
             }
 
 

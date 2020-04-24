@@ -20,6 +20,7 @@ public class Projectile extends WheelObstacle {
         this.type = type;
         rotation = 0;
         this.sourceData = sourceData;
+        this.setSensor(true);
     }
 
     public Object getSourceData() {

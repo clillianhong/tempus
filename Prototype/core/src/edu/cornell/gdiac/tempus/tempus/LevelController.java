@@ -686,7 +686,7 @@ public class LevelController extends WorldController {
 //			 }
 
 //			if (obj.getName().equals("bullet") || obj.getName().equals("turret")) {
-            if (obj.getName().equals("bullet")) {
+            /*if (obj.getName().equals("bullet")) {
 				obj.setSensor(false);
 				if (obj.getSpace() == 3) {
 					obj.setSensor(false);
@@ -695,7 +695,7 @@ public class LevelController extends WorldController {
 				} else if (shifted && (obj.getSpace() == 1)) {
 					obj.setSensor(true);
 				}
-			} else {
+			} else {*/
 				obj.setActive(true);
 				if (obj.getSpace() == 3) {
 					obj.setActive(true);
@@ -706,7 +706,7 @@ public class LevelController extends WorldController {
 				}
 			}
 		}
-	}
+	//}
 
 	/**
 	 * The core gameplay loop of this world.
@@ -1004,6 +1004,7 @@ public class LevelController extends WorldController {
 		bullet.setName("bullet");
 		bullet.setDensity(HEAVY_DENSITY);
 		bullet.setDrawScale(scale);
+		bullet.setSensor(true);
 		//bullet.setTexture(bulletBigTexture);
 		if (bullet.getType() == PRESENT){
             presentBullet = JsonAssetManager.getInstance().getEntry("projpresent", TextureRegion.class);
