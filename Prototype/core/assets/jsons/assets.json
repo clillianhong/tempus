@@ -40,6 +40,10 @@
       "file": "textures/platform/both_round.png",
       "wrap": false
     },
+    "spikes": {
+      "file": "textures/general/spike2.png",
+      "wrap": true
+    },
     "goal": {
       "file": "textures/general/goaldoor.png",
       "wrap": true
@@ -92,12 +96,20 @@
       "file": "textures/background/bg_present_lv_1.png",
       "wrap": false
     },
-    "past_background": {
+    "past_background2": {
       "file": "textures/background/past_room2.png",
       "wrap": false
     },
-    "present_background": {
+    "present_background2": {
       "file": "textures/background/present_room2.png",
+      "wrap": false
+    },
+    "past_background1": {
+      "file": "textures/background/level-1-past.png",
+      "wrap": false
+    },
+    "past_background3": {
+      "file": "textures/background/past-3.png",
       "wrap": false
     },
     "enemypresent": {

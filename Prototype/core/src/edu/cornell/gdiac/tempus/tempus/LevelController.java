@@ -403,6 +403,8 @@ public class LevelController extends WorldController {
 		float[] newPlatCapsule = levelFormat.get("capsuleshape").asFloatArray();
 		float[] newPlatDiamond = levelFormat.get("diamondshape").asFloatArray();
 		float[] newPlatRounded = levelFormat.get("roundshape").asFloatArray();
+		float[] newSpikes = levelFormat.get("spikeshape").asFloatArray();
+
 		JsonValue capsule = levelFormat.get("capsules").child();
 		while (capsule!=null){
 			Platform obj = new Platform (newPlatCapsule);
@@ -469,7 +471,16 @@ public class LevelController extends WorldController {
 //			obj.setSpace(1);
 //			addObject(obj);
 //		}
+		//float[] newSpikes = {0.3f, -0.6f, 0.0f, -0.2f, -0.6f, 0.0f, -0.5f, 0.4f, 0.0f, 0.6f, 0.4f, -0.2f, 0.6f, -0.3f};
 
+		JsonValue spikes = levelFormat.get("spikes").child();
+		while (spikes != null){
+			Spikes obj = new Spikes (newSpikes);
+			obj.initialize(spikes);
+			obj.setDrawScale(scale);
+			addObject(obj);
+			spikes = spikes.next();
+		}
         //TODO:Delete
 //		for (int ii = 0; ii < PAST_ROUNDS.length; ii++) {
 //			PolygonObstacle obj;
@@ -613,6 +624,8 @@ public class LevelController extends WorldController {
 
 	public PooledList<Obstacle> getObjects() { return objects;}
 
+	public boolean isShifted() { return shifted; }
+
 	/**
 	 * Returns whether to process the update loop
 	 *
@@ -686,7 +699,14 @@ public class LevelController extends WorldController {
 //			 	}
 //			 }
 
-//			if (obj.getName().equals("bullet") || obj.getName().equals("turret")) {
+			if (obj instanceof Enemy && ((Enemy) obj).isTurret()) {
+				if (obj.getSpace() == 3) {
+					obj.setSensor(false);
+				} else if (!shifted && (obj.getSpace() == 2)) {
+					obj.setSensor(true);
+				} else if (shifted && (obj.getSpace() == 1)) {
+					obj.setSensor(true);
+				}
             /*if (obj.getName().equals("bullet")) {
 				obj.setSensor(false);
 				if (obj.getSpace() == 3) {
@@ -695,8 +715,8 @@ public class LevelController extends WorldController {
 					obj.setSensor(true);
 				} else if (shifted && (obj.getSpace() == 1)) {
 					obj.setSensor(true);
-				}
-			} else {*/
+				}*/
+			} else if (!(obj instanceof Projectile)) {
 				obj.setActive(true);
 				if (obj.getSpace() == 3) {
 					obj.setActive(true);
@@ -707,7 +727,7 @@ public class LevelController extends WorldController {
 				}
 			}
 		}
-	//}
+	}
 
 	/**
 	 * The core gameplay loop of this world.
