@@ -9,8 +9,8 @@
   "restitution": 0.1,
   "bullet_offset": 0.7,
   "effect_volume": 0.8,
-  "present_background": "present_background",
-  "past_background": "past_background",
+  "present_background": "present_background2",
+  "past_background": "past_background3",
   "door": {
     "pos": [
       29.5, 15.5
@@ -92,8 +92,8 @@
   },
   "diamondshape": [0.2, 1.8, 2.4, 1.8, 1.4, 0.1],
   "diamonds": {
-    "presentdiamond1": {
-      "name": "present_diamond",
+    "bothdiamond1": {
+      "name": "both_diamond",
       "pos": [
         1.0, 2.0
       ],
@@ -101,10 +101,10 @@
       "density": 0.0,
       "friction": 0.6,
       "restitution": 0.1,
-      "texture": "present_diamond",
-      "space": 1
+      "texture": "both_diamond",
+      "space": 3
     },
-    "presentdiamond2": {
+    "presentdiamond1": {
       "name": "present_diamond",
       "pos": [
         11.0, 7.0
@@ -237,6 +237,119 @@
       "direction": [0.0, 2.0],
       "bodytype": "static",
       "density": 1.0
+    }
+  },
+  "spikeshape": [0.3, -0.6, 0.0, -0.2, -0.6, 0.0, -0.5, 0.4, 0.0, 0.6, 0.4, -0.2, 0.6, -0.3],
+  "spikes": {
+    "test1": {
+      "name": "testspike",
+      "pos": [6.1, 5.5],
+      "bodytype": "static",
+      "density": 0.0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "spikes",
+      "space": 1,
+      "angle": 0
+    },
+    "test2": {
+      "name": "testspike",
+      "pos": [6.7, 5.7],
+      "bodytype": "static",
+      "density": 0.0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "spikes",
+      "space": 1,
+      "angle": -0.52
+    },
+    "test3": {
+      "name": "testspike",
+      "pos": [7.3, 5.7],
+      "bodytype": "static",
+      "density": 0.0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "spikes",
+      "space": 1,
+      "angle": -0.79
+    },
+    "test4": {
+      "name": "testspike",
+      "pos": [7.7, 5.8],
+      "bodytype": "static",
+      "density": 0.0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "spikes",
+      "space": 1,
+      "angle": -0.79
+    },
+    "test5": {
+      "name": "testspike",
+      "pos": [8.5, 5.8],
+      "bodytype": "static",
+      "density": 0.0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "spikes",
+      "space": 1,
+      "angle": -1.1
+    },
+    "test6": {
+      "name": "testspike",
+      "pos": [13.8, 4.3],
+      "bodytype": "static",
+      "density": 0.0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "spikes",
+      "space": 2,
+      "angle": 2.1
+    },
+    "test7": {
+      "name": "testspike",
+      "pos": [14.3, 3.9],
+      "bodytype": "static",
+      "density": 0.0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "spikes",
+      "space": 2,
+      "angle": 2.3
+    },
+    "test8": {
+      "name": "testspike",
+      "pos": [14.8, 3.5],
+      "bodytype": "static",
+      "density": 0.0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "spikes",
+      "space": 2,
+      "angle": 2.5
+    },
+    "test9": {
+      "name": "testspike",
+      "pos": [15.3, 4.0],
+      "bodytype": "static",
+      "density": 0.0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "spikes",
+      "space": 2,
+      "angle": 3.14
+    },
+    "test10": {
+      "name": "testspike",
+      "pos": [15.6, 4.2],
+      "bodytype": "static",
+      "density": 0.0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "spikes",
+      "space": 2,
+      "angle": 2.6
     }
   }
 }

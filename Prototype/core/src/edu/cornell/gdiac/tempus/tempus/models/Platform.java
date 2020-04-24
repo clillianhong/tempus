@@ -192,8 +192,7 @@ public class Platform extends PolygonObstacle {
 
     public void draw(GameCanvas canvas) {
         if (region != null) {
-            if (getName() == "wall") super.draw(canvas);
-            else canvas.draw(texture,Color.WHITE, 0, 0, getX() * drawScale.x,getY() * drawScale.y, getAngle(), 0.008f * drawScale.x, 0.0075f * drawScale.y);
+             canvas.draw(texture,Color.WHITE, 0, 0, getX() * drawScale.x,getY() * drawScale.y, getAngle(), 0.008f * drawScale.x, 0.0075f * drawScale.y);
         }
     }
 }

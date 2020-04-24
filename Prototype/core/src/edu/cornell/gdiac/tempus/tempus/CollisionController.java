@@ -96,15 +96,17 @@ public class CollisionController implements ContactListener {
         } else if ((objB instanceof Avatar) && (objA instanceof Projectile)) {
             processAvatarProjectileContact(fixB, fixA);
         }
-        //projectile-projectile
-        else if ((objB instanceof Projectile) && (objA instanceof Projectile)) {
-            return;
-        }
         //avatar-platform
         else if ((objA instanceof Avatar) && (objB instanceof Platform)) {
             processAvatarPlatformContact(fixA, fixB);
         } else if ((objB instanceof Avatar) && (objA instanceof Platform)) {
             processAvatarPlatformContact(fixB, fixA);
+        }
+        //avatar-spikes
+        else if ((objA instanceof Avatar) && (objB instanceof Spikes)) {
+            processAvatarSpikesContact(fixA, fixB);
+        } else if ((objB instanceof Avatar) && (objA instanceof Spikes)) {
+            processAvatarSpikesContact(fixB, fixA);
         }
         //avatar-turret
         else if ((objA instanceof Avatar) && (objB instanceof Enemy)) {
@@ -132,8 +134,8 @@ public class CollisionController implements ContactListener {
         //TODO: avatar platform contact
     }
 
-    private void processProjectileProjectileContact(Fixture proj1, Fixture proj2) {
-        return;
+    private void processAvatarSpikesContact(Fixture proj1, Fixture proj2) {
+        avatar.setEnemyContact(true);
     }
 
     private void processAvatarEnemyContact(Fixture av, Fixture turret) {
@@ -145,22 +147,37 @@ public class CollisionController implements ContactListener {
 
     private void processAvatarProjectileContact(Fixture av, Fixture projectile) {
         if (!avatar.isHolding() && InputController.getInstance().pressedRightMouseButton()) {
-            avatar.setHolding(true);
             Obstacle bullet = (Obstacle) projectile.getBody().getUserData();
-            avatar.setHeldBullet((Projectile) bullet);
-            removeBullet(bullet);
+            if (bullet.getSpace() == 2 && controller.isShifted()) {
+                avatar.setHolding(true);
+                avatar.setHeldBullet((Projectile) bullet);
+                removeBullet(bullet);
+            } else if (bullet.getSpace() == 1 && !controller.isShifted()){
+                avatar.setHolding(true);
+                avatar.setHeldBullet((Projectile) bullet);
+                removeBullet(bullet);
+            }
             // //bullet.markRemoved(true);
             //bullet.setPosition(avatar.getPosition());
             // avatar.setHeldBullet(bullet);
 //            projectile.getBody().setType(BodyDef.BodyType.StaticBody);
         } else {
             Obstacle bullet = (Obstacle) projectile.getBody().getUserData();
-            if (avatar.getStartedDashing() == 0) {
-                if (!bullet.equals(avatar.getHeldBullet())) {
-                    avatar.setProjectileContact(true);
+            if (bullet.getSpace() == 2 && controller.isShifted()) {
+                if (avatar.getStartedDashing() == 0) {
+                    if (!bullet.equals(avatar.getHeldBullet())) {
+                        avatar.setProjectileContact(true);
+                    }
                 }
+                removeBullet(bullet);
+            } else if (bullet.getSpace() == 1 && !controller.isShifted()){
+                if (avatar.getStartedDashing() == 0) {
+                    if (!bullet.equals(avatar.getHeldBullet())) {
+                        avatar.setProjectileContact(true);
+                    }
+                }
+                removeBullet(bullet);
             }
-            removeBullet(bullet);
             /*else if (avatar.isHolding() && InputController.getInstance().releasedLeftMouseButton()){
             Vector2 mousePos = InputController.getInstance().getMousePosition();
             avatar.setBodyType(BodyDef.BodyType.DynamicBody);

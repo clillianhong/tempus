@@ -10,8 +10,8 @@
   "restitution": 0.1,
   "bullet_offset": 0.7,
   "effect_volume": 0.8,
-  "present_background": "present_background",
-  "past_background": "past_background",
+  "present_background": "present_background2",
+  "past_background": "past_background3",
   "door": {
     "pos": [
       29.5,
