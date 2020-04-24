@@ -631,13 +631,14 @@ public class LevelController extends WorldController {
 			return false;
 		}
 
-		if (!isFailure() && avatar.getY() < -6) {
+		if (!isFailure() && avatar.getY() < -6 || avatar.getEnemyContact()) {
 			avatar.removeLife();
 			if (avatar.getLives() > 0) {
 				if (shifted) {
                     shifted = false;
                     enemyController.shift();
                 }
+				avatar.setEnemyContact(false);
 				avatar.setPosition(avatarStart);
 				avatar.getBody().setLinearVelocity(0, 0);
 				return true;
@@ -756,7 +757,7 @@ public class LevelController extends WorldController {
 
 		if (avatar.isHolding()) {
 			timeFreeze = true;
-			avatar.resetDashNum();
+			//avatar.resetDashNum();
 			if (avatar.getBodyType() != BodyDef.BodyType.StaticBody) {
 				avatar.setBodyType(BodyDef.BodyType.StaticBody);
 			} else if (InputController.getInstance().releasedRightMouseButton()) {
@@ -779,9 +780,14 @@ public class LevelController extends WorldController {
 			}
 		}
 		if (InputController.getInstance().pressedShiftKey()) {
+			if(avatar.isSticking()){
+				avatar.resetDashNum();
+			}
 			shifted = !shifted;
 			//avatar.resetDashNum();
-			avatar.setPosition(avatar.getPosition().x, avatar.getPosition().y + 0.0001f * Gdx.graphics.getWidth());
+			/*if (!avatar.isHolding()) {
+				avatar.setPosition(avatar.getPosition().x, avatar.getPosition().y + 0.0001f * Gdx.graphics.getWidth());
+			}*/
 			if (avatar.getCurrentPlatform() != null) {
 				if (avatar.isSticking()) {
 					if (!shifted && (avatar.getCurrentPlatform().getSpace() == 2)) { // past world
@@ -1061,6 +1067,9 @@ public class LevelController extends WorldController {
 		if (!InputController.getInstance().pressedLeftMouseButton()
 				&& !InputController.getInstance().pressedRightMouseButton())
 			return;
+		if (InputController.getInstance().pressedRightMouseButton() && !avatar.isHolding()){
+			return;
+		}
 		// Do not draw while player is dashing or not holding a projectile
 		//if (avatar.isDashing() && !avatar.isHolding())
 		//	return;

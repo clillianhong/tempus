@@ -12,6 +12,10 @@
       "file": "textures/platform/platform_capsule_lv_2_past.png",
       "wrap": false
     },
+    "both_capsule": {
+      "file": "textures/platform/both_capsule.png",
+      "wrap": false
+    },
     "present_diamond": {
       "file": "textures/platform/platform_diamond_lv_2_present.png",
       "wrap": false
@@ -20,12 +24,20 @@
       "file": "textures/platform/platform_diamond_lv_2_past.png",
       "wrap": false
     },
+    "both_diamond": {
+      "file": "textures/platform/both_diamond.png",
+      "wrap": false
+    },
     "present_round": {
       "file": "textures/platform/platform_rounded_lv_2_present.png",
       "wrap": false
     },
     "past_round": {
       "file": "textures/platform/platform_rounded_lv_2_past.png",
+      "wrap": false
+    },
+    "both_round": {
+      "file": "textures/platform/both_round.png",
       "wrap": false
     },
     "goal": {

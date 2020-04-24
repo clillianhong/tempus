@@ -137,21 +137,13 @@ public class CollisionController implements ContactListener {
     }
 
     private void processAvatarEnemyContact(Fixture av, Fixture turret) {
-        if (!avatar.getEnemyContact()) {
-            avatar.setEnemyContact(true);
-        }
-        if (avatar.getPosition().x <= turret.getBody().getPosition().x) {
-            avatar.setLinearVelocity(new Vector2(-2, 6));
-        } else {
-            avatar.setLinearVelocity(new Vector2(2, 6));
-        }
+        avatar.setEnemyContact(true);
         turret.getBody().setLinearVelocity(new Vector2(0, 0));
         //avatar.getBody().applyForce(new Vector2(-20, 40), avatar.getPosition(), true);
         //TODO: avatar turret contact (die)
     }
 
     private void processAvatarProjectileContact(Fixture av, Fixture projectile) {
-        System.out.println("fieuwbfiwe");
         if (!avatar.isHolding() && InputController.getInstance().pressedRightMouseButton()) {
             avatar.setHolding(true);
             Obstacle bullet = (Obstacle) projectile.getBody().getUserData();
