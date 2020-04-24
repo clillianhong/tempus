@@ -37,48 +37,48 @@
   },
   "turrets": {},
   "capsules": {
-    "presentcapsule13": {
-      "name": "present_capsule",
+    "capsule13": {
+      "name": "both_capsule",
       "pos": [18.984, 8.34],
       "bodytype": "static",
       "density": 0,
       "friction": 0.6,
       "restitution": 0.1,
-      "texture": "present_capsule",
-      "space": 1
+      "texture": "both_capsule",
+      "space": 3
     },
-    "presentcapsule15": {
-      "name": "present_capsule",
+    "capsule15": {
+      "name": "both_capsule",
       "pos": [9.576, 6.0],
       "bodytype": "static",
       "density": 0,
       "friction": 0.6,
       "restitution": 0.1,
-      "texture": "present_capsule",
-      "space": 1
+      "texture": "both_capsule",
+      "space": 3
     },
-    "presentcapsule16": {
-      "name": "present_capsule",
+    "capsule16": {
+      "name": "both_capsule",
       "pos": [4.072, 7.8],
       "bodytype": "static",
       "density": 0,
       "friction": 0.6,
       "restitution": 0.1,
-      "texture": "present_capsule",
-      "space": 1
+      "texture": "both_capsule",
+      "space": 3
     }
   },
   "diamonds": {},
   "rounds": {
-    "presentround14": {
-      "name": "present_round",
+    "round14": {
+      "name": "both_round",
       "pos": [1, 2.9400000000000004],
       "bodytype": "static",
       "density": 0,
       "friction": 0.6,
       "restitution": 0.1,
-      "texture": "present_round",
-      "space": 1
+      "texture": "both_round",
+      "space": 3
     }
   },
   "enemies": {}

@@ -843,17 +843,6 @@ public class Avatar extends CapsuleObstacle {
     public void update(float dt) {
         //System.out.println(lives);
         // Apply cooldowns
-        if (enemyContact  && enemyTicks == 0){
-            enemyTicks = 10;
-        }
-        if (enemyTicks > 0){
-            enemyTicks --;
-        }
-        if (enemyTicks == 1 && enemyContact){
-            enemyTicks = 0;
-            removeLife();
-            enemyContact = false;
-        }
         if (hitByProjctile && isHolding){
                 removeLife();
                 hitByProjctile = false;
