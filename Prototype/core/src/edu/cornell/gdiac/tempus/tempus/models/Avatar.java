@@ -843,17 +843,6 @@ public class Avatar extends CapsuleObstacle {
     public void update(float dt) {
         //System.out.println(lives);
         // Apply cooldowns
-        if (enemyContact  && enemyTicks == 0){
-            enemyTicks = 10;
-        }
-        if (enemyTicks > 0){
-            enemyTicks --;
-        }
-        if (enemyTicks == 1 && enemyContact){
-            enemyTicks = 0;
-            removeLife();
-            enemyContact = false;
-        }
         if (hitByProjctile && isHolding){
                 removeLife();
                 hitByProjctile = false;
@@ -1000,9 +989,9 @@ public class Avatar extends CapsuleObstacle {
 
         // Draw avatar body
         if (currentStrip != null) {
-            canvas.draw(currentStrip, Color.WHITE, origin.x, origin.y,
+            canvas.draw(currentStrip, Color.WHITE, origin.x + 84f, origin.y + 52f,
                     getX() * drawScale.x, getY() * drawScale.y, getAngle(),
-                    0.024f * drawScale.x * faceDirection, 0.0225f * drawScale.y);
+                    0.02f * drawScale.x * faceDirection, 0.01875f * drawScale.y);
         }
 
         // If player is holding a projectile then draw the held projectile

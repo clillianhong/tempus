@@ -102,6 +102,12 @@ public class CollisionController implements ContactListener {
         } else if ((objB instanceof Avatar) && (objA instanceof Platform)) {
             processAvatarPlatformContact(fixB, fixA);
         }
+        //avatar-spikes
+        else if ((objA instanceof Avatar) && (objB instanceof Spikes)) {
+            processAvatarSpikesContact(fixA, fixB);
+        } else if ((objB instanceof Avatar) && (objA instanceof Spikes)) {
+            processAvatarSpikesContact(fixB, fixA);
+        }
         //avatar-turret
         else if ((objA instanceof Avatar) && (objB instanceof Enemy)) {
             processAvatarEnemyContact(fixA, fixB);
@@ -128,15 +134,12 @@ public class CollisionController implements ContactListener {
         //TODO: avatar platform contact
     }
 
+    private void processAvatarSpikesContact(Fixture proj1, Fixture proj2) {
+        avatar.setEnemyContact(true);
+    }
+
     private void processAvatarEnemyContact(Fixture av, Fixture turret) {
-        if (!avatar.getEnemyContact()) {
-            avatar.setEnemyContact(true);
-        }
-        if (avatar.getPosition().x <= turret.getBody().getPosition().x) {
-            avatar.setLinearVelocity(new Vector2(-2, 6));
-        } else {
-            avatar.setLinearVelocity(new Vector2(2, 6));
-        }
+        avatar.setEnemyContact(true);
         turret.getBody().setLinearVelocity(new Vector2(0, 0));
         //avatar.getBody().applyForce(new Vector2(-20, 40), avatar.getPosition(), true);
         //TODO: avatar turret contact (die)
@@ -144,22 +147,37 @@ public class CollisionController implements ContactListener {
 
     private void processAvatarProjectileContact(Fixture av, Fixture projectile) {
         if (!avatar.isHolding() && InputController.getInstance().pressedRightMouseButton()) {
-            avatar.setHolding(true);
             Obstacle bullet = (Obstacle) projectile.getBody().getUserData();
-            avatar.setHeldBullet((Projectile) bullet);
-            removeBullet(bullet);
+            if (bullet.getSpace() == 2 && controller.isShifted()) {
+                avatar.setHolding(true);
+                avatar.setHeldBullet((Projectile) bullet);
+                removeBullet(bullet);
+            } else if (bullet.getSpace() == 1 && !controller.isShifted()){
+                avatar.setHolding(true);
+                avatar.setHeldBullet((Projectile) bullet);
+                removeBullet(bullet);
+            }
             // //bullet.markRemoved(true);
             //bullet.setPosition(avatar.getPosition());
             // avatar.setHeldBullet(bullet);
 //            projectile.getBody().setType(BodyDef.BodyType.StaticBody);
         } else {
             Obstacle bullet = (Obstacle) projectile.getBody().getUserData();
-            if (avatar.getStartedDashing() == 0) {
-                if (!bullet.equals(avatar.getHeldBullet())) {
-                    avatar.setProjectileContact(true);
+            if (bullet.getSpace() == 2 && controller.isShifted()) {
+                if (avatar.getStartedDashing() == 0) {
+                    if (!bullet.equals(avatar.getHeldBullet())) {
+                        avatar.setProjectileContact(true);
+                    }
                 }
+                removeBullet(bullet);
+            } else if (bullet.getSpace() == 1 && !controller.isShifted()){
+                if (avatar.getStartedDashing() == 0) {
+                    if (!bullet.equals(avatar.getHeldBullet())) {
+                        avatar.setProjectileContact(true);
+                    }
+                }
+                removeBullet(bullet);
             }
-            removeBullet(bullet);
             /*else if (avatar.isHolding() && InputController.getInstance().releasedLeftMouseButton()){
             Vector2 mousePos = InputController.getInstance().getMousePosition();
             avatar.setBodyType(BodyDef.BodyType.DynamicBody);
@@ -257,16 +275,20 @@ public class CollisionController implements ContactListener {
             if (bd1.getName().equals("bullet") && bd2 != avatar) {
                 if (bd2.getBody().getUserData() instanceof Enemy) {
                     processProjEnemyContact(fix1, fix2);
-                } else {
+                } else if (!bd2.getName().equals("bullet")){
                     removeBullet(bd1);
                 }
+            } else if ((bd1.getName().equals("bullet") && bd2 == avatar)){
+                processAvatarProjectileContact(fix2, fix1);
             }
             if (bd2.getName().equals("bullet") && bd1 != avatar) {
                 if (bd1.getBody().getUserData() instanceof Enemy) {
                     processProjEnemyContact(fix2, fix1);
-                } else {
+                } else if (!bd1.getName().equals("bullet")){
                     removeBullet(bd2);
                 }
+            } else if (bd2.getName().equals("bullet") && bd1 == avatar){
+                processAvatarProjectileContact(fix1, fix2);
             }
 
 

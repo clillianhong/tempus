@@ -303,7 +303,7 @@ public class Enemy extends CapsuleObstacle {
 
     public RayCastCallback getSight() { return sight; }
 
-    public void setLimiter(int limiter) { this.limiter = limiter; }
+    public void setLimiter(float limiter) { this.limiter = limiter; }
 
     public EnemyType getAi() {
         return ai;

@@ -1,11 +1,12 @@
 {
   "gravity": -14.7,
   "bounds": [32, 18],
-  "present_background": "present_background",
-  "past_background": "past_background",
+  "present_background": "present_background2",
+  "past_background": "past_background3",
   "diamondshape": [0.2, 1.8, 2.4, 1.8, 1.4, 0.1],
   "capsuleshape": [0.2, 1.1, 2.9, 1.1, 2.9, 0.6, 2.0, 0.2, 1.1, 0.2, 0.2, 0.6],
   "roundshape": [0.1, 1.4, 0.5, 1.7, 2.4, 1.7, 2.7, 1.4, 2.6, 0.8, 2, 0.2, 0.8, 0.2],
+  "spikeshape": [0.3, -0.6, 0.0, -0.2, -0.6, 0.0, -0.5, 0.4, 0.0, 0.6, 0.4, -0.2, 0.6, -0.3],
   "density": 0,
   "heavy_density": 10,
   "friction": 0.6,
@@ -92,16 +93,17 @@
     }
   },
   "rounds": {
-    "presentround10": {
-      "name": "present_round",
+    "bothround10": {
+      "name": "both_round",
       "pos": [1, 2.91],
       "bodytype": "static",
       "density": 0,
       "friction": 0.6,
       "restitution": 0.1,
-      "texture": "present_round",
-      "space": 1
+      "texture": "both_round",
+      "space": 3
     }
   },
-  "enemies": {}
+  "enemies": {},
+  "spikes": {}
 }
