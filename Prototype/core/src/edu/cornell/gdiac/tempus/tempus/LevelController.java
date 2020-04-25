@@ -905,11 +905,11 @@ public class LevelController extends WorldController {
 		if (InputController.getInstance().pressedLeftMouseButton()
 				|| InputController.getInstance().pressedRightMouseButton()) {
 			// If either mouse button is held, set animation to be crouching
-			avatar.animate(Avatar.AvatarState.CROUCHING, true);
+			avatar.animate(Avatar.AvatarState.CROUCHING, false);
 		} else if (avatar.isSticking()) {
 			// Default animation if player is stationary
 			avatar.animate(Avatar.AvatarState.STANDING, false);
-		} else if (avatar.isDashing()) {
+		} else if (avatar.getLinearVelocity().y > 0) {
 			avatar.animate(Avatar.AvatarState.DASHING, false);
 		} else {
 			avatar.animate(Avatar.AvatarState.FALLING, false);
