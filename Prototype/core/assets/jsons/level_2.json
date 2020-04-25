@@ -1,8 +1,8 @@
 {
   "gravity": -14.7,
   "bounds": [32, 18],
-  "present_background": "present_background",
-  "past_background": "past_background",
+  "present_background": "present_background2",
+  "past_background": "past_background2",
   "diamondshape": [0.2, 1.8, 2.4, 1.8, 1.4, 0.1],
   "capsuleshape": [0.2, 1.1, 2.9, 1.1, 2.9, 0.6, 2.0, 0.2, 1.1, 0.2, 0.2, 0.6],
   "roundshape": [0.1, 1.4, 0.5, 1.7, 2.4, 1.7, 2.7, 1.4, 2.6, 0.8, 2, 0.2, 0.8, 0.2],

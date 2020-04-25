@@ -86,7 +86,7 @@ public class EnemyController {
     public void slowCoolDown(boolean flag) {
         for (Enemy e: enemies) {
             if (flag) {
-                e.setLimiter(1);
+                e.setLimiter(0.5f);
             } else {
                 e.setLimiter(4);
             }

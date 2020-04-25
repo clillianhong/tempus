@@ -403,6 +403,8 @@ public class LevelController extends WorldController {
 		float[] newPlatCapsule = levelFormat.get("capsuleshape").asFloatArray();
 		float[] newPlatDiamond = levelFormat.get("diamondshape").asFloatArray();
 		float[] newPlatRounded = levelFormat.get("roundshape").asFloatArray();
+		float[] newSpikes = levelFormat.get("spikeshape").asFloatArray();
+
 		JsonValue capsule = levelFormat.get("capsules").child();
 		while (capsule!=null){
 			Platform obj = new Platform (newPlatCapsule);
@@ -469,7 +471,16 @@ public class LevelController extends WorldController {
 //			obj.setSpace(1);
 //			addObject(obj);
 //		}
+		//float[] newSpikes = {0.3f, -0.6f, 0.0f, -0.2f, -0.6f, 0.0f, -0.5f, 0.4f, 0.0f, 0.6f, 0.4f, -0.2f, 0.6f, -0.3f};
 
+		JsonValue spikes = levelFormat.get("spikes").child();
+		while (spikes != null){
+			Spikes obj = new Spikes (newSpikes);
+			obj.initialize(spikes);
+			obj.setDrawScale(scale);
+			addObject(obj);
+			spikes = spikes.next();
+		}
         //TODO:Delete
 //		for (int ii = 0; ii < PAST_ROUNDS.length; ii++) {
 //			PolygonObstacle obj;
@@ -613,6 +624,8 @@ public class LevelController extends WorldController {
 
 	public PooledList<Obstacle> getObjects() { return objects;}
 
+	public boolean isShifted() { return shifted; }
+
 	/**
 	 * Returns whether to process the update loop
 	 *
@@ -631,13 +644,14 @@ public class LevelController extends WorldController {
 			return false;
 		}
 
-		if (!isFailure() && avatar.getY() < -6) {
+		if (!isFailure() && avatar.getY() < -6 || avatar.getEnemyContact()) {
 			avatar.removeLife();
 			if (avatar.getLives() > 0) {
 				if (shifted) {
                     shifted = false;
                     enemyController.shift();
                 }
+				avatar.setEnemyContact(false);
 				avatar.setPosition(avatarStart);
 				avatar.getBody().setLinearVelocity(0, 0);
 				return true;
@@ -685,9 +699,7 @@ public class LevelController extends WorldController {
 //			 	}
 //			 }
 
-//			if (obj.getName().equals("bullet") || obj.getName().equals("turret")) {
-            if (obj.getName().equals("bullet")) {
-				obj.setSensor(false);
+			if (obj instanceof Enemy && ((Enemy) obj).isTurret()) {
 				if (obj.getSpace() == 3) {
 					obj.setSensor(false);
 				} else if (!shifted && (obj.getSpace() == 2)) {
@@ -695,7 +707,16 @@ public class LevelController extends WorldController {
 				} else if (shifted && (obj.getSpace() == 1)) {
 					obj.setSensor(true);
 				}
-			} else {
+            /*if (obj.getName().equals("bullet")) {
+				obj.setSensor(false);
+				if (obj.getSpace() == 3) {
+					obj.setSensor(false);
+				} else if (!shifted && (obj.getSpace() == 2)) {
+					obj.setSensor(true);
+				} else if (shifted && (obj.getSpace() == 1)) {
+					obj.setSensor(true);
+				}*/
+			} else if (!(obj instanceof Projectile)) {
 				obj.setActive(true);
 				if (obj.getSpace() == 3) {
 					obj.setActive(true);
@@ -756,7 +777,7 @@ public class LevelController extends WorldController {
 
 		if (avatar.isHolding()) {
 			timeFreeze = true;
-			avatar.resetDashNum();
+			//avatar.resetDashNum();
 			if (avatar.getBodyType() != BodyDef.BodyType.StaticBody) {
 				avatar.setBodyType(BodyDef.BodyType.StaticBody);
 			} else if (InputController.getInstance().releasedRightMouseButton()) {
@@ -779,9 +800,14 @@ public class LevelController extends WorldController {
 			}
 		}
 		if (InputController.getInstance().pressedShiftKey()) {
+			if(avatar.isSticking()){
+				avatar.resetDashNum();
+			}
 			shifted = !shifted;
 			//avatar.resetDashNum();
-			avatar.setPosition(avatar.getPosition().x, avatar.getPosition().y + 0.0001f * Gdx.graphics.getWidth());
+			/*if (!avatar.isHolding()) {
+				avatar.setPosition(avatar.getPosition().x, avatar.getPosition().y + 0.0001f * Gdx.graphics.getWidth());
+			}*/
 			if (avatar.getCurrentPlatform() != null) {
 				if (avatar.isSticking()) {
 					if (!shifted && (avatar.getCurrentPlatform().getSpace() == 2)) { // past world
@@ -879,11 +905,11 @@ public class LevelController extends WorldController {
 		if (InputController.getInstance().pressedLeftMouseButton()
 				|| InputController.getInstance().pressedRightMouseButton()) {
 			// If either mouse button is held, set animation to be crouching
-			avatar.animate(Avatar.AvatarState.CROUCHING, true);
+			avatar.animate(Avatar.AvatarState.CROUCHING, false);
 		} else if (avatar.isSticking()) {
 			// Default animation if player is stationary
 			avatar.animate(Avatar.AvatarState.STANDING, false);
-		} else if (avatar.isDashing()) {
+		} else if (avatar.getLinearVelocity().y > 0) {
 			avatar.animate(Avatar.AvatarState.DASHING, false);
 		} else {
 			avatar.animate(Avatar.AvatarState.FALLING, false);
@@ -1004,6 +1030,7 @@ public class LevelController extends WorldController {
 		bullet.setName("bullet");
 		bullet.setDensity(HEAVY_DENSITY);
 		bullet.setDrawScale(scale);
+		bullet.setSensor(true);
 		//bullet.setTexture(bulletBigTexture);
 		if (bullet.getType() == PRESENT){
             presentBullet = JsonAssetManager.getInstance().getEntry("projpresent", TextureRegion.class);
@@ -1060,6 +1087,9 @@ public class LevelController extends WorldController {
 		if (!InputController.getInstance().pressedLeftMouseButton()
 				&& !InputController.getInstance().pressedRightMouseButton())
 			return;
+		if (InputController.getInstance().pressedRightMouseButton() && !avatar.isHolding()){
+			return;
+		}
 		// Do not draw while player is dashing or not holding a projectile
 		//if (avatar.isDashing() && !avatar.isHolding())
 		//	return;
