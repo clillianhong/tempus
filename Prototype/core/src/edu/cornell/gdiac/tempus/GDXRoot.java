@@ -91,19 +91,9 @@ public class GDXRoot extends Game implements ScreenListener {
 		gameManager.setCanvas(canvas);
 		gameManager.setListener(this);
 
-		// Initialize the three game worlds
-
-		controllers = new LevelController[3];
-		controllers[0] = new LevelController("jsons/level_1.json");
-		controllers[1] = new LevelController("jsons/level_2.json");
-		controllers[2] = new LevelController("jsons/level_3.json");
-
 		menu = new MainMenuMode();
 		levelselect = new SelectLevelMode();
 
-		for(int ii = 0; ii < controllers.length; ii++) {
-			controllers[ii].preLoadContent();
-		}
 
 		current = 0;
 		loading.setScreenListener(this);

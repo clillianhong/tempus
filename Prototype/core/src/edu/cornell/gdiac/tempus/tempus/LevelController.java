@@ -57,6 +57,14 @@ import static edu.cornell.gdiac.tempus.tempus.models.EntityType.PRESENT;
 public class LevelController extends WorldController {
 
 
+	/** Stage for adding UI components **/
+	private Skin skin;
+	private Stage stage;
+
+	private Table table;
+	private Button quitButton;
+
+
 	/** Checks if did debug */
 	private boolean debug;
 	/** counts down beginning of game to avoid opening mis-dash*/
@@ -288,12 +296,6 @@ public class LevelController extends WorldController {
 		timeFreeze = false;
 	}
 
-	private Skin skin;
-	private Stage stage;
-
-	private Table table;
-	private Button quitButton;
-
 	private void exitGame() {
 		listener.exitScreen(this, ScreenExitCodes.EXIT_QUIT.ordinal());
 	}
@@ -308,8 +310,6 @@ public class LevelController extends WorldController {
 	 */
 	private void populateLevel() {
 
-		float sw = Gdx.graphics.getWidth();
-		float sh = Gdx.graphics.getHeight();
 
 		// tester stage!
 		skin = new Skin(Gdx.files.internal("jsons/uiskin.json"));
@@ -318,25 +318,9 @@ public class LevelController extends WorldController {
 		table.setWidth(stage.getWidth());
 		table.align(Align.center | Align.top);
 		table.setPosition(0, Gdx.graphics.getHeight());
-//		TextureRegionDrawable qBuResource = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/white_quit.png"))));
-//		quitButton = new Button(qBuResource);
-//		quitButton.addListener(new ClickListener() {
-//			@Override
-//			public void clicked(InputEvent event, float x, float y) {
-//				exitGame();
-//			}
-//		});
-		TextureRegionDrawable backButtonResource = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/selectmode/backbutton.png"))));
-		Button backButton = new Button(backButtonResource);
-		backButton.addListener(new ClickListener() {
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				exitBack();
-			}
-		});
-		table.add(backButton).width(sw/15f).height(sw/15f).expand().right();
-		stage.addActor(table);
-		Gdx.input.setInputProcessor(stage);
+
+		createUI();
+
 
 		//Initializes the world
 		float gravity = levelFormat.getFloat("gravity");
@@ -622,6 +606,27 @@ public class LevelController extends WorldController {
         enemyController = new EnemyController(enemies, objects, avatar, world, scale, this);
     }
 
+	/**
+	 * Creates all UI features for a room mode.
+	 *
+	 */
+	public void createUI(){
+		float sw = Gdx.graphics.getWidth();
+		float sh = Gdx.graphics.getHeight();
+
+		TextureRegionDrawable pauseButtonResource = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/selectmode/backbutton.png"))));
+		Button pauseButton = new Button(pauseButtonResource);
+		pauseButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				exitBack();
+			}
+		});
+		table.add(pauseButton).width(sw/15f).height(sw/15f).expand().right();
+		stage.addActor(table);
+		Gdx.input.setInputProcessor(stage);
+
+	}
 	public PooledList<Obstacle> getObjects() { return objects;}
 
 	public boolean isShifted() { return shifted; }
