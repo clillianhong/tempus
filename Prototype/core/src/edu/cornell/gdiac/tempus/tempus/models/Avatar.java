@@ -983,15 +983,15 @@ public class Avatar extends CapsuleObstacle {
         // flipping the avatar when they are sticking
         // below a platform looks off
         float faceDirection = 1.0f;
-        if (getAngle() > -0.3 && getAngle() < 0.3) {
-            faceDirection = faceRight ? 1.0f : -1.0f;
-        }
+//        if (getAngle() > -0.3 && getAngle() < 0.3) {
+//            faceDirection = faceRight ? 1.0f : -1.0f;
+//        }
 
         // Draw avatar body
         if (currentStrip != null) {
-            canvas.draw(currentStrip, Color.WHITE, origin.x, origin.y,
+            canvas.draw(currentStrip, Color.WHITE, origin.x + 84f, origin.y + 52f,
                     getX() * drawScale.x, getY() * drawScale.y, getAngle(),
-                    0.024f * drawScale.x * faceDirection, 0.0225f * drawScale.y);
+                    0.02f * drawScale.x * faceDirection, 0.01875f * drawScale.y);
         }
 
         // If player is holding a projectile then draw the held projectile
