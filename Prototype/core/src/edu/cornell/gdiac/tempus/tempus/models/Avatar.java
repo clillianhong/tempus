@@ -983,9 +983,9 @@ public class Avatar extends CapsuleObstacle {
         // flipping the avatar when they are sticking
         // below a platform looks off
         float faceDirection = 1.0f;
-//        if (getAngle() > -0.3 && getAngle() < 0.3) {
-//            faceDirection = faceRight ? 1.0f : -1.0f;
-//        }
+        if (getAngle() > -0.3 && getAngle() < 0.3) {
+            faceDirection = faceRight ? 1.0f : -1.0f;
+        }
 
         // Draw avatar body
         if (currentStrip != null) {
