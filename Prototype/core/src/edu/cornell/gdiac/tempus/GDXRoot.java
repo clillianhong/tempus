@@ -93,7 +93,7 @@ public class GDXRoot extends Game implements ScreenListener {
 
 		// Initialize the three game worlds
 
-		controllers = new WorldController[3];
+		controllers = new LevelController[3];
 		controllers[0] = new LevelController("jsons/level_1.json");
 		controllers[1] = new LevelController("jsons/level_2.json");
 		controllers[2] = new LevelController("jsons/level_3.json");
