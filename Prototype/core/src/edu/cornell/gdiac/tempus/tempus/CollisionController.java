@@ -6,6 +6,7 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.ObjectSet;
 import edu.cornell.gdiac.tempus.InputController;
 import edu.cornell.gdiac.tempus.obstacle.Obstacle;
+import edu.cornell.gdiac.tempus.obstacle.SimpleObstacle;
 import edu.cornell.gdiac.tempus.tempus.models.*;
 import edu.cornell.gdiac.util.PooledList;
 
@@ -164,18 +165,14 @@ public class CollisionController implements ContactListener {
         } else {
             Obstacle bullet = (Obstacle) projectile.getBody().getUserData();
             if (bullet.getSpace() == 2 && controller.isShifted()) {
-                if (avatar.getStartedDashing() == 0) {
                     if (!bullet.equals(avatar.getHeldBullet())) {
                         avatar.setProjectileContact(true);
                     }
-                }
                 removeBullet(bullet);
             } else if (bullet.getSpace() == 1 && !controller.isShifted()){
-                if (avatar.getStartedDashing() == 0) {
                     if (!bullet.equals(avatar.getHeldBullet())) {
                         avatar.setProjectileContact(true);
                     }
-                }
                 removeBullet(bullet);
             }
             /*else if (avatar.isHolding() && InputController.getInstance().releasedLeftMouseButton()){
@@ -294,18 +291,23 @@ public class CollisionController implements ContactListener {
 
             //handle platform-avatar collisions first (outside of processcontact
             if (((objA instanceof Avatar) && (objB instanceof Platform)) || ((objB instanceof Avatar) && (objA instanceof Platform))) {
+                //if(avatar.getCurrentPlatform() != objB && avatar.getCurrentPlatform() != objA) {
+                    if (!avatar.isSticking()) {
+                        Float norm_angle = contact.getWorldManifold().getNormal().angle();
 
-                if (!avatar.isSticking()) {
-                    Float norm_angle = contact.getWorldManifold().getNormal().angle();
-
-                    if (!norm_angle.isNaN()) {
-                        cur_normal = ((norm_angle.intValue()) == 0) ? 0 : (float) Math.toRadians(norm_angle - 90);
+                        if (!norm_angle.isNaN()) {
+                        /*if ((norm_angle.intValue()) == 0){
+                            System.out.println("Fekwbfiewq");
+                            cur_normal = (float) Math.toRadians(90);
+                        } else {*/
+                            cur_normal = (float) Math.toRadians(norm_angle - 90);
+                            //}
+                        }
                     }
-                }
 
-                if (!avatar.isSticking() && avatar.getStartedDashing() == 0) {
+                    if (!avatar.isSticking()) {
 
-                    if (avatar.getCurrentPlatform() != null && (bd1.getName().equals("wall") || bd2.getName().equals("wall"))) {
+                    /*if (avatar.getCurrentPlatform() != null && (bd1.getName().equals("wall") || bd2.getName().equals("wall"))) {
                         if (!avatar.getCurrentPlatform().equals(objA) && !avatar.getCurrentPlatform().equals(objB)) {
                             avatar.setGrounded(true);
                             avatar.setSticking(true);
@@ -316,19 +318,21 @@ public class CollisionController implements ContactListener {
                                 avatar.setCurrentPlatform((Platform) objA);
                             }
                         }
-                    } else {
+                    } else {*/
+                        //avatar.contactPoint = contact.getWorldManifold().getPoints()[0];
                         avatar.setGrounded(true);
                         avatar.setSticking(true);
+                        System.out.println(cur_normal);
                         avatar.setNewAngle(cur_normal);
                         if (objB instanceof Platform) {
                             avatar.setCurrentPlatform((Platform) objB);
                         } else {
                             avatar.setCurrentPlatform((Platform) objA);
                         }
+                        //}
                     }
-                }
-                sensorFixtures.add(avatar == bd1 ? fix2 : fix1); // Could have more than one ground
-
+                    sensorFixtures.add(avatar == bd1 ? fix2 : fix1); // Could have more than one ground
+               // }
             }
 
             if (objA instanceof Enemy || objB instanceof Enemy) {
