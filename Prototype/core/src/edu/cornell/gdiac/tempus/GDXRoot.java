@@ -188,24 +188,22 @@ public class GDXRoot extends Game implements ScreenListener {
 				setScreen(menu);
 			} else { // go to a level
 				gameManager.setCurrentLevel(exitCode);
-				LevelController room = gameManager.getCurrentRoom();
-				room.reset();
+				gameManager.getCurrentRoom().reset();
 				gameManager.printGameState();
-
-				setScreen(room);
+				setScreen(gameManager.getCurrentRoom());
 				current = exitCode;
 			}
 
 			levelselect.dispose();
 		} else if (exitCode == ScreenExitCodes.EXIT_NEXT.ordinal()) {
-			System.out.println("TRYING TO EXIT LEVEL");
-			gameManager.stepGame();
+			gameManager.getCurrentRoom().reset();
+			gameManager.stepGame(false);
 			LevelController room = gameManager.getCurrentRoom();
 			gameManager.printGameState();
 			room.reset();
 			setScreen(room);
 		} else if (exitCode == ScreenExitCodes.EXIT_PREV.ordinal()) {
-			// gameManager.getCurrentRoom().reset();
+			gameManager.stepGame(true);
 			setScreen(levelselect);
 		} else if (exitCode == ScreenExitCodes.EXIT_QUIT.ordinal()) {
 			// We quit the main application
