@@ -159,7 +159,6 @@ public class GDXRoot extends Game implements ScreenListener {
 			loading = null;
 		} else if (screen == menu) {
 			gameManager.printGameState();
-
 			if (exitCode == ScreenExitCodes.MENU_START.ordinal()) {
 
 				gameManager.readyLevels();
@@ -174,13 +173,15 @@ public class GDXRoot extends Game implements ScreenListener {
 			} else if (exitCode == ScreenExitCodes.MENU_HELP.ordinal()) {
 				// TODO menu help hookup
 			} else {
+				// We quit the main application
+				gameManager.updateGameState();
+				gameManager.saveGameState();
 				Gdx.app.exit();
 			}
 
 			menu.dispose();
 
 		} else if (screen == levelselect) {
-
 			if (exitCode == ScreenExitCodes.EXIT_PREV.ordinal()) {
 				menu.createMode();
 				menu.setScreenListener(this);
@@ -198,15 +199,19 @@ public class GDXRoot extends Game implements ScreenListener {
 		} else if (exitCode == ScreenExitCodes.EXIT_NEXT.ordinal()) {
 			gameManager.getCurrentRoom().reset();
 			gameManager.stepGame(false);
+			gameManager.updateGameState();
 			LevelController room = gameManager.getCurrentRoom();
 			gameManager.printGameState();
 			room.reset();
 			setScreen(room);
 		} else if (exitCode == ScreenExitCodes.EXIT_PREV.ordinal()) {
 			gameManager.stepGame(true);
+			gameManager.updateGameState();
 			setScreen(levelselect);
 		} else if (exitCode == ScreenExitCodes.EXIT_QUIT.ordinal()) {
 			// We quit the main application
+			gameManager.updateGameState();
+			gameManager.saveGameState();
 			Gdx.app.exit();
 		}
 	}
