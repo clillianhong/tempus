@@ -761,6 +761,7 @@ public class LevelController extends WorldController {
 	 * @param dt Number of seconds since last animation frame
 	 */
 	public void update(float dt) {
+
 		// Turn the physics engine crank.
 		// world.step(WORLD_STEP,WORLD_VELOC,WORLD_POSIT);
 
@@ -782,11 +783,6 @@ public class LevelController extends WorldController {
 //				}
 //			}
             enemyController.slowCoolDown(false);
-		}
-		int t = avatar.getStartedDashing();
-		if (t > 0) {
-			t = t - 1;
-			avatar.setStartedDashing(t);
 		}
 //		System.out.println(numEnemies);
 		if (numEnemies == 0){
@@ -816,7 +812,6 @@ public class LevelController extends WorldController {
 				avatar.setCurrentPlatform(null);
 				createRedirectedProj();
 				avatar.setHeldBullet(null); // NOTE: gives error if called before createRedirectedProj()
-
 			}
 		}
 		if (InputController.getInstance().pressedShiftKey()) {
@@ -972,14 +967,16 @@ public class LevelController extends WorldController {
 	 */
 	public void postUpdate(float dt) {
 		super.postUpdate(dt);
-
+		avatar.setAngle(avatar.getNewAngle());
 		if (avatar.isSticking() && !avatar.getWasSticking()) {
 			avatar.setDashing(false);
 			avatar.getBody().setLinearVelocity(0, 0);
+			//avatar.setPosition(avatar.getPosition().cpy().add(
+			//		new Vector2((float) Math.sin(avatar.getAngle() * (avatar.getWidth()/4 - avatar.getHeight()/2)), 0)));
+			//avatar.setPosition(avatar.contactPoint.cpy().add(new Vector2(avatar.getHeight()/2 * 1.1f, avatar.getHeight()/2 * 1.1f).setAngleRad(avatar.getAngle() +(float) Math.PI /2)));
 			avatar.getBody().setAngularVelocity(0);
 			avatar.setBodyType(BodyDef.BodyType.StaticBody);
 			avatar.setWasSticking(true);
-			avatar.setAngle(avatar.getNewAngle());
 		}
 	}
 
@@ -1211,7 +1208,6 @@ public class LevelController extends WorldController {
 			backgroundTexture = JsonAssetManager.getInstance().getEntry(levelFormat.get("present_background").asString(), TextureRegion.class);
 			canvas.draw(backgroundTexture, Color.WHITE, 0, 0, canvas.getWidth(), canvas.getHeight());
 		}
-
 		drawObjectInWorld();
 		canvas.end();
 

@@ -29,7 +29,7 @@
     "nextlevel": 0,
     "space": 3
   },
-  "capsuleshape": [0.2, 1.1, 2.9, 1.1, 2.9, 0.6, 2.0, 0.2, 1.1, 0.2, 0.2, 0.6],
+  "capsuleshape": [0.5, 1.1, 2.6, 1.1, 2.6, 0.6, 2.0, 0.2, 1.1, 0.2, 0.5, 0.6],
   "capsules": {
     "presentcapsule1": {
       "name": "present_capsule",
@@ -92,7 +92,7 @@
       "space": 2
     }
   },
-  "diamondshape": [0.2, 1.8, 2.4, 1.8, 1.4, 0.1],
+  "diamondshape": [0.5, 1.8, 2.1, 1.8, 1.4, 0.1],
   "diamonds": {
     "bothdiamond1": {
       "name": "both_diamond",
@@ -143,7 +143,7 @@
       "space": 2
     }
   },
-  "roundshape": [0.1, 1.4, 0.5, 1.7, 2.4, 1.7, 2.7, 1.4, 2.6, 0.8, 2.0, 0.2, 0.8, 0.2],
+  "roundshape": [0.4, 1.4, 0.8, 1.7, 2.1, 1.7, 2.4, 1.4, 2.3, 0.8, 1.7, 0.3, 1.1, 0.3],
   "rounds": {
     "presentround1": {
       "name": "present_round",
