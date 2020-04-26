@@ -353,10 +353,10 @@ public class LevelController extends WorldController {
 		// jsonReader.parse(Gdx.files.internal("jsons/test_level_editor.json"));
 		present_music = JsonAssetManager.getInstance().getEntry(levelFormat.getString("present_music"), Music.class);
 		past_music = JsonAssetManager.getInstance().getEntry(levelFormat.getString("past_music"), Music.class);
-		present_music.setVolume(1);
+		//present_music.setVolume(1);
 		present_music.play();
 		present_music.setLooping(true);
-		past_music.setVolume(0);
+		//past_music.setVolume(0);
 		past_music.play();
 		past_music.setLooping(true);
 		populateLevel();
@@ -364,10 +364,12 @@ public class LevelController extends WorldController {
 	}
 
 	private void exitGame() {
+		stopMusic();
 		listener.exitScreen(this, ScreenExitCodes.EXIT_QUIT.ordinal());
 	}
 
 	private void exitLevelSelect() {
+		stopMusic();
 		listener.exitScreen(this, ScreenExitCodes.EXIT_PREV.ordinal());
 	}
 
@@ -888,8 +890,6 @@ public class LevelController extends WorldController {
 			if (avatar.getLives() > 0) {
 				if (shifted) {
 					shifted = false;
-					present_music.setVolume(1);
-					past_music.setVolume(0);
 					enemyController.shift();
 				}
 				avatar.setEnemyContact(false);
@@ -1017,6 +1017,24 @@ public class LevelController extends WorldController {
 			goalDoor.setOpen(false);
 		}
 
+		float presVol = present_music.getVolume();
+		float pastVol = past_music.getVolume();
+		if (shifted) {
+			if (presVol > 0){
+				present_music.setVolume(presVol - 0.07f);
+			}
+			if (pastVol < 1){
+				past_music.setVolume(pastVol + 0.07f);
+			}
+		} else {
+			if (presVol < 1){
+				present_music.setVolume(presVol + 0.07f);
+			}
+			if (pastVol > 0){
+				past_music.setVolume(pastVol - 0.07f);
+			}
+		}
+
 		if (avatar.isHolding()) {
 			timeFreeze = true;
 			avatar.resetDashNum(1);
@@ -1053,13 +1071,6 @@ public class LevelController extends WorldController {
 				avatar.resetDashNum(-1);
 			}
 			shifted = !shifted;
-			if (shifted) {
-				present_music.setVolume(0);
-				past_music.setVolume(1);
-			} else {
-				present_music.setVolume(1);
-				past_music.setVolume(0);
-			}
 			// avatar.resetDashNum();
 			/*
 			 * if (!avatar.isHolding()) { avatar.setPosition(avatar.getPosition().x,
