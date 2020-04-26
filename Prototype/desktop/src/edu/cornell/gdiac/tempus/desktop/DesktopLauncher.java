@@ -14,6 +14,8 @@ package edu.cornell.gdiac.tempus.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import edu.cornell.gdiac.backend.GDXApp;
+import edu.cornell.gdiac.backend.GDXAppSettings;
 import edu.cornell.gdiac.tempus.GDXRoot;
 
 /**
@@ -33,14 +35,15 @@ public class DesktopLauncher {
 	 * @param arg Command line arguments
 	 */
 	public static void main (String[] arg) {
-		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+		//LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+		GDXAppSettings settings = new GDXAppSettings();
 		int lillian_width = 3840;
 		int lillian_height = 2160;
-		float resolution_multiplier = 0.7f;
-		config.width  = (int) (lillian_width * resolution_multiplier);
-		config.height = (int) (lillian_height * resolution_multiplier);
-		config.resizable = false;
-//		config.fullscreen = true;
-		new LwjglApplication(new GDXRoot(), config);
+		float resolution_multiplier = 0.3f;
+		settings.width  = (int) (lillian_width * resolution_multiplier);
+		settings.height = (int) (lillian_height * resolution_multiplier);
+		settings.resizable = false;
+//		settings.fullscreen = true;
+		new GDXApp(new GDXRoot(), settings);
 	}
 }

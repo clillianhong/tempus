@@ -365,8 +365,7 @@ public class InputController {
 	 * Reads input from the keyboard.
 	 */
 	private void readKeyboard() {
-		shiftKeyPressed = Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) ||
-				Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT);
+		shiftKeyPressed = Gdx.input.isKeyPressed(Input.Keys.SPACE);
 		xKeyPressed = Gdx.input.isKeyPressed(Input.Keys.X);
 	}
 
