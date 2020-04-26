@@ -334,6 +334,8 @@ public class LevelController extends WorldController {
 	public void reset() {
 		// Vector2 gravity = new Vector2(world.getGravity());
 		numEnemies = 0;
+		paused = false;
+		prepause = false;
 		enemyController.reset();
 		for (Obstacle obj : objects) {
 			obj.deactivatePhysics(world);
@@ -926,20 +928,6 @@ public class LevelController extends WorldController {
 
 		for (Obstacle obj : objects) {
 
-			// if (obj instanceof Enemy && !((Enemy) obj).isTurret()) {
-			// Enemy e = (Enemy) obj;
-			// if (e.getSpace() == 3) {
-			// e.setIsActive(true);
-			// } else if (!shifted && (e.getSpace()==2)) {
-			// e.setIsActive(false);
-			// } else if (shifted && (e.getSpace()==2)) {
-			// e.setIsActive(e.getShiftedActive());
-			// } else if (shifted && (e.getSpace()==1)) {
-			// e.setIsActive(false);
-			// } else if (!shifted && (e.getSpace()==1)) {
-			// e.setIsActive(e.getShiftedActive());
-			// }
-			// }
 
 			if (obj instanceof Enemy && ((Enemy) obj).isTurret()) {
 				if (obj.getSpace() == 3) {
@@ -949,12 +937,7 @@ public class LevelController extends WorldController {
 				} else if (shifted && (obj.getSpace() == 1)) {
 					obj.setSensor(true);
 				}
-				/*
-				 * if (obj.getName().equals("bullet")) { obj.setSensor(false); if
-				 * (obj.getSpace() == 3) { obj.setSensor(false); } else if (!shifted &&
-				 * (obj.getSpace() == 2)) { obj.setSensor(true); } else if (shifted &&
-				 * (obj.getSpace() == 1)) { obj.setSensor(true); }
-				 */
+
 			} else if (!(obj instanceof Projectile)) {
 				obj.setActive(true);
 				if (obj.getSpace() == 3) {
@@ -1129,8 +1112,6 @@ public class LevelController extends WorldController {
 			updateShader();
 
 		}
-
-
 
 		// Process actions in object model
 		avatar.setJumping(InputController.getInstance().didPrimary());
