@@ -864,12 +864,12 @@ public class Avatar extends CapsuleObstacle {
             projectileTicks = 0;
             hitByProjctile = false;
         }
+        if(!isSticking){
+            setAngle(0);
+        }
         //check if dash must end
         if(isDashing){
             setCurrentPlatform(null);
-            if(!isSticking){
-                setNewAngle(0);
-            }
             float dist = getPosition().dst(getDashStartPos());
             if(dist > getDashDistance()){
 //                System.out.println("DASHED TOO FAR");
@@ -878,7 +878,7 @@ public class Avatar extends CapsuleObstacle {
                 endDashVelocity = getPosition();
 //                this.setLinearVelocity(new Vector2(0,0));
 //                System.out.println(getDashDistance());
-                setLinearVelocity(getLinearVelocity().cpy().nor().scl(getDashDistance() * 4));
+                setLinearVelocity(getLinearVelocity().cpy().nor().scl(getDashDistance() * 3, getDashDistance() * 4));
 //                setLinearVelocity(new Vector2(0,0));
             }
         }

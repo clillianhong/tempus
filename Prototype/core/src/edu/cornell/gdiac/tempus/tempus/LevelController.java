@@ -304,7 +304,7 @@ public class LevelController extends WorldController {
 		json_filepath = json;
 		numEnemies = 0;
 		begincount = 10;
-		enemyController = new EnemyController(enemies, objects, avatar, world, scale, this);
+		enemyController = new EnemyController(enemies, objects, avatar, world, scale, this,assetDirectory);
 
 		//ripple shader
 		ticks = 0f;
@@ -697,8 +697,8 @@ public class LevelController extends WorldController {
 		// }
 
 		collisionController = new CollisionController(this);
+		enemyController = new EnemyController(enemies, objects, avatar, world, scale, this,assetDirectory);
 		world.setContactListener(collisionController);
-		enemyController = new EnemyController(enemies, objects, avatar, world, scale, this);
 	}
 
 	/**
@@ -939,13 +939,13 @@ public class LevelController extends WorldController {
 				}
 
 			} else if (!(obj instanceof Projectile)) {
-				obj.setActive(true);
+				obj.setSensor(false);
 				if (obj.getSpace() == 3) {
-					obj.setActive(true);
+					obj.setSensor(false);
 				} else if (!shifted && (obj.getSpace() == 2)) {
-					obj.setActive(false);
+					obj.setSensor(true);
 				} else if (shifted && (obj.getSpace() == 1)) {
-					obj.setActive(false);
+					obj.setSensor(true);
 				}
 			}
 		}
@@ -1562,5 +1562,9 @@ public class LevelController extends WorldController {
 	public void stopMusic() {
 		present_music.stop();
 		past_music.stop();
+	}
+
+	public boolean getShifted(){
+		return shifted;
 	}
 }
