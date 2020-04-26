@@ -939,13 +939,13 @@ public class LevelController extends WorldController {
 				}
 
 			} else if (!(obj instanceof Projectile)) {
-				obj.setActive(true);
+				obj.setSensor(false);
 				if (obj.getSpace() == 3) {
-					obj.setActive(true);
+					obj.setSensor(false);
 				} else if (!shifted && (obj.getSpace() == 2)) {
-					obj.setActive(false);
+					obj.setSensor(true);
 				} else if (shifted && (obj.getSpace() == 1)) {
-					obj.setActive(false);
+					obj.setSensor(true);
 				}
 			}
 		}
@@ -1562,5 +1562,9 @@ public class LevelController extends WorldController {
 	public void stopMusic() {
 		present_music.stop();
 		past_music.stop();
+	}
+
+	public boolean getShifted(){
+		return shifted;
 	}
 }

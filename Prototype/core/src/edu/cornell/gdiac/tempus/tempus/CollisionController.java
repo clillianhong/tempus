@@ -261,6 +261,38 @@ public class CollisionController implements ContactListener {
         Object objA = fix1.getBody().getUserData();
         Object objB = fix2.getBody().getUserData();
 
+        if (((objB instanceof Platform)) || ((objA instanceof Platform))) {
+            //if(avatar.getCurrentPlatform() != objB && avatar.getCurrentPlatform() != objA) {
+            boolean correctWorld = false;
+            if (objB instanceof Platform) {
+                if (((Platform) objB).getSpace() == 3) {
+                    correctWorld = true;
+                } else if (controller.getShifted()) {
+                    if (((Platform) objB).getSpace() == 2) {
+                        correctWorld = true;
+                    }
+                } else {
+                    if (((Platform) objB).getSpace() == 1) {
+                        correctWorld = true;
+                    }
+                }
+            } else {
+                if (((Platform) objA).getSpace() == 3) {
+                    correctWorld = true;
+                } else if (controller.getShifted()) {
+                    if (((Platform) objA).getSpace() == 2) {
+                        correctWorld = true;
+                    }
+                } else {
+                    if (((Platform) objA).getSpace() == 1) {
+                        correctWorld = true;
+                    }
+                }
+            }
+            if (!correctWorld) {
+                return;
+            }
+        }
         try {
             Obstacle bd1 = (Obstacle) objA;
             Obstacle bd2 = (Obstacle) objB;
@@ -272,19 +304,19 @@ public class CollisionController implements ContactListener {
             if (bd1.getName().equals("bullet") && bd2 != avatar) {
                 if (bd2.getBody().getUserData() instanceof Enemy) {
                     processProjEnemyContact(fix1, fix2);
-                } else if (!bd2.getName().equals("bullet")){
+                } else if (!bd2.getName().equals("bullet")) {
                     removeBullet(bd1);
                 }
-            } else if ((bd1.getName().equals("bullet") && bd2 == avatar)){
+            } else if ((bd1.getName().equals("bullet") && bd2 == avatar)) {
                 processAvatarProjectileContact(fix2, fix1);
             }
             if (bd2.getName().equals("bullet") && bd1 != avatar) {
                 if (bd1.getBody().getUserData() instanceof Enemy) {
                     processProjEnemyContact(fix2, fix1);
-                } else if (!bd1.getName().equals("bullet")){
+                } else if (!bd1.getName().equals("bullet")) {
                     removeBullet(bd2);
                 }
-            } else if (bd2.getName().equals("bullet") && bd1 == avatar){
+            } else if (bd2.getName().equals("bullet") && bd1 == avatar) {
                 processAvatarProjectileContact(fix1, fix2);
             }
 
@@ -292,20 +324,17 @@ public class CollisionController implements ContactListener {
             //handle platform-avatar collisions first (outside of processcontact
             if (((objA instanceof Avatar) && (objB instanceof Platform)) || ((objB instanceof Avatar) && (objA instanceof Platform))) {
                 //if(avatar.getCurrentPlatform() != objB && avatar.getCurrentPlatform() != objA) {
-                    if (!avatar.isSticking()) {
-                        Float norm_angle = contact.getWorldManifold().getNormal().angle();
+                if (!avatar.isSticking()) {
+                    Float norm_angle = contact.getWorldManifold().getNormal().angle();
 
-                        if (!norm_angle.isNaN()) {
+                    if (!norm_angle.isNaN()) {
                         /*if ((norm_angle.intValue()) == 0){
                             System.out.println("Fekwbfiewq");
                             cur_normal = (float) Math.toRadians(90);
                         } else {*/
-                            cur_normal = (float) Math.toRadians(norm_angle - 90);
-                            //}
-                        }
+                        cur_normal = (float) Math.toRadians(norm_angle - 90);
+                        //}
                     }
-
-                    if (!avatar.isSticking()) {
 
                     /*if (avatar.getCurrentPlatform() != null && (bd1.getName().equals("wall") || bd2.getName().equals("wall"))) {
                         if (!avatar.getCurrentPlatform().equals(objA) && !avatar.getCurrentPlatform().equals(objB)) {
@@ -319,20 +348,20 @@ public class CollisionController implements ContactListener {
                             }
                         }
                     } else {*/
-                        //avatar.contactPoint = contact.getWorldManifold().getPoints()[0];
-                        avatar.setGrounded(true);
-                        avatar.setSticking(true);
-                        //System.out.println(cur_normal);
-                        avatar.setNewAngle(cur_normal);
-                        if (objB instanceof Platform) {
-                            avatar.setCurrentPlatform((Platform) objB);
-                        } else {
-                            avatar.setCurrentPlatform((Platform) objA);
-                        }
-                        //}
+                    //avatar.contactPoint = contact.getWorldManifold().getPoints()[0];
+                    avatar.setGrounded(true);
+                    avatar.setSticking(true);
+                    System.out.println(cur_normal);
+                    avatar.setNewAngle(cur_normal);
+                    if (objB instanceof Platform) {
+                        avatar.setCurrentPlatform((Platform) objB);
+                    } else {
+                        avatar.setCurrentPlatform((Platform) objA);
                     }
-                    sensorFixtures.add(avatar == bd1 ? fix2 : fix1); // Could have more than one ground
-               // }
+                    //}
+                }
+                sensorFixtures.add(avatar == bd1 ? fix2 : fix1); // Could have more than one ground
+                // }
             }
 
             if (objA instanceof Enemy || objB instanceof Enemy) {
