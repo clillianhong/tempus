@@ -11,6 +11,8 @@
   "effect_volume": 0.8,
   "present_background": "present_background2",
   "past_background": "past_background3",
+  "present_music": "present2",
+  "past_music": "past2",
   "door": {
     "pos": [
       29.5, 15.5

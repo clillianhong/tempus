@@ -12,6 +12,7 @@ package edu.cornell.gdiac.tempus.tempus;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -86,6 +87,9 @@ public class LevelController extends WorldController {
 	/** Texture asset for the background */
 	private TextureRegion backgroundTexture;
 
+	private Music present_music;
+	private Music past_music;
+
 	/** The reader to process JSON files */
 	private JsonReader jsonReader;
 	/** The JSON asset directory */
@@ -118,7 +122,6 @@ public class LevelController extends WorldController {
 		assetDirectory = jsonReader.parse(Gdx.files.internal("jsons/assets.json"));
 
 		JsonAssetManager.getInstance().loadDirectory(assetDirectory);
-
 		// super.preLoadContent(manager);
 	}
 
@@ -153,7 +156,7 @@ public class LevelController extends WorldController {
 //	/** Offset for bullet when firing */
 //	private static final float BULLET_OFFSET = 1.5f;
 	/** The volume for sound effects */
-	private static final float EFFECT_VOLUME = 0.8f;
+	private static final float EFFECT_VOLUME = 0.1f;
 
 	// Since these appear only once, we do not care about the magic numbers.
 	// In an actual game, this information would go in a data file.
@@ -249,7 +252,6 @@ public class LevelController extends WorldController {
 		setDebug(false);
 		setComplete(false);
 		setFailure(false);
-
 		shifted = false;
 		debug = false;
 		timeFreeze = false;
@@ -283,7 +285,14 @@ public class LevelController extends WorldController {
 		setFailure(false);
 		levelFormat = jsonReader.parse(Gdx.files.internal(json_filepath));
 //		levelFormat = jsonReader.parse(Gdx.files.internal("jsons/test_level_editor.json"));
-
+		present_music = JsonAssetManager.getInstance().getEntry(levelFormat.getString("present_music"), Music.class);
+		past_music = JsonAssetManager.getInstance().getEntry(levelFormat.getString("past_music"), Music.class);
+		present_music.setVolume(1);
+		present_music.play();
+		present_music.setLooping(true);
+		past_music.setVolume(0);
+		past_music.play();
+		past_music.setLooping(true);
 		populateLevel();
 		timeFreeze = false;
 	}
@@ -299,6 +308,7 @@ public class LevelController extends WorldController {
 	}
 
 	private void exitBack() {
+		stopMusic();
 		listener.exitScreen(this, ScreenExitCodes.EXIT_PREV.ordinal());
 	}
 
@@ -307,7 +317,6 @@ public class LevelController extends WorldController {
 	 * Lays out the game geography.
 	 */
 	private void populateLevel() {
-
 		float sw = Gdx.graphics.getWidth();
 		float sh = Gdx.graphics.getHeight();
 
@@ -649,6 +658,8 @@ public class LevelController extends WorldController {
 			if (avatar.getLives() > 0) {
 				if (shifted) {
                     shifted = false;
+					present_music.setVolume(1);
+					past_music.setVolume(0);
                     enemyController.shift();
                 }
 				avatar.setEnemyContact(false);
@@ -777,7 +788,7 @@ public class LevelController extends WorldController {
 
 		if (avatar.isHolding()) {
 			timeFreeze = true;
-			//avatar.resetDashNum();
+			avatar.resetDashNum(1);
 			if (avatar.getBodyType() != BodyDef.BodyType.StaticBody) {
 				avatar.setBodyType(BodyDef.BodyType.StaticBody);
 			} else if (InputController.getInstance().releasedRightMouseButton()) {
@@ -801,9 +812,16 @@ public class LevelController extends WorldController {
 		}
 		if (InputController.getInstance().pressedShiftKey()) {
 			if(avatar.isSticking()){
-				avatar.resetDashNum();
+				avatar.resetDashNum(-1);
 			}
 			shifted = !shifted;
+			if (shifted){
+				present_music.setVolume(0);
+				past_music.setVolume(1);
+			} else {
+				present_music.setVolume(1);
+				past_music.setVolume(0);
+			}
 			//avatar.resetDashNum();
 			/*if (!avatar.isHolding()) {
 				avatar.setPosition(avatar.getPosition().x, avatar.getPosition().y + 0.0001f * Gdx.graphics.getWidth());
@@ -1244,5 +1262,10 @@ public class LevelController extends WorldController {
 		if (numEnemies < 0){
 			numEnemies = 0;
 		}
+	}
+
+	public void stopMusic(){
+		present_music.stop();
+		past_music.stop();
 	}
 }

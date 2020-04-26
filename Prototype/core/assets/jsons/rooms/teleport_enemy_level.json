@@ -6,6 +6,8 @@
   ],
   "present_background": "present_background2",
   "past_background": "past_background2",
+  "present_music": "present2",
+  "past_music": "past2",
   "diamondshape": [
     0.2,
     1.8,

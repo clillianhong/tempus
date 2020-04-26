@@ -288,8 +288,12 @@ public class Avatar extends CapsuleObstacle {
      *
      * @return true if the dude is actively dashing.
      */
-    public void resetDashNum() {
-        numDashes = maxDashes;
+    public void resetDashNum(int n) {
+        if (n == -1) {
+            numDashes = maxDashes;
+        } else {
+            numDashes = n;
+        }
     }
 
 
