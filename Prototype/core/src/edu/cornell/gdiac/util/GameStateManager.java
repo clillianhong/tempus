@@ -121,10 +121,7 @@ public class GameStateManager {
             levels[i] = loadLevel(levelDirectories[i]);
             levels[i].preloadLevel();
         }
-
-
         currentLevel = levels[1];
-
     }
 
     /**
@@ -175,23 +172,26 @@ public class GameStateManager {
      * 2. Finishing last room in level and finishing level/moving on to next level
      * 3. Finishing the game
      */
-    public void stepGame(){
-        boolean level_finished = currentLevel.stepLevel();
-        if(level_finished){ // LEVEL HAS FINISHED
-            //TODO: Finish level announcement/screen
-            currentLevel.finishLevel();
-            if(current_level_idx == last_level_idx){
-                endGameState(); //TODO: end game state accouncement/screen
+    public void stepGame(boolean is_exit){
+        if(!is_exit){
+            boolean level_finished = currentLevel.stepLevel();
+
+            if(level_finished){ // LEVEL HAS FINISHED
+                //TODO: Finish level announcement/screen
+                currentLevel.finishLevel();
+                if(current_level_idx == last_level_idx){
+                    endGameState(); //TODO: end game state accouncement/screen
+                }
+                else{
+                    current_level_idx++;
+                    currentLevel = levels[current_level_idx];
+                    currentLevel.unlockLevel();
+                    //TODO: LEVEL FINISH SCREEN
+                }
             }
-            else{
-                current_level_idx++;
-                currentLevel = levels[current_level_idx];
-                currentLevel.unlockLevel();
-                //TODO: LEVEL FINISH SCREEN
-            }
+        }else{
+            currentLevel.getCurrentRoom().stopMusic();
         }
-
-
     }
 
     public void printGameState(){
