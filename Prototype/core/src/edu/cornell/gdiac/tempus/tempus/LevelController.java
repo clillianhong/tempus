@@ -304,7 +304,7 @@ public class LevelController extends WorldController {
 		json_filepath = json;
 		numEnemies = 0;
 		begincount = 10;
-		enemyController = new EnemyController(enemies, objects, avatar, world, scale, this);
+		enemyController = new EnemyController(enemies, objects, avatar, world, scale, this,assetDirectory);
 
 		//ripple shader
 		ticks = 0f;
@@ -697,8 +697,8 @@ public class LevelController extends WorldController {
 		// }
 
 		collisionController = new CollisionController(this);
+		enemyController = new EnemyController(enemies, objects, avatar, world, scale, this,assetDirectory);
 		world.setContactListener(collisionController);
-		enemyController = new EnemyController(enemies, objects, avatar, world, scale, this);
 	}
 
 	/**
