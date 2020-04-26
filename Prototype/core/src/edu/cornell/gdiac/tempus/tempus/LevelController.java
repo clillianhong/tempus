@@ -16,10 +16,9 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
@@ -62,6 +61,38 @@ public class LevelController extends WorldController {
 	private Table table;
 	private Table pauseTable;
 	private Container pauseButtonContainer;
+
+	/** RIPPLE SHADER ** /
+
+	/** vertex shader source code */
+	private String vert;
+	/** fragment shader source code */
+	private String frag;
+	/** custom shader */
+	private ShaderProgram shaderprog;
+	/** background sprite batch for rendering w shader */
+	SpriteBatch batch;
+	/** background sprite for rendering w shader */
+	Sprite sprite;
+	/** time ticks for sine/cosine wave in frag shader*/
+	float ticks;
+	/** current mouse position */
+	Vector2 mouse_pos;
+	/** current delta x */
+	float delta_x;
+	/** current delta y */
+	float delta_y;
+	/** tick value to reset */
+	float ripple_reset;
+
+	Vector2 fish_pos;
+
+	float m_rippleDistance;
+
+	float m_rippleRange;
+	boolean rippleOn;
+
+	float time_incr;
 
 	/** whether or not game is paused **/
 	private boolean paused;
@@ -150,6 +181,9 @@ public class LevelController extends WorldController {
 		JsonAssetManager.getInstance().allocateDirectory();
 		displayFont = JsonAssetManager.getInstance().getEntry("display", BitmapFont.class);
 		platformAssetState = AssetState.COMPLETE;
+
+
+
 	}
 
 	// Physics constants for initialization
@@ -271,6 +305,25 @@ public class LevelController extends WorldController {
 		numEnemies = 0;
 		begincount = 10;
 		enemyController = new EnemyController(enemies, objects, avatar, world, scale, this);
+
+		//ripple shader
+		ticks = 0f;
+		rippleOn = false;
+		vert = Gdx.files.internal(".vertex.glsl").readString();
+		frag = Gdx.files.internal(".fragment.glsl").readString();
+		shaderprog = new ShaderProgram(vert,frag);
+		shaderprog.pedantic=false;
+		m_rippleDistance = 0;
+		m_rippleRange = 0;
+		ticks = 0;
+		time_incr = (float) 0.002;
+		ripple_reset = Gdx.graphics.getWidth() * 0.00025f;
+		shaderprog.setUniformf("time", ticks);
+		batch = new SpriteBatch();
+		mouse_pos = new Vector2(0.5f,0.5f);
+		delta_x = 1000;
+		delta_y = 1000;
+		fish_pos = new Vector2(0,0);
 	}
 
 	/**
@@ -712,7 +765,7 @@ public class LevelController extends WorldController {
 		table.add(pauseButton).width(sw / 15f).height(sw / 15f).expand().right().top();
 
 		pauseTable = new Table();
-		pauseTable.background(pauseBox);
+		//pauseTable.background(pauseBox);
 		pauseButtonContainer.setActor(pauseTable);
 		pauseButtonContainer.setVisible(false);
 
@@ -756,6 +809,20 @@ public class LevelController extends WorldController {
 		/*
 		 * END PAUSE SCREEN SETUP---------------------
 		 */
+		TextureRegion rippleBG = new TextureRegion(new Texture(Gdx.files.internal("textures/gui/pause_filter_50.png")));
+		sprite = new Sprite(rippleBG);
+
+//		levelWonContainer = new Container<>();
+//		levelWonContainer.setBackground(pauseBG);
+//		levelWonContainer.setPosition(0, 0);
+//		levelWonContainer.fillX();
+//		levelWonContainer.fillY();
+//		table.add(pauseButton).width(sw / 15f).height(sw / 15f).expand().right().top();
+//
+//		pauseTable = new Table();
+//		//pauseTable.background(pauseBox);
+//		levelWonContainer.setActor(pauseTable);
+//		levelWonContainer.setVisible(false);
 
 		/*
 		
@@ -778,6 +845,10 @@ public class LevelController extends WorldController {
 		begincount = 30;
 		pauseButtonContainer.setVisible(false);
 		pauseTable.setVisible(false);
+
+	}
+
+	public void wonLevel(){
 
 	}
 
@@ -911,6 +982,9 @@ public class LevelController extends WorldController {
 	public void update(float dt) {
 		// Turn the physics engine crank.
 		// world.step(WORLD_STEP,WORLD_VELOC,WORLD_POSIT);
+		if(rippleOn){
+			updateShader();
+		}
 
 		// test slow down time
 		if (timeFreeze) {
@@ -968,6 +1042,13 @@ public class LevelController extends WorldController {
 			}
 		}
 		if (InputController.getInstance().pressedShiftKey()) {
+			//update ripple shader params
+
+			rippleOn = true;
+			ticks=0;
+			m_rippleDistance = 0;
+			m_rippleRange = 0;
+
 			if (avatar.isSticking()) {
 				avatar.resetDashNum(-1);
 			}
@@ -1021,20 +1102,24 @@ public class LevelController extends WorldController {
 		if (dashAttempt) {
 			avatar.dash(); // handles checking if dashing is possible
 		}
-		// if (dashAttempt && !avatar.isDashing() && avatar.isSticking()) {
-		// // check valid direction
-		// Vector2 mousePos = InputController.getInstance().getMousePosition();
-		// avatar.setBodyType(BodyDef.BodyType.DynamicBody);
-		// avatar.setSticking(false);
-		// avatar.setWasSticking(false);
-		// avatar.setDashing(true);
-		// avatar.setDashStartPos(avatar.getPosition().cpy());
-		// avatar.setDashDistance(avatar.getDashRange());
-		// // avatar.setDashDistance(Math.min(avatar.getDashRange(),
-		// // avatar.getPosition().dst(mousePos)));
-		// avatar.setDashForceDirection(mousePos.sub(avatar.getPosition()));
-		// avatar.setStartedDashing(1);
-		// }
+
+		if(rippleOn){
+			float rippleSpeed = 0.25f;
+			float maxRippleDistance = 8f;
+			ticks += time_incr;
+			if(ticks > ripple_reset){
+				rippleOn = false;
+				ticks=0;
+				m_rippleDistance = 0;
+				m_rippleRange = 0;
+			}
+			m_rippleDistance += rippleSpeed * ticks;
+			m_rippleRange = (1 - m_rippleDistance / maxRippleDistance) * 0.02f;
+			updateShader();
+
+		}
+
+
 
 		// Process actions in object model
 		avatar.setJumping(InputController.getInstance().didPrimary());
@@ -1123,6 +1208,10 @@ public class LevelController extends WorldController {
 	 */
 	public void postUpdate(float dt) {
 		super.postUpdate(dt);
+
+		if(rippleOn){
+			updateShader();
+		}
 
 		if (avatar.isSticking() && !avatar.getWasSticking()) {
 			avatar.setDashing(false);
@@ -1274,6 +1363,7 @@ public class LevelController extends WorldController {
 		if (InputController.getInstance().pressedRightMouseButton() && !avatar.isHolding()) {
 			return;
 		}
+
 		// Do not draw while player is dashing or not holding a projectile
 		// if (avatar.isDashing() && !avatar.isHolding())
 		// return;
@@ -1339,6 +1429,23 @@ public class LevelController extends WorldController {
 		canvas.end();
 	}
 
+	public void updateShader(){
+		//write to shader
+		shaderprog.begin();
+		shaderprog.setUniformf("time", ticks);
+
+//		shaderprog.setUniformf("mousePos", new Vector2(0 * scale.x / Gdx.graphics.getWidth() , 0 * scale.y / Gdx.graphics.getHeight()));
+		shaderprog.setUniformf("mousePos", new Vector2(avatar.getPosition().x * scale.x / Gdx.graphics.getWidth() , (DEFAULT_HEIGHT - avatar.getPosition().y) * scale.y / Gdx.graphics.getHeight()));
+		shaderprog.setUniformf("deltax", Math.abs(delta_x/100));
+		shaderprog.setUniformf("deltay",  Math.abs(delta_y/100));
+		//update ripple params
+		shaderprog.setUniformf("u_rippleDistance", m_rippleDistance);
+		shaderprog.setUniformf("u_rippleRange", m_rippleRange);
+
+		shaderprog.end();
+
+	}
+
 	/**
 	 * Draws the debug of an object if it is in this world
 	 *
@@ -1368,18 +1475,31 @@ public class LevelController extends WorldController {
 	 * @param delta The drawing context
 	 */
 	public void draw(float delta) {
+
 		canvas.clear();
-		canvas.begin();
+
+		if(rippleOn){
+			updateShader();
+		}
+
+		//render batch with shader
+		batch.begin();
+		batch.setShader(shaderprog);
+
 		if (shifted) {
 			// System.out.println(backgroundTexture.getRegionWidth());
 			backgroundTexture = JsonAssetManager.getInstance().getEntry(levelFormat.get("past_background").asString(),
 					TextureRegion.class);
-			canvas.draw(backgroundTexture, Color.WHITE, 0, 0, canvas.getWidth(), canvas.getHeight());
 		} else {
 			backgroundTexture = JsonAssetManager.getInstance().getEntry(levelFormat.get("present_background").asString(),
 					TextureRegion.class);
-			canvas.draw(backgroundTexture, Color.WHITE, 0, 0, canvas.getWidth(), canvas.getHeight());
 		}
+
+		sprite = new Sprite(backgroundTexture);
+		batch.draw(sprite,0,0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
+		batch.end();
+
+		canvas.begin();
 
 		drawObjectInWorld();
 		canvas.end();
@@ -1408,6 +1528,10 @@ public class LevelController extends WorldController {
 			canvas.drawTextCentered("FAILURE!", displayFont, 0.0f);
 			canvas.end();
 		}
+
+
+
+
 	}
 
 	/** Unused ContactListener method */
