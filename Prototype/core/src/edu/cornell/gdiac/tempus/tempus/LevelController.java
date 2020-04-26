@@ -22,12 +22,10 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.*;
@@ -41,6 +39,7 @@ import edu.cornell.gdiac.tempus.tempus.models.*;
 import edu.cornell.gdiac.util.FilmStrip;
 import edu.cornell.gdiac.util.PooledList;
 import edu.cornell.gdiac.util.SoundController;
+
 
 import static edu.cornell.gdiac.tempus.tempus.models.EntityType.PAST;
 import static edu.cornell.gdiac.tempus.tempus.models.EntityType.PRESENT;
@@ -62,7 +61,13 @@ public class LevelController extends WorldController {
 	private Stage stage;
 
 	private Table table;
-	private Button quitButton;
+	private Table pauseTable;
+	private Container pauseButtonContainer;
+
+	/** whether or not game is paused **/
+	private boolean paused;
+	/** whether game input should stall in case of pause **/
+	private boolean prepause;
 
 
 	/** Checks if did debug */
@@ -259,6 +264,8 @@ public class LevelController extends WorldController {
 		setFailure(false);
 
 		shifted = false;
+		paused = false;
+		prepause = false;
 		debug = false;
 		timeFreeze = false;
 		json_filepath = json;
@@ -300,7 +307,7 @@ public class LevelController extends WorldController {
 		listener.exitScreen(this, ScreenExitCodes.EXIT_QUIT.ordinal());
 	}
 
-	private void exitBack() {
+	private void exitLevelSelect() {
 		listener.exitScreen(this, ScreenExitCodes.EXIT_PREV.ordinal());
 	}
 
@@ -614,19 +621,132 @@ public class LevelController extends WorldController {
 		float sw = Gdx.graphics.getWidth();
 		float sh = Gdx.graphics.getHeight();
 
-		TextureRegionDrawable pauseButtonResource = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/selectmode/backbutton.png"))));
-		Button pauseButton = new Button(pauseButtonResource);
+		//table container to center main table
+		Container<Stack> edgeContainer = new Container<Stack>();
+		edgeContainer.setSize(sw, sh);
+		edgeContainer.setPosition(0, 0);
+		edgeContainer.fillX();
+		edgeContainer.fillY();
+
+		Stack tableStack = new Stack();
+
+		/*
+		START PAUSE SCREEN SETUP ---------------------
+		 */
+		TextureRegionDrawable pauseButtonResource = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/pausebutton.png"))));
+		TextureRegionDrawable pauseBG = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/pause_filter_50_black.png"))));
+		TextureRegionDrawable pauseBox = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/frame_pause.png"))));
+		TextureRegionDrawable resumeResource = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/pause_resume_button.png"))));
+		TextureRegionDrawable restartResource = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/pause_restart_button.png"))));
+		TextureRegionDrawable exitResource = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/pause_exit_button.png"))));
+
+
+		final Button pauseButton = new Button(pauseButtonResource);
 		pauseButton.addListener(new ClickListener() {
+
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				exitBack();
+				if(!paused){
+					pauseGame();
+				}
+			}
+
+			@Override
+			public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+				super.enter(event, x, y, pointer, fromActor);
+				prepause = true;
+				pauseButton.setChecked(true);
+
+			}
+
+			@Override
+			public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+				super.exit(event, x, y, pointer, toActor);
+
+				prepause = false;
+				pauseButton.setChecked(false);
 			}
 		});
-		table.add(pauseButton).width(sw/15f).height(sw/15f).expand().right();
-		stage.addActor(table);
+
+		pauseButtonContainer = new Container<>();
+		pauseButtonContainer.setBackground(pauseBG);
+		pauseButtonContainer.setPosition(0,0);
+		pauseButtonContainer.fillX();
+		pauseButtonContainer.fillY();
+		table.add(pauseButton).width(sw/15f).height(sw/15f).expand().right().top();
+
+		pauseTable = new Table();
+		pauseTable.background(pauseBox);
+		pauseButtonContainer.setActor(pauseTable);
+		pauseButtonContainer.setVisible(false);
+
+		Button resumeButton = new Button(resumeResource);
+		resumeButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				super.clicked(event, x, y);
+				unpauseGame();
+			}
+		});
+
+
+		Button restartButton = new Button(restartResource);
+		restartButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				super.clicked(event, x, y);
+				reset();
+				unpauseGame();
+			}
+		});
+
+		Button exitButton = new Button(exitResource);
+		exitButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				super.clicked(event, x, y);
+				exitLevelSelect();
+			}
+		});
+		pauseTable.add(resumeButton).width(sw/4/1.5f).height(sh/5.1f/1.5f).center().expandX().padBottom(sh/20);
+		pauseTable.row();
+		pauseTable.add(restartButton).width(sw/4/1.5f).height(sh/5.1f/1.5f).center().expandX().padBottom(sh/20);;
+		pauseTable.row();
+		pauseTable.add(exitButton).width(sw/4/1.5f).height(sh/5.1f/1.5f).expandX();
+
+
+		tableStack.add(table);
+		tableStack.add(pauseButtonContainer);
+		edgeContainer.setActor(tableStack);
+		/*
+		END PAUSE SCREEN SETUP---------------------
+		 */
+
+
+		/*
+		
+		 */
+
+		stage.addActor(edgeContainer);
 		Gdx.input.setInputProcessor(stage);
 
 	}
+
+	public void pauseGame(){
+		paused = true;
+		//table.setVisible(false);
+		pauseButtonContainer.setVisible(true);
+		pauseTable.setVisible(true);
+	}
+
+	public void unpauseGame(){
+		paused = false;
+		begincount = 30;
+		pauseButtonContainer.setVisible(false);
+		pauseTable.setVisible(false);
+
+	}
+
 	public PooledList<Obstacle> getObjects() { return objects;}
 
 	public boolean isShifted() { return shifted; }
@@ -642,6 +762,11 @@ public class LevelController extends WorldController {
 	 * @return whether to process the update loop
 	 */
 	public boolean preUpdate(float dt) {
+
+		if(paused || prepause){
+			return false;
+		}
+
 		if (complete){
 			avatar.setBodyType(BodyDef.BodyType.StaticBody);
 		}
@@ -652,13 +777,7 @@ public class LevelController extends WorldController {
 		if (!isFailure() && avatar.getY() < -6 || avatar.getEnemyContact()) {
 			avatar.removeLife();
 			if (avatar.getLives() > 0) {
-				if (shifted) {
-                    shifted = false;
-                    enemyController.shift();
-                }
-				avatar.setEnemyContact(false);
-				avatar.setPosition(avatarStart);
-				avatar.getBody().setLinearVelocity(0, 0);
+				resetGame();
 				return true;
 			} else {
 				setFailure(true);
@@ -680,6 +799,19 @@ public class LevelController extends WorldController {
 		return true;
 	}
 
+	/**
+	 *
+	 * Handles resetting game state when player dies in room.
+	 */
+	public void resetGame(){
+		if (shifted) {
+			shifted = false;
+			enemyController.shift();
+		}
+		avatar.setEnemyContact(false);
+		avatar.setPosition(avatarStart);
+		avatar.getBody().setLinearVelocity(0, 0);
+	}
 	/**
 	 * Makes the object sleep if it is not in this world
 	 *
