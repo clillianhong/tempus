@@ -158,11 +158,21 @@
     },
     "pew": {
       "file": "sounds/pew.mp3",
-      "volume": 0.4,
+      "volume": 0.1
     },
     "pop": {
       "file": "sounds/plop.mp3",
       "volume": 0.8
+    }
+  },
+  "music": {
+    "past2": {
+      "file": "music/past_track_4_25.mp3",
+      "volume": 0.1
+    },
+    "present2": {
+      "file": "music/present_track_4_25.mp3",
+      "volume": 0.1
     }
   },
   "filmstrips": {
