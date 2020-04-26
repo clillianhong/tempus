@@ -52,8 +52,9 @@ public class Enemy extends CapsuleObstacle {
     /** Height of the sensor attached to the player's feet */
     private static final float SENSOR_HEIGHT = 0.05f;
     private static final float DENSITY = 1.0F;
-    private static final String LEFT_SENSOR_NAME = "EnemyLeftSensor";
-    private static final String RIGHT_SENSOR_NAME = "EnemyRightSensor";
+//    private static final String LEFT_SENSOR_NAME = "EnemyLeftSensor";
+//    private static final String RIGHT_SENSOR_NAME = "EnemyRightSensor";
+    private static final String GROUND_SENSOR_NAME = "EnemyGroundSensor";
     private static final String CENTER_SENSOR_NAME = "EnemyCenterSensor";
 
     // ANIMATION FIELDS
@@ -74,14 +75,19 @@ public class Enemy extends CapsuleObstacle {
     /** The frame cooldown for the animation */
     private static float frame_cooldown = FRAME_RATE;
 
-    /** Left sensor to determine enemy position on platform*/
-    private Fixture sensorFixtureLeft;
-    private PolygonShape sensorShapeLeft;
-    private Fixture leftFixture;
-    /** Right sensor to determine enemy position on platform*/
-    private Fixture sensorFixtureRight;
-    private PolygonShape sensorShapeRight;
-    private Fixture rightFixture;
+//    /** Left sensor to determine enemy position on platform*/
+//    private Fixture sensorFixtureLeft;
+//    private PolygonShape sensorShapeLeft;
+//    private Fixture leftFixture;
+//    /** Right sensor to determine enemy position on platform*/
+//    private Fixture sensorFixtureRight;
+//    private PolygonShape sensorShapeRight;
+//    private Fixture rightFixture;
+    /** Sensor to determine enemy position on platform */
+    private Fixture sensorFixtureGround;
+    private PolygonShape sensorShapeGround;
+    /** Fixture the enemy stands on */
+    private Fixture platformFixture;
     /** Surrounding censor for flying pathfinding */
     private Fixture sensorFixtureCenter;
     private CircleShape sensorShapeCenter;
@@ -309,33 +315,37 @@ public class Enemy extends CapsuleObstacle {
         return ai;
     }
 
+    public void setPlatformFixture(Fixture f) { platformFixture = f; }
+
+    public Fixture getPlatformFixture() { return platformFixture; }
+
     /**
      * Returns the platform fixture that the enemy's left sensor is connected to
      *
      * @return platform fixture the enemy stands on
      */
-    public Fixture getLeftFixture() { return leftFixture; }
+//    public Fixture getLeftFixture() { return leftFixture; }
 
     /**
      * Sets the platform fixture the enemy's left sensor detects
      *
      * @param f the platform fixture
      */
-    public void setLeftFixture(Fixture f) { leftFixture = f; }
+//    public void setLeftFixture(Fixture f) { leftFixture = f; }
 
     /**
      * Returns the platform fixture that the enemy's right sensor is connected to
      *
      * @return platform fixture the enemy stands on
      */
-    public Fixture getRightFixture() { return rightFixture; }
+//    public Fixture getRightFixture() { return rightFixture; }
 
     /**
      * Sets the platform fixture the enemy's right sensor detects
      *
      * @param f the platform fixture
      */
-    public void setRightFixture(Fixture f) { rightFixture = f;}
+//    public void setRightFixture(Fixture f) { rightFixture = f;}
 
     public boolean isTurret() { return isTurret; }
 
@@ -508,25 +518,27 @@ public class Enemy extends CapsuleObstacle {
 //        }
 //    }
 
-    /** Returns the name of the left sensor
-     *
-     * This is used by ContactListener
-     *
-     * @return the name of the left sensor
-     */
-    public String getLeftSensorName() {
-        return LEFT_SENSOR_NAME;
-    }
+//    /** Returns the name of the left sensor
+//     *
+//     * This is used by ContactListener
+//     *
+//     * @return the name of the left sensor
+//     */
+//    public String getLeftSensorName() {
+//        return LEFT_SENSOR_NAME;
+//    }
+//
+//    /** Returns the name of the right sensor
+//     *
+//     * This is used by ContactListener
+//     *
+//     * @return the name of the right sensor
+//     */
+//    public String getRightSensorName() {
+//        return RIGHT_SENSOR_NAME;
+//    }
 
-    /** Returns the name of the right sensor
-     *
-     * This is used by ContactListener
-     *
-     * @return the name of the right sensor
-     */
-    public String getRightSensorName() {
-        return RIGHT_SENSOR_NAME;
-    }
+    public String getGroundSensorName() { return GROUND_SENSOR_NAME; }
 
     public boolean activatePhysics(World world) {
         if (!super.activatePhysics(world)) {
@@ -534,24 +546,30 @@ public class Enemy extends CapsuleObstacle {
         }
 
         if (getAi() == EnemyType.WALK) {
-            Vector2 sensorCenterLeft = new Vector2(-getWidth() / 2, -getHeight() / 2);
+            Vector2 sensorGround = new Vector2(0, -getHeight() / 2);
+//            Vector2 sensorCenterLeft = new Vector2(-getWidth() / 2, -getHeight() / 2);
             FixtureDef sensorDef = new FixtureDef();
             sensorDef.density = DENSITY;
             sensorDef.isSensor = true;
-            sensorShapeLeft = new PolygonShape();
-            sensorShapeLeft.setAsBox(SENSOR_HEIGHT / 2, SENSOR_HEIGHT, sensorCenterLeft, 0.0f);
-            sensorDef.shape = sensorShapeLeft;
+            sensorShapeGround = new PolygonShape();
+            sensorShapeGround.setAsBox(getWidth() / 4, SENSOR_HEIGHT, sensorGround, 0f);
+            sensorDef.shape = sensorShapeGround;
 
-            sensorFixtureLeft = body.createFixture(sensorDef);
-            sensorFixtureLeft.setUserData(LEFT_SENSOR_NAME);
-
-            Vector2 sensorCenterRight = new Vector2(getWidth() / 2, -getHeight() / 2);
-            sensorShapeRight = new PolygonShape();
-            sensorShapeRight.setAsBox(SENSOR_HEIGHT / 2, SENSOR_HEIGHT, sensorCenterRight, 0.0f);
-            sensorDef.shape = sensorShapeRight;
-
-            sensorFixtureRight = body.createFixture(sensorDef);
-            sensorFixtureRight.setUserData(RIGHT_SENSOR_NAME);
+            sensorFixtureGround = body.createFixture(sensorDef);
+            sensorFixtureGround.setUserData(GROUND_SENSOR_NAME);
+//            sensorShapeLeft.setAsBox(SENSOR_HEIGHT / 2, SENSOR_HEIGHT, sensorCenterLeft, 0.0f);
+//            sensorDef.shape = sensorShapeLeft;
+//
+//            sensorFixtureLeft = body.createFixture(sensorDef);
+//            sensorFixtureLeft.setUserData(LEFT_SENSOR_NAME);
+//
+//            Vector2 sensorCenterRight = new Vector2(getWidth() / 2, -getHeight() / 2);
+//            sensorShapeRight = new PolygonShape();
+//            sensorShapeRight.setAsBox(SENSOR_HEIGHT / 2, SENSOR_HEIGHT, sensorCenterRight, 0.0f);
+//            sensorDef.shape = sensorShapeRight;
+//
+//            sensorFixtureRight = body.createFixture(sensorDef);
+//            sensorFixtureRight.setUserData(RIGHT_SENSOR_NAME);
 
 //        } else if (getAi() == EnemyType.FLY) {
 //            FixtureDef sensorDef = new FixtureDef();
@@ -644,8 +662,9 @@ public class Enemy extends CapsuleObstacle {
     public void drawDebug(GameCanvas canvas) {
         super.drawDebug(canvas);
         if (getAi() == EnemyType.WALK) {
-            canvas.drawPhysics(sensorShapeLeft, Color.RED, getX(), getY(), getAngle(), drawScale.x, drawScale.y);
-            canvas.drawPhysics(sensorShapeRight, Color.RED, getX(), getY(), getAngle(), drawScale.x, drawScale.y);
+            canvas.drawPhysics(sensorShapeGround, Color.RED, getX(), getY(), getAngle(), drawScale.x, drawScale.y);
+//            canvas.drawPhysics(sensorShapeLeft, Color.RED, getX(), getY(), getAngle(), drawScale.x, drawScale.y);
+//            canvas.drawPhysics(sensorShapeRight, Color.RED, getX(), getY(), getAngle(), drawScale.x, drawScale.y);
         } else if (getAi() == EnemyType.FLY) {
             canvas.drawPhysics(sensorShapeCenter, Color.RED, getX(), getY(), drawScale.x, drawScale.y);
         }

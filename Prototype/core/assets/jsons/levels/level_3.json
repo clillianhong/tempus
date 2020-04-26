@@ -1,7 +1,7 @@
 {
   "level": 3,
   "room_count": 4,
-  "unlocked": false,
+  "unlocked": true,
   "finished": false,
   "resume_room_index": 0,
   "rooms" : [
