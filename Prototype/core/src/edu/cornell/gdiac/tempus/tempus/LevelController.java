@@ -58,6 +58,14 @@ import static edu.cornell.gdiac.tempus.tempus.models.EntityType.PRESENT;
 public class LevelController extends WorldController {
 
 
+	/** Stage for adding UI components **/
+	private Skin skin;
+	private Stage stage;
+
+	private Table table;
+	private Button quitButton;
+
+
 	/** Checks if did debug */
 	private boolean debug;
 	/** counts down beginning of game to avoid opening mis-dash*/
@@ -297,12 +305,6 @@ public class LevelController extends WorldController {
 		timeFreeze = false;
 	}
 
-	private Skin skin;
-	private Stage stage;
-
-	private Table table;
-	private Button quitButton;
-
 	private void exitGame() {
 		listener.exitScreen(this, ScreenExitCodes.EXIT_QUIT.ordinal());
 	}
@@ -320,6 +322,7 @@ public class LevelController extends WorldController {
 		float sw = Gdx.graphics.getWidth();
 		float sh = Gdx.graphics.getHeight();
 
+
 		// tester stage!
 		skin = new Skin(Gdx.files.internal("jsons/uiskin.json"));
 		stage = new Stage(new ScreenViewport());
@@ -327,25 +330,9 @@ public class LevelController extends WorldController {
 		table.setWidth(stage.getWidth());
 		table.align(Align.center | Align.top);
 		table.setPosition(0, Gdx.graphics.getHeight());
-//		TextureRegionDrawable qBuResource = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/white_quit.png"))));
-//		quitButton = new Button(qBuResource);
-//		quitButton.addListener(new ClickListener() {
-//			@Override
-//			public void clicked(InputEvent event, float x, float y) {
-//				exitGame();
-//			}
-//		});
-		TextureRegionDrawable backButtonResource = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/selectmode/backbutton.png"))));
-		Button backButton = new Button(backButtonResource);
-		backButton.addListener(new ClickListener() {
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				exitBack();
-			}
-		});
-		table.add(backButton).width(sw/15f).height(sw/15f).expand().right();
-		stage.addActor(table);
-		Gdx.input.setInputProcessor(stage);
+
+		createUI();
+
 
 		//Initializes the world
 		float gravity = levelFormat.getFloat("gravity");
@@ -631,6 +618,27 @@ public class LevelController extends WorldController {
         enemyController = new EnemyController(enemies, objects, avatar, world, scale, this);
     }
 
+	/**
+	 * Creates all UI features for a room mode.
+	 *
+	 */
+	public void createUI(){
+		float sw = Gdx.graphics.getWidth();
+		float sh = Gdx.graphics.getHeight();
+
+		TextureRegionDrawable pauseButtonResource = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/selectmode/backbutton.png"))));
+		Button pauseButton = new Button(pauseButtonResource);
+		pauseButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				exitBack();
+			}
+		});
+		table.add(pauseButton).width(sw/15f).height(sw/15f).expand().right();
+		stage.addActor(table);
+		Gdx.input.setInputProcessor(stage);
+
+	}
 	public PooledList<Obstacle> getObjects() { return objects;}
 
 	public boolean isShifted() { return shifted; }
@@ -788,7 +796,7 @@ public class LevelController extends WorldController {
 
 		if (avatar.isHolding()) {
 			timeFreeze = true;
-			avatar.resetDashNum(1);
+			//avatar.resetDashNum();
 			if (avatar.getBodyType() != BodyDef.BodyType.StaticBody) {
 				avatar.setBodyType(BodyDef.BodyType.StaticBody);
 			} else if (InputController.getInstance().releasedRightMouseButton()) {
@@ -923,11 +931,11 @@ public class LevelController extends WorldController {
 		if (InputController.getInstance().pressedLeftMouseButton()
 				|| InputController.getInstance().pressedRightMouseButton()) {
 			// If either mouse button is held, set animation to be crouching
-			avatar.animate(Avatar.AvatarState.CROUCHING, true);
+			avatar.animate(Avatar.AvatarState.CROUCHING, false);
 		} else if (avatar.isSticking()) {
 			// Default animation if player is stationary
 			avatar.animate(Avatar.AvatarState.STANDING, false);
-		} else if (avatar.isDashing()) {
+		} else if (avatar.getLinearVelocity().y > 0) {
 			avatar.animate(Avatar.AvatarState.DASHING, false);
 		} else {
 			avatar.animate(Avatar.AvatarState.FALLING, false);

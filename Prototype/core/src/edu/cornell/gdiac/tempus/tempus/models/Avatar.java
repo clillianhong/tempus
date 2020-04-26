@@ -993,9 +993,9 @@ public class Avatar extends CapsuleObstacle {
 
         // Draw avatar body
         if (currentStrip != null) {
-            canvas.draw(currentStrip, Color.WHITE, origin.x, origin.y,
+            canvas.draw(currentStrip, Color.WHITE, origin.x + 84f, origin.y + 52f,
                     getX() * drawScale.x, getY() * drawScale.y, getAngle(),
-                    0.024f * drawScale.x * faceDirection, 0.0225f * drawScale.y);
+                    0.02f * drawScale.x * faceDirection, 0.01875f * drawScale.y);
         }
 
         // If player is holding a projectile then draw the held projectile
