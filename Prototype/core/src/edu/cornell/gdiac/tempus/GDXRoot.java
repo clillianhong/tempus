@@ -11,7 +11,7 @@
  * Based on original PhysicsDemo Lab by Don Holden, 2007
  * LibGDX version, 2/6/2015
  */
- package edu.cornell.gdiac.tempus;
+package edu.cornell.gdiac.tempus;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.assets.*;
@@ -30,19 +30,20 @@ import edu.cornell.gdiac.util.*;
 import java.util.logging.Level;
 
 /**
- * Root class for a LibGDX.  
+ * Root class for a LibGDX.
  * 
- * This class is technically not the ROOT CLASS. Each platform has another class above
- * this (e.g. PC games use DesktopLauncher) which serves as the true root.  However, 
- * those classes are unique to each platform, while this class is the same across all 
- * plaforms. In addition, this functions as the root class all intents and purposes, 
- * and you would draw it as a root class in an architecture specification.  
+ * This class is technically not the ROOT CLASS. Each platform has another class
+ * above this (e.g. PC games use DesktopLauncher) which serves as the true root.
+ * However, those classes are unique to each platform, while this class is the
+ * same across all plaforms. In addition, this functions as the root class all
+ * intents and purposes, and you would draw it as a root class in an
+ * architecture specification.
  */
 public class GDXRoot extends Game implements ScreenListener {
 	/** AssetManager to load game assets (textures, sounds, etc.) */
 	private AssetManager manager;
 	/** Drawing context to display graphics (VIEW CLASS) */
-	private GameCanvas canvas; 
+	private GameCanvas canvas;
 	/** Player mode for the asset loading screen (CONTROLLER CLASS) */
 	private LoadingMode loading;
 	/** Player mode for the the game proper (CONTROLLER CLASS) */
@@ -59,33 +60,33 @@ public class GDXRoot extends Game implements ScreenListener {
 	/**
 	 * Creates a new game from the configuration settings.
 	 *
-	 * This method configures the asset manager, but does not load any assets
-	 * or assign any screen.
+	 * This method configures the asset manager, but does not load any assets or
+	 * assign any screen.
 	 */
 	public GDXRoot() {
 		gameManager = new GameStateManager();
 
-
 		// Start loading with the asset manager
-//		manager = new AssetManager();
-		
-		// Add font support to the asset manager
-//		FileHandleResolver resolver = new InternalFileHandleResolver();
-//		manager.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(resolver));
-//		manager.setLoader(BitmapFont.class, ".ttf", new FreetypeFontLoader(resolver));
+		// manager = new AssetManager();
 
+		// Add font support to the asset manager
+		// FileHandleResolver resolver = new InternalFileHandleResolver();
+		// manager.setLoader(FreeTypeFontGenerator.class, new
+		// FreeTypeFontGeneratorLoader(resolver));
+		// manager.setLoader(BitmapFont.class, ".ttf", new
+		// FreetypeFontLoader(resolver));
 
 	}
 
-	/** 
+	/**
 	 * Called when the Application is first created.
 	 * 
 	 * This is method immediately loads assets for the loading screen, and prepares
 	 * the asynchronous loader for all other assets.
 	 */
 	public void create() {
-		canvas  = new GameCanvas();
-		loading = new LoadingMode(canvas,1);
+		canvas = new GameCanvas();
+		loading = new LoadingMode(canvas, 1);
 
 		gameManager.loadGameState("jsons/game.json");
 		gameManager.setCanvas(canvas);
@@ -94,25 +95,25 @@ public class GDXRoot extends Game implements ScreenListener {
 		menu = new MainMenuMode();
 		levelselect = new SelectLevelMode();
 
-
 		current = 0;
 		loading.setScreenListener(this);
 		setScreen(loading);
 	}
 
-	/** 
-	 * Called when the Application is destroyed. 
+	/**
+	 * Called when the Application is destroyed.
 	 *
 	 * This is preceded by a call to pause().
 	 */
 	public void dispose() {
 		// Call dispose on our children
 		setScreen(null);
-
-		for(int ii = 0; ii < controllers.length; ii++) {
-			controllers[ii].unloadContent();
-			JsonAssetManager.clearInstance();
-			controllers[ii].dispose();
+		if (controllers != null) {
+			for (int ii = 0; ii < controllers.length; ii++) {
+				controllers[ii].unloadContent();
+				JsonAssetManager.clearInstance();
+				controllers[ii].dispose();
+			}
 		}
 
 		menu.dispose();
@@ -123,11 +124,11 @@ public class GDXRoot extends Game implements ScreenListener {
 
 		super.dispose();
 	}
-	
+
 	/**
-	 * Called when the Application is resized. 
+	 * Called when the Application is resized.
 	 *
-	 * This can happen at any point during a non-paused state but will never happen 
+	 * This can happen at any point during a non-paused state but will never happen
 	 * before a call to create().
 	 *
 	 * @param width  The new width in pixels
@@ -135,9 +136,9 @@ public class GDXRoot extends Game implements ScreenListener {
 	 */
 	public void resize(int width, int height) {
 		canvas.resize();
-		super.resize(width,height);
+		super.resize(width, height);
 	}
-	
+
 	/**
 	 * The given screen has made a request to exit its player mode.
 	 *
@@ -153,13 +154,13 @@ public class GDXRoot extends Game implements ScreenListener {
 			menu.setScreenListener(this);
 			menu.setCanvas(canvas);
 			setScreen(menu);
-			
+
 			loading.dispose();
 			loading = null;
-		} else if(screen == menu){
+		} else if (screen == menu) {
 			gameManager.printGameState();
 
-			if(exitCode == ScreenExitCodes.MENU_START.ordinal()){
+			if (exitCode == ScreenExitCodes.MENU_START.ordinal()) {
 
 				gameManager.readyLevels();
 
@@ -168,27 +169,24 @@ public class GDXRoot extends Game implements ScreenListener {
 				levelselect.setCanvas(canvas);
 
 				setScreen(levelselect);
-			}
-			else if(exitCode == ScreenExitCodes.MENU_ABOUT.ordinal()){
-				//TODO menu about hookup
-			}
-			else if(exitCode == ScreenExitCodes.MENU_HELP.ordinal()){
-				//TODO menu help hookup
-			}else{
+			} else if (exitCode == ScreenExitCodes.MENU_ABOUT.ordinal()) {
+				// TODO menu about hookup
+			} else if (exitCode == ScreenExitCodes.MENU_HELP.ordinal()) {
+				// TODO menu help hookup
+			} else {
 				Gdx.app.exit();
 			}
 
 			menu.dispose();
 
-		} else if(screen == levelselect){
+		} else if (screen == levelselect) {
 
-			if(exitCode == ScreenExitCodes.EXIT_PREV.ordinal()){
+			if (exitCode == ScreenExitCodes.EXIT_PREV.ordinal()) {
 				menu.createMode();
 				menu.setScreenListener(this);
 				menu.setCanvas(canvas);
 				setScreen(menu);
-			}
-			else{ //go to a level
+			} else { // go to a level
 				gameManager.setCurrentLevel(exitCode);
 				LevelController room = gameManager.getCurrentRoom();
 				room.reset();
@@ -199,7 +197,7 @@ public class GDXRoot extends Game implements ScreenListener {
 			}
 
 			levelselect.dispose();
-		}else if (exitCode == ScreenExitCodes.EXIT_NEXT.ordinal()) {
+		} else if (exitCode == ScreenExitCodes.EXIT_NEXT.ordinal()) {
 			System.out.println("TRYING TO EXIT LEVEL");
 			gameManager.stepGame();
 			LevelController room = gameManager.getCurrentRoom();
@@ -207,7 +205,7 @@ public class GDXRoot extends Game implements ScreenListener {
 			room.reset();
 			setScreen(room);
 		} else if (exitCode == ScreenExitCodes.EXIT_PREV.ordinal()) {
-			gameManager.getCurrentRoom().reset();
+			// gameManager.getCurrentRoom().reset();
 			setScreen(levelselect);
 		} else if (exitCode == ScreenExitCodes.EXIT_QUIT.ordinal()) {
 			// We quit the main application

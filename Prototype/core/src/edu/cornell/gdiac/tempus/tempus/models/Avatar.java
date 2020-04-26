@@ -255,8 +255,8 @@ public class Avatar extends CapsuleObstacle {
             this.setWasSticking(false);
             this.setDashing(true);
             this.setDashStartPos(this.getPosition().cpy());
-            this.setDashDistance(this.getDashRange());
-            this.setDashForceDirection(mousePos.sub(this.getPosition()));
+            this.setDashDistance(Math.min(this.getDashRange(), mousePos.cpy().sub(this.getPosition()).len()));
+            this.setDashForceDirection(mousePos.cpy().sub(this.getPosition()));
             this.setStartedDashing(1);
             numDashes--;
         }
@@ -288,11 +288,13 @@ public class Avatar extends CapsuleObstacle {
      *
      * @return true if the dude is actively dashing.
      */
-    public void resetDashNum() {
-        numDashes = maxDashes;
+    public void resetDashNum(int n) {
+        if (n == -1) {
+            numDashes = maxDashes;
+        } else {
+            numDashes = n;
+        }
     }
-
-
 
 
     /**
@@ -869,7 +871,8 @@ public class Avatar extends CapsuleObstacle {
                 System.out.println("VELOCITY: " + getLinearVelocity());
                 endDashVelocity = getPosition();
 //                this.setLinearVelocity(new Vector2(0,0));
-                setLinearVelocity(getLinearVelocity().cpy().nor().scl(7.0f));
+//                System.out.println(getDashDistance());
+                setLinearVelocity(getLinearVelocity().cpy().nor().scl(getDashDistance() * 4));
 //                setLinearVelocity(new Vector2(0,0));
             }
         }

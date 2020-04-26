@@ -65,6 +65,7 @@ public class LevelModel {
         current_room_idx = current_room_idx + 1;
         if(current_room_idx == rooms.length){
             //TODO: ROOM END SCREEN
+            current_room.stopMusic();
             return true;
         }
         current_room = rooms[current_room_idx];
