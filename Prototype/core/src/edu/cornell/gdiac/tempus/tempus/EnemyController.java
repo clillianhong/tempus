@@ -54,7 +54,7 @@ public class EnemyController {
     private GameCanvas canvas;
 
     public EnemyController(PooledList<Enemy> enemies, PooledList<Obstacle> objects, Avatar target, World world,
-                           Vector2 scale, WorldController worldController) {
+                           Vector2 scale, WorldController worldController, JsonValue assetDirectory) {
         this.enemies = enemies;
         this.objects = objects;
         this.target = target;
@@ -63,7 +63,7 @@ public class EnemyController {
         this.shifted = false;
         this.worldController = worldController;
         jsonReader = new JsonReader();
-        assetDirectory = jsonReader.parse(Gdx.files.internal("jsons/assets.json"));
+        this.assetDirectory = assetDirectory;
         canvas = worldController.getCanvas();
     }
 
@@ -294,11 +294,9 @@ public class EnemyController {
 
         if (shifted && enemy.getSpace() == 2) { // past world
             JsonValue data = assetDirectory.get("sounds").get("pew");
-//			System.out.println("sound volume: " +  data.get("volume").asFloat());
             SoundController.getInstance().play("pew", data.get("file").asString(), false, data.get("volume").asFloat());
         } else if (!shifted && enemy.getSpace() == 1) { // present world
             JsonValue data = assetDirectory.get("sounds").get("pew");
-//			System.out.println("sound volume: " +    data.get("volume").asFloat());
             SoundController.getInstance().play("pew", data.get("file").asString(), false, data.get("volume").asFloat());
         }
 
