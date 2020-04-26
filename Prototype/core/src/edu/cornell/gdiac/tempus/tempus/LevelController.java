@@ -334,6 +334,8 @@ public class LevelController extends WorldController {
 	public void reset() {
 		// Vector2 gravity = new Vector2(world.getGravity());
 		numEnemies = 0;
+		paused = false;
+		prepause = false;
 		enemyController.reset();
 		for (Obstacle obj : objects) {
 			obj.deactivatePhysics(world);
@@ -353,10 +355,10 @@ public class LevelController extends WorldController {
 		// jsonReader.parse(Gdx.files.internal("jsons/test_level_editor.json"));
 		present_music = JsonAssetManager.getInstance().getEntry(levelFormat.getString("present_music"), Music.class);
 		past_music = JsonAssetManager.getInstance().getEntry(levelFormat.getString("past_music"), Music.class);
-		present_music.setVolume(1);
+		//present_music.setVolume(1);
 		present_music.play();
 		present_music.setLooping(true);
-		past_music.setVolume(0);
+		//past_music.setVolume(0);
 		past_music.play();
 		past_music.setLooping(true);
 		populateLevel();
@@ -364,10 +366,12 @@ public class LevelController extends WorldController {
 	}
 
 	private void exitGame() {
+		stopMusic();
 		listener.exitScreen(this, ScreenExitCodes.EXIT_QUIT.ordinal());
 	}
 
 	private void exitLevelSelect() {
+		stopMusic();
 		listener.exitScreen(this, ScreenExitCodes.EXIT_PREV.ordinal());
 	}
 
@@ -888,8 +892,6 @@ public class LevelController extends WorldController {
 			if (avatar.getLives() > 0) {
 				if (shifted) {
 					shifted = false;
-					present_music.setVolume(1);
-					past_music.setVolume(0);
 					enemyController.shift();
 				}
 				avatar.setEnemyContact(false);
@@ -926,20 +928,6 @@ public class LevelController extends WorldController {
 
 		for (Obstacle obj : objects) {
 
-			// if (obj instanceof Enemy && !((Enemy) obj).isTurret()) {
-			// Enemy e = (Enemy) obj;
-			// if (e.getSpace() == 3) {
-			// e.setIsActive(true);
-			// } else if (!shifted && (e.getSpace()==2)) {
-			// e.setIsActive(false);
-			// } else if (shifted && (e.getSpace()==2)) {
-			// e.setIsActive(e.getShiftedActive());
-			// } else if (shifted && (e.getSpace()==1)) {
-			// e.setIsActive(false);
-			// } else if (!shifted && (e.getSpace()==1)) {
-			// e.setIsActive(e.getShiftedActive());
-			// }
-			// }
 
 			if (obj instanceof Enemy && ((Enemy) obj).isTurret()) {
 				if (obj.getSpace() == 3) {
@@ -949,12 +937,7 @@ public class LevelController extends WorldController {
 				} else if (shifted && (obj.getSpace() == 1)) {
 					obj.setSensor(true);
 				}
-				/*
-				 * if (obj.getName().equals("bullet")) { obj.setSensor(false); if
-				 * (obj.getSpace() == 3) { obj.setSensor(false); } else if (!shifted &&
-				 * (obj.getSpace() == 2)) { obj.setSensor(true); } else if (shifted &&
-				 * (obj.getSpace() == 1)) { obj.setSensor(true); }
-				 */
+
 			} else if (!(obj instanceof Projectile)) {
 				obj.setActive(true);
 				if (obj.getSpace() == 3) {
@@ -1017,6 +1000,24 @@ public class LevelController extends WorldController {
 			goalDoor.setOpen(false);
 		}
 
+		float presVol = present_music.getVolume();
+		float pastVol = past_music.getVolume();
+		if (shifted) {
+			if (presVol > 0){
+				present_music.setVolume(presVol - 0.1f);
+			}
+			if (pastVol < 1){
+				past_music.setVolume(pastVol + 0.1f);
+			}
+		} else {
+			if (presVol < 1){
+				present_music.setVolume(presVol + 0.1f);
+			}
+			if (pastVol > 0){
+				past_music.setVolume(pastVol - 0.1f);
+			}
+		}
+
 		if (avatar.isHolding()) {
 			timeFreeze = true;
 			avatar.resetDashNum(1);
@@ -1053,13 +1054,6 @@ public class LevelController extends WorldController {
 				avatar.resetDashNum(-1);
 			}
 			shifted = !shifted;
-			if (shifted) {
-				present_music.setVolume(0);
-				past_music.setVolume(1);
-			} else {
-				present_music.setVolume(1);
-				past_music.setVolume(0);
-			}
 			// avatar.resetDashNum();
 			/*
 			 * if (!avatar.isHolding()) { avatar.setPosition(avatar.getPosition().x,
@@ -1118,8 +1112,6 @@ public class LevelController extends WorldController {
 			updateShader();
 
 		}
-
-
 
 		// Process actions in object model
 		avatar.setJumping(InputController.getInstance().didPrimary());
