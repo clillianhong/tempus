@@ -1021,17 +1021,17 @@ public class LevelController extends WorldController {
 		float pastVol = past_music.getVolume();
 		if (shifted) {
 			if (presVol > 0){
-				present_music.setVolume(presVol - 0.07f);
+				present_music.setVolume(presVol - 0.1f);
 			}
 			if (pastVol < 1){
-				past_music.setVolume(pastVol + 0.07f);
+				past_music.setVolume(pastVol + 0.1f);
 			}
 		} else {
 			if (presVol < 1){
-				present_music.setVolume(presVol + 0.07f);
+				present_music.setVolume(presVol + 0.1f);
 			}
 			if (pastVol > 0){
-				past_music.setVolume(pastVol - 0.07f);
+				past_music.setVolume(pastVol - 0.1f);
 			}
 		}
 

@@ -322,7 +322,7 @@ public class CollisionController implements ContactListener {
                         //avatar.contactPoint = contact.getWorldManifold().getPoints()[0];
                         avatar.setGrounded(true);
                         avatar.setSticking(true);
-                        System.out.println(cur_normal);
+                        //System.out.println(cur_normal);
                         avatar.setNewAngle(cur_normal);
                         if (objB instanceof Platform) {
                             avatar.setCurrentPlatform((Platform) objB);
