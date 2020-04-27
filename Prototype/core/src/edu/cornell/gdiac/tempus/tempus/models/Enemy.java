@@ -146,7 +146,7 @@ public class Enemy extends CapsuleObstacle {
 
         //example Filmstrip extraction
         String entitytype = json.get("entitytype").asString();
-        FilmStrip test = JsonAssetManager.getInstance().getEntry(json.get("turretshooting").asString()+"_"+entitytype,FilmStrip.class);
+        //FilmStrip test = JsonAssetManager.getInstance().getEntry(json.get("turretshooting").asString()+"_"+entitytype,FilmStrip.class);
         setTexture(texture);
 
         setPosition(pos[0],pos[1]);
@@ -180,11 +180,6 @@ public class Enemy extends CapsuleObstacle {
         setTexture(texture);
         String entitytype = json.get("entitytype").asString();
 
-        //example filmstrip extraction
-        FilmStrip test = JsonAssetManager.getInstance().getEntry((json.get("enemywalking").asString())+"_"+entitytype, FilmStrip.class);
-        test = JsonAssetManager.getInstance().getEntry((json.get("enemyshooting").asString())+"_"+entitytype, FilmStrip.class);
-        test = JsonAssetManager.getInstance().getEntry((json.get("enemyflying").asString())+"_"+entitytype, FilmStrip.class);
-        test = JsonAssetManager.getInstance().getEntry((json.get("enemyteleporting").asString())+"_"+entitytype, FilmStrip.class);
 
         setPosition(pos[0], pos[1]);
         setDimension(texture.getRegionWidth() * shrink[0], texture.getRegionHeight() * shrink[1]);

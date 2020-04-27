@@ -3,7 +3,7 @@
   "room_count": 5,
   "unlocked": true,
   "finished": true,
-  "resume_room_index": 0,
+  "resume_room_index": 3,
   "rooms" : [
     "jsons/rooms/tutorial_room2.json",
     "jsons/rooms/tutorial_room3.json",
