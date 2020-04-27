@@ -129,11 +129,11 @@
       "wrap": false
     },
     "circle": {
-      "file": "textures/indicators/glowingcircle.png",
+      "file": "textures/indicators/glowingcircle_new.png",
       "wrap": false
     },
     "arrow": {
-      "file": "textures/indicators/linearrow2.png",
+      "file": "textures/indicators/arrow_white_new.png",
       "wrap": false
     },
     "projectile_circle": {

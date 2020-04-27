@@ -897,8 +897,13 @@ public class LevelController extends WorldController {
 				avatar.setEnemyContact(false);
 				avatar.setPosition(avatarStart);
 				avatar.getBody().setLinearVelocity(0, 0);
+				avatar.setHolding(false);
+				avatar.setHeldBullet(null);
+				avatar.setBodyType(BodyDef.BodyType.DynamicBody);
+				timeFreeze = false;
 				return true;
 			} else {
+				avatar.setPosition(avatarStart);
 				avatar.setEnemyContact(false);
 				setFailure(true);
 			}
@@ -1161,13 +1166,18 @@ public class LevelController extends WorldController {
 				|| InputController.getInstance().pressedRightMouseButton()) {
 			// If either mouse button is held, set animation to be crouching
 			avatar.animate(Avatar.AvatarState.CROUCHING, false);
+			avatar.setAnimationState(Avatar.AvatarState.CROUCHING);
 		} else if (avatar.isSticking()) {
 			// Default animation if player is stationary
 			avatar.animate(Avatar.AvatarState.STANDING, false);
+			avatar.setAnimationState(Avatar.AvatarState.STANDING);
 		} else if (avatar.getLinearVelocity().y > 0) {
 			avatar.animate(Avatar.AvatarState.DASHING, false);
+			avatar.setAnimationState(Avatar.AvatarState.DASHING);
 		} else {
 			avatar.animate(Avatar.AvatarState.FALLING, false);
+			avatar.setAnimationState(Avatar.AvatarState.FALLING);
+
 		}
 
 		if (avatar.isJumping()) {
@@ -1200,7 +1210,10 @@ public class LevelController extends WorldController {
 	 */
 	public void postUpdate(float dt) {
 		super.postUpdate(dt);
-
+		if (avatar.getStartedDashing() > 0){
+			avatar.setStartedDashing(0);
+			avatar.setCurrentPlatform(null);
+		}
 		if(rippleOn){
 			updateShader();
 		}
@@ -1370,23 +1383,23 @@ public class LevelController extends WorldController {
 		Vector2 mPos = InputController.getInstance().getMousePosition();
 		Vector2 startPos = avPos.cpy().scl(scale);
 		mousePos = mPos.cpy().scl(scale);
-		// Vector2 alteredPos = mousePos.sub(startPos).nor();
+		 //Vector2 alteredPos = mousePos.sub(startPos).nor();
 		// float dist = avatar.getDashRange();
 		float dist = Math.min(avatar.getDashRange(), avPos.dst(mPos));
-		// Vector2 endPos = alteredPos.scl(dist).scl(scale);
-		// endPos.add(startPos);
-		// canvas.drawLine(startPos.x, startPos.y, endPos.x, endPos.y, 0, 1, 0.6f, 1);
+		 //Vector2 endPos = alteredPos.scl(dist).scl(scale);
+		 //endPos.add(startPos);
+		 //canvas.drawLine(startPos.x, startPos.y, endPos.x, endPos.y, 0, 1, 0.6f, 1);
 		canvas.begin();
 		// System.out.println(scale);
 		if (!avatar.isHolding()) {
 			canvas.draw(circle, Color.WHITE, circle.getRegionWidth() / 2, circle.getRegionHeight() / 2,
-					avatar.getX() * scale.x, avatar.getY() * scale.y, redirection.angle() / 57, 0.0031f * scale.x * dist,
-					0.0031f * scale.y * dist);
+					avatar.getX() * scale.x, avatar.getY() * scale.y, redirection.angle() / 57, 0.0095f * scale.x * dist,
+					0.0095f * scale.y * dist);
 			canvas.draw(arrow, Color.WHITE, 0, arrow.getRegionHeight() / 2, avatar.getX() * scale.x, avatar.getY() * scale.y,
-					(180 + redirection.angle()) / 57, 0.006f * scale.x * dist, 0.006f * scale.y * dist);
+					(180 + redirection.angle()) / 57, 0.0075f * scale.x * dist, 0.0075f * scale.y * dist);
 		} else {
 			canvas.draw(arrow, Color.WHITE, 0, arrow.getRegionHeight() / 2, avatar.getX() * scale.x, avatar.getY() * scale.y,
-					(180 + redirection.angle()) / 57, 0.016f * scale.x, 0.016f * scale.y);
+					(180 + redirection.angle()) / 57, 0.0075f * scale.x * avatar.getDashRange(), 0.0075f * scale.y * avatar.getDashRange());
 		}
 		canvas.end();
 		// If player is holding a projectile, draw projectile indicator
