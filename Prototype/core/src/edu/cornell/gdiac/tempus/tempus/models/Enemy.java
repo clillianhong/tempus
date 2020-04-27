@@ -38,7 +38,9 @@ public class Enemy extends CapsuleObstacle {
     // This is to fit the image to a tighter hitbox
     /** The amount to shrink the body fixture (vertically) relative to the image */
     private static final float VSHRINK = 0.0225f * 0.95f;
-    /** The amount to shrink the body fixture (horizontally) relative to the image */
+    /**
+     * The amount to shrink the body fixture (horizontally) relative to the image
+     */
     private static final float HSHRINK = 0.024f * 0.7f;
     /** The density of the enemy */
     private static final float ENEMY_MASS = 1.0f;
@@ -82,10 +84,9 @@ public class Enemy extends CapsuleObstacle {
     private Fixture sensorFixtureCenter;
     private CircleShape sensorShapeCenter;
 
-
     /** Line of sight to the avatar */
     private RayCastCallback sight;
-    /** To calculate line of sight*/
+    /** To calculate line of sight */
     private Avatar target;
 
     /** Cache for internal force calculations */
@@ -112,7 +113,7 @@ public class Enemy extends CapsuleObstacle {
     private EntityType type;
     /** AI of enemy */
     private EnemyType ai;
-    /** Platform the enemy teleports to*/
+    /** Platform the enemy teleports to */
     private Platform teleportTo;
     /** Platform currently on */
     private Platform currPlatform;
@@ -130,26 +131,37 @@ public class Enemy extends CapsuleObstacle {
 
     /**
      * Creates a turret with the provided json value
+     * 
      * @param json The params for the turret
      */
-    public Enemy(JsonValue json){
-        super(0,0,0.5f,1.0f);
-        float [] pos = json.get("pos").asFloatArray();
-        float [] shrink = json.get("shrink").asFloatArray();
-        TextureRegion texture = JsonAssetManager.getInstance().getEntry(json.get("texture").asString(), TextureRegion.class);
+    public Enemy(JsonValue json) {
+        super(0, 0, 0.5f, 1.0f);
+        float[] pos = json.get("pos").asFloatArray();
+        float[] shrink = json.get("shrink").asFloatArray();
+        TextureRegion texture = JsonAssetManager.getInstance().getEntry(json.get("texture").asString(),
+                TextureRegion.class);
 
-        //TODO 1: set filmstrips
-        //neutralTexture = JsonAssetManager.getInstance().getEntry(json.get("texture").asString(), FilmStrip.class);
-        //setFilmStrip(EnemyState.NEUTRAL, neutralTexture);
-        //attackingTexture = JsonAssetManager.getInstance().getEntry(json.get("texture").asString(), FilmStrip.class);
-        //setFilmStrip(EnemyState.ATTACKING, attackingTexture);
+        // TODO 1: set filmstrips
+        // neutralTexture =
+        // JsonAssetManager.getInstance().getEntry(json.get("texture").asString(),
+        // FilmStrip.class);
+        // setFilmStrip(EnemyState.NEUTRAL, neutralTexture);
+        // attackingTexture =
+        // JsonAssetManager.getInstance().getEntry(json.get("texture").asString(),
+        // FilmStrip.class);
+        // setFilmStrip(EnemyState.ATTACKING, attackingTexture);
+
+        // example Filmstrip extraction
+        String entitytype = json.get("entitytype").asString();
+        FilmStrip test = JsonAssetManager.getInstance().getEntry("turret_shooting" + "_" + entitytype, FilmStrip.class);
         setTexture(texture);
 
-        setPosition(pos[0],pos[1]);
-        setDimension(texture.getRegionWidth()*shrink[0],texture.getRegionHeight()*shrink[1]);
-        setType(json.get("entitytype").asString().equals("present")?EntityType.PRESENT: PAST);
-        setSpace(getType()==PRESENT?1:2);
-        setBodyType(json.get("bodytype").asString().equals("static") ? BodyDef.BodyType.StaticBody : BodyDef.BodyType.DynamicBody);
+        setPosition(pos[0], pos[1]);
+        setDimension(texture.getRegionWidth() * shrink[0], texture.getRegionHeight() * shrink[1]);
+        setType(entitytype.equals("present") ? EntityType.PRESENT : PAST);
+        setSpace(getType() == PRESENT ? 1 : 2);
+        setBodyType(json.get("bodytype").asString().equals("static") ? BodyDef.BodyType.StaticBody
+                : BodyDef.BodyType.DynamicBody);
         setDensity(json.get("density").asFloat());
         isTurret = true;
         this.cooldown = json.get("cooldown").asInt();
@@ -172,18 +184,32 @@ public class Enemy extends CapsuleObstacle {
         super(0, 0, 0.5f, 1.0f);
         float[] pos = json.get("pos").asFloatArray();
         float[] shrink = json.get("shrink").asFloatArray();
-        TextureRegion texture = JsonAssetManager.getInstance().getEntry(json.get("texture").asString(), TextureRegion.class);
+        System.out.println("TEXTURE: " + json.get("texture").asString() + "_type" + (json.get("aitype").asInt()));
+        TextureRegion texture = JsonAssetManager.getInstance()
+                .getEntry(json.get("texture").asString() + "_type" + (json.get("aitype").asInt()), TextureRegion.class);
+
+
+        String entitytype = json.get("entitytype").asString();
+
+        // example filmstrip extraction
+        FilmStrip test = JsonAssetManager.getInstance().getEntry(("enemywalking" + "_" + entitytype), FilmStrip.class);
+        test = JsonAssetManager.getInstance().getEntry(("enemyshooting" + "_" + entitytype), FilmStrip.class);
+        test = JsonAssetManager.getInstance().getEntry(("enemyflying" + "_" + entitytype), FilmStrip.class);
+        test = JsonAssetManager.getInstance().getEntry(("enemyteleporting" + "_" + entitytype), FilmStrip.class);
+
         setTexture(texture);
+
         setPosition(pos[0], pos[1]);
         setDimension(texture.getRegionWidth() * shrink[0], texture.getRegionHeight() * shrink[1]);
         setType(json.get("entitytype").asString().equals("present") ? EntityType.PRESENT : PAST);
-        setBodyType(json.get("bodytype").asString().equals("static") ? BodyDef.BodyType.StaticBody : BodyDef.BodyType.DynamicBody);
+        setBodyType(json.get("bodytype").asString().equals("static") ? BodyDef.BodyType.StaticBody
+                : BodyDef.BodyType.DynamicBody);
         setSpace(getType() == PRESENT ? 1 : 2);
         setDensity(json.get("density").asFloat());
         setMass(ENEMY_MASS);
         this.target = target;
         this.cooldown = json.get("cooldown").asInt();
-//        projVel = new Vector2(0,0).sub(getPosition().sub(target.getPosition()));
+        // projVel = new Vector2(0,0).sub(getPosition().sub(target.getPosition()));
         shiftedActive = isFiring;
         framesTillFire = this.cooldown;
         movement = 0;
@@ -192,21 +218,21 @@ public class Enemy extends CapsuleObstacle {
         limiter = 4;
         isTurret = false;
         switch (json.get("aitype").asInt()) {
-            case 1:
-                ai = EnemyType.WALK;
-                break;
+        case 1:
+            ai = EnemyType.WALK;
+            break;
 
-            case 2:
-                ai = EnemyType.TELEPORT;
-                break;
+        case 2:
+            ai = EnemyType.TELEPORT;
+            break;
 
-            case 3:
-                ai = EnemyType.GUN;
-                break;
+        case 3:
+            ai = EnemyType.GUN;
+            break;
 
-            case 4:
-                ai = EnemyType.FLY;
-                break;
+        case 4:
+            ai = EnemyType.FLY;
+            break;
         }
         if (ai.equals(EnemyType.WALK)) {
             sight = new LineOfSight(this);
@@ -230,75 +256,103 @@ public class Enemy extends CapsuleObstacle {
         }
     }
 
-    public void setFlyAngle (Float angle) { flyAngle = angle; }
+    public void setFlyAngle(Float angle) {
+        flyAngle = angle;
+    }
 
-    public Float getFlyAngle () { return flyAngle; }
+    public Float getFlyAngle() {
+        return flyAngle;
+    }
 
-    public Fixture getSensorFixtureCenter() { return sensorFixtureCenter; }
+    public Fixture getSensorFixtureCenter() {
+        return sensorFixtureCenter;
+    }
 
     /**
      * Sets the velocity of the flying enemy
      *
      * @param vel vector the the flying enemy velocity
      */
-    public void setFlyingVelocity(Vector2 vel) { this.flyingVelocity = vel.scl(FORCE); }
+    public void setFlyingVelocity(Vector2 vel) {
+        this.flyingVelocity = vel.scl(FORCE);
+    }
 
     /**
      * Returns the velocity of the flying enemy
      *
      * @return velocity of flying enemy
      */
-    public Vector2 getFlyingVelocity () { return flyingVelocity; }
+    public Vector2 getFlyingVelocity() {
+        return flyingVelocity;
+    }
 
-    /** Sets the platform the enemy is currently on
+    /**
+     * Sets the platform the enemy is currently on
      *
      * @param currPlatform platform the enemy is currently on
      */
-    public void setCurrPlatform(Platform currPlatform) { this.currPlatform = currPlatform; }
+    public void setCurrPlatform(Platform currPlatform) {
+        this.currPlatform = currPlatform;
+    }
 
     /**
      * Returns the platform the enemy is currently on
      *
      * @return platform the enemy is currently on
      */
-    public Platform getCurrPlatform() { return currPlatform; }
+    public Platform getCurrPlatform() {
+        return currPlatform;
+    }
 
     /**
      * Sets the platform the enemy plans to teleport to
      *
      * @param platform platform the enemy plans to teleport to
      */
-    public void setTeleportTo (Platform platform) { teleportTo = platform; }
+    public void setTeleportTo(Platform platform) {
+        teleportTo = platform;
+    }
 
     /**
      * Returns the platform the enemy is planning on teleporting to
      *
      * @return platform the enemy plans to teleport to
      */
-    public Platform getTeleportTo() { return teleportTo; }
+    public Platform getTeleportTo() {
+        return teleportTo;
+    }
 
     /**
      * Returns the velocity of the projectile
      *
      * @return velocity of projectile
      */
-    public Vector2 getProjVel() { return projVel; }
+    public Vector2 getProjVel() {
+        return projVel;
+    }
 
     /**
      * Sets the velocity of the projectile
      *
      * @param projVel vector of the velocity
      */
-    public void setProjVel(Vector2 projVel) { this.projVel = projVel; }
+    public void setProjVel(Vector2 projVel) {
+        this.projVel = projVel;
+    }
 
     /**
      * Returns the ray cast used for line of sight
      *
      * @return ray cast used for line of sight
      */
-    public RayCastCallback getSight() { return sight; }
+    public RayCastCallback getSight() {
+        return sight;
+    }
 
-    public void setLimiter(float limiter) { this.limiter = limiter; }
+
+    public void setLimiter(float limiter) {
+        this.limiter = limiter;
+    }
 
     /**
      * Returns the type of ai the enemy uses
@@ -314,34 +368,45 @@ public class Enemy extends CapsuleObstacle {
      *
      * @param f fixture the enemy stands on
      */
-    public void setPlatformFixture(Fixture f) { platformFixture = f; }
+    public void setPlatformFixture(Fixture f) {
+        platformFixture = f;
+    }
 
     /**
      * Returns the fixture that the enemy stands on
      *
      * @return fixture enemy stands on
      */
-    public Fixture getPlatformFixture() { return platformFixture; }
+    public Fixture getPlatformFixture() {
+        return platformFixture;
+    }
 
     /**
      * Returns whether the enemy is a turret or not
      *
      * @return boolean whether enemy is a turret
      */
-    public boolean isTurret() { return isTurret; }
+    public boolean isTurret() {
+        return isTurret;
+    }
 
     /**
      * Returns the type of enemy.
      *
      * @return type of enemy.
      */
-    public EntityType getType() { return type; }
+    public EntityType getType() {
+        return type;
+    }
 
     /**
      * Sets the entity type of enemy
+     * 
      * @param t the type of enemy
      */
-    public void setType (EntityType t){type = t;}
+    public void setType(EntityType t) {
+        type = t;
+    }
 
     /**
      * Sets whether the is active to fire bullets
@@ -380,7 +445,7 @@ public class Enemy extends CapsuleObstacle {
             return framesTillFire <= 0;
         } else {
             return false;
-            //return framesTillFire <= 0 && isActive;
+            // return framesTillFire <= 0 && isActive;
         }
     }
 
@@ -391,7 +456,7 @@ public class Enemy extends CapsuleObstacle {
     /**
      * Reset or cool down the enemy weapon.
      *
-     * If flag is true, the enemy will cool down by one animation frame.  Otherwise
+     * If flag is true, the enemy will cool down by one animation frame. Otherwise
      * it will reset to its maximum cooldown.
      *
      * @param flag whether to cooldown or reset
@@ -405,14 +470,12 @@ public class Enemy extends CapsuleObstacle {
     }
 
     public void slowCoolDown(boolean flag) {
-        if (flag){
+        if (flag) {
             limiter = 0.5f;
-        }
-        else {
+        } else {
             limiter = 4;
         }
     }
-
 
     /**
      * Returns the amount of sideways movement.
@@ -469,7 +532,9 @@ public class Enemy extends CapsuleObstacle {
         return ENEMY_MAXSPEED;
     }
 
-    public String getGroundSensorName() { return GROUND_SENSOR_NAME; }
+    public String getGroundSensorName() {
+        return GROUND_SENSOR_NAME;
+    }
 
     public boolean activatePhysics(World world) {
         if (!super.activatePhysics(world)) {
@@ -500,47 +565,50 @@ public class Enemy extends CapsuleObstacle {
      */
     public void setFilmStrip(EnemyState state, FilmStrip strip) {
         switch (state) {
-            case NEUTRAL:
-                neutralStrip = strip;
-                break;
-            case ATTACKING:
-                attackingStrip = strip;
-                break;
-            default:
-                assert false : "Invalid EnemyState enumeration";
+        case NEUTRAL:
+            neutralStrip = strip;
+            break;
+        case ATTACKING:
+            attackingStrip = strip;
+            break;
+        default:
+            assert false : "Invalid EnemyState enumeration";
         }
     }
 
     /**
      * Animates the given state.
      *
-     * @param state The reference to the rocket burner
+     * @param state      The reference to the rocket burner
      * @param shouldLoop Whether the animation should loop
      */
     public void animate(EnemyState state, boolean shouldLoop) {
         switch (state) {
-            case NEUTRAL:
-                currentStrip = neutralStrip;
-                break;
-            case ATTACKING:
-                currentStrip = attackingStrip;
-                break;
-            default:
-                assert false : "Invalid EnemyState enumeration";
+        case NEUTRAL:
+            currentStrip = neutralStrip;
+            break;
+        case ATTACKING:
+            currentStrip = attackingStrip;
+            break;
+        default:
+            assert false : "Invalid EnemyState enumeration";
         }
 
         // Adjust animation speed
         if (frame_cooldown > 0) {
             frame_cooldown--;
             return;
-        } else frame_cooldown = FRAME_RATE;
+        } else
+            frame_cooldown = FRAME_RATE;
 
         // Manage current frame to draw
-        if (currentStrip.getFrame() < currentStrip.getSize()-1) {
+        if (currentStrip.getFrame() < currentStrip.getSize() - 1) {
             currentStrip.setFrame(currentStrip.getFrame() + 1);
         } else {
-            if (shouldLoop) currentStrip.setFrame(0); // loop animation
-            else return; // play animation once
+            if (shouldLoop)
+                currentStrip.setFrame(0); // loop animation
+            else
+                return; // play animation once
         }
     }
 
@@ -555,8 +623,10 @@ public class Enemy extends CapsuleObstacle {
         super.drawDebug(canvas);
         if (getAi() == EnemyType.WALK) {
             canvas.drawPhysics(sensorShapeGround, Color.RED, getX(), getY(), getAngle(), drawScale.x, drawScale.y);
-//            canvas.drawPhysics(sensorShapeLeft, Color.RED, getX(), getY(), getAngle(), drawScale.x, drawScale.y);
-//            canvas.drawPhysics(sensorShapeRight, Color.RED, getX(), getY(), getAngle(), drawScale.x, drawScale.y);
+            // canvas.drawPhysics(sensorShapeLeft, Color.RED, getX(), getY(), getAngle(),
+            // drawScale.x, drawScale.y);
+            // canvas.drawPhysics(sensorShapeRight, Color.RED, getX(), getY(), getAngle(),
+            // drawScale.x, drawScale.y);
         } else if (getAi() == EnemyType.FLY) {
             canvas.drawPhysics(sensorShapeCenter, Color.RED, getX(), getY(), drawScale.x, drawScale.y);
         }
@@ -568,17 +638,18 @@ public class Enemy extends CapsuleObstacle {
      * @param canvas Drawing context
      */
     public void draw(GameCanvas canvas) {
-        //TODO 2: uncomment this after [TODO 1] has been done
+        // TODO 2: uncomment this after [TODO 1] has been done
         // Draw enemy filmstrip
-//        if (currentStrip != null) {
-//            canvas.draw(currentStrip, Color.WHITE, origin.x, origin.y,
-//                    getX() * drawScale.x, getY() * drawScale.y, getAngle(),
-//                    0.024f * drawScale.x, 0.0225f * drawScale.y);
-//        }
+        // if (currentStrip != null) {
+        // canvas.draw(currentStrip, Color.WHITE, origin.x, origin.y,
+        // getX() * drawScale.x, getY() * drawScale.y, getAngle(),
+        // 0.024f * drawScale.x, 0.0225f * drawScale.y);
+        // }
 
         // Old draw texture method
         if (texture != null) {
-            canvas.draw(texture,Color.WHITE,origin.x,origin.y,getX()*drawScale.x,getY()*drawScale.y,getAngle(),0.024f * drawScale.x,0.0225f * drawScale.y);
+            canvas.draw(texture, Color.WHITE, origin.x, origin.y, getX() * drawScale.x, getY() * drawScale.y,
+                    getAngle(), 0.024f * drawScale.x, 0.0225f * drawScale.y);
         }
     }
 }

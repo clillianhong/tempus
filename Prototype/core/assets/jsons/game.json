@@ -1,6 +1,6 @@
 {
 "highest_level": 3,
-"room_unlocked": 2,
+"room_unlocked": 0,
 "num_levels": 4,
 "level_jsons": [
 	"jsons/levels/tutorial.json",
