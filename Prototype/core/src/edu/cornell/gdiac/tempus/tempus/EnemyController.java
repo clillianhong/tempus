@@ -101,8 +101,6 @@ public class EnemyController {
         for (Enemy e: enemies) {
             if (!e.isTurret()) {
                 e.coolDown(false);
-                e.setLeftFixture(null);
-                e.setRightFixture(null);
             }
         }
     }
@@ -155,7 +153,7 @@ public class EnemyController {
             if (e.isTurret()) {
                 fire(e);
             } else if ((!shifted && e.getSpace() == 1) || (shifted && e.getSpace() == 2)) {
-                if (e.getAi() == Enemy.EnemyType.WALK && e.getLeftFixture() != null && e.getRightFixture() != null) {
+                if (e.getAi() == Enemy.EnemyType.WALK && e.getPlatformFixture() != null) {
                     createLineOfSight(world, BULLET_OFFSET, e);
                     applyForce(e);
                     setBulletVelocity(BULLET_OFFSET, e);
@@ -194,7 +192,7 @@ public class EnemyController {
     public void findPlatform(Enemy e) {
         for (Obstacle ob: objects) {
             if (ob instanceof Platform &&
-                    ((!shifted && ob.getSpace() == 1) || (shifted && ob.getSpace() == 2))) {
+                    ((!shifted && ob.getSpace() == 1) || (shifted && ob.getSpace() == 2) || ob.getSpace() == 3)) {
                 Platform p = (Platform) ob;
                 teleportLineOfSight(p, e);
                 if (e.getTeleportTo() != null && e.canFire()

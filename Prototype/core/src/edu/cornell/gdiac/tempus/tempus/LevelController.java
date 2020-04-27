@@ -1027,7 +1027,6 @@ public class LevelController extends WorldController {
 				// avatar.getPosition().dst(mousePos)));
 				avatar.setDashForceDirection(mousePos.cpy().sub(avatar.getPosition()));
 				avatar.setHolding(false);
-				avatar.setCurrentPlatform(null);
 				createRedirectedProj();
 				avatar.setHeldBullet(null); // NOTE: gives error if called before createRedirectedProj()
 
@@ -1199,7 +1198,6 @@ public class LevelController extends WorldController {
 		super.postUpdate(dt);
 		if (avatar.getStartedDashing() > 0){
 			avatar.setStartedDashing(0);
-			avatar.setCurrentPlatform(null);
 		}
 		if(rippleOn){
 			updateShader();
