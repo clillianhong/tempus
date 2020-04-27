@@ -42,6 +42,11 @@ public class EnemyController {
     /** Present or past */
     private boolean shifted;
 
+    /** Frames after enemy teleports */
+    private float framesAfterMove;
+    /** Waiting to teleport to fire */
+    private boolean waitToFire;
+
     /** Cache for internal force calculations */
     private Vector2 forceCache = new Vector2();
 
@@ -65,6 +70,8 @@ public class EnemyController {
         jsonReader = new JsonReader();
         this.assetDirectory = assetDirectory;
         canvas = worldController.getCanvas();
+        framesAfterMove = 0;
+        waitToFire = true;
     }
 
     /**
@@ -167,7 +174,11 @@ public class EnemyController {
                     fire(e);
                 } else if (e.getAi() == Enemy.EnemyType.TELEPORT) {
                     e.coolDown(true);
-                    setBulletVelocity(BULLET_OFFSET, e);
+                    if (framesAfterMove == 59 && waitToFire) {
+                        setBulletVelocity(BULLET_OFFSET, e);
+                        createBullet(e);
+                        waitToFire = false;
+                    }
                     findPlatform(e);
                 } else if (e.getAi() == Enemy.EnemyType.GUN) {
                     createLineOfSight(world, BULLET_OFFSET, e);
@@ -235,8 +246,10 @@ public class EnemyController {
         newPos.x += p.getWidth() / 2;
         e.setPosition(newPos);
         e.setCurrPlatform(p);
-        setBulletVelocity(BULLET_OFFSET, e);
-        createBullet(e);
+        e.setTeleportTo(null);
+        e.coolDown(false);
+        framesAfterMove = 1;
+        waitToFire = true;
     }
 
     /**
@@ -366,10 +379,24 @@ public class EnemyController {
         for (Enemy e: enemies) {
             if (e.getSpace() == 3) {
                 e.draw(canvas);
-            } else if (shifted && (e.getSpace() == 2)) { // past world
-                e.draw(canvas);
-            } else if (!shifted && (e.getSpace() == 1)) { // present world
-                e.draw(canvas);
+            } else if ((shifted && (e.getSpace() == 2)) || (!shifted && (e.getSpace() == 1))) { // past world
+                if (e.getAi() != Enemy.EnemyType.WALK) {
+                    e.setFaceDirection((e.getX() - target.getX()) < 0 ? 1 : -1);
+                }
+                if (e.getAi() == Enemy.EnemyType.TELEPORT) {
+                    if (e.getTeleportTo() != null && e.getFramesTillFire() < 60) {
+                        e.drawFade(canvas, e.getFramesTillFire());
+                    } else if (framesAfterMove > 0 && framesAfterMove < 60) {
+                        e.drawFade(canvas, framesAfterMove);
+                        framesAfterMove += 1;
+                    } else {
+                        e.draw(canvas);
+                    }
+                } else {
+                    e.draw(canvas);
+                }
+//            } else if (!shifted && (e.getSpace() == 1)) { // present world
+//                e.draw(canvas);
             }
         }
     }
