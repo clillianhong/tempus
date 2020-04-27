@@ -85,6 +85,9 @@ public class Avatar extends CapsuleObstacle {
     /** The amount to shrink the sensor fixture (horizontally) relative to the image */
     private static final float SSHRINK = 0.6f;
 
+    private int shifted;
+    private boolean spliced;
+
     private boolean wasDamaged;
     private boolean hitByProjctile;
     private int projectileTicks;
@@ -191,6 +194,18 @@ public class Avatar extends CapsuleObstacle {
     private TextureRegion projPresentCaughtTexture;
     /** The texture for the caught projectile of type past */
     private TextureRegion projPastCaughtTexture;
+
+    public int getShifted(){
+        return shifted;
+    }
+
+    public void setShifted(int s){
+        shifted = s;
+    }
+
+    public void setSpliced(boolean s){
+        spliced = s;
+    }
 
     /** returns true if the avatar touched an enemy recently */
     public boolean getEnemyContact() {return enemyContact;}
@@ -644,6 +659,8 @@ public class Avatar extends CapsuleObstacle {
         jumpCooldown = 0;
         isHolding = false;
         wasDamaged = false;
+        shifted = 0;
+        spliced = false;
     }
     /**
      * Creates a new dude avatar at the given position.
@@ -687,6 +704,7 @@ public class Avatar extends CapsuleObstacle {
         isHolding = false;
         wasDamaged = false;
         enemyContact = false;
+        spliced = false;
     }
 
     /**
@@ -870,6 +888,12 @@ public class Avatar extends CapsuleObstacle {
     public void update(float dt) {
         //System.out.println(lives);
         wingsActive();
+        if (spliced){
+            System.out.println("fwiuefnwf");
+            setLinearVelocity(new Vector2(0,0));
+            setPosition(currentPlat.getPosition().cpy().add(new Vector2(getWidth()* 3 / 2, getHeight() * 4)));
+            spliced = false;
+        }
         // Apply cooldowns
         if (hitByProjctile && isHolding){
                 removeLife();

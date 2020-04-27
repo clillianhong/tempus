@@ -974,6 +974,9 @@ public class LevelController extends WorldController {
 		// world.step(WORLD_STEP,WORLD_VELOC,WORLD_POSIT);
 		MusicController.getInstance().update(shifted);
 
+		if (avatar.getShifted() > 0){
+			avatar.setShifted(avatar.getShifted() - 1);
+		}
 		if(rippleOn){
 			updateShader();
 		}
@@ -1044,6 +1047,7 @@ public class LevelController extends WorldController {
 				avatar.resetDashNum(-1);
 			}
 			shifted = !shifted;
+			avatar.setShifted(6);
 			//MusicController.getInstance().shift(shifted);
 			// avatar.resetDashNum();
 			/*
@@ -1490,7 +1494,14 @@ public class LevelController extends WorldController {
 		batch.end();
 
 		canvas.begin();
-
+		/*TextureRegion projCircle = JsonAssetManager.getInstance().getEntry("projectile_circle", TextureRegion.class);
+		for (Obstacle obj : objects) {
+			if (obj instanceof Platform){
+				canvas.draw(projCircle, Color.GOLD, projCircle.getRegionWidth() / 2, projCircle.getRegionHeight() / 2,
+						obj.getX() * scale.x, obj.getY() * scale.y, 0, 0.001f * scale.x,
+						0.001f * scale.y);
+			}
+		}*/
 		drawObjectInWorld();
 		canvas.end();
 

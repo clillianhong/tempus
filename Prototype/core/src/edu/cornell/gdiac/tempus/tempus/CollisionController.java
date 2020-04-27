@@ -324,6 +324,15 @@ public class CollisionController implements ContactListener {
             //handle platform-avatar collisions first (outside of processcontact
             if (((objA instanceof Avatar) && (objB instanceof Platform)) || ((objB instanceof Avatar) && (objA instanceof Platform))) {
                 //if(avatar.getCurrentPlatform() != objB && avatar.getCurrentPlatform() != objA) {
+                if (avatar.getShifted() > 0){
+                    avatar.setSpliced(true);
+                    if (objB instanceof Platform) {
+                        avatar.setCurrentPlatform((Platform) objB);
+                    } else {
+                        avatar.setCurrentPlatform((Platform) objA);
+                    }
+                    return;
+                }
                 boolean latentCol = false;
                 if (avatar.getStartedDashing() == 1) {
                     if (avatar.getCurrentPlatform() == objA || avatar.getCurrentPlatform() == objB) {
