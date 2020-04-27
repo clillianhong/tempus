@@ -62,7 +62,6 @@
       "direction": [
         3, 0
       ],
-      "turretshooting": "turret_shooting"
     },
     "turret8": {
       "pos": [
@@ -79,7 +78,6 @@
       "direction": [
         -3, 0
       ],
-      "turretshooting": "turret_shooting"
     }
   },
   "capsules": {
@@ -221,10 +219,6 @@
       "entitytype": "present",
       "cooldown": 360,
       "aitype": 2,
-      "enemywalking": "enemywalking",
-      "enemyshooting": "enemyshooting",
-      "enemyflying": "enemyflying",
-      "enemyteleporting": "enemyteleporting"
     },
     "enemy10": {
       "pos": [
@@ -239,10 +233,6 @@
       "entitytype": "past",
       "cooldown": 360,
       "aitype": 2,
-      "enemywalking": "enemywalking",
-      "enemyshooting": "enemyshooting",
-      "enemyflying": "enemyflying",
-      "enemyteleporting": "enemyteleporting"
     }
   },
   "spikes": {}
