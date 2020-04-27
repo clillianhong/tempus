@@ -180,6 +180,7 @@ public class Platform extends PolygonObstacle {
         setName(json.get("name").asString());
         float[] pos =json.get("pos").asFloatArray();
         setPosition(pos[0],pos[1]);
+        getFilterData().groupIndex = -1;
         setBodyType(json.get("bodytype").asString().equals("static") ? BodyDef.BodyType.StaticBody : BodyDef.BodyType.DynamicBody);
         setDensity(json.get("density").asFloat());
         setFriction(json.get("friction").asFloat());
