@@ -897,8 +897,13 @@ public class LevelController extends WorldController {
 				avatar.setEnemyContact(false);
 				avatar.setPosition(avatarStart);
 				avatar.getBody().setLinearVelocity(0, 0);
+				avatar.setHolding(false);
+				avatar.setHeldBullet(null);
+				avatar.setBodyType(BodyDef.BodyType.DynamicBody);
+				timeFreeze = false;
 				return true;
 			} else {
+				avatar.setPosition(avatarStart);
 				avatar.setEnemyContact(false);
 				setFailure(true);
 			}
