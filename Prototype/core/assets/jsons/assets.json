@@ -215,6 +215,66 @@
       "rows": 1,
       "cols": 3,
       "size": 3
+    },
+    "enemywalking_present": {
+      "file": "filmstrips/enemy/avatar_standing_lv_1.png",
+      "rows": 1,
+      "cols": 3,
+      "size": 3
+    },
+    "enemywalking_past": {
+      "file": "filmstrips/enemy/avatar_standing_lv_1.png",
+      "rows": 1,
+      "cols": 3,
+      "size": 3
+    },
+    "enemyshooting_present": {
+      "file": "filmstrips/enemy/avatar_standing_lv_1.png",
+      "rows": 1,
+      "cols": 3,
+      "size": 3
+    },
+    "enemyshooting_past": {
+      "file": "filmstrips/enemy/avatar_standing_lv_1.png",
+      "rows": 1,
+      "cols": 3,
+      "size": 3
+    },
+    "enemyflying_past": {
+      "file": "filmstrips/enemy/avatar_standing_lv_1.png",
+      "rows": 1,
+      "cols": 3,
+      "size": 3
+    },
+    "enemyflying_present": {
+      "file": "filmstrips/enemy/avatar_standing_lv_1.png",
+      "rows": 1,
+      "cols": 3,
+      "size": 3
+    },
+    "enemyteleporting_past": {
+      "file": "filmstrips/enemy/avatar_standing_lv_1.png",
+      "rows": 1,
+      "cols": 3,
+      "size": 3
+    },
+    "enemyteleporting_present": {
+      "file": "filmstrips/enemy/avatar_standing_lv_1.png",
+      "rows": 1,
+      "cols": 3,
+      "size": 3
+    },
+    "turret_shooting_present": {
+      "file": "filmstrips/turret/avatar_standing_lv_1.png",
+      "rows": 1,
+      "cols": 3,
+      "size": 3
+    },
+    "turret_shooting_past": {
+      "file": "filmstrips/turret/avatar_standing_lv_1.png",
+      "rows": 1,
+      "cols": 3,
+      "size": 3
     }
   }
 }

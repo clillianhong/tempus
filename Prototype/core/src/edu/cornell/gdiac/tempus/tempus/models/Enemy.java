@@ -143,11 +143,15 @@ public class Enemy extends CapsuleObstacle {
         //setFilmStrip(EnemyState.NEUTRAL, neutralTexture);
         //attackingTexture = JsonAssetManager.getInstance().getEntry(json.get("texture").asString(), FilmStrip.class);
         //setFilmStrip(EnemyState.ATTACKING, attackingTexture);
+
+        //example Filmstrip extraction
+        String entitytype = json.get("entitytype").asString();
+        FilmStrip test = JsonAssetManager.getInstance().getEntry(json.get("turretshooting").asString()+"_"+entitytype,FilmStrip.class);
         setTexture(texture);
 
         setPosition(pos[0],pos[1]);
         setDimension(texture.getRegionWidth()*shrink[0],texture.getRegionHeight()*shrink[1]);
-        setType(json.get("entitytype").asString().equals("present")?EntityType.PRESENT: PAST);
+        setType(entitytype.equals("present")?EntityType.PRESENT: PAST);
         setSpace(getType()==PRESENT?1:2);
         setBodyType(json.get("bodytype").asString().equals("static") ? BodyDef.BodyType.StaticBody : BodyDef.BodyType.DynamicBody);
         setDensity(json.get("density").asFloat());
@@ -174,6 +178,14 @@ public class Enemy extends CapsuleObstacle {
         float[] shrink = json.get("shrink").asFloatArray();
         TextureRegion texture = JsonAssetManager.getInstance().getEntry(json.get("texture").asString(), TextureRegion.class);
         setTexture(texture);
+        String entitytype = json.get("entitytype").asString();
+
+        //example filmstrip extraction
+        FilmStrip test = JsonAssetManager.getInstance().getEntry((json.get("enemywalking").asString())+"_"+entitytype, FilmStrip.class);
+        test = JsonAssetManager.getInstance().getEntry((json.get("enemyshooting").asString())+"_"+entitytype, FilmStrip.class);
+        test = JsonAssetManager.getInstance().getEntry((json.get("enemyflying").asString())+"_"+entitytype, FilmStrip.class);
+        test = JsonAssetManager.getInstance().getEntry((json.get("enemyteleporting").asString())+"_"+entitytype, FilmStrip.class);
+
         setPosition(pos[0], pos[1]);
         setDimension(texture.getRegionWidth() * shrink[0], texture.getRegionHeight() * shrink[1]);
         setType(json.get("entitytype").asString().equals("present") ? EntityType.PRESENT : PAST);

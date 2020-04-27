@@ -45,7 +45,8 @@
       "bodytype": "static",
       "entitytype": "past",
       "cooldown": 360,
-      "direction": [0, 1]
+      "direction": [0, 1],
+      "turretshooting": "turret_shooting"
     }
   },
   "capsules": {
