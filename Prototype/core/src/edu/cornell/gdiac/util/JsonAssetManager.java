@@ -24,6 +24,7 @@ import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.g2d.freetype.*;
 import com.badlogic.gdx.assets.loaders.*;
 import com.badlogic.gdx.assets.loaders.resolvers.*;
+import edu.cornell.gdiac.tempus.MusicController;
 
 /**
  * An asset manager that uses a JSON file to define its assets.
@@ -319,7 +320,8 @@ public class JsonAssetManager extends AssetManager {
             while (json != null) {
                 String file = json.getString("file");
                 if (isLoaded(file)) {
-                    unload(file);
+                    MusicController controller = MusicController.getInstance();
+                    controller.deallocate(this, file);
                     if (fonts.containsKey(file)) {
                         fonts.remove(file);
                     }
@@ -432,7 +434,8 @@ public class JsonAssetManager extends AssetManager {
     private Music allocateMusic(JsonValue json){
         String filename = json.getString("file");
         Music music = get(filename, Music.class);
-        music.setVolume(json.getFloat("volume"));
+        MusicController controller = MusicController.getInstance();
+        controller.allocate(this, filename);
         this.music.put(json.name(),music);
         return music;
     }

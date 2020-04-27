@@ -166,13 +166,29 @@
     }
   },
   "music": {
+    "past1": {
+      "file": "music/past_track_4_25.mp3"
+    },
     "past2": {
-      "file": "music/past_track_4_25.mp3",
-      "volume": 0.1
+      "file": "music/past_track_4_25.mp3"
+    },
+    "past3": {
+      "file": "music/past_track_4_25.mp3"
+    },
+    "past4": {
+      "file": "music/past_track_4_25.mp3"
+    },
+    "present1": {
+      "file": "music/present_track_4_25.mp3"
     },
     "present2": {
-      "file": "music/present_track_4_25.mp3",
-      "volume": 0.1
+      "file": "music/present_track_4_25.mp3"
+    },
+    "present3": {
+      "file": "music/present_track_4_25.mp3"
+    },
+    "present4": {
+      "file": "music/present_track_4_25.mp3"
     }
   },
   "filmstrips": {

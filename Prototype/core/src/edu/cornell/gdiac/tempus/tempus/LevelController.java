@@ -30,7 +30,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.*;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import edu.cornell.gdiac.audio.MusicBuffer;
 import edu.cornell.gdiac.tempus.InputController;
+import edu.cornell.gdiac.tempus.MusicController;
 import edu.cornell.gdiac.tempus.WorldController;
 import edu.cornell.gdiac.util.JsonAssetManager;
 import edu.cornell.gdiac.tempus.GameCanvas;
@@ -353,25 +355,25 @@ public class LevelController extends WorldController {
 		levelFormat = jsonReader.parse(Gdx.files.internal(json_filepath));
 		// levelFormat =
 		// jsonReader.parse(Gdx.files.internal("jsons/test_level_editor.json"));
-		present_music = JsonAssetManager.getInstance().getEntry(levelFormat.getString("present_music"), Music.class);
+		/*present_music = JsonAssetManager.getInstance().getEntry(levelFormat.getString("present_music"), Music.class);
 		past_music = JsonAssetManager.getInstance().getEntry(levelFormat.getString("past_music"), Music.class);
 		//present_music.setVolume(1);
 		present_music.play();
 		present_music.setLooping(true);
 		//past_music.setVolume(0);
 		past_music.play();
-		past_music.setLooping(true);
+		past_music.setLooping(true);*/
 		populateLevel();
 		timeFreeze = false;
 	}
 
 	private void exitGame() {
-		stopMusic();
+		//stopMusic();
 		listener.exitScreen(this, ScreenExitCodes.EXIT_QUIT.ordinal());
 	}
 
 	private void exitLevelSelect() {
-		stopMusic();
+		//stopMusic();
 		listener.exitScreen(this, ScreenExitCodes.EXIT_PREV.ordinal());
 	}
 
@@ -970,6 +972,8 @@ public class LevelController extends WorldController {
 	public void update(float dt) {
 		// Turn the physics engine crank.
 		// world.step(WORLD_STEP,WORLD_VELOC,WORLD_POSIT);
+		MusicController.getInstance().update(shifted);
+
 		if(rippleOn){
 			updateShader();
 		}
@@ -1003,24 +1007,6 @@ public class LevelController extends WorldController {
 			goalDoor.setOpen(true);
 		} else {
 			goalDoor.setOpen(false);
-		}
-
-		float presVol = present_music.getVolume();
-		float pastVol = past_music.getVolume();
-		if (shifted) {
-			if (presVol > 0){
-				present_music.setVolume(presVol - 0.1f);
-			}
-			if (pastVol < 1){
-				past_music.setVolume(pastVol + 0.1f);
-			}
-		} else {
-			if (presVol < 1){
-				present_music.setVolume(presVol + 0.1f);
-			}
-			if (pastVol > 0){
-				past_music.setVolume(pastVol - 0.1f);
-			}
 		}
 
 		if (avatar.isHolding()) {
@@ -1059,6 +1045,7 @@ public class LevelController extends WorldController {
 				avatar.resetDashNum(-1);
 			}
 			shifted = !shifted;
+			//MusicController.getInstance().shift(shifted);
 			// avatar.resetDashNum();
 			/*
 			 * if (!avatar.isHolding()) { avatar.setPosition(avatar.getPosition().x,
@@ -1180,10 +1167,10 @@ public class LevelController extends WorldController {
 
 		}
 
-		if (avatar.isJumping()) {
+		/*if (avatar.isJumping()) {
 			JsonValue data = assetDirectory.get("sounds").get("jump");
 			SoundController.getInstance().play("jump", data.get("file").asString(), false, data.get("volume").asFloat());
-		}
+		}*/
 
 		// If we use sound, we must remember this.
 		SoundController.getInstance().update();
@@ -1572,12 +1559,30 @@ public class LevelController extends WorldController {
 		}
 	}
 
-	public void stopMusic() {
-		present_music.stop();
-		past_music.stop();
-	}
-
 	public boolean getShifted(){
 		return shifted;
 	}
+
+	public void playMusic(int level){
+		String past = "past2";
+		String present = "present2";
+		if (level == 1){
+			past = "past1";
+			present = "present1";
+		} else if (level == 2){
+			past = "past2";
+			present = "present2";
+		} else if (level == 3){
+			past = "past3";
+			present = "present3";
+		}else if (level == 4){
+			past = "past4";
+			present = "present4";
+		}
+		JsonValue pastMus = assetDirectory.get("music").get(past);
+		MusicController.getInstance().play("past", pastMus.get("file").asString(), true, 0.0f);
+		JsonValue presentMus = assetDirectory.get("music").get(present);
+		MusicController.getInstance().play("present", presentMus.get("file").asString(), true, 1.0f);
+	}
+
 }
