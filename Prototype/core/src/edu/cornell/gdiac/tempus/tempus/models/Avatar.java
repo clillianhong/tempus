@@ -43,7 +43,6 @@ public class Avatar extends CapsuleObstacle {
     /** The density of the avatar */
     private static final float DENSITY = 1.0f;
 
-
     /** The factor to multiply by the input */
     private static final float FORCE = 20.0f;
     /** The amount to slow the character down */
@@ -85,6 +84,10 @@ public class Avatar extends CapsuleObstacle {
     /** The amount to shrink the sensor fixture (horizontally) relative to the image */
     private static final float SSHRINK = 0.6f;
 
+    /** The current immortality frame */
+    private int immortality;
+    /** The threshold for immortality */
+    private static final int threshold = 120;
     private int shifted;
     private boolean spliced;
 
@@ -319,7 +322,6 @@ public class Avatar extends CapsuleObstacle {
         }
     }
 
-
     /**
      * Returns the avatar orientation enum
      *
@@ -356,7 +358,10 @@ public class Avatar extends CapsuleObstacle {
      * @return true if lives > 0, else false
      */
     public boolean removeLife() {
-        this.lives = lives - 1;
+        if(!isImmortal()){
+            this.lives = lives - 1;
+            resetImmortality();
+        }
         return lives > 0;
     }
 
@@ -632,6 +637,38 @@ public class Avatar extends CapsuleObstacle {
     public Projectile getHeldBullet() { return heldBullet; }
 
     /**
+     * Returns the current immortality frame of the player
+     * @return the current immortality frame
+     */
+    public int getImmmortality(){return immortality;}
+
+    /**
+     * Decrements the immortality frame
+     */
+    public void  decImmortality(){
+        if (immortality <= 0) {
+            immortality = 0;
+        }
+        immortality -- ;
+    }
+
+    /**
+     * Returns whether the player is immortal
+     * @return whether the player is immortal
+     */
+    public boolean isImmortal(){
+        return immortality > 0;
+    }
+
+    /**
+     * Resets the immortality when the player is damaged while not being immortal.
+     */
+    public void resetImmortality(){
+        immortality = threshold;
+    }
+
+
+    /**
      * Creates a new dude avatar with degenerate settings.
      */
     public Avatar (){
@@ -895,7 +932,7 @@ public class Avatar extends CapsuleObstacle {
             spliced = false;
         }
         // Apply cooldowns
-        if (hitByProjctile && isHolding){
+        /*if (hitByProjctile && isHolding){
                 removeLife();
                 hitByProjctile = false;
         }
@@ -911,7 +948,7 @@ public class Avatar extends CapsuleObstacle {
             }
             projectileTicks = 0;
             hitByProjctile = false;
-        }
+        }*/
         if(!isSticking){
             setAngle(0);
         }
@@ -1046,9 +1083,23 @@ public class Avatar extends CapsuleObstacle {
 
         // Draw avatar body
         if (currentStrip != null) {
-            canvas.draw(currentStrip, Color.WHITE, origin.x + 84f, origin.y + 60f,
-                    getX() * drawScale.x, getY() * drawScale.y, getAngle(),
-                    0.02f * drawScale.x * faceDirection, 0.01875f * drawScale.y);
+            if(isImmortal()) { //If the player is immortal, make the player blink.
+                if (getImmmortality()%20<10) {
+                    canvas.draw(currentStrip, (new Color(1, 1, 1, 0.5f)), origin.x + 84f, origin.y + 60f,
+                            getX() * drawScale.x, getY() * drawScale.y, getAngle(),
+                            0.02f * drawScale.x * faceDirection, 0.01875f * drawScale.y);
+                }
+                else {
+                    canvas.draw(currentStrip, (new Color(1, 1, 1, 1f)), origin.x + 84f, origin.y + 60f,
+                            getX() * drawScale.x, getY() * drawScale.y, getAngle(),
+                            0.02f * drawScale.x * faceDirection, 0.01875f * drawScale.y);
+                }
+            }
+            else{
+                canvas.draw(currentStrip, Color.WHITE, origin.x + 84f, origin.y + 60f,
+                        getX() * drawScale.x, getY() * drawScale.y, getAngle(),
+                        0.02f * drawScale.x * faceDirection, 0.01875f * drawScale.y);
+            }
         }
 
         // If player is holding a projectile then draw the held projectile

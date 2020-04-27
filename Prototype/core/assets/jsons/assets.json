@@ -92,6 +92,14 @@
       "file": "textures/enemy/turret/turret_past_lv_1.png",
       "wrap": false
     },
+    "past_background": {
+      "file": "textures/background/past_room2.png",
+      "wrap": false
+    },
+    "present_background": {
+      "file": "textures/background/present_level1.png",
+      "wrap": false
+    },
     "background": {
       "file": "textures/background/bg_present_lv_1.png",
       "wrap": false
@@ -104,19 +112,39 @@
       "file": "textures/background/present_room2.png",
       "wrap": false
     },
-    "past_background1": {
-      "file": "textures/background/level-1-past.png",
-      "wrap": false
-    },
     "past_background3": {
       "file": "textures/background/past-3.png",
       "wrap": false
     },
-    "enemypresent": {
+    "enemypresent_type1": {
       "file": "textures/enemy/creature/enemy_present_alive_lv_1.png",
       "wrap": false
     },
-    "enemypast": {
+    "enemypresent_type2": {
+      "file": "textures/enemy/creature/enemy_present_alive_lv_1.png",
+      "wrap": false
+    },
+    "enemypresent_type3": {
+      "file": "textures/enemy/creature/enemy_present_alive_lv_1.png",
+      "wrap": false
+    },
+    "enemypresent_type4": {
+      "file": "textures/enemy/creature/enemy_present_alive_lv_1.png",
+      "wrap": false
+    },
+    "enemypast_type1": {
+      "file": "textures/enemy/creature/enemy_past_alive_lv_1.png",
+      "wrap": false
+    },
+    "enemypast_type2": {
+      "file": "textures/enemy/creature/enemy_past_alive_lv_1.png",
+      "wrap": false
+    },
+    "enemypast_type3": {
+      "file": "textures/enemy/creature/enemy_past_alive_lv_1.png",
+      "wrap": false
+    },
+    "enemypast_type4": {
       "file": "textures/enemy/creature/enemy_past_alive_lv_1.png",
       "wrap": false
     },
@@ -212,6 +240,66 @@
     },
     "avatarfalling": {
       "file": "filmstrips/avatar_falling_lv_1.png",
+      "rows": 1,
+      "cols": 3,
+      "size": 3
+    },
+    "enemywalking_present": {
+      "file": "filmstrips/enemy/avatar_standing_lv_1.png",
+      "rows": 1,
+      "cols": 3,
+      "size": 3
+    },
+    "enemywalking_past": {
+      "file": "filmstrips/enemy/avatar_standing_lv_1.png",
+      "rows": 1,
+      "cols": 3,
+      "size": 3
+    },
+    "enemyshooting_present": {
+      "file": "filmstrips/enemy/avatar_standing_lv_1.png",
+      "rows": 1,
+      "cols": 3,
+      "size": 3
+    },
+    "enemyshooting_past": {
+      "file": "filmstrips/enemy/avatar_standing_lv_1.png",
+      "rows": 1,
+      "cols": 3,
+      "size": 3
+    },
+    "enemyflying_past": {
+      "file": "filmstrips/enemy/avatar_standing_lv_1.png",
+      "rows": 1,
+      "cols": 3,
+      "size": 3
+    },
+    "enemyflying_present": {
+      "file": "filmstrips/enemy/avatar_standing_lv_1.png",
+      "rows": 1,
+      "cols": 3,
+      "size": 3
+    },
+    "enemyteleporting_past": {
+      "file": "filmstrips/enemy/avatar_standing_lv_1.png",
+      "rows": 1,
+      "cols": 3,
+      "size": 3
+    },
+    "enemyteleporting_present": {
+      "file": "filmstrips/enemy/avatar_standing_lv_1.png",
+      "rows": 1,
+      "cols": 3,
+      "size": 3
+    },
+    "turret_shooting_present": {
+      "file": "filmstrips/turret/avatar_standing_lv_1.png",
+      "rows": 1,
+      "cols": 3,
+      "size": 3
+    },
+    "turret_shooting_past": {
+      "file": "filmstrips/turret/avatar_standing_lv_1.png",
       "rows": 1,
       "cols": 3,
       "size": 3

@@ -204,7 +204,7 @@
       "cooldown": 120,
       "bodytype": "dynamic",
       "density": 1.0,
-      "aitype": 1
+      "aitype": 1,
     },
     "enemy2": {
       "pos": [15.625, 11.03125],
@@ -214,7 +214,7 @@
       "cooldown": 120,
       "bodytype": "dynamic",
       "density": 1.0,
-      "aitype": 1
+      "aitype": 1,
     }
   },
   "turrets": {
@@ -226,7 +226,7 @@
       "cooldown": 360,
       "direction": [-3.0, 0.0],
       "bodytype": "static",
-      "density": 1.0
+      "density": 1.0,
     },
     "turret2": {
       "pos": [8.5, 5.0],
@@ -236,7 +236,7 @@
       "cooldown": 480,
       "direction": [0.0, 2.0],
       "bodytype": "static",
-      "density": 1.0
+      "density": 1.0,
     }
   },
   "spikeshape": [0.3, -0.6, 0.0, -0.2, -0.6, 0.0, -0.5, 0.4, 0.0, 0.6, 0.4, -0.2, 0.6, -0.3],

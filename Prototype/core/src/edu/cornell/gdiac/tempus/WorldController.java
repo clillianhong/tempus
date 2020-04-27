@@ -470,12 +470,8 @@ public abstract class WorldController implements Screen {
 		if (input.didReset()) {
 			reset();
 		}
-		
-		// Now it is time to maybe switch screens.
-		if (input.didExit()) {
-			listener.exitScreen(this, ScreenExitCodes.EXIT_QUIT.ordinal());
-			return false;
-		} else if (input.didAdvance()) {
+
+		if (input.didAdvance()) {
 			listener.exitScreen(this, ScreenExitCodes.EXIT_NEXT.ordinal());
 			return false;
 		} else if (input.didRetreat()) {
