@@ -205,10 +205,6 @@
       "bodytype": "dynamic",
       "density": 1.0,
       "aitype": 1,
-      "enemywalking": "enemywalking",
-      "enemyshooting": "enemyshooting",
-      "enemyflying": "enemyflying",
-      "enemyteleporting": "enemyteleporting"
     },
     "enemy2": {
       "pos": [15.625, 11.03125],
@@ -219,10 +215,6 @@
       "bodytype": "dynamic",
       "density": 1.0,
       "aitype": 1,
-      "enemywalking": "enemywalking",
-      "enemyshooting": "enemyshooting",
-      "enemyflying": "enemyflying",
-      "enemyteleporting": "enemyteleporting"
     }
   },
   "turrets": {
@@ -235,7 +227,6 @@
       "direction": [-3.0, 0.0],
       "bodytype": "static",
       "density": 1.0,
-      "turretshooting": "turret_shooting"
     },
     "turret2": {
       "pos": [8.5, 5.0],
@@ -246,7 +237,6 @@
       "direction": [0.0, 2.0],
       "bodytype": "static",
       "density": 1.0,
-      "turretshooting": "turret_shooting"
     }
   },
   "spikeshape": [0.3, -0.6, 0.0, -0.2, -0.6, 0.0, -0.5, 0.4, 0.0, 0.6, 0.4, -0.2, 0.6, -0.3],

@@ -98,25 +98,24 @@ public class SelectLevelMode implements Screen {
 
                 @Override
                 public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                    if(!(scrolling)){
+//                    if(!(scrolling)){
                         super.enter(event, x, y, pointer, fromActor);
                         button.setChecked(true);
 
                         if(currentLevel != level){
                             currentLevel = level;
-                            stage.clear();
-                            show();
+                            updatePreview();
                         }
-                    }
+//                    }
                 }
 
                 @Override
                 public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-                    if(!(scrolling)) {
+//                    if(!(scrolling)) {
                         super.exit(event, x, y, pointer, toActor);
                         button.setChecked(false);
-                    }
-                    scrolling = false;
+//                    }
+//                    scrolling = false;
                 }
             });
         }
@@ -135,6 +134,8 @@ public class SelectLevelMode implements Screen {
         listener.exitScreen(this, ScreenExitCodes.EXIT_PREV.ordinal());
     }
 
+    private Container pIContainer;
+    private Container lbContainer;
 
     private boolean scrollPrev;
     private boolean scrolling;
@@ -241,6 +242,15 @@ public class SelectLevelMode implements Screen {
     }
 
 
+    public void updatePreview(){
+        Texture prevTexture = new Texture(Gdx.files.internal(levels[currentLevel].getFilePreview()));
+        Image previewImg = new Image( new TextureRegion(prevTexture));
+
+        pIContainer.setActor(previewImg);
+
+        Image loreImage = new Image( new TextureRegion(new Texture(Gdx.files.internal(levels[currentLevel].getFileLore()))));
+        lbContainer.setActor(loreImage);
+    }
     @Override
     public void show() {
 
@@ -336,7 +346,7 @@ public class SelectLevelMode implements Screen {
 
         Stack prevStack = new Stack();
 
-        Container<Image> pIContainer = new Container<>();
+        pIContainer = new Container<>();
         pIContainer.size(cw/2f* 0.5f, ch/2f * 0.6f);
         Texture prevTexture = new Texture(Gdx.files.internal(levels[currentLevel].getFilePreview()));
         Image previewImg = new Image( new TextureRegion(prevTexture));
@@ -348,7 +358,7 @@ public class SelectLevelMode implements Screen {
         prevStack.add(pIContainer);
 
         //lore panel
-        Container<Image> lbContainer = new Container<>();
+        lbContainer = new Container<>();
         lbContainer.size(sw/2f*0.7f, sh/2f*0.6f);
         Image loreImage = new Image( new TextureRegion(new Texture(Gdx.files.internal(levels[currentLevel].getFileLore()))));
         lbContainer.setActor(loreImage);

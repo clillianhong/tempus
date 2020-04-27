@@ -116,11 +116,35 @@
       "file": "textures/background/past-3.png",
       "wrap": false
     },
-    "enemypresent": {
+    "enemypresent_type1": {
       "file": "textures/enemy/creature/enemy_present_alive_lv_1.png",
       "wrap": false
     },
-    "enemypast": {
+    "enemypresent_type2": {
+      "file": "textures/enemy/creature/enemy_present_alive_lv_1.png",
+      "wrap": false
+    },
+    "enemypresent_type3": {
+      "file": "textures/enemy/creature/enemy_present_alive_lv_1.png",
+      "wrap": false
+    },
+    "enemypresent_type4": {
+      "file": "textures/enemy/creature/enemy_present_alive_lv_1.png",
+      "wrap": false
+    },
+    "enemypast_type1": {
+      "file": "textures/enemy/creature/enemy_past_alive_lv_1.png",
+      "wrap": false
+    },
+    "enemypast_type2": {
+      "file": "textures/enemy/creature/enemy_past_alive_lv_1.png",
+      "wrap": false
+    },
+    "enemypast_type3": {
+      "file": "textures/enemy/creature/enemy_past_alive_lv_1.png",
+      "wrap": false
+    },
+    "enemypast_type4": {
       "file": "textures/enemy/creature/enemy_past_alive_lv_1.png",
       "wrap": false
     },
