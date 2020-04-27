@@ -13,7 +13,9 @@ import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.JsonWriter;
 import edu.cornell.gdiac.tempus.GameCanvas;
 import edu.cornell.gdiac.tempus.tempus.LevelController;
+import edu.cornell.gdiac.tempus.tempus.TutorialController;
 import edu.cornell.gdiac.tempus.tempus.models.LevelModel;
+import edu.cornell.gdiac.tempus.tempus.models.TutorialModel;
 
 import java.io.File;
 
@@ -175,7 +177,11 @@ public class GameStateManager {
         levels = new LevelModel[num_levels];
         last_level_idx = levels.length-1;
 
-        for(int i = 0; i<num_levels; i++){
+        levelDirectories[0] = jsonReader.parse(Gdx.files.internal(level_paths[0]));
+        levels[0] = loadTutorial(levelDirectories[0]);
+        levels[0].preloadLevel();
+
+        for(int i = 1; i<num_levels; i++){
             levelDirectories[i] = jsonReader.parse(Gdx.files.internal(level_paths[i]));
             levels[i] = loadLevel(levelDirectories[i], unfinishedLevel, unfinishedRoom);
             if(levels[i].getLevelNumber() == unfinishedLevel){
@@ -214,13 +220,34 @@ public class GameStateManager {
             rooms[i] = new LevelController(room_paths[i]);
         }
 
-        if(lv == unfinishedLevel){
+       if(lv == unfinishedLevel){
             return new LevelModel(lv, true, false, unfinishedRoom, rooms);
         }else if(lv > unfinishedLevel){
             return new LevelModel(lv, false, false, 0, rooms);
         }else{
             return new LevelModel(lv, true, true, 0, rooms);
         }
+
+    }
+
+    /**
+     * Loads a level model from JSON.
+     *
+     * @param levelJson
+     * @return LevelModel generated from levelJson
+     */
+    protected TutorialModel loadTutorial(JsonValue levelJson){
+        int lv = levelJson.getInt("level");
+        int room_count = levelJson.getInt("room_count");
+        String[] room_paths = levelJson.get("rooms").asStringArray();
+
+        LevelController [] rooms = new LevelController[room_count];
+
+        for(int i=0; i<room_count; i++){
+            rooms[i] = new TutorialController(room_paths[i]);
+        }
+
+       return new TutorialModel(lv, true, true, 0, rooms);
 
     }
 

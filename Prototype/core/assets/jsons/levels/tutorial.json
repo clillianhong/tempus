@@ -5,9 +5,10 @@
   "finished": true,
   "resume_room_index": 0,
   "rooms" : [
-    "jsons/rooms/lv1_room1.json",
-    "jsons/rooms/lv1_room1.json",
-    "jsons/rooms/lv1_room1.json",
+    "jsons/rooms/tutorial_room2.json",
+    "jsons/rooms/tutorial_room3.json",
+    "jsons/rooms/tutorial_room4.json",
+    "jsons/rooms/tutorial_room5.json",
     "jsons/rooms/lv1_room1.json",
     "jsons/rooms/lv1_room1.json"
   ]

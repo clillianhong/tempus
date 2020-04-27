@@ -1258,7 +1258,7 @@ public class LevelController extends WorldController {
 	/**
 	 * Add a new bullet to the world and send it in the right direction.
 	 */
-	private void createRedirectedProj() {
+	protected void createRedirectedProj() {
 		Vector2 mousePos = InputController.getInstance().getMousePosition();
 		Vector2 redirection = avatar.getPosition().cpy().sub(mousePos).nor();
 		float x0 = avatar.getX() + (redirection.x * avatar.getWidth());

@@ -16,6 +16,7 @@ public class TutorialModel extends LevelModel {
         super(lv, unlocked, finished, resume, rms);
 
         int num_rooms = rms.length;
+        tutorials = new TextureRegionDrawable[num_rooms];
 
         for(int i = 0; i<num_rooms; i++){
             String filename = "tutorial" + (i+1) + ".png";
