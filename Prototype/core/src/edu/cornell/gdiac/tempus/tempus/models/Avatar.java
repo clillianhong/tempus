@@ -932,7 +932,7 @@ public class Avatar extends CapsuleObstacle {
             spliced = false;
         }
         // Apply cooldowns
-        if (hitByProjctile && isHolding){
+        /*if (hitByProjctile && isHolding){
                 removeLife();
                 hitByProjctile = false;
         }
@@ -948,7 +948,7 @@ public class Avatar extends CapsuleObstacle {
             }
             projectileTicks = 0;
             hitByProjctile = false;
-        }
+        }*/
         if(!isSticking){
             setAngle(0);
         }
