@@ -1,8 +1,7 @@
 {
   "gravity": -14.7,
   "bounds": [
-    32,
-    18
+    32, 18
   ],
   "present_background": "present_background2",
   "past_background": "past_background2",
@@ -18,12 +17,10 @@
   "effect_volume": 0.8,
   "door": {
     "pos": [
-      29.5,
-      15.5
+      29.5, 15.5
     ],
     "size": [
-      1.92,
-      1.92
+      1.92, 1.92
     ],
     "bodytype": "static",
     "density": 0,
@@ -36,12 +33,10 @@
   },
   "avatar": {
     "pos": [
-      4.9,
-      4.429999999999999
+      4.9, 4.429999999999999
     ],
     "shrink": [
-      0.0216,
-      0.01125
+      0.0216, 0.01125
     ],
     "texture": "dude",
     "density": 1,
@@ -54,12 +49,10 @@
   "turrets": {
     "turret7": {
       "pos": [
-        1.768,
-        6.900000000000001
+        1.768, 6.900000000000001
       ],
       "shrink": [
-        0.0168,
-        0.021375
+        0.0168, 0.021375
       ],
       "texture": "present_turret",
       "density": 1,
@@ -67,18 +60,16 @@
       "entitytype": "present",
       "cooldown": 360,
       "direction": [
-        3,
-        0
-      ]
+        3, 0
+      ],
+      "turretshooting": "turret_shooting"
     },
     "turret8": {
       "pos": [
-        30.728,
-        9.45
+        30.728, 9.45
       ],
       "shrink": [
-        0.0168,
-        0.021375
+        0.0168, 0.021375
       ],
       "texture": "past_turret",
       "density": 1,
@@ -86,17 +77,16 @@
       "entitytype": "past",
       "cooldown": 360,
       "direction": [
-        -3,
-        0
-      ]
+        -3, 0
+      ],
+      "turretshooting": "turret_shooting"
     }
   },
   "capsules": {
     "presentcapsule11": {
       "name": "present_capsule",
       "pos": [
-        3.304,
-        2.79
+        3.304, 2.79
       ],
       "bodytype": "static",
       "density": 0,
@@ -108,8 +98,7 @@
     "pastcapsule12": {
       "name": "past_capsule",
       "pos": [
-        3.304,
-        2.79
+        3.304, 2.79
       ],
       "bodytype": "static",
       "density": 0,
@@ -121,8 +110,7 @@
     "presentcapsule17": {
       "name": "present_capsule",
       "pos": [
-        11.72,
-        1.02
+        11.72, 1.02
       ],
       "bodytype": "static",
       "density": 0,
@@ -134,8 +122,7 @@
     "pastcapsule18": {
       "name": "past_capsule",
       "pos": [
-        5.768,
-        10.92
+        5.768, 10.92
       ],
       "bodytype": "static",
       "density": 0,
@@ -147,8 +134,7 @@
     "presentcapsule21": {
       "name": "present_capsule",
       "pos": [
-        13.8,
-        14.31
+        13.8, 14.31
       ],
       "bodytype": "static",
       "density": 0,
@@ -160,8 +146,7 @@
     "pastcapsule22": {
       "name": "past_capsule",
       "pos": [
-        20.712,
-        1.02
+        20.712, 1.02
       ],
       "bodytype": "static",
       "density": 0,
@@ -173,8 +158,7 @@
     "presentcapsule23": {
       "name": "present_capsule",
       "pos": [
-        27.496,
-        4.379999999999999
+        27.496, 4.379999999999999
       ],
       "bodytype": "static",
       "density": 0,
@@ -186,8 +170,7 @@
     "pastcapsule25": {
       "name": "past_capsule",
       "pos": [
-        23.144,
-        12.87
+        23.144, 12.87
       ],
       "bodytype": "static",
       "density": 0,
@@ -202,8 +185,7 @@
     "pastround19": {
       "name": "past_round",
       "pos": [
-        16.296,
-        7.2
+        16.296, 7.2
       ],
       "bodytype": "static",
       "density": 0,
@@ -215,8 +197,7 @@
     "presentround20": {
       "name": "present_round",
       "pos": [
-        16.328,
-        7.23
+        16.328, 7.23
       ],
       "bodytype": "static",
       "density": 0,
@@ -229,35 +210,39 @@
   "enemies": {
     "enemy9": {
       "pos": [
-        15.4,
-        16.79
+        15.4, 16.79
       ],
       "shrink": [
-        0.0168,
-        0.021375
+        0.0168, 0.021375
       ],
       "texture": "enemypresent",
       "density": 1,
       "bodytype": "dynamic",
       "entitytype": "present",
       "cooldown": 360,
-      "aitype": 2
+      "aitype": 2,
+      "enemywalking": "enemywalking",
+      "enemyshooting": "enemyshooting",
+      "enemyflying": "enemyflying",
+      "enemyteleporting": "enemyteleporting"
     },
     "enemy10": {
       "pos": [
-        24.84,
-        14.820000000000004
+        24.84, 14.820000000000004
       ],
       "shrink": [
-        0.0168,
-        0.021375
+        0.0168, 0.021375
       ],
       "texture": "enemypast",
       "density": 1,
       "bodytype": "dynamic",
       "entitytype": "past",
       "cooldown": 360,
-      "aitype": 2
+      "aitype": 2,
+      "enemywalking": "enemywalking",
+      "enemyshooting": "enemyshooting",
+      "enemyflying": "enemyflying",
+      "enemyteleporting": "enemyteleporting"
     }
   },
   "spikes": {}
