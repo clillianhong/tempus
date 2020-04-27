@@ -30,7 +30,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.*;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import edu.cornell.gdiac.audio.MusicBuffer;
 import edu.cornell.gdiac.tempus.InputController;
+import edu.cornell.gdiac.tempus.MusicController;
 import edu.cornell.gdiac.tempus.WorldController;
 import edu.cornell.gdiac.util.JsonAssetManager;
 import edu.cornell.gdiac.tempus.GameCanvas;
@@ -62,9 +64,11 @@ public class LevelController extends WorldController {
 	protected Table pauseTable;
 	protected Container pauseButtonContainer;
 
-	/** RIPPLE SHADER ** /
-
-	/** vertex shader source code */
+	/**
+	 * RIPPLE SHADER ** /
+	 * 
+	 * /** vertex shader source code
+	 */
 	protected String vert;
 	/** fragment shader source code */
 	protected String frag;
@@ -74,7 +78,7 @@ public class LevelController extends WorldController {
 	SpriteBatch batch;
 	/** background sprite for rendering w shader */
 	Sprite sprite;
-	/** time ticks for sine/cosine wave in frag shader*/
+	/** time ticks for sine/cosine wave in frag shader */
 	float ticks;
 	/** current mouse position */
 	Vector2 mouse_pos;
@@ -181,8 +185,6 @@ public class LevelController extends WorldController {
 		JsonAssetManager.getInstance().allocateDirectory();
 		displayFont = JsonAssetManager.getInstance().getEntry("display", BitmapFont.class);
 		platformAssetState = AssetState.COMPLETE;
-
-
 
 	}
 
@@ -304,15 +306,15 @@ public class LevelController extends WorldController {
 		json_filepath = json;
 		numEnemies = 0;
 		begincount = 10;
-		enemyController = new EnemyController(enemies, objects, avatar, world, scale, this,assetDirectory);
+		enemyController = new EnemyController(enemies, objects, avatar, world, scale, this, assetDirectory);
 
-		//ripple shader
+		// ripple shader
 		ticks = 0f;
 		rippleOn = false;
 		vert = Gdx.files.internal(".vertex.glsl").readString();
 		frag = Gdx.files.internal(".fragment.glsl").readString();
-		shaderprog = new ShaderProgram(vert,frag);
-		shaderprog.pedantic=false;
+		shaderprog = new ShaderProgram(vert, frag);
+		shaderprog.pedantic = false;
 		m_rippleDistance = 0;
 		m_rippleRange = 0;
 		ticks = 0;
@@ -320,10 +322,10 @@ public class LevelController extends WorldController {
 		ripple_reset = Gdx.graphics.getWidth() * 0.00025f;
 		shaderprog.setUniformf("time", ticks);
 		batch = new SpriteBatch();
-		mouse_pos = new Vector2(0.5f,0.5f);
+		mouse_pos = new Vector2(0.5f, 0.5f);
 		delta_x = 1000;
 		delta_y = 1000;
-		fish_pos = new Vector2(0,0);
+		fish_pos = new Vector2(0, 0);
 	}
 
 	/**
@@ -353,25 +355,24 @@ public class LevelController extends WorldController {
 		levelFormat = jsonReader.parse(Gdx.files.internal(json_filepath));
 		// levelFormat =
 		// jsonReader.parse(Gdx.files.internal("jsons/test_level_editor.json"));
-		present_music = JsonAssetManager.getInstance().getEntry(levelFormat.getString("present_music"), Music.class);
-		past_music = JsonAssetManager.getInstance().getEntry(levelFormat.getString("past_music"), Music.class);
-		//present_music.setVolume(1);
-		present_music.play();
-		present_music.setLooping(true);
-		//past_music.setVolume(0);
-		past_music.play();
-		past_music.setLooping(true);
+		/*
+		 * present_music =
+		 * JsonAssetManager.getInstance().getEntry(levelFormat.getString("present_music"
+		 * ), Music.class); past_music =
+		 * JsonAssetManager.getInstance().getEntry(levelFormat.getString("past_music"),
+		 * Music.class); //present_music.setVolume(1); present_music.play();
+		 * present_music.setLooping(true); //past_music.setVolume(0); past_music.play();
+		 * past_music.setLooping(true);
+		 */
 		populateLevel();
 		timeFreeze = false;
 	}
 
 	protected void exitGame() {
-		stopMusic();
 		listener.exitScreen(this, ScreenExitCodes.EXIT_QUIT.ordinal());
 	}
 
 	protected void exitLevelSelect() {
-		stopMusic();
 		listener.exitScreen(this, ScreenExitCodes.EXIT_PREV.ordinal());
 	}
 
@@ -697,7 +698,7 @@ public class LevelController extends WorldController {
 		// }
 
 		collisionController = new CollisionController(this);
-		enemyController = new EnemyController(enemies, objects, avatar, world, scale, this,assetDirectory);
+		enemyController = new EnemyController(enemies, objects, avatar, world, scale, this, assetDirectory);
 		world.setContactListener(collisionController);
 	}
 
@@ -787,17 +788,18 @@ public class LevelController extends WorldController {
 		TextureRegion rippleBG = new TextureRegion(new Texture(Gdx.files.internal("textures/gui/pause_filter_50.png")));
 		sprite = new Sprite(rippleBG);
 
-//		levelWonContainer = new Container<>();
-//		levelWonContainer.setBackground(pauseBG);
-//		levelWonContainer.setPosition(0, 0);
-//		levelWonContainer.fillX();
-//		levelWonContainer.fillY();
-//		table.add(pauseButton).width(sw / 15f).height(sw / 15f).expand().right().top();
-//
-//		pauseTable = new Table();
-//		//pauseTable.background(pauseBox);
-//		levelWonContainer.setActor(pauseTable);
-//		levelWonContainer.setVisible(false);
+		// levelWonContainer = new Container<>();
+		// levelWonContainer.setBackground(pauseBG);
+		// levelWonContainer.setPosition(0, 0);
+		// levelWonContainer.fillX();
+		// levelWonContainer.fillY();
+		// table.add(pauseButton).width(sw / 15f).height(sw /
+		// 15f).expand().right().top();
+		//
+		// pauseTable = new Table();
+		// //pauseTable.background(pauseBox);
+		// levelWonContainer.setActor(pauseTable);
+		// levelWonContainer.setVisible(false);
 
 		/*
 		
@@ -823,7 +825,7 @@ public class LevelController extends WorldController {
 
 	}
 
-	public void wonLevel(){
+	public void wonLevel() {
 
 	}
 
@@ -847,7 +849,6 @@ public class LevelController extends WorldController {
 	 */
 	public boolean preUpdate(float dt) {
 
-
 		if (paused || prepause) {
 			return false;
 		}
@@ -869,8 +870,13 @@ public class LevelController extends WorldController {
 				avatar.setEnemyContact(false);
 				avatar.setPosition(avatarStart);
 				avatar.getBody().setLinearVelocity(0, 0);
+				avatar.setHolding(false);
+				avatar.setHeldBullet(null);
+				avatar.setBodyType(BodyDef.BodyType.DynamicBody);
+				timeFreeze = false;
 				return true;
 			} else {
+				avatar.setPosition(avatarStart);
 				avatar.setEnemyContact(false);
 				setFailure(true);
 			}
@@ -899,7 +905,6 @@ public class LevelController extends WorldController {
 		enemyController.sleepIfNotInWorld();
 
 		for (Obstacle obj : objects) {
-
 
 			if (obj instanceof Enemy && ((Enemy) obj).isTurret()) {
 				if (obj.getSpace() == 3) {
@@ -938,11 +943,16 @@ public class LevelController extends WorldController {
 		// Turn the physics engine crank.
 		// world.step(WORLD_STEP,WORLD_VELOC,WORLD_POSIT);
 
-		if(InputController.getInstance().didPause() && !paused){
+		if (InputController.getInstance().didPause() && !paused) {
 			pauseGame();
 		}
 
-		if(rippleOn){
+		MusicController.getInstance().update(shifted);
+
+		if (avatar.getShifted() > 0) {
+			avatar.setShifted(avatar.getShifted() - 1);
+		}
+		if (rippleOn) {
 			updateShader();
 		}
 
@@ -965,6 +975,7 @@ public class LevelController extends WorldController {
 			// }
 			enemyController.slowCoolDown(false);
 		}
+		avatar.decImmortality();
 		int t = avatar.getStartedDashing();
 		if (t > 0) {
 			t = t - 1;
@@ -975,24 +986,6 @@ public class LevelController extends WorldController {
 			goalDoor.setOpen(true);
 		} else {
 			goalDoor.setOpen(false);
-		}
-
-		float presVol = present_music.getVolume();
-		float pastVol = past_music.getVolume();
-		if (shifted) {
-			if (presVol > 0){
-				present_music.setVolume(presVol - 0.1f);
-			}
-			if (pastVol < 1){
-				past_music.setVolume(pastVol + 0.1f);
-			}
-		} else {
-			if (presVol < 1){
-				present_music.setVolume(presVol + 0.1f);
-			}
-			if (pastVol > 0){
-				past_music.setVolume(pastVol - 0.1f);
-			}
 		}
 
 		if (avatar.isHolding()) {
@@ -1013,17 +1006,16 @@ public class LevelController extends WorldController {
 				// avatar.getPosition().dst(mousePos)));
 				avatar.setDashForceDirection(mousePos.cpy().sub(avatar.getPosition()));
 				avatar.setHolding(false);
-				avatar.setCurrentPlatform(null);
 				createRedirectedProj();
 				avatar.setHeldBullet(null); // NOTE: gives error if called before createRedirectedProj()
 
 			}
 		}
 		if (InputController.getInstance().pressedShiftKey()) {
-			//update ripple shader params
+			// update ripple shader params
 
 			rippleOn = true;
-			ticks=0;
+			ticks = 0;
 			m_rippleDistance = 0;
 			m_rippleRange = 0;
 
@@ -1031,6 +1023,8 @@ public class LevelController extends WorldController {
 				avatar.resetDashNum(-1);
 			}
 			shifted = !shifted;
+			avatar.setShifted(6);
+			// MusicController.getInstance().shift(shifted);
 			// avatar.resetDashNum();
 			/*
 			 * if (!avatar.isHolding()) { avatar.setPosition(avatar.getPosition().x,
@@ -1074,13 +1068,13 @@ public class LevelController extends WorldController {
 			avatar.dash(); // handles checking if dashing is possible
 		}
 
-		if(rippleOn){
+		if (rippleOn) {
 			float rippleSpeed = 0.25f;
 			float maxRippleDistance = 8f;
 			ticks += time_incr;
-			if(ticks > ripple_reset){
+			if (ticks > ripple_reset) {
 				rippleOn = false;
-				ticks=0;
+				ticks = 0;
 				m_rippleDistance = 0;
 				m_rippleRange = 0;
 			}
@@ -1138,19 +1132,26 @@ public class LevelController extends WorldController {
 				|| InputController.getInstance().pressedRightMouseButton()) {
 			// If either mouse button is held, set animation to be crouching
 			avatar.animate(Avatar.AvatarState.CROUCHING, false);
+			avatar.setAnimationState(Avatar.AvatarState.CROUCHING);
 		} else if (avatar.isSticking()) {
 			// Default animation if player is stationary
 			avatar.animate(Avatar.AvatarState.STANDING, false);
+			avatar.setAnimationState(Avatar.AvatarState.STANDING);
 		} else if (avatar.getLinearVelocity().y > 0) {
 			avatar.animate(Avatar.AvatarState.DASHING, false);
+			avatar.setAnimationState(Avatar.AvatarState.DASHING);
 		} else {
 			avatar.animate(Avatar.AvatarState.FALLING, false);
+			avatar.setAnimationState(Avatar.AvatarState.FALLING);
+
 		}
 
-		if (avatar.isJumping()) {
-			JsonValue data = assetDirectory.get("sounds").get("jump");
-			SoundController.getInstance().play("jump", data.get("file").asString(), false, data.get("volume").asFloat());
-		}
+		/*
+		 * if (avatar.isJumping()) { JsonValue data =
+		 * assetDirectory.get("sounds").get("jump");
+		 * SoundController.getInstance().play("jump", data.get("file").asString(),
+		 * false, data.get("volume").asFloat()); }
+		 */
 
 		// If we use sound, we must remember this.
 		SoundController.getInstance().update();
@@ -1177,8 +1178,10 @@ public class LevelController extends WorldController {
 	 */
 	public void postUpdate(float dt) {
 		super.postUpdate(dt);
-
-		if(rippleOn){
+		if (avatar.getStartedDashing() > 0) {
+			avatar.setStartedDashing(0);
+		}
+		if (rippleOn) {
 			updateShader();
 		}
 
@@ -1357,13 +1360,14 @@ public class LevelController extends WorldController {
 		// System.out.println(scale);
 		if (!avatar.isHolding()) {
 			canvas.draw(circle, Color.WHITE, circle.getRegionWidth() / 2, circle.getRegionHeight() / 2,
-					avatar.getX() * scale.x, avatar.getY() * scale.y, redirection.angle() / 57, 0.0031f * scale.x * dist,
-					0.0031f * scale.y * dist);
+					avatar.getX() * scale.x, avatar.getY() * scale.y, redirection.angle() / 57, 0.0095f * scale.x * dist,
+					0.0095f * scale.y * dist);
 			canvas.draw(arrow, Color.WHITE, 0, arrow.getRegionHeight() / 2, avatar.getX() * scale.x, avatar.getY() * scale.y,
-					(180 + redirection.angle()) / 57, 0.006f * scale.x * dist, 0.006f * scale.y * dist);
+					(180 + redirection.angle()) / 57, 0.0075f * scale.x * dist, 0.0075f * scale.y * dist);
 		} else {
 			canvas.draw(arrow, Color.WHITE, 0, arrow.getRegionHeight() / 2, avatar.getX() * scale.x, avatar.getY() * scale.y,
-					(180 + redirection.angle()) / 57, 0.016f * scale.x, 0.016f * scale.y);
+					(180 + redirection.angle()) / 57, 0.0075f * scale.x * avatar.getDashRange(),
+					0.0075f * scale.y * avatar.getDashRange());
 		}
 		canvas.end();
 		// If player is holding a projectile, draw projectile indicator
@@ -1398,16 +1402,18 @@ public class LevelController extends WorldController {
 		canvas.end();
 	}
 
-	public void updateShader(){
-		//write to shader
+	public void updateShader() {
+		// write to shader
 		shaderprog.begin();
 		shaderprog.setUniformf("time", ticks);
 
-//		shaderprog.setUniformf("mousePos", new Vector2(0 * scale.x / Gdx.graphics.getWidth() , 0 * scale.y / Gdx.graphics.getHeight()));
-		shaderprog.setUniformf("mousePos", new Vector2(avatar.getPosition().x * scale.x / Gdx.graphics.getWidth() , (DEFAULT_HEIGHT - avatar.getPosition().y) * scale.y / Gdx.graphics.getHeight()));
-		shaderprog.setUniformf("deltax", Math.abs(delta_x/100));
-		shaderprog.setUniformf("deltay",  Math.abs(delta_y/100));
-		//update ripple params
+		// shaderprog.setUniformf("mousePos", new Vector2(0 * scale.x /
+		// Gdx.graphics.getWidth() , 0 * scale.y / Gdx.graphics.getHeight()));
+		shaderprog.setUniformf("mousePos", new Vector2(avatar.getPosition().x * scale.x / Gdx.graphics.getWidth(),
+				(DEFAULT_HEIGHT - avatar.getPosition().y) * scale.y / Gdx.graphics.getHeight()));
+		shaderprog.setUniformf("deltax", Math.abs(delta_x / 100));
+		shaderprog.setUniformf("deltay", Math.abs(delta_y / 100));
+		// update ripple params
 		shaderprog.setUniformf("u_rippleDistance", m_rippleDistance);
 		shaderprog.setUniformf("u_rippleRange", m_rippleRange);
 
@@ -1447,11 +1453,11 @@ public class LevelController extends WorldController {
 
 		canvas.clear();
 
-		if(rippleOn){
+		if (rippleOn) {
 			updateShader();
 		}
 
-		//render batch with shader
+		// render batch with shader
 		batch.begin();
 		batch.setShader(shaderprog);
 
@@ -1465,11 +1471,18 @@ public class LevelController extends WorldController {
 		}
 
 		sprite = new Sprite(backgroundTexture);
-		batch.draw(sprite,0,0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
+		batch.draw(sprite, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		batch.end();
 
 		canvas.begin();
-
+		/*
+		 * TextureRegion projCircle =
+		 * JsonAssetManager.getInstance().getEntry("projectile_circle",
+		 * TextureRegion.class); for (Obstacle obj : objects) { if (obj instanceof
+		 * Platform){ canvas.draw(projCircle, Color.GOLD, projCircle.getRegionWidth() /
+		 * 2, projCircle.getRegionHeight() / 2, obj.getX() * scale.x, obj.getY() *
+		 * scale.y, 0, 0.001f * scale.x, 0.001f * scale.y); } }
+		 */
 		drawObjectInWorld();
 		canvas.end();
 
@@ -1497,9 +1510,6 @@ public class LevelController extends WorldController {
 			canvas.drawTextCentered("FAILURE!", displayFont, 0.0f);
 			canvas.end();
 		}
-
-
-
 
 	}
 
@@ -1536,12 +1546,30 @@ public class LevelController extends WorldController {
 		}
 	}
 
-	public void stopMusic() {
-		present_music.stop();
-		past_music.stop();
-	}
-
-	public boolean getShifted(){
+	public boolean getShifted() {
 		return shifted;
 	}
+
+	public void playMusic(int level) {
+		String past = "past2";
+		String present = "present2";
+		if (level == 1) {
+			past = "past1";
+			present = "present1";
+		} else if (level == 2) {
+			past = "past2";
+			present = "present2";
+		} else if (level == 3) {
+			past = "past3";
+			present = "present3";
+		} else if (level == 4) {
+			past = "past4";
+			present = "present4";
+		}
+		JsonValue pastMus = assetDirectory.get("music").get(past);
+		MusicController.getInstance().play("past", pastMus.get("file").asString(), true, 0.0f);
+		JsonValue presentMus = assetDirectory.get("music").get(present);
+		MusicController.getInstance().play("present", presentMus.get("file").asString(), true, 1.0f);
+	}
+
 }

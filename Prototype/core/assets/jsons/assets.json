@@ -133,11 +133,11 @@
       "wrap": false
     },
     "circle": {
-      "file": "textures/indicators/glowingcircle.png",
+      "file": "textures/indicators/glowingcircle_new.png",
       "wrap": false
     },
     "arrow": {
-      "file": "textures/indicators/linearrow2.png",
+      "file": "textures/indicators/arrow_white_new.png",
       "wrap": false
     },
     "projectile_circle": {
@@ -170,13 +170,29 @@
     }
   },
   "music": {
+    "past1": {
+      "file": "music/past_track_4_25.mp3"
+    },
     "past2": {
-      "file": "music/past_track_4_25.mp3",
-      "volume": 0.1
+      "file": "music/past_track_4_25.mp3"
+    },
+    "past3": {
+      "file": "music/past_track_4_25.mp3"
+    },
+    "past4": {
+      "file": "music/past_track_4_25.mp3"
+    },
+    "present1": {
+      "file": "music/present_track_4_25.mp3"
     },
     "present2": {
-      "file": "music/present_track_4_25.mp3",
-      "volume": 0.1
+      "file": "music/present_track_4_25.mp3"
+    },
+    "present3": {
+      "file": "music/present_track_4_25.mp3"
+    },
+    "present4": {
+      "file": "music/present_track_4_25.mp3"
     }
   },
   "filmstrips": {
@@ -200,6 +216,66 @@
     },
     "avatarfalling": {
       "file": "filmstrips/avatar_falling_lv_1.png",
+      "rows": 1,
+      "cols": 3,
+      "size": 3
+    },
+    "enemywalking_present": {
+      "file": "filmstrips/enemy/avatar_standing_lv_1.png",
+      "rows": 1,
+      "cols": 3,
+      "size": 3
+    },
+    "enemywalking_past": {
+      "file": "filmstrips/enemy/avatar_standing_lv_1.png",
+      "rows": 1,
+      "cols": 3,
+      "size": 3
+    },
+    "enemyshooting_present": {
+      "file": "filmstrips/enemy/avatar_standing_lv_1.png",
+      "rows": 1,
+      "cols": 3,
+      "size": 3
+    },
+    "enemyshooting_past": {
+      "file": "filmstrips/enemy/avatar_standing_lv_1.png",
+      "rows": 1,
+      "cols": 3,
+      "size": 3
+    },
+    "enemyflying_past": {
+      "file": "filmstrips/enemy/avatar_standing_lv_1.png",
+      "rows": 1,
+      "cols": 3,
+      "size": 3
+    },
+    "enemyflying_present": {
+      "file": "filmstrips/enemy/avatar_standing_lv_1.png",
+      "rows": 1,
+      "cols": 3,
+      "size": 3
+    },
+    "enemyteleporting_past": {
+      "file": "filmstrips/enemy/avatar_standing_lv_1.png",
+      "rows": 1,
+      "cols": 3,
+      "size": 3
+    },
+    "enemyteleporting_present": {
+      "file": "filmstrips/enemy/avatar_standing_lv_1.png",
+      "rows": 1,
+      "cols": 3,
+      "size": 3
+    },
+    "turret_shooting_present": {
+      "file": "filmstrips/turret/avatar_standing_lv_1.png",
+      "rows": 1,
+      "cols": 3,
+      "size": 3
+    },
+    "turret_shooting_past": {
+      "file": "filmstrips/turret/avatar_standing_lv_1.png",
       "rows": 1,
       "cols": 3,
       "size": 3

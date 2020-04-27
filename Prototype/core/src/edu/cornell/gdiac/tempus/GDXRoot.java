@@ -191,6 +191,7 @@ public class GDXRoot extends Game implements ScreenListener {
 				gameManager.setCurrentLevel(exitCode);
 				gameManager.getCurrentRoom().reset();
 				gameManager.printGameState();
+				gameManager.getCurrentLevel().playMusic();
 				setScreen(gameManager.getCurrentRoom());
 				current = exitCode;
 			}
@@ -207,6 +208,7 @@ public class GDXRoot extends Game implements ScreenListener {
 		} else if (exitCode == ScreenExitCodes.EXIT_PREV.ordinal()) {
 			gameManager.stepGame(true);
 			gameManager.updateGameState();
+			MusicController.getInstance().stopAll();
 			setScreen(levelselect);
 		} else if (exitCode == ScreenExitCodes.EXIT_QUIT.ordinal()) {
 			// We quit the main application

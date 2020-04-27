@@ -1,6 +1,7 @@
 package edu.cornell.gdiac.tempus.tempus.models;
 
 import edu.cornell.gdiac.tempus.GameCanvas;
+import edu.cornell.gdiac.tempus.MusicController;
 import edu.cornell.gdiac.tempus.tempus.LevelController;
 import edu.cornell.gdiac.util.ScreenListener;
 
@@ -65,7 +66,7 @@ public class LevelModel {
         current_room_idx = current_room_idx + 1;
         if(current_room_idx == rooms.length){
             //TODO: ROOM END SCREEN
-            current_room.stopMusic();
+            //current_room.stopMusic();
             return true;
         }
         current_room = rooms[current_room_idx];
@@ -115,6 +116,10 @@ public class LevelModel {
 
     public boolean isFinished(){
         return level_finished;
+    }
+
+    public void playMusic(){
+        current_room.playMusic(level_number);
     }
 
 }

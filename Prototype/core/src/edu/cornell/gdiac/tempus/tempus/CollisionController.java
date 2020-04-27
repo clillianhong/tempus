@@ -261,6 +261,7 @@ public class CollisionController implements ContactListener {
         Object objA = fix1.getBody().getUserData();
         Object objB = fix2.getBody().getUserData();
 
+
         if (((objB instanceof Platform)) || ((objA instanceof Platform))) {
             //if(avatar.getCurrentPlatform() != objB && avatar.getCurrentPlatform() != objA) {
             boolean correctWorld = false;
@@ -293,37 +294,52 @@ public class CollisionController implements ContactListener {
                 return;
             }
         }
-            try {
-                Obstacle bd1 = (Obstacle) objA;
-                Obstacle bd2 = (Obstacle) objB;
+        try {
+            Obstacle bd1 = (Obstacle) objA;
+            Obstacle bd2 = (Obstacle) objB;
 
-                // Test bullet collision with world
-                if (bd1.getSpace() != 3 && bd2.getSpace() != 3 && bd1.getSpace() != bd2.getSpace()) {
+            // Test bullet collision with world
+            if (bd1.getSpace() != 3 && bd2.getSpace() != 3 && bd1.getSpace() != bd2.getSpace()) {
+                return;
+            }
+            if (bd1.getName().equals("bullet") && bd2 != avatar) {
+                if (bd2.getBody().getUserData() instanceof Enemy) {
+                    processProjEnemyContact(fix1, fix2);
+                } else if (!bd2.getName().equals("bullet")) {
+                    removeBullet(bd1);
+                }
+            } else if ((bd1.getName().equals("bullet") && bd2 == avatar)) {
+                processAvatarProjectileContact(fix2, fix1);
+            }
+            if (bd2.getName().equals("bullet") && bd1 != avatar) {
+                if (bd1.getBody().getUserData() instanceof Enemy) {
+                    processProjEnemyContact(fix2, fix1);
+                } else if (!bd1.getName().equals("bullet")) {
+                    removeBullet(bd2);
+                }
+            } else if (bd2.getName().equals("bullet") && bd1 == avatar) {
+                processAvatarProjectileContact(fix1, fix2);
+            }
+
+            //handle platform-avatar collisions first (outside of processcontact
+            if (((objA instanceof Avatar) && (objB instanceof Platform)) || ((objB instanceof Avatar) && (objA instanceof Platform))) {
+                //if(avatar.getCurrentPlatform() != objB && avatar.getCurrentPlatform() != objA) {
+                if (avatar.getShifted() > 0){
+                    avatar.setSpliced(true);
+                    if (objB instanceof Platform) {
+                        avatar.setCurrentPlatform((Platform) objB);
+                    } else {
+                        avatar.setCurrentPlatform((Platform) objA);
+                    }
                     return;
                 }
-                if (bd1.getName().equals("bullet") && bd2 != avatar) {
-                    if (bd2.getBody().getUserData() instanceof Enemy) {
-                        processProjEnemyContact(fix1, fix2);
-                    } else if (!bd2.getName().equals("bullet")) {
-                        removeBullet(bd1);
+                boolean latentCol = false;
+                if (avatar.getStartedDashing() == 1) {
+                    if (avatar.getCurrentPlatform() == objA || avatar.getCurrentPlatform() == objB) {
+                        latentCol = true;
                     }
-                } else if ((bd1.getName().equals("bullet") && bd2 == avatar)) {
-                    processAvatarProjectileContact(fix2, fix1);
                 }
-                if (bd2.getName().equals("bullet") && bd1 != avatar) {
-                    if (bd1.getBody().getUserData() instanceof Enemy) {
-                        processProjEnemyContact(fix2, fix1);
-                    } else if (!bd1.getName().equals("bullet")) {
-                        removeBullet(bd2);
-                    }
-                } else if (bd2.getName().equals("bullet") && bd1 == avatar) {
-                    processAvatarProjectileContact(fix1, fix2);
-                }
-
-
-                //handle platform-avatar collisions first (outside of processcontact
-                if (((objA instanceof Avatar) && (objB instanceof Platform)) || ((objB instanceof Avatar) && (objA instanceof Platform))) {
-                    //if(avatar.getCurrentPlatform() != objB && avatar.getCurrentPlatform() != objA) {
+                if (!latentCol) {
                     if (!avatar.isSticking()) {
                         Float norm_angle = contact.getWorldManifold().getNormal().angle();
 
@@ -348,10 +364,11 @@ public class CollisionController implements ContactListener {
                             }
                         }
                     } else {*/
+
                         //avatar.contactPoint = contact.getWorldManifold().getPoints()[0];
                         avatar.setGrounded(true);
                         avatar.setSticking(true);
-                        System.out.println(cur_normal);
+                        //System.out.println(cur_normal);
                         avatar.setNewAngle(cur_normal);
                         if (objB instanceof Platform) {
                             avatar.setCurrentPlatform((Platform) objB);
@@ -360,56 +377,51 @@ public class CollisionController implements ContactListener {
                         }
                         //}
                     }
-                    sensorFixtures.add(avatar == bd1 ? fix2 : fix1); // Could have more than one ground
-                    // }
+                    //}
                 }
 
-                if (objA instanceof Enemy || objB instanceof Enemy) {
-                    Enemy enemy = (objA instanceof Enemy ? (Enemy) objA : (Enemy) objB);
-                    if (enemy.getAi() == Enemy.EnemyType.WALK) {
-                        if ((enemy != bd1 && !bd1.getName().equals("bullet")) ||
-                                (enemy != bd2 && !bd2.getName().equals("bullet"))) {
-                            if (enemy.getLeftFixture() == null) {
-                                enemy.setLeftFixture(enemy == bd1 ? fix2 : fix1);
-                                enemy.setMovement(-1);
-                                enemy.setNextDirection(-1);
-                            } else if (fix1 != enemy.getLeftFixture() && fix2 != enemy.getLeftFixture()) {
-                                enemy.setMovement(0);
-                                enemy.setNextDirection(1);
-                            }
-                            if (enemy.getRightFixture() == null) {
-                                enemy.setRightFixture(enemy == bd1 ? fix2 : fix1);
-                                enemy.setMovement(-1);
-                                enemy.setNextDirection(-1);
-                            } else if (fix1 != enemy.getRightFixture() && fix2 != enemy.getRightFixture()) {
-                                enemy.setMovement(0);
-                                enemy.setNextDirection(-1);
-                            }
-                        }
-                    } else if (enemy.getAi() == Enemy.EnemyType.FLY) {
-                        if ((enemy != bd1 && !bd1.getName().equals("bullet")) ||
-                                (enemy != bd2 && !bd2.getName().equals("bullet"))) {
-                            if (fix1 == enemy.getSensorFixtureCenter() || fix2 == enemy.getSensorFixtureCenter()) {
-                                enemy.setFlyAngle(contact.getWorldManifold().getNormal().angle());
-                            }
-                        }
-                    }
-                }
-
-
-                // Check for win condition
-                if ((bd1 == avatar && bd2 == controller.getGoalDoor()) ||
-                        (bd1 == controller.getGoalDoor() && bd2 == avatar)) {
-                    Door door = (Door) controller.getGoalDoor();
-                    if (door.getOpen()) {
-                        controller.setComplete(true);
-                    } else {
-                        avatar.setLinearVelocity(avatar.getLinearVelocity().scl(-1));
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
             }
+
+            if (objA instanceof Enemy || objB instanceof Enemy) {
+                Enemy enemy = (objA instanceof Enemy ? (Enemy) objA : (Enemy) objB);
+                if (enemy.getAi() == Enemy.EnemyType.WALK) {
+                    if ((enemy != bd1 && !bd1.getName().equals("bullet")) ||
+                            (enemy != bd2 && !bd2.getName().equals("bullet"))) {
+                        if (enemy.getPlatformFixture() == null) {
+                            enemy.setPlatformFixture(enemy == bd1 ? fix2 : fix1);
+                            enemy.setNextDirection(1);
+                            enemy.setMovement(1);
+                        }
+                        if ((fix1 != enemy.getPlatformFixture() && objA instanceof Platform) ||
+                                (fix2 != enemy.getPlatformFixture() && objB instanceof Platform)) {
+                            enemy.setNextDirection(-1 * enemy.getNextDirection());
+                            enemy.setMovement(0);
+                        }
+                    }
+                } else if (enemy.getAi() == Enemy.EnemyType.FLY) {
+                    if ((enemy != bd1 && !bd1.getName().equals("bullet")) ||
+                            (enemy != bd2 && !bd2.getName().equals("bullet"))) {
+                        if (fix1 == enemy.getSensorFixtureCenter() || fix2 == enemy.getSensorFixtureCenter()) {
+                            enemy.setFlyAngle(contact.getWorldManifold().getNormal().angle());
+                        }
+                    }
+                }
+            }
+
+
+            // Check for win condition
+            if ((bd1 == avatar && bd2 == controller.getGoalDoor()) ||
+                    (bd1 == controller.getGoalDoor() && bd2 == avatar)) {
+                Door door = (Door) controller.getGoalDoor();
+                if (door.getOpen()) {
+                    controller.setComplete(true);
+                } else {
+                    avatar.setLinearVelocity(avatar.getLinearVelocity().scl(-1));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -444,49 +456,13 @@ public class CollisionController implements ContactListener {
             }
         }
 
-//        for (Obstacle obj : obstacles) {
-//            if (obj instanceof Enemy) {
-//                Enemy enemy = (Enemy) obj;
-//                if ((enemy.getLeftSensorName().equals(fd2) && enemy != bd1) ||
-//                        (enemy.getLeftSensorName().equals(fd1) && enemy != bd2)) {
-//                    if (enemy.getLeftFixture() == fix2 || enemy.getLeftFixture() == fix1) {
-//                        enemy.setMovement(0);
-//                        enemy.setNextDirection(1);
-//                    }
-//                }
-//
-//                if ((enemy.getRightSensorName().equals(fd2) && enemy != bd1) ||
-//                        (enemy.getRightSensorName().equals(fd1) && enemy != bd2)) {
-//                    if (enemy.getRightFixture() == fix2 || enemy.getRightFixture() == fix1) {
-//                        enemy.setMovement(0);
-//                        enemy.setNextDirection(-1);
-//                    }
-//                }
-//            }
-//        }
-
         if (bd1 instanceof Enemy || bd2 instanceof Enemy) {
             Enemy enemy = (bd1 instanceof Enemy ? (Enemy) bd1 : (Enemy) bd2);
             if (enemy.getAi() == Enemy.EnemyType.WALK) {
-                if ((enemy.getLeftSensorName().equals(fd2) && enemy != bd1) ||
-                        (enemy.getLeftSensorName().equals(fd1) && enemy != bd2)) {
-                    if (enemy.getLeftFixture() == fix2 || enemy.getLeftFixture() == fix1) {
-                        enemy.setMovement(0);
-                        enemy.setNextDirection(1);
-                    }
+                if (fix1 == enemy.getPlatformFixture() || fix2 == enemy.getPlatformFixture()) {
+                    enemy.setMovement(0);
+                    enemy.setNextDirection(-1 * enemy.getNextDirection());
                 }
-
-                if ((enemy.getRightSensorName().equals(fd2) && enemy != bd1) ||
-                        (enemy.getRightSensorName().equals(fd1) && enemy != bd2)) {
-                    if (enemy.getRightFixture() == fix2 || enemy.getRightFixture() == fix1) {
-                        enemy.setMovement(0);
-                        enemy.setNextDirection(-1);
-                    }
-                }
-//            } else if (enemy.getAi() == Enemy.EnemyType.FLY) {
-//                if (enemy.getSensorFixtureCenter().equals(fix1) || enemy.getSensorFixtureCenter().equals(fix2)) {
-//                    enemy.setFlyAngle(-1f);
-//                }
             }
         }
     }
