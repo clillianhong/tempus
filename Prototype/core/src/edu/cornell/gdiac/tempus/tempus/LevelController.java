@@ -890,7 +890,7 @@ public class LevelController extends WorldController {
 		}
 
 		if (!isFailure() && avatar.getY() < -6 || avatar.getEnemyContact()) {
-			avatar.removeLife();
+				avatar.removeLife();
 			if (avatar.getLives() > 0) {
 				if (shifted) {
 					shifted = false;
@@ -1000,6 +1000,7 @@ public class LevelController extends WorldController {
 			// }
 			enemyController.slowCoolDown(false);
 		}
+		avatar.decImmortality();
 		int t = avatar.getStartedDashing();
 		if (t > 0) {
 			t = t - 1;
