@@ -9,21 +9,21 @@ import java.util.logging.Level;
 public class LevelModel {
 
     /** GDXRoot screen listener instance */
-    private ScreenListener listener;
+    protected ScreenListener listener;
     /** GameCanvas instance */
-    private GameCanvas canvas;
+    protected GameCanvas canvas;
     /** corresponds to the int ordinal of the level */
-    private int level_number;
+    protected int level_number;
     /** true if the level has been unlocked */
-    private boolean level_unlocked;
+    protected boolean level_unlocked;
     /** true if player has cleared the entire level **/
-    private boolean level_finished;
+    protected boolean level_finished;
     /** index of current room */
-    private int current_room_idx;
+    protected int current_room_idx;
     /** pointer to current room */
-    private LevelController current_room;
+    protected LevelController current_room;
     /** list of rooms */
-    private LevelController[] rooms;
+    protected LevelController[] rooms;
 
     public LevelModel(int lv, boolean unlocked, boolean finished, int resume, LevelController[] rms){
         level_number = lv;
