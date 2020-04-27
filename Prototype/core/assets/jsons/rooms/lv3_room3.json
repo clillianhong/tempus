@@ -29,7 +29,7 @@
     "nextlevel": 0,
     "space": 3
   },
-  "capsuleshape": [0.5, 1.1, 2.6, 1.1, 2.6, 0.6, 2.0, 0.2, 1.1, 0.2, 0.5, 0.6],
+  "capsuleshape": [0.4, 1.1, 0.5, 1.1, 2.6, 1.1, 2.7, 1.1, 2.6, 0.6, 2.0, 0.2, 1.1, 0.2, 0.5, 0.6],
   "capsules": {
     "presentcapsule1": {
       "name": "present_capsule",
@@ -92,7 +92,7 @@
       "space": 2
     }
   },
-  "diamondshape": [0.5, 1.8, 2.1, 1.8, 1.4, 0.1],
+  "diamondshape": [0.4, 1.8, 0.5, 1.8, 2.1, 1.8, 2.2, 1.8, 1.4, 0.1],
   "diamonds": {
     "bothdiamond1": {
       "name": "both_diamond",
