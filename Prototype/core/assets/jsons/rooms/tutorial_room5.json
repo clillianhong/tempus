@@ -1,0 +1,166 @@
+{
+  "gravity": -14.7,
+  "bounds": [
+    32,
+    18
+  ],
+  "present_background": "present_background",
+  "past_background": "past_background",
+  "diamondshape": [
+    0.2,
+    1.8,
+    2.4,
+    1.8,
+    1.4,
+    0.1
+  ],
+  "capsuleshape": [
+    0.2,
+    1.1,
+    2.9,
+    1.1,
+    2.9,
+    0.6,
+    1.7,
+    0.1,
+    0.2,
+    0.6
+  ],
+  "roundshape": [
+    0.1,
+    1.4,
+    0.5,
+    1.7,
+    2.4,
+    1.7,
+    2.7,
+    1.4,
+    2.6,
+    0.8,
+    2,
+    0.2,
+    0.8,
+    0.2
+  ],
+  "door": {
+    "pos": [
+      28.188,
+      8.690000000000005
+    ],
+    "size": [
+      1.92,
+      1.92
+    ],
+    "bodytype": "static",
+    "density": 0,
+    "friction": 0,
+    "restitution": 0,
+    "texture": "goal",
+    "sensor": true,
+    "nextlevel": 0,
+    "space": 3
+  },
+  "avatar": {
+    "pos": [
+      7.364,
+      7.789999999999998
+    ],
+    "shrink": [
+      0.0216,
+      0.01125
+    ],
+    "texture": "dude",
+    "density": 1,
+    "bodytype": "dynamic",
+    "avatarstanding": "avatarstanding",
+    "avatarcrouching": "avatarcrouching",
+    "avatardashing": "avatardashing",
+    "avatarfalling": "avatarfalling"
+  },
+  "turrets": {
+    "turret6": {
+      "pos": [
+        13.928,
+        2.3699999999999997
+      ],
+      "shrink": [
+        0.0168,
+        0.021375
+      ],
+      "texture": "turret_present",
+      "density": 1,
+      "bodytype": "static",
+      "entitytype": "present",
+      "cooldown": 360,
+      "direction": [
+        0,
+        3
+      ]
+    },
+    "turret7": {
+      "pos": [
+        23.016,
+        2.28
+      ],
+      "shrink": [
+        0.0168,
+        0.021375
+      ],
+      "texture": "turret_past",
+      "density": 1,
+      "bodytype": "static",
+      "entitytype": "past",
+      "cooldown": 360,
+      "direction": [
+        -3,
+        0
+      ]
+    }
+  },
+  "capsules": {
+    "presentcapsule21": {
+      "name": "present_capsule",
+      "pos": [
+        9.896,
+        10.62
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "present_capsule",
+      "space": 1
+    }
+  },
+  "diamonds": {},
+  "rounds": {
+    "round1": {
+      "name": "both_round",
+      "pos": [
+        5.992,
+        5.4
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_round",
+      "space": 3
+    },
+    "bothround20": {
+      "name": "both_round",
+      "pos": [
+        17.256,
+        10.17
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_round",
+      "space": 3
+    }
+  },
+  "enemies": {},
+  "spikes": {}
+}

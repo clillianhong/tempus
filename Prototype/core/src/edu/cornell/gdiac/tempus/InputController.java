@@ -104,6 +104,10 @@ public class InputController {
 	/** Whether the 'X' key was pressed. */
 	private boolean xKeyPressed;
 	private boolean xKeyPrevious;
+	/** Whether the 'H' key was pressed */
+	/** Whether the shift key was pressed. */
+	private boolean hKeyPressed;
+	private boolean hKeyPrevious;
 
 	/** An X-Box controller (if it is connected) */
 	XBox360Controller xbox;
@@ -180,6 +184,16 @@ public class InputController {
 	public boolean didTertiary() {
 		return tertiaryPressed;
 	}
+
+	/**
+	 * Returns true if the h key was pressed.
+	 *
+	 * @return true if the h key was pressed.
+	 */
+	public boolean didHelp() {
+		return hKeyPressed && !hKeyPrevious;
+	}
+
 
 	/**
 	 * Returns true if the reset button was pressed.
@@ -358,12 +372,14 @@ public class InputController {
 		secondPrevious = secondPressed;
 		resetPrevious  = resetPressed;
 		debugPrevious  = debugPressed;
+		exitPrevious = exitPressed;
 		nextPrevious = nextPressed;
 		prevPrevious = prevPressed;
 		leftMousePrevious = leftMouseReleased;
 		rightMousePrevious = rightMousePressed;
 		shiftKeyPrevious = shiftKeyPressed;
 		xKeyPrevious = xKeyPressed;
+		hKeyPrevious = hKeyPressed;
 
 		//old stuff
 		resetPressed = Gdx.input.isKeyPressed(Input.Keys.R);
@@ -373,14 +389,7 @@ public class InputController {
 		prevPressed = Gdx.input.isKeyPressed(Input.Keys.P);
 		nextPressed = Gdx.input.isKeyPressed(Input.Keys.N);
 		exitPressed  = Gdx.input.isKeyPressed(Input.Keys.ESCAPE);
-
-		if(exitPressed && !exitPrevious){
-			exitPrevious = true;
-		}else if(exitPrevious && exitPressed){
-			exitPrevious = false;
-			unpausePressed = true;
-		}
-
+		hKeyPressed = Gdx.input.isKeyPressed(Input.Keys.H);
 
 		readMouse(bounds, scale);
 		readKeyboard();
