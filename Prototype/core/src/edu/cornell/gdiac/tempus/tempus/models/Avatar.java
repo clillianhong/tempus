@@ -1083,10 +1083,17 @@ public class Avatar extends CapsuleObstacle {
 
         // Draw avatar body
         if (currentStrip != null) {
-            if(isImmortal()) { //If the player is immortal, make the player clear.
-                canvas.draw(currentStrip, (new Color (1,1,1,0.5f)), origin.x + 84f, origin.y + 60f,
-                        getX() * drawScale.x, getY() * drawScale.y, getAngle(),
-                        0.02f * drawScale.x * faceDirection, 0.01875f * drawScale.y);
+            if(isImmortal()) { //If the player is immortal, make the player blink.
+                if (getImmmortality()%20<10) {
+                    canvas.draw(currentStrip, (new Color(1, 1, 1, 0.5f)), origin.x + 84f, origin.y + 60f,
+                            getX() * drawScale.x, getY() * drawScale.y, getAngle(),
+                            0.02f * drawScale.x * faceDirection, 0.01875f * drawScale.y);
+                }
+                else {
+                    canvas.draw(currentStrip, (new Color(1, 1, 1, 1f)), origin.x + 84f, origin.y + 60f,
+                            getX() * drawScale.x, getY() * drawScale.y, getAngle(),
+                            0.02f * drawScale.x * faceDirection, 0.01875f * drawScale.y);
+                }
             }
             else{
                 canvas.draw(currentStrip, Color.WHITE, origin.x + 84f, origin.y + 60f,
