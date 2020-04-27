@@ -259,6 +259,8 @@ public class LevelController extends WorldController {
 	protected Avatar avatar;
 	/** Reference to the goalDoor (for collision detection) */
 	protected Door goalDoor;
+	/** is tutorial mode */
+	protected boolean isTutorial;
 
 	/** The information of all the enemies */
 	protected int NUMBER_ENEMIES = 2;
@@ -307,6 +309,7 @@ public class LevelController extends WorldController {
 		numEnemies = 0;
 		begincount = 10;
 		enemyController = new EnemyController(enemies, objects, avatar, world, scale, this, assetDirectory);
+		isTutorial = false;
 
 		// ripple shader
 		ticks = 0f;
@@ -862,7 +865,7 @@ public class LevelController extends WorldController {
 
 		if (!isFailure() && avatar.getY() < -6 || avatar.getEnemyContact()) {
 			avatar.removeLife();
-			if (avatar.getLives() > 0) {
+			if (avatar.getLives() > 0 ) {
 				if (shifted) {
 					shifted = false;
 					enemyController.shift();
@@ -875,14 +878,14 @@ public class LevelController extends WorldController {
 				avatar.setBodyType(BodyDef.BodyType.DynamicBody);
 				timeFreeze = false;
 				return true;
-			} else {
+			} else{
 				avatar.setPosition(avatarStart);
 				avatar.setEnemyContact(false);
 				setFailure(true);
 			}
 			return false;
 		}
-		if (!isFailure() && avatar.getLives() <= 0) {
+		if (!isFailure() && avatar.getLives() == 0) {
 			setFailure(true);
 			return false;
 		}
@@ -1487,7 +1490,9 @@ public class LevelController extends WorldController {
 		canvas.end();
 
 		drawIndicator(canvas);
-		drawLives(canvas);
+		if(!isTutorial){
+			drawLives(canvas);
+		}
 
 		if (debug) {
 			canvas.beginDebug();
