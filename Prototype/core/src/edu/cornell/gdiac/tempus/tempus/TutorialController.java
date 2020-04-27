@@ -43,6 +43,7 @@ public class TutorialController extends LevelController {
         super(json);
         isHelp = false;
         beginDisplay = 0;
+        isTutorial = true;
     }
 
     public void setCard(TextureRegionDrawable card){
@@ -198,7 +199,8 @@ public class TutorialController extends LevelController {
             unshowTutorial();
         }
 
-        avatar.setLives(3);
+        avatar.setLives(5);
+
         super.update(dt);
 
     }
