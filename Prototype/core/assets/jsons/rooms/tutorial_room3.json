@@ -1,7 +1,7 @@
 {
   "gravity": -14.7,
   "diamondshape": [0.4, 1.8, 0.5, 1.8, 2.1, 1.8, 2.2, 1.8, 1.4, 0.1],
-  "capsuleshape": [0.4, 1.1, 0.5, 1.1, 2.6, 1.1, 2.7, 1.1, 2.6, 0.6, 2.0, 0.2, 1.1, 0.2, 0.5, 0.6],
+  "capsuleshape": [0.4, 1.1, 0.5, 1.1, 2.6, 1.1, 2.7, 1.1, 2.6, 0.6, 2.0, 0.3, 1.1, 0.3, 0.5, 0.6],
   "roundshape": [0.4, 1.4, 0.8, 1.7, 2.1, 1.7, 2.4, 1.4, 2.3, 0.8, 1.7, 0.3, 1.1, 0.3],
   "spikeshape": [0.3, -0.6, 0.0, -0.2, -0.6, 0.0, -0.5, 0.4, 0.0, 0.6, 0.4, -0.2, 0.6, -0.3],
   "bounds": [
@@ -67,7 +67,7 @@
   "avatar": {
     "pos": [
       7.364,
-      7.789999999999998
+      6.789999999999998
     ],
     "shrink": [
       0.0216,
@@ -86,7 +86,7 @@
     "capsule1": {
       "name": "present_capsule",
       "pos": [
-        11.08,
+        10.08,
         9.48
       ],
       "bodytype": "static",
@@ -99,7 +99,7 @@
     "pastcapsule19": {
       "name": "past_capsule",
       "pos": [
-        19.08,
+        18.08,
         9.54
       ],
       "bodytype": "static",
@@ -115,7 +115,7 @@
       "name": "both_diamond",
       "pos": [
         15.08,
-        5.19
+        4.19
       ],
       "bodytype": "static",
       "density": 0,
@@ -130,7 +130,7 @@
       "name": "both_round",
       "pos": [
         5.992,
-        5.4
+        4.4
       ],
       "bodytype": "static",
       "density": 0,
@@ -140,7 +140,7 @@
       "space": 3
     },
     "round2": {
-      "name": "past_round",
+      "name": "both_round",
       "pos": [
         23.112,
         5.31
@@ -149,8 +149,8 @@
       "density": 0,
       "friction": 0.6,
       "restitution": 0.1,
-      "texture": "past_round",
-      "space": 2
+      "texture": "both_round",
+      "space": 3
     }
   },
   "enemies": {},
