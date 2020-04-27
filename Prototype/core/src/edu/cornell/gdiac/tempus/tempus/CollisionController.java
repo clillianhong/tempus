@@ -166,12 +166,14 @@ public class CollisionController implements ContactListener {
             Obstacle bullet = (Obstacle) projectile.getBody().getUserData();
             if (bullet.getSpace() == 2 && controller.isShifted()) {
                     if (!bullet.equals(avatar.getHeldBullet())) {
-                        avatar.setProjectileContact(true);
+                        avatar.removeLife();
+                        //avatar.setProjectileContact(true);
                     }
                 removeBullet(bullet);
             } else if (bullet.getSpace() == 1 && !controller.isShifted()){
                     if (!bullet.equals(avatar.getHeldBullet())) {
-                        avatar.setProjectileContact(true);
+                        avatar.removeLife();
+                        //avatar.setProjectileContact(true);
                     }
                 removeBullet(bullet);
             }
