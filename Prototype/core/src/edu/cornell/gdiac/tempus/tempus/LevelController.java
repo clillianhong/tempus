@@ -55,21 +55,21 @@ import static edu.cornell.gdiac.tempus.tempus.models.EntityType.PRESENT;
 public class LevelController extends WorldController {
 
 	/** Stage for adding UI components **/
-	private Skin skin;
-	private Stage stage;
+	protected Skin skin;
+	protected Stage stage;
 
-	private Table table;
-	private Table pauseTable;
-	private Container pauseButtonContainer;
+	protected Table table;
+	protected Table pauseTable;
+	protected Container pauseButtonContainer;
 
 	/** RIPPLE SHADER ** /
 
 	/** vertex shader source code */
-	private String vert;
+	protected String vert;
 	/** fragment shader source code */
-	private String frag;
+	protected String frag;
 	/** custom shader */
-	private ShaderProgram shaderprog;
+	protected ShaderProgram shaderprog;
 	/** background sprite batch for rendering w shader */
 	SpriteBatch batch;
 	/** background sprite for rendering w shader */
@@ -95,17 +95,17 @@ public class LevelController extends WorldController {
 	float time_incr;
 
 	/** whether or not game is paused **/
-	private boolean paused;
+	protected boolean paused;
 	/** whether game input should stall in case of pause **/
-	private boolean prepause;
+	protected boolean prepause;
 
 	/** Checks if did debug */
-	private boolean debug;
+	protected boolean debug;
 	/** counts down beginning of game to avoid opening mis-dash */
-	private int begincount;
+	protected int begincount;
 
 	/** The sound file for a bullet fire */
-	private static final String PEW_FILE = "sounds/pew.mp3";
+	protected static final String PEW_FILE = "sounds/pew.mp3";
 
 	/** The texture for walls and platforms */
 	protected TextureRegion earthTile;
@@ -115,35 +115,35 @@ public class LevelController extends WorldController {
 	protected BitmapFont displayFont;
 
 	/** Texture asset for the big bullet */
-	private TextureRegion bulletBigTexture;
-	private TextureRegion presentBullet = JsonAssetManager.getInstance().getEntry("projpresent", TextureRegion.class);
-	private TextureRegion pastBullet = JsonAssetManager.getInstance().getEntry("projpast", TextureRegion.class);
+	protected TextureRegion bulletBigTexture;
+	protected TextureRegion presentBullet = JsonAssetManager.getInstance().getEntry("projpresent", TextureRegion.class);
+	protected TextureRegion pastBullet = JsonAssetManager.getInstance().getEntry("projpast", TextureRegion.class);
 	/** Texture aobjects.sset for the turret */
-	private TextureRegion turretTexture;
+	protected TextureRegion turretTexture;
 	/** Texture asset for present enemy */
-	private TextureRegion enemyPresentTexture;
+	protected TextureRegion enemyPresentTexture;
 	/** Texture asset for past enemy */
-	private TextureRegion enemyPastTexture;
+	protected TextureRegion enemyPastTexture;
 
 	/** Texture asset for the background */
-	private TextureRegion backgroundTexture;
+	protected TextureRegion backgroundTexture;
 
-	private Music present_music;
-	private Music past_music;
+	protected Music present_music;
+	protected Music past_music;
 
 	/** The reader to process JSON files */
-	private JsonReader jsonReader;
+	protected JsonReader jsonReader;
 	/** The JSON asset directory */
-	private JsonValue assetDirectory;
+	protected JsonValue assetDirectory;
 	/** The JSON defining the level model */
-	private JsonValue levelFormat;
+	protected JsonValue levelFormat;
 
 	/** Track asset loading from all instances and subclasses */
-	private AssetState platformAssetState = AssetState.EMPTY;
+	protected AssetState platformAssetState = AssetState.EMPTY;
 	/** Freeze time */
-	private boolean timeFreeze;
-	private Vector2 avatarStart;
-	private int numEnemies;
+	protected boolean timeFreeze;
+	protected Vector2 avatarStart;
+	protected int numEnemies;
 
 	/**
 	 * Preloads the assets for this controller.
@@ -188,24 +188,24 @@ public class LevelController extends WorldController {
 
 	// Physics constants for initialization
 	/** The new heavier gravity for this world (so it is not so floaty) */
-	private static final float DEFAULT_GRAVITY = -14.7f;
+	protected static final float DEFAULT_GRAVITY = -14.7f;
 	/** The density for most physics objects */
-	private static final float BASIC_DENSITY = 0.0f;
+	protected static final float BASIC_DENSITY = 0.0f;
 	/** The density for a bullet */
-	private static final float HEAVY_DENSITY = 10.0f;
+	protected static final float HEAVY_DENSITY = 10.0f;
 	/** Friction of most platforms */
-	private static final float BASIC_FRICTION = 0.6f;
+	protected static final float BASIC_FRICTION = 0.6f;
 	/** The restitution for all physics objects */
-	private static final float BASIC_RESTITUTION = 0.1f;
+	protected static final float BASIC_RESTITUTION = 0.1f;
 	// /** Offset for bullet when firing */
-	// private static final float BULLET_OFFSET = 1.5f;
+	// protected static final float BULLET_OFFSET = 1.5f;
 	/** The volume for sound effects */
-	private static final float EFFECT_VOLUME = 0.1f;
+	protected static final float EFFECT_VOLUME = 0.1f;
 
 	// Since these appear only once, we do not care about the magic numbers.
 	// In an actual game, this information would go in a data file.
 	// Wall vertices
-	private static final float[][] WALLS = { { 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 18.0f, 0.0f, 18.0f },
+	protected static final float[][] WALLS = { { 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 18.0f, 0.0f, 18.0f },
 			{ 1.0f, 18.0f, 1.0f, 17.0f, 31.0f, 17.0f, 31.0f, 18.0f },
 			{ 31.0f, 18.0f, 31.0f, 0.0f, 32.0f, 0.0f, 32.0f, 18.0f } };
 	/*
@@ -215,7 +215,7 @@ public class LevelController extends WorldController {
 	 */
 
 	/** The outlines of all of the platforms */
-	private static final float[][] PLATFORMS = {
+	protected static final float[][] PLATFORMS = {
 
 			{ 1.0f, 4.0f, 3.0f, 4.0f, 3.0f, 2.5f, 1.0f, 2.5f }, // { 3.0f, 8.0f, 5.0f, 8.0f, 5.0f, 7.5f, 3.0f, 7.5f },
 			{ 5.5f, 4.5f, 7.5f, 4.5f, 7.5f, 5.0f, 5.5f, 5.0f }, // downwards diagonal
@@ -230,53 +230,53 @@ public class LevelController extends WorldController {
 			{ 26.5f, 13.0f, 26.5f, 14.0f, 31.0f, 14.0f, 31.0f, 13.0f } };
 
 	/** The positions of all present capsule platforms */
-	private static final float[][] PRESENT_CAPSULES = { { 3.0f, 7.0f }, { 6.0f, 4.0f }, { 24.0f, 11.5f } };
+	protected static final float[][] PRESENT_CAPSULES = { { 3.0f, 7.0f }, { 6.0f, 4.0f }, { 24.0f, 11.5f } };
 	/** The positions of all present diamond platforms */
-	private static final float[][] PRESENT_DIAMONDS = { { 1.0f, 2.0f }, { 11.0f, 7.0f } };
+	protected static final float[][] PRESENT_DIAMONDS = { { 1.0f, 2.0f }, { 11.0f, 7.0f } };
 	/** The positions of all present rounded platforms */
-	private static final float[][] PRESENT_ROUNDS = { { 11.5f, 2.0f }, { 9.5f, 13.0f } };
+	protected static final float[][] PRESENT_ROUNDS = { { 11.5f, 2.0f }, { 9.5f, 13.0f } };
 	/** The positions of all past capsule platforms */
-	private static final float[][] PAST_CAPSULES = { { 4.5f, 1.0f }, { 14.5f, 9.0f } };
+	protected static final float[][] PAST_CAPSULES = { { 4.5f, 1.0f }, { 14.5f, 9.0f } };
 	/** The positions of all past diamond platforms */
-	private static final float[][] PAST_DIAMONDS = { { 13.5f, 3.0f }, { 20.0f, 5.0f } };
+	protected static final float[][] PAST_DIAMONDS = { { 13.5f, 3.0f }, { 20.0f, 5.0f } };
 	/** The positions of all past rounded platforms */
-	private static final float[][] PAST_ROUNDS = { { 2.0f, 13.0f }, { 18.5f, 13.0f } };
+	protected static final float[][] PAST_ROUNDS = { { 2.0f, 13.0f }, { 18.5f, 13.0f } };
 
 	// Other game objects
 	/** The goal door position */
-	private static Vector2 GOAL_POS = new Vector2(29.5f, 15.5f);
+	protected static Vector2 GOAL_POS = new Vector2(29.5f, 15.5f);
 	/** The initial position of the dude */
-	private static Vector2 DUDE_POS = new Vector2(2.5f, 5.0f);
+	protected static Vector2 DUDE_POS = new Vector2(2.5f, 5.0f);
 	/** The initial position of the turret */
-	private static Vector2 TURRET_POS = new Vector2(8.5f, 10.0f);
+	protected static Vector2 TURRET_POS = new Vector2(8.5f, 10.0f);
 	// /** The initial position of the enemy */
-	// private static Vector2 ENEMY_POS = new Vector2(13.0f, 7.5f);
+	// protected static Vector2 ENEMY_POS = new Vector2(13.0f, 7.5f);
 
 	// Physics objects for the game
 	/** Reference to the character avatar */
-	private Avatar avatar;
+	protected Avatar avatar;
 	/** Reference to the goalDoor (for collision detection) */
-	private Door goalDoor;
+	protected Door goalDoor;
 
 	/** The information of all the enemies */
-	private int NUMBER_ENEMIES = 2;
-	private EntityType[] TYPE_ENEMIES = { PRESENT, PAST };
-	private float[][] COOR_ENEMIES = { { 13.0f, 6.0f }, { 15.625f, 11.03125f } };
-	private int[] CD_ENEMIES = { 80, 80 };
+	protected int NUMBER_ENEMIES = 2;
+	protected EntityType[] TYPE_ENEMIES = { PRESENT, PAST };
+	protected float[][] COOR_ENEMIES = { { 13.0f, 6.0f }, { 15.625f, 11.03125f } };
+	protected int[] CD_ENEMIES = { 80, 80 };
 
 	/** The information of all the turrets */
-	private int NUMBER_TURRETS = 2;
-	private EntityType[] TYPE_TURRETS = { PRESENT, PAST };
-	private float[][] COOR_TURRETS = { { TURRET_POS.x + 10.0f, TURRET_POS.y + 0.3f },
+	protected int NUMBER_TURRETS = 2;
+	protected EntityType[] TYPE_TURRETS = { PRESENT, PAST };
+	protected float[][] COOR_TURRETS = { { TURRET_POS.x + 10.0f, TURRET_POS.y + 0.3f },
 			{ TURRET_POS.x, TURRET_POS.y - 5.0f } };
-	private float[][] DIR_TURRETS = { // direction of proj which the turrets shoot
+	protected float[][] DIR_TURRETS = { // direction of proj which the turrets shoot
 			{ -3.0f, 0 }, { 0, 2.0f } };
-	private int[] CD_TURRETS = { 90, 120 };
+	protected int[] CD_TURRETS = { 90, 120 };
 
-	private Enemy enemy;
+	protected Enemy enemy;
 
 	/** Whether the avatar is shifted to the other world or not */
-	private boolean shifted;
+	protected boolean shifted;
 
 	/** Collision Controller instance **/
 	protected CollisionController collisionController;
@@ -284,7 +284,7 @@ public class LevelController extends WorldController {
 	protected EnemyController enemyController;
 
 	/** FILEPATH TO JSON RESOURCE FOR THE LEVEL **/
-	private String json_filepath;
+	protected String json_filepath;
 
 	/**
 	 * Creates and initialize a new instance of the platformer game
@@ -365,12 +365,12 @@ public class LevelController extends WorldController {
 		timeFreeze = false;
 	}
 
-	private void exitGame() {
+	protected void exitGame() {
 		stopMusic();
 		listener.exitScreen(this, ScreenExitCodes.EXIT_QUIT.ordinal());
 	}
 
-	private void exitLevelSelect() {
+	protected void exitLevelSelect() {
 		stopMusic();
 		listener.exitScreen(this, ScreenExitCodes.EXIT_PREV.ordinal());
 	}
@@ -734,42 +734,13 @@ public class LevelController extends WorldController {
 		TextureRegionDrawable exitResource = new TextureRegionDrawable(
 				new TextureRegion(new Texture(Gdx.files.internal("textures/gui/pause_exit_button.png"))));
 
-		final Button pauseButton = new Button(pauseButtonResource);
-		pauseButton.addListener(new ClickListener() {
-
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				if (!paused) {
-					pauseGame();
-				}
-			}
-
-			@Override
-			public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-				super.enter(event, x, y, pointer, fromActor);
-				prepause = true;
-				pauseButton.setChecked(true);
-
-			}
-
-			@Override
-			public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-				super.exit(event, x, y, pointer, toActor);
-
-				prepause = false;
-				pauseButton.setChecked(false);
-			}
-		});
-
 		pauseButtonContainer = new Container<>();
 		pauseButtonContainer.setBackground(pauseBG);
 		pauseButtonContainer.setPosition(0, 0);
 		pauseButtonContainer.fillX();
 		pauseButtonContainer.fillY();
-		table.add(pauseButton).width(sw / 15f).height(sw / 15f).expand().right().top();
 
 		pauseTable = new Table();
-		//pauseTable.background(pauseBox);
 		pauseButtonContainer.setActor(pauseTable);
 		pauseButtonContainer.setVisible(false);
 
@@ -876,6 +847,7 @@ public class LevelController extends WorldController {
 	 */
 	public boolean preUpdate(float dt) {
 
+
 		if (paused || prepause) {
 			return false;
 		}
@@ -965,6 +937,11 @@ public class LevelController extends WorldController {
 	public void update(float dt) {
 		// Turn the physics engine crank.
 		// world.step(WORLD_STEP,WORLD_VELOC,WORLD_POSIT);
+
+		if(InputController.getInstance().didPause() && !paused){
+			pauseGame();
+		}
+
 		if(rippleOn){
 			updateShader();
 		}

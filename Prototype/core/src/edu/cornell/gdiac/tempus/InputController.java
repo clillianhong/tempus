@@ -70,6 +70,7 @@ public class InputController {
 	/** Whether the exit button was pressed. */
 	private boolean exitPressed;
 	private boolean exitPrevious;
+	private boolean unpausePressed;
 	
 	/** How much did we move horizontally? */
 	private float horizontal;
@@ -222,8 +223,25 @@ public class InputController {
 	 * @return true if the exit button was pressed.
 	 */
 	public boolean didExit() {
-		return exitPressed && !exitPrevious;
+		return false;
 	}
+
+
+	/**
+	 * Returns true if the exit button was pressed.
+	 *
+	 * @return true if the exit button was pressed.
+	 */
+	public boolean didPause() {
+		return exitPressed;
+	}
+
+	public boolean didUnPause(){
+		return unpausePressed;
+	}
+
+
+
 
 
 	//methods for Gameplay prototype
@@ -340,7 +358,6 @@ public class InputController {
 		secondPrevious = secondPressed;
 		resetPrevious  = resetPressed;
 		debugPrevious  = debugPressed;
-		exitPrevious = exitPressed;
 		nextPrevious = nextPressed;
 		prevPrevious = prevPressed;
 		leftMousePrevious = leftMouseReleased;
@@ -356,6 +373,14 @@ public class InputController {
 		prevPressed = Gdx.input.isKeyPressed(Input.Keys.P);
 		nextPressed = Gdx.input.isKeyPressed(Input.Keys.N);
 		exitPressed  = Gdx.input.isKeyPressed(Input.Keys.ESCAPE);
+
+		if(exitPressed && !exitPrevious){
+			exitPrevious = true;
+		}else if(exitPrevious && exitPressed){
+			exitPrevious = false;
+			unpausePressed = true;
+		}
+
 
 		readMouse(bounds, scale);
 		readKeyboard();
