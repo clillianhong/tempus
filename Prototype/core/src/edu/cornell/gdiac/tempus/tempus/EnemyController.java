@@ -192,7 +192,7 @@ public class EnemyController {
     public void findPlatform(Enemy e) {
         for (Obstacle ob: objects) {
             if (ob instanceof Platform &&
-                    ((!shifted && ob.getSpace() == 1) || (shifted && ob.getSpace() == 2))) {
+                    ((!shifted && ob.getSpace() == 1) || (shifted && ob.getSpace() == 2) || ob.getSpace() == 3)) {
                 Platform p = (Platform) ob;
                 teleportLineOfSight(p, e);
                 if (e.getTeleportTo() != null && e.canFire()
