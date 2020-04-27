@@ -1287,8 +1287,8 @@ public class LevelController extends WorldController {
 	private void createRedirectedProj() {
 		Vector2 mousePos = InputController.getInstance().getMousePosition();
 		Vector2 redirection = avatar.getPosition().cpy().sub(mousePos).nor();
-		float x0 = avatar.getX() + (redirection.x * avatar.getWidth());
-		float y0 = avatar.getY() + (redirection.y * avatar.getHeight());
+		float x0 = avatar.getX() + (redirection.x * avatar.getWidth() * 1.5f);
+		float y0 = avatar.getY() + (redirection.y * avatar.getHeight() * 1.5f);
 		bulletBigTexture = JsonAssetManager.getInstance().getEntry("bulletbig", TextureRegion.class);
 		float radius = bulletBigTexture.getRegionWidth() / (2.0f * scale.x);
 		Vector2 projVel = redirection.cpy().scl(12);
