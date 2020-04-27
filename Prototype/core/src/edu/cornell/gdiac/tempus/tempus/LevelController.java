@@ -1073,7 +1073,7 @@ public class LevelController extends WorldController {
 
 		if (rippleOn) {
 			float rippleSpeed = 0.25f;
-			float maxRippleDistance = 8f;
+			float maxRippleDistance = 2f;
 			ticks += time_incr;
 			if (ticks > ripple_reset) {
 				rippleOn = false;
@@ -1082,7 +1082,7 @@ public class LevelController extends WorldController {
 				m_rippleRange = 0;
 			}
 			m_rippleDistance += rippleSpeed * ticks;
-			m_rippleRange = (1 - m_rippleDistance / maxRippleDistance) * 0.02f;
+			m_rippleRange = (1 - m_rippleDistance / maxRippleDistance) * 0.009f;
 			updateShader();
 
 		}
