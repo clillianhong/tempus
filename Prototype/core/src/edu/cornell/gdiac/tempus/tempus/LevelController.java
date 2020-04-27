@@ -458,10 +458,15 @@ public class LevelController extends WorldController {
 			}
 			// addObject(obj);
 		}
-		float[] newPlatCapsule = levelFormat.get("capsuleshape").asFloatArray();
+		/*float[] newPlatCapsule = levelFormat.get("capsuleshape").asFloatArray();
 		float[] newPlatDiamond = levelFormat.get("diamondshape").asFloatArray();
 		float[] newPlatRounded = levelFormat.get("roundshape").asFloatArray();
-		float[] newSpikes = levelFormat.get("spikeshape").asFloatArray();
+		float[] newSpikes = levelFormat.get("spikeshape").asFloatArray();*/
+
+		float[] newPlatCapsule = {0.4f, 1.1f, 0.5f, 1.1f, 2.6f, 1.1f, 2.7f, 1.1f, 2.6f, 0.6f, 2.0f, 0.3f, 1.1f, 0.3f, 0.5f, 0.6f};
+		float[] newPlatDiamond = {0.4f, 1.8f, 0.5f, 1.8f, 2.1f, 1.8f, 2.2f, 1.8f, 1.4f, 0.1f};
+		float[] newPlatRounded = {0.4f, 1.4f, 0.8f, 1.7f, 2.1f, 1.7f, 2.4f, 1.4f, 2.3f, 0.8f, 1.7f, 0.3f, 1.1f, 0.3f};
+		float[] newSpikes = {0.3f, -0.6f, 0.0f, -0.2f, -0.6f, 0.0f, -0.5f, 0.4f, 0.0f, 0.6f, 0.4f, -0.2f, 0.6f, -0.3f};
 
 		JsonValue capsule = levelFormat.get("capsules").child();
 		while (capsule != null) {
