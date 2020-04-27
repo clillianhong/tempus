@@ -261,6 +261,7 @@ public class CollisionController implements ContactListener {
         Object objA = fix1.getBody().getUserData();
         Object objB = fix2.getBody().getUserData();
 
+
         if (((objB instanceof Platform)) || ((objA instanceof Platform))) {
             //if(avatar.getCurrentPlatform() != objB && avatar.getCurrentPlatform() != objA) {
             boolean correctWorld = false;
@@ -320,21 +321,27 @@ public class CollisionController implements ContactListener {
                 processAvatarProjectileContact(fix1, fix2);
             }
 
-
             //handle platform-avatar collisions first (outside of processcontact
             if (((objA instanceof Avatar) && (objB instanceof Platform)) || ((objB instanceof Avatar) && (objA instanceof Platform))) {
                 //if(avatar.getCurrentPlatform() != objB && avatar.getCurrentPlatform() != objA) {
-                if (!avatar.isSticking()) {
-                    Float norm_angle = contact.getWorldManifold().getNormal().angle();
+                boolean latentCol = false;
+                if (avatar.getStartedDashing() == 1) {
+                    if (avatar.getCurrentPlatform() == objA || avatar.getCurrentPlatform() == objB) {
+                        latentCol = true;
+                    }
+                }
+                if (!latentCol) {
+                    if (!avatar.isSticking()) {
+                        Float norm_angle = contact.getWorldManifold().getNormal().angle();
 
-                    if (!norm_angle.isNaN()) {
+                        if (!norm_angle.isNaN()) {
                         /*if ((norm_angle.intValue()) == 0){
                             System.out.println("Fekwbfiewq");
                             cur_normal = (float) Math.toRadians(90);
                         } else {*/
-                        cur_normal = (float) Math.toRadians(norm_angle - 90);
-                        //}
-                    }
+                            cur_normal = (float) Math.toRadians(norm_angle - 90);
+                            //}
+                        }
 
                     /*if (avatar.getCurrentPlatform() != null && (bd1.getName().equals("wall") || bd2.getName().equals("wall"))) {
                         if (!avatar.getCurrentPlatform().equals(objA) && !avatar.getCurrentPlatform().equals(objB)) {
@@ -348,20 +355,22 @@ public class CollisionController implements ContactListener {
                             }
                         }
                     } else {*/
-                    //avatar.contactPoint = contact.getWorldManifold().getPoints()[0];
-                    avatar.setGrounded(true);
-                    avatar.setSticking(true);
-                    System.out.println(cur_normal);
-                    avatar.setNewAngle(cur_normal);
-                    if (objB instanceof Platform) {
-                        avatar.setCurrentPlatform((Platform) objB);
-                    } else {
-                        avatar.setCurrentPlatform((Platform) objA);
+
+                        //avatar.contactPoint = contact.getWorldManifold().getPoints()[0];
+                        avatar.setGrounded(true);
+                        avatar.setSticking(true);
+                        //System.out.println(cur_normal);
+                        avatar.setNewAngle(cur_normal);
+                        if (objB instanceof Platform) {
+                            avatar.setCurrentPlatform((Platform) objB);
+                        } else {
+                            avatar.setCurrentPlatform((Platform) objA);
+                        }
+                        //}
                     }
                     //}
                 }
-                sensorFixtures.add(avatar == bd1 ? fix2 : fix1); // Could have more than one ground
-                // }
+
             }
 
             if (objA instanceof Enemy || objB instanceof Enemy) {
@@ -379,22 +388,6 @@ public class CollisionController implements ContactListener {
                             enemy.setNextDirection(-1 * enemy.getNextDirection());
                             enemy.setMovement(0);
                         }
-//                        if (enemy.getLeftFixture() == null) {
-//                            enemy.setLeftFixture(enemy == bd1 ? fix2 : fix1);
-//                            enemy.setMovement(-1);
-//                            enemy.setNextDirection(-1);
-//                        } else if (fix1 != enemy.getLeftFixture() && fix2 != enemy.getLeftFixture()) {
-//                            enemy.setMovement(0);
-//                            enemy.setNextDirection(1);
-//                        }
-//                        if (enemy.getRightFixture() == null) {
-//                            enemy.setRightFixture(enemy == bd1 ? fix2 : fix1);
-//                            enemy.setMovement(-1);
-//                            enemy.setNextDirection(-1);
-//                        } else if (fix1 != enemy.getRightFixture() && fix2 != enemy.getRightFixture()) {
-//                            enemy.setMovement(0);
-//                            enemy.setNextDirection(-1);
-//                        }
                     }
                 } else if (enemy.getAi() == Enemy.EnemyType.FLY) {
                     if ((enemy != bd1 && !bd1.getName().equals("bullet")) ||
@@ -454,27 +447,6 @@ public class CollisionController implements ContactListener {
             }
         }
 
-//        for (Obstacle obj : obstacles) {
-//            if (obj instanceof Enemy) {
-//                Enemy enemy = (Enemy) obj;
-//                if ((enemy.getLeftSensorName().equals(fd2) && enemy != bd1) ||
-//                        (enemy.getLeftSensorName().equals(fd1) && enemy != bd2)) {
-//                    if (enemy.getLeftFixture() == fix2 || enemy.getLeftFixture() == fix1) {
-//                        enemy.setMovement(0);
-//                        enemy.setNextDirection(1);
-//                    }
-//                }
-//
-//                if ((enemy.getRightSensorName().equals(fd2) && enemy != bd1) ||
-//                        (enemy.getRightSensorName().equals(fd1) && enemy != bd2)) {
-//                    if (enemy.getRightFixture() == fix2 || enemy.getRightFixture() == fix1) {
-//                        enemy.setMovement(0);
-//                        enemy.setNextDirection(-1);
-//                    }
-//                }
-//            }
-//        }
-
         if (bd1 instanceof Enemy || bd2 instanceof Enemy) {
             Enemy enemy = (bd1 instanceof Enemy ? (Enemy) bd1 : (Enemy) bd2);
             if (enemy.getAi() == Enemy.EnemyType.WALK) {
@@ -482,25 +454,6 @@ public class CollisionController implements ContactListener {
                     enemy.setMovement(0);
                     enemy.setNextDirection(-1 * enemy.getNextDirection());
                 }
-//                if ((enemy.getLeftSensorName().equals(fd2) && enemy != bd1) ||
-//                        (enemy.getLeftSensorName().equals(fd1) && enemy != bd2)) {
-//                    if (enemy.getLeftSensorName() == fix2.getUserData() || enemy.getLeftSensorName() == fix1.getUserData()) {
-//                        enemy.setMovement(0);
-//                        enemy.setNextDirection(1);
-//                    }
-//                }
-//
-//                if ((enemy.getRightSensorName().equals(fd2) && enemy != bd1) ||
-//                        (enemy.getRightSensorName().equals(fd1) && enemy != bd2)) {
-//                    if (enemy.getRightSensorName() == fix2.getUserData() || enemy.getRightSensorName() == fix1.getUserData()) {
-//                        enemy.setMovement(0);
-//                        enemy.setNextDirection(-1);
-//                    }
-//                }
-//            } else if (enemy.getAi() == Enemy.EnemyType.FLY) {
-//                if (enemy.getSensorFixtureCenter().equals(fix1) || enemy.getSensorFixtureCenter().equals(fix2)) {
-//                    enemy.setFlyAngle(-1f);
-//                }
             }
         }
     }

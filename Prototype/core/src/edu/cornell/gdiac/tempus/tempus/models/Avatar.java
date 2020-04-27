@@ -10,6 +10,7 @@ import edu.cornell.gdiac.tempus.InputController;
 import edu.cornell.gdiac.tempus.obstacle.CapsuleObstacle;
 import edu.cornell.gdiac.util.FilmStrip;
 import edu.cornell.gdiac.util.JsonAssetManager;
+import sun.management.Sensor;
 
 import static edu.cornell.gdiac.tempus.tempus.models.EntityType.PAST;
 import static edu.cornell.gdiac.tempus.tempus.models.EntityType.PRESENT;
@@ -42,7 +43,6 @@ public class Avatar extends CapsuleObstacle {
     /** The density of the avatar */
     private static final float DENSITY = 1.0f;
 
-    //public Vector2 contactPoint;
 
     /** The factor to multiply by the input */
     private static final float FORCE = 20.0f;
@@ -93,7 +93,9 @@ public class Avatar extends CapsuleObstacle {
     /** The current lives the avatar has **/
     private int lives;
     /** The current state of the avatar **/
-    AvatarState state;
+    private AvatarState state;
+
+    public AvatarState animationState;
     /** The avatar of the character at the end of the dash*/
     private Vector2 endDashVelocity;
     /** Number of dashes left*/
@@ -117,14 +119,14 @@ public class Avatar extends CapsuleObstacle {
 //    private Fixture sensorFixture;
 //    private PolygonShape sensorShape;
 //    /** Left sensor to determine sticking on the left side */
-//    private Fixture sensorFixtureLeft;
-//    private PolygonShape sensorShapeLeft;
+    private Fixture sensorFixtureLeft;
+    private PolygonShape sensorShapeLeft;
 //    /** Right sensor to determine sticking on the right side */
-//    private Fixture sensorFixtureRight;
-//    private PolygonShape sensorShapeRight;
+    private Fixture sensorFixtureRight;
+    private PolygonShape sensorShapeRight;
 //    /** Top sensor to determine sticking on the top */
-//    private Fixture sensorFixtureTop;
-//    private PolygonShape sensorShapeTop;
+    private Fixture sensorFixtureTop;
+    private PolygonShape sensorShapeTop;
 //    /** Core sensor for line of sight */
 //    private Fixture sensorFixtureCore;
 //    private PolygonShape sensorShapeCore;
@@ -224,6 +226,10 @@ public class Avatar extends CapsuleObstacle {
         }
     }
 
+    public void setAnimationState(AvatarState s){
+        this.animationState = s;
+    }
+
     /**
      * Returns true if the dude is actively firing.
      *
@@ -260,6 +266,7 @@ public class Avatar extends CapsuleObstacle {
             this.setDashStartPos(this.getPosition().cpy());
             this.setDashDistance(Math.min(this.getDashRange(), mousePos.cpy().sub(this.getPosition()).len()));
             this.setDashForceDirection(mousePos.cpy().sub(this.getPosition()));
+            this.setStartedDashing(1);
             numDashes--;
         }
         return candash;
@@ -620,6 +627,7 @@ public class Avatar extends CapsuleObstacle {
         // Gameplay attributes
         lives = 5;
         state = AvatarState.STANDING;
+        animationState = state;
         isGrounded = false;
         isShooting = false;
         isJumping = false;
@@ -658,6 +666,7 @@ public class Avatar extends CapsuleObstacle {
         // Gameplay attributes
         lives = 3;
         state = AvatarState.STANDING;
+        animationState = state;
         isGrounded = false;
         isShooting = false;
         isJumping = false;
@@ -732,23 +741,34 @@ public class Avatar extends CapsuleObstacle {
         if (!super.activatePhysics(world)) {
             return false;
         }
+        FixtureDef sensorDef = new FixtureDef();
+        sensorDef.density = 0;
 
+        Vector2 sensorCenterTop = new Vector2(0, getHeight()/ 2);
+        sensorShapeTop = new PolygonShape();
+        sensorShapeTop.setAsBox(3 * getWidth()/ 4, getHeight() / 2, sensorCenterTop, 0.0f);
+        sensorDef.shape = sensorShapeTop;
+        sensorDef.isSensor = true;
+        sensorDef.filter.groupIndex = -1;
+        sensorFixtureTop = body.createFixture(sensorDef);
+        sensorFixtureTop.setUserData(getTopSensorName());
         return true;
     }
 
-    public void wingSensorsActive(boolean active){
-        // Ground Sensor
-        // -------------
-        // We only allow the dude to jump when he's on the ground.
-        // Double jumping is not allowed.
-        //
-        // To determine whether or not the dude is on the ground,
-        // we create a thin sensor under his feet, which reports
-        // collisions with the world but has no collision response.
+    /*public void wingSensorsActive(boolean active){
+        if (active) {
+            // Ground Sensor
+            // -------------
+            // We only allow the dude to jump when he's on the ground.
+            // Double jumping is not allowed.
+            //
+            // To determine whether or not the dude is on the ground,
+            // we create a thin sensor under his feet, which reports
+            // collisions with the world but has no collision response.
 //        Vector2 sensorCenter = new Vector2(0, -getHeight() / 2);
-//        FixtureDef sensorDef = new FixtureDef();
-//        sensorDef.density = DENSITY;
-//        sensorDef.isSensor = true;
+            FixtureDef sensorDef = new FixtureDef();
+            sensorDef.density = DENSITY;
+            sensorDef.isSensor = true;
 //        sensorShape = new PolygonShape();
 //        sensorShape.setAsBox(getWidth() / 4.0f - 2.0f * SENSOR_HEIGHT, SENSOR_HEIGHT, sensorCenter, 0.0f);
 //        sensorDef.shape = sensorShape;
@@ -756,23 +776,25 @@ public class Avatar extends CapsuleObstacle {
 //        sensorFixture = body.createFixture(sensorDef);
 //        sensorFixture.setUserData(getSensorName());
 
-        // To determine whether the body collides on the left side
-        /*Vector2 sensorCenterLeft = new Vector2(-getWidth() / 2, 0);
-        sensorShapeLeft = new PolygonShape();
-        sensorShapeLeft.setAsBox(SENSOR_HEIGHT, getHeight() / 5.0f - 2.0f * SENSOR_HEIGHT, sensorCenterLeft, 0.0f);
-        sensorDef.shape = sensorShapeLeft;
+            // To determine whether the body collides on the left side
+            Vector2 sensorCenterLeft = new Vector2(-getWidth() / 2, 0);
+            sensorShapeLeft = new PolygonShape();
+            sensorShapeLeft.setAsBox(SENSOR_HEIGHT, getHeight() / 5.0f - 2.0f * SENSOR_HEIGHT, sensorCenterLeft, 0.0f);
+            sensorDef.shape = sensorShapeLeft;
 
-        sensorFixtureLeft = body.createFixture(sensorDef);
-        sensorFixtureLeft.setUserData(getLeftSensorName());
+            sensorFixtureLeft = body.createFixture(sensorDef);
+            sensorFixtureLeft.setUserData(getLeftSensorName());
+
+
 //
 //        // To determine whether the body collides on the right side
-        Vector2 sensorCenterRight = new Vector2(getWidth() / 2, 0);
-        sensorShapeRight = new PolygonShape();
-        sensorShapeRight.setAsBox(SENSOR_HEIGHT, getHeight() / 5.0f - 2.0f * SENSOR_HEIGHT, sensorCenterRight, 0.0f);
-        sensorDef.shape = sensorShapeRight;
+            Vector2 sensorCenterRight = new Vector2(getWidth() / 2, 0);
+            sensorShapeRight = new PolygonShape();
+            sensorShapeRight.setAsBox(SENSOR_HEIGHT, getHeight() / 5.0f - 2.0f * SENSOR_HEIGHT, sensorCenterRight, 0.0f);
+            sensorDef.shape = sensorShapeRight;
 
-        sensorFixtureRight = body.createFixture(sensorDef);
-        sensorFixtureRight.setUserData(getRightSensorName());*/
+            sensorFixtureRight = body.createFixture(sensorDef);
+            sensorFixtureRight.setUserData(getRightSensorName());
 //
 //        // To determine whether the body collides on the top side
 //        Vector2 sensorCenterTop = new Vector2(0, getHeight() / 2);
@@ -790,7 +812,8 @@ public class Avatar extends CapsuleObstacle {
 //
 //        sensorFixtureCore = body.createFixture(sensorDef);
 //        sensorFixtureCore.setUserData(getCoreSensorName());
-    }
+        }
+    }*/
 //    public Fixture getSensorFixtureCore() { return sensorFixtureCore; }
 
     /**
@@ -846,13 +869,14 @@ public class Avatar extends CapsuleObstacle {
      */
     public void update(float dt) {
         //System.out.println(lives);
+        wingsActive();
         // Apply cooldowns
         if (hitByProjctile && isHolding){
                 removeLife();
                 hitByProjctile = false;
         }
         if (hitByProjctile && projectileTicks == 0) {
-            projectileTicks = 10;
+            projectileTicks = 20;
         }
         if (projectileTicks > 0) {
             projectileTicks--;
@@ -869,7 +893,7 @@ public class Avatar extends CapsuleObstacle {
         }
         //check if dash must end
         if(isDashing){
-            setCurrentPlatform(null);
+            //setCurrentPlatform(null);
             float dist = getPosition().dst(getDashStartPos());
             if(dist > getDashDistance()){
 //                System.out.println("DASHED TOO FAR");
@@ -1033,8 +1057,16 @@ public class Avatar extends CapsuleObstacle {
     public void drawDebug(GameCanvas canvas) {
         super.drawDebug(canvas);
 //       canvas.drawPhysics(sensorShape,Color.RED,getX(),getY(),getAngle(),drawScale.x,drawScale.y);
-//        canvas.drawPhysics(sensorShapeLeft,Color.RED,getX(),getY(),getAngle(),drawScale.x,drawScale.y);
-//        canvas.drawPhysics(sensorShapeRight,Color.RED,getX(),getY(),getAngle(),drawScale.x,drawScale.y);
-//        canvas.drawPhysics(sensorShapeTop,Color.RED,getX(),getY(),getAngle(),drawScale.x,drawScale.y);
+        /*if (sensorFixtureRight != null){
+            canvas.drawPhysics((PolygonShape) sensorFixtureRight.getShape(),Color.RED,getX(),getY(),getAngle(),drawScale.x,drawScale.y);
+        }
+        if (sensorFixtureLeft != null) {
+            canvas.drawPhysics((PolygonShape) sensorFixtureLeft.getShape(), Color.RED, getX(), getY(), getAngle(), drawScale.x, drawScale.y);
+        }*/
+        canvas.drawPhysics(sensorShapeTop,Color.RED,getX(),getY(),getAngle(),drawScale.x,drawScale.y);
+    }
+
+    public boolean wingsActive() {
+        return (animationState == AvatarState.CROUCHING || animationState == AvatarState.FALLING);
     }
 }

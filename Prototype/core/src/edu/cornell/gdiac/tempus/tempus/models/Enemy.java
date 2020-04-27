@@ -52,8 +52,6 @@ public class Enemy extends CapsuleObstacle {
     /** Height of the sensor attached to the player's feet */
     private static final float SENSOR_HEIGHT = 0.05f;
     private static final float DENSITY = 1.0F;
-//    private static final String LEFT_SENSOR_NAME = "EnemyLeftSensor";
-//    private static final String RIGHT_SENSOR_NAME = "EnemyRightSensor";
     private static final String GROUND_SENSOR_NAME = "EnemyGroundSensor";
     private static final String CENTER_SENSOR_NAME = "EnemyCenterSensor";
 
@@ -75,14 +73,6 @@ public class Enemy extends CapsuleObstacle {
     /** The frame cooldown for the animation */
     private static float frame_cooldown = FRAME_RATE;
 
-//    /** Left sensor to determine enemy position on platform*/
-//    private Fixture sensorFixtureLeft;
-//    private PolygonShape sensorShapeLeft;
-//    private Fixture leftFixture;
-//    /** Right sensor to determine enemy position on platform*/
-//    private Fixture sensorFixtureRight;
-//    private PolygonShape sensorShapeRight;
-//    private Fixture rightFixture;
     /** Sensor to determine enemy position on platform */
     private Fixture sensorFixtureGround;
     private PolygonShape sensorShapeGround;
@@ -138,27 +128,6 @@ public class Enemy extends CapsuleObstacle {
     /** Texture asset for past enemy */
     private TextureRegion enemyPastTexture;
 
-//    // Immobile enemy (turret)
-//    public Enemy(
-//            EntityType type, float x, float y, float width, float height,
-//            TextureRegion texture, int cooldown, Vector2 projVel, Vector2 scale) {
-//        super(x,y,width*HSHRINK * scale.x,height*VSHRINK * scale.y);
-//
-//        this.setTexture(texture);
-//        // set body space so that createBullet sets the
-//        // correct space for created projectiles
-//        if (type == PRESENT) this.setSpace(1);
-//        else if (type == PAST) this.setSpace(2);
-//
-//        isTurret = true;
-//        this.type = type;
-//        this.cooldown = cooldown * 4;
-//        this.projVel = projVel;
-//        isActive = true;
-//        framesTillFire = 0;
-//        limiter = 4;
-//    }
-
     /**
      * Creates a turret with the provided json value
      * @param json The params for the turret
@@ -192,30 +161,6 @@ public class Enemy extends CapsuleObstacle {
         limiter = 4;
         setName("turret");
     }
-
-//    // Moving enemy
-//    public Enemy(
-//            EntityType type, float x, float y, float width, float height,
-//            TextureRegion texture, int cooldown, final Avatar target, Vector2 scale) {
-//        super(x,y,width*HSHRINK * scale.x,height*VSHRINK * scale.y);
-//
-//        this.setTexture(texture);
-//        if (type == PRESENT) this.setSpace(1);
-//        else if (type == PAST) this.setSpace(2);
-//
-//        this.type = type;
-//        this.target = target;
-//        this.cooldown = cooldown * 4;
-//        projVel = new Vector2(0,0).sub(getPosition().sub(target.getPosition()));
-//        isActive = true;
-//        framesTillFire = 0;
-//        movement = -1;
-//        nextDirection = -1;
-//        setFixedRotation(true);
-//        sight = new LineOfSight(this);
-//        limiter = 4;
-//        isTurret = false;
-//    }
 
     /**
      * Creates a moving enemy
@@ -319,34 +264,6 @@ public class Enemy extends CapsuleObstacle {
 
     public Fixture getPlatformFixture() { return platformFixture; }
 
-    /**
-     * Returns the platform fixture that the enemy's left sensor is connected to
-     *
-     * @return platform fixture the enemy stands on
-     */
-//    public Fixture getLeftFixture() { return leftFixture; }
-
-    /**
-     * Sets the platform fixture the enemy's left sensor detects
-     *
-     * @param f the platform fixture
-     */
-//    public void setLeftFixture(Fixture f) { leftFixture = f; }
-
-    /**
-     * Returns the platform fixture that the enemy's right sensor is connected to
-     *
-     * @return platform fixture the enemy stands on
-     */
-//    public Fixture getRightFixture() { return rightFixture; }
-
-    /**
-     * Sets the platform fixture the enemy's right sensor detects
-     *
-     * @param f the platform fixture
-     */
-//    public void setRightFixture(Fixture f) { rightFixture = f;}
-
     public boolean isTurret() { return isTurret; }
 
     /**
@@ -361,23 +278,6 @@ public class Enemy extends CapsuleObstacle {
      * @param t the type of enemy
      */
     public void setType (EntityType t){type = t;}
-
-//    /**
-//     * Sets the velocity of the bullet to aim at the target
-//     *
-//     * @param offset float of the offset from the enemy's center that bullet shoots from
-//     */
-//    public void setVelocity(float offset) {
-//        projVel = target.getPosition().sub(getPosition());
-//        projVel.y -= offset;
-//    }
-//
-//    /**
-//     * Returns the velocity of the projectiles that this enemy fires.
-//     *
-//     * @return velocity of the projectiles that this enemy fires.
-//     */
-//    public Vector2 getProjVelocity() { return projVel; }
 
     /**
      * Sets whether the is active to fire bullets
@@ -494,49 +394,6 @@ public class Enemy extends CapsuleObstacle {
     public float getMaxSpeed() {
         return ENEMY_MAXSPEED;
     }
-//
-//    /**
-//     * Moves the enemy left and right
-//     */
-//    public void applyForce() {
-//        if (!isActive()) {
-//            return;
-//        }
-//
-//        // Don't want to be moving. Damp out player motion
-//        if (getMovement() == 0f) {
-//            forceCache.set(-getDamping()*getVX(),0);
-//            body.applyForce(forceCache,getPosition(),true);
-//        }
-//
-//        // Velocity too high, clamp it
-//        if (Math.abs(getVX()) >= getMaxSpeed()) {
-//            setVX(Math.signum(getVX()) * getMaxSpeed());
-//        } else {
-//            forceCache.set(getMovement(),0);
-//            body.applyForce(forceCache,getPosition(),true);
-//        }
-//    }
-
-//    /** Returns the name of the left sensor
-//     *
-//     * This is used by ContactListener
-//     *
-//     * @return the name of the left sensor
-//     */
-//    public String getLeftSensorName() {
-//        return LEFT_SENSOR_NAME;
-//    }
-//
-//    /** Returns the name of the right sensor
-//     *
-//     * This is used by ContactListener
-//     *
-//     * @return the name of the right sensor
-//     */
-//    public String getRightSensorName() {
-//        return RIGHT_SENSOR_NAME;
-//    }
 
     public String getGroundSensorName() { return GROUND_SENSOR_NAME; }
 
@@ -547,7 +404,6 @@ public class Enemy extends CapsuleObstacle {
 
         if (getAi() == EnemyType.WALK) {
             Vector2 sensorGround = new Vector2(0, -getHeight() / 2);
-//            Vector2 sensorCenterLeft = new Vector2(-getWidth() / 2, -getHeight() / 2);
             FixtureDef sensorDef = new FixtureDef();
             sensorDef.density = DENSITY;
             sensorDef.isSensor = true;
@@ -557,48 +413,10 @@ public class Enemy extends CapsuleObstacle {
 
             sensorFixtureGround = body.createFixture(sensorDef);
             sensorFixtureGround.setUserData(GROUND_SENSOR_NAME);
-//            sensorShapeLeft.setAsBox(SENSOR_HEIGHT / 2, SENSOR_HEIGHT, sensorCenterLeft, 0.0f);
-//            sensorDef.shape = sensorShapeLeft;
-//
-//            sensorFixtureLeft = body.createFixture(sensorDef);
-//            sensorFixtureLeft.setUserData(LEFT_SENSOR_NAME);
-//
-//            Vector2 sensorCenterRight = new Vector2(getWidth() / 2, -getHeight() / 2);
-//            sensorShapeRight = new PolygonShape();
-//            sensorShapeRight.setAsBox(SENSOR_HEIGHT / 2, SENSOR_HEIGHT, sensorCenterRight, 0.0f);
-//            sensorDef.shape = sensorShapeRight;
-//
-//            sensorFixtureRight = body.createFixture(sensorDef);
-//            sensorFixtureRight.setUserData(RIGHT_SENSOR_NAME);
-
-//        } else if (getAi() == EnemyType.FLY) {
-//            FixtureDef sensorDef = new FixtureDef();
-//            sensorDef.density = DENSITY;
-//            sensorDef.isSensor = true;
-//            sensorShapeCenter = new CircleShape();
-//            sensorShapeCenter.setPosition(new Vector2(0,0));
-//            sensorShapeCenter.setRadius(3 * getWidth() / 2);
-//            sensorDef.shape = sensorShapeCenter;
-//
-//            sensorFixtureCenter = body.createFixture(sensorDef);
-//            sensorFixtureCenter.setUserData(CENTER_SENSOR_NAME);
         }
 
         return true;
     }
-
-//    /**
-//     * Updates the enemies line of sight to check if it can see the target
-//     * @param world
-//     * @param offset offset from the enemy center to where the bullet shoots from
-//     */
-//    public void createLineOfSight(World world, float offset) {
-//        Vector2 shootPos = getPosition().add(0f, offset);
-//        TextureRegion bulletBigTexture = JsonAssetManager.getInstance().getEntry("bulletbig", TextureRegion.class);
-//        float radius = bulletBigTexture.getRegionWidth() / (30.0f);
-//        shootPos.y -= radius * 2;
-//        world.rayCast(sight, shootPos, target.getPosition());
-//    }
 
     /**
      * Sets the animation node for the given state

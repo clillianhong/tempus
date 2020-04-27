@@ -51,6 +51,7 @@ public class Spikes extends PolygonObstacle {
         setTexture(texture);
         setSpace(json.get("space").asInt());
         setAngle(json.get("angle").asFloat());
+        getFilterData().groupIndex = -1;
     }
 
     public void draw(GameCanvas canvas) {
