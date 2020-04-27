@@ -236,34 +236,98 @@ public class Enemy extends CapsuleObstacle {
 
     public Fixture getSensorFixtureCenter() { return sensorFixtureCenter; }
 
+    /**
+     * Sets the velocity of the flying enemy
+     *
+     * @param vel vector the the flying enemy velocity
+     */
     public void setFlyingVelocity(Vector2 vel) { this.flyingVelocity = vel.scl(FORCE); }
 
+    /**
+     * Returns the velocity of the flying enemy
+     *
+     * @return velocity of flying enemy
+     */
     public Vector2 getFlyingVelocity () { return flyingVelocity; }
 
+    /** Sets the platform the enemy is currently on
+     *
+     * @param currPlatform platform the enemy is currently on
+     */
     public void setCurrPlatform(Platform currPlatform) { this.currPlatform = currPlatform; }
 
+    /**
+     * Returns the platform the enemy is currently on
+     *
+     * @return platform the enemy is currently on
+     */
     public Platform getCurrPlatform() { return currPlatform; }
 
+    /**
+     * Sets the platform the enemy plans to teleport to
+     *
+     * @param platform platform the enemy plans to teleport to
+     */
     public void setTeleportTo (Platform platform) { teleportTo = platform; }
 
+    /**
+     * Returns the platform the enemy is planning on teleporting to
+     *
+     * @return platform the enemy plans to teleport to
+     */
     public Platform getTeleportTo() { return teleportTo; }
 
+    /**
+     * Returns the velocity of the projectile
+     *
+     * @return velocity of projectile
+     */
     public Vector2 getProjVel() { return projVel; }
 
+    /**
+     * Sets the velocity of the projectile
+     *
+     * @param projVel vector of the velocity
+     */
     public void setProjVel(Vector2 projVel) { this.projVel = projVel; }
 
+    /**
+     * Returns the ray cast used for line of sight
+     *
+     * @return ray cast used for line of sight
+     */
     public RayCastCallback getSight() { return sight; }
 
     public void setLimiter(float limiter) { this.limiter = limiter; }
 
+    /**
+     * Returns the type of ai the enemy uses
+     *
+     * @return ai the enemy uses
+     */
     public EnemyType getAi() {
         return ai;
     }
 
+    /**
+     * Sets the fixture the enemy stands on
+     *
+     * @param f fixture the enemy stands on
+     */
     public void setPlatformFixture(Fixture f) { platformFixture = f; }
 
+    /**
+     * Returns the fixture that the enemy stands on
+     *
+     * @return fixture enemy stands on
+     */
     public Fixture getPlatformFixture() { return platformFixture; }
 
+    /**
+     * Returns whether the enemy is a turret or not
+     *
+     * @return boolean whether enemy is a turret
+     */
     public boolean isTurret() { return isTurret; }
 
     /**
@@ -288,10 +352,20 @@ public class Enemy extends CapsuleObstacle {
         isFiring = a;
     }
 
+    /**
+     * Remembers through shift whether an enemy is firing
+     *
+     * @return boolean whether the enemy is meant to be firing
+     */
     public boolean getShiftedFiring() {
         return shiftedActive;
     }
 
+    /**
+     * Sets whether the enemy is firing to remember after shift
+     *
+     * @param a boolean whether the enemy is firing
+     */
     public void setShiftedFiring(boolean a) {
         shiftedActive = a;
     }
