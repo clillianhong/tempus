@@ -1,5 +1,9 @@
 {
   "gravity": -14.7,
+  "diamondshape": [0.4, 1.8, 0.5, 1.8, 2.1, 1.8, 2.2, 1.8, 1.4, 0.1],
+  "capsuleshape": [0.4, 1.1, 0.5, 1.1, 2.6, 1.1, 2.7, 1.1, 2.6, 0.6, 2.0, 0.2, 1.1, 0.2, 0.5, 0.6],
+  "roundshape": [0.4, 1.4, 0.8, 1.7, 2.1, 1.7, 2.4, 1.4, 2.3, 0.8, 1.7, 0.3, 1.1, 0.3],
+  "spikeshape": [0.3, -0.6, 0.0, -0.2, -0.6, 0.0, -0.5, 0.4, 0.0, 0.6, 0.4, -0.2, 0.6, -0.3],
   "bounds": [
     32,
     18
@@ -78,6 +82,7 @@
     "avatarfalling": "avatarfalling"
   },
   "turrets": {
+
     "turret6": {
       "pos": [
         13.928,
@@ -87,7 +92,7 @@
         0.0168,
         0.021375
       ],
-      "texture": "turret_present",
+      "texture": "present_turret",
       "density": 1,
       "bodytype": "static",
       "entitytype": "present",
@@ -95,7 +100,8 @@
       "direction": [
         0,
         3
-      ]
+      ],
+      "turretshooting": "turret_shooting"
     },
     "turret7": {
       "pos": [
@@ -106,15 +112,16 @@
         0.0168,
         0.021375
       ],
-      "texture": "turret_past",
+      "texture": "past_turret",
       "density": 1,
       "bodytype": "static",
       "entitytype": "past",
       "cooldown": 360,
       "direction": [
-        -3,
-        0
-      ]
+        0,
+        3
+      ],
+      "turretshooting": "turret_shooting"
     }
   },
   "capsules": {

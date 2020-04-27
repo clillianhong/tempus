@@ -39,7 +39,7 @@ public class Spikes extends PolygonObstacle {
      * @param json the JSON subtree defining the dude
      */
     public void initialize(JsonValue json) {
-        setName(json.get("name").asString());
+        setName("spike");
         float[] pos =json.get("pos").asFloatArray();
         setPosition(pos[0],pos[1]);
         setBodyType(json.get("bodytype").asString().equals("static") ? BodyDef.BodyType.StaticBody : BodyDef.BodyType.DynamicBody);
