@@ -261,6 +261,7 @@ public class CollisionController implements ContactListener {
         Object objA = fix1.getBody().getUserData();
         Object objB = fix2.getBody().getUserData();
 
+
         if (((objB instanceof Platform)) || ((objA instanceof Platform))) {
             //if(avatar.getCurrentPlatform() != objB && avatar.getCurrentPlatform() != objA) {
             boolean correctWorld = false;
@@ -324,6 +325,13 @@ public class CollisionController implements ContactListener {
                 //handle platform-avatar collisions first (outside of processcontact
                 if (((objA instanceof Avatar) && (objB instanceof Platform)) || ((objB instanceof Avatar) && (objA instanceof Platform))) {
                     //if(avatar.getCurrentPlatform() != objB && avatar.getCurrentPlatform() != objA) {
+                    boolean latentCol = false;
+                    if (avatar.getStartedDashing() == 1) {
+                        if (avatar.getCurrentPlatform() == objA || avatar.getCurrentPlatform() == objB) {
+                            latentCol = true;
+                        }
+                    }
+                    if (!latentCol) {
                     if (!avatar.isSticking()) {
                         Float norm_angle = contact.getWorldManifold().getNormal().angle();
 
@@ -351,7 +359,7 @@ public class CollisionController implements ContactListener {
                         //avatar.contactPoint = contact.getWorldManifold().getPoints()[0];
                         avatar.setGrounded(true);
                         avatar.setSticking(true);
-                        System.out.println(cur_normal);
+                        //System.out.println(cur_normal);
                         avatar.setNewAngle(cur_normal);
                         if (objB instanceof Platform) {
                             avatar.setCurrentPlatform((Platform) objB);
@@ -362,6 +370,7 @@ public class CollisionController implements ContactListener {
                     }
                     sensorFixtures.add(avatar == bd1 ? fix2 : fix1); // Could have more than one ground
                     // }
+                }
                 }
 
                 if (objA instanceof Enemy || objB instanceof Enemy) {
