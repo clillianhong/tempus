@@ -122,7 +122,11 @@ public class Enemy extends CapsuleObstacle {
     /** Flying angle */
     private Float flyAngle;
 
+    /** Whether the enemy is a turret or not */
     private boolean isTurret;
+
+    /** Direction the enemy faces */
+    private float faceDirection;
 
     /** Texture asset for present enemy */
     private TextureRegion enemyPresentTexture;
@@ -217,6 +221,7 @@ public class Enemy extends CapsuleObstacle {
         setFixedRotation(true);
         limiter = 4;
         isTurret = false;
+        faceDirection = 1f;
         switch (json.get("aitype").asInt()) {
         case 1:
             ai = EnemyType.WALK;
@@ -266,6 +271,24 @@ public class Enemy extends CapsuleObstacle {
 
     public Fixture getSensorFixtureCenter() {
         return sensorFixtureCenter;
+    }
+
+    /**
+     * Set the direction the enemy faces
+     *
+     * @param faceDirection float of direction enemy faces
+     */
+    public void setFaceDirection(float faceDirection) {
+        this.faceDirection = faceDirection;
+    }
+
+    /**
+     * Get the direction the enemy faces
+     *
+     * @return direction the enemy faces
+     */
+    public float getFaceDirection() {
+        return faceDirection;
     }
 
     /**
@@ -649,7 +672,15 @@ public class Enemy extends CapsuleObstacle {
         // Old draw texture method
         if (texture != null) {
             canvas.draw(texture, Color.WHITE, origin.x, origin.y, getX() * drawScale.x, getY() * drawScale.y,
-                    getAngle(), 0.024f * drawScale.x, 0.0225f * drawScale.y);
+                    getAngle(), 0.024f * drawScale.x * faceDirection, 0.0225f * drawScale.y);
+        }
+    }
+
+    public void drawFade(GameCanvas canvas, float frames) {
+        if (texture != null) {
+            canvas.draw(texture, new Color(1,1,1, .017f * frames), origin.x, origin.y,
+                    getX() * drawScale.x, getY() * drawScale.y, getAngle(),
+                    0.024f * drawScale.x * faceDirection, 0.0225f * drawScale.y);
         }
     }
 }
