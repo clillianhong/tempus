@@ -243,29 +243,30 @@ public class MusicController {
      * garbage collection.
      */
     public void update(boolean shifted) {
-
-        MusicBuffer present_music = actives.get("present").music;
-        MusicBuffer past_music = actives.get("past").music;
-        float presVol = present_music.getVolume();
-        float pastVol = past_music.getVolume();
-        float crossfade = 0.05f;
-        if (shifted) {
-            //present_music.setVolume(0);
-            //past_music.setVolume(1);
-            if (presVol > 0){
-                present_music.setVolume(Math.max(0, presVol - crossfade));
-            }
-            if (pastVol < 1){
-                past_music.setVolume(Math.min(1, pastVol + crossfade));
-            }
-        } else {
-            //present_music.setVolume(1);
-            //past_music.setVolume(0);
-            if (presVol < 1){
-                present_music.setVolume(Math.max(1, presVol + crossfade));
-            }
-            if (pastVol > 0){
-                past_music.setVolume(Math.min(0, pastVol - crossfade));
+        if (!actives.isEmpty()) {
+            MusicBuffer present_music = actives.get("present").music;
+            MusicBuffer past_music = actives.get("past").music;
+            float presVol = present_music.getVolume();
+            float pastVol = past_music.getVolume();
+            float crossfade = 0.05f;
+            if (shifted) {
+                //present_music.setVolume(0);
+                //past_music.setVolume(1);
+                if (presVol > 0) {
+                    present_music.setVolume(Math.max(0, presVol - crossfade));
+                }
+                if (pastVol < 1) {
+                    past_music.setVolume(Math.min(1, pastVol + crossfade));
+                }
+            } else {
+                //present_music.setVolume(1);
+                //past_music.setVolume(0);
+                if (presVol < 1) {
+                    present_music.setVolume(Math.max(1, presVol + crossfade));
+                }
+                if (pastVol > 0) {
+                    past_music.setVolume(Math.min(0, pastVol - crossfade));
+                }
             }
         }
 
