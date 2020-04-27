@@ -3,8 +3,6 @@
   "bounds": [32, 18],
   "present_background": "present_background2",
   "past_background": "past_background2",
-  "present_music": "present2",
-  "past_music": "past2",
   "diamondshape": [0.5, 1.8, 2.1, 1.8, 1.4, 0.1],
   "capsuleshape": [0.5, 1.1, 2.6, 1.1, 2.6, 0.6, 2.0, 0.2, 1.1, 0.2, 0.5, 0.6],
   "roundshape": [0.4, 1.4, 0.8, 1.7, 2.1, 1.7, 2.4, 1.4, 2.3, 0.8, 1.7, 0.3, 1.1, 0.3],

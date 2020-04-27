@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.JsonWriter;
 import edu.cornell.gdiac.tempus.GameCanvas;
+import edu.cornell.gdiac.tempus.MusicController;
 import edu.cornell.gdiac.tempus.tempus.LevelController;
 import edu.cornell.gdiac.tempus.tempus.models.LevelModel;
 
@@ -243,6 +244,7 @@ public class GameStateManager {
             boolean level_finished = currentLevel.stepLevel();
             if(level_finished){ // LEVEL HAS FINISHED
                 //TODO: Finish level announcement/screen
+                MusicController.getInstance().stopAll();
                 currentLevel.finishLevel();
                 if(current_level_idx == last_level_idx){
                     endGameState(); //TODO: end game state accouncement/screen
@@ -250,6 +252,7 @@ public class GameStateManager {
                 else{
                     current_level_idx++;
                     currentLevel = levels[current_level_idx];
+                    currentLevel.playMusic();
                     if(!currentLevel.isUnlocked()){
                         highestUnlockedLevel = currentLevel;
                         currentLevel.unlockLevel();
@@ -257,8 +260,6 @@ public class GameStateManager {
                     //TODO: LEVEL FINISH SCREEN
                 }
             }
-        }else{
-            currentLevel.getCurrentRoom().stopMusic();
         }
     }
 
@@ -328,6 +329,5 @@ public class GameStateManager {
 
         gamefile.writeString(json.prettyPrint(gameState), false);
     }
-
 
 }
