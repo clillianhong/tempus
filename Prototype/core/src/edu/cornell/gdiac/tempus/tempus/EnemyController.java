@@ -354,6 +354,13 @@ public class EnemyController {
         }
     }
 
+    //Update enemy animation state
+    public void animateEnemies() {
+        for (Enemy e: enemies) {
+            e.animate(Enemy.EnemyState.NEUTRAL, true);
+        }
+    }
+
     public void drawEnemiesInWorld() {
         for (Enemy e: enemies) {
             if (e.getSpace() == 3) {

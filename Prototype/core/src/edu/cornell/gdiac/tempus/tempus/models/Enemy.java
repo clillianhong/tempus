@@ -146,15 +146,14 @@ public class Enemy extends CapsuleObstacle {
         // JsonAssetManager.getInstance().getEntry(json.get("texture").asString(),
         // FilmStrip.class);
         // setFilmStrip(EnemyState.NEUTRAL, neutralTexture);
-        // attackingTexture =
-        // JsonAssetManager.getInstance().getEntry(json.get("texture").asString(),
-        // FilmStrip.class);
-        // setFilmStrip(EnemyState.ATTACKING, attackingTexture);
 
         // example Filmstrip extraction
         String entitytype = json.get("entitytype").asString();
         FilmStrip test = JsonAssetManager.getInstance().getEntry("turret_shooting" + "_" + entitytype, FilmStrip.class);
         setTexture(texture);
+
+        neutralTexture = JsonAssetManager.getInstance().getEntry("turret_shooting" + "_" + entitytype, FilmStrip.class);
+        setFilmStrip(EnemyState.NEUTRAL, neutralTexture);
 
         setPosition(pos[0], pos[1]);
         setDimension(texture.getRegionWidth() * shrink[0], texture.getRegionHeight() * shrink[1]);
@@ -220,20 +219,27 @@ public class Enemy extends CapsuleObstacle {
         switch (json.get("aitype").asInt()) {
         case 1:
             ai = EnemyType.WALK;
+            neutralTexture = JsonAssetManager.getInstance().getEntry(("enemywalking" + "_" + entitytype), FilmStrip.class);
             break;
 
         case 2:
             ai = EnemyType.TELEPORT;
+            neutralTexture = JsonAssetManager.getInstance().getEntry(("enemyteleporting" + "_" + entitytype), FilmStrip.class);
             break;
 
         case 3:
             ai = EnemyType.GUN;
+            neutralTexture = JsonAssetManager.getInstance().getEntry(("enemyshooting" + "_" + entitytype), FilmStrip.class);
             break;
 
         case 4:
             ai = EnemyType.FLY;
+            neutralTexture = JsonAssetManager.getInstance().getEntry(("enemyflying" + "_" + entitytype), FilmStrip.class);
             break;
         }
+        setFilmStrip(EnemyState.NEUTRAL, neutralTexture);
+        setFilmStrip(EnemyState.ATTACKING, neutralTexture); //TODO : CHANGE LATER
+
         if (ai.equals(EnemyType.WALK)) {
             sight = new LineOfSight(this);
             setName("enemy");
@@ -564,17 +570,17 @@ public class Enemy extends CapsuleObstacle {
     public void draw(GameCanvas canvas) {
         // TODO 2: uncomment this after [TODO 1] has been done
         // Draw enemy filmstrip
-        // if (currentStrip != null) {
-        // canvas.draw(currentStrip, Color.WHITE, origin.x, origin.y,
-        // getX() * drawScale.x, getY() * drawScale.y, getAngle(),
-        // 0.024f * drawScale.x, 0.0225f * drawScale.y);
-        // }
+         if (currentStrip != null) {
+         canvas.draw(currentStrip, Color.WHITE, origin.x, origin.y,
+         getX() * drawScale.x, getY() * drawScale.y, getAngle(),
+         0.024f * drawScale.x, 0.0225f * drawScale.y);
+         }
 
         // Old draw texture method
-        if (texture != null) {
-            canvas.draw(texture, Color.WHITE, origin.x, origin.y, getX() * drawScale.x, getY() * drawScale.y,
-                    getAngle(), 0.024f * drawScale.x, 0.0225f * drawScale.y);
-        }
+//        if (texture != null) {
+//            canvas.draw(texture, Color.WHITE, origin.x, origin.y, getX() * drawScale.x, getY() * drawScale.y,
+//                    getAngle(), 0.024f * drawScale.x, 0.0225f * drawScale.y);
+//        }
     }
 }
 
