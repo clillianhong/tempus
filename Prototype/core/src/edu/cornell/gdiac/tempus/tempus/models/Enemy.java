@@ -145,12 +145,6 @@ public class Enemy extends CapsuleObstacle {
         TextureRegion texture = JsonAssetManager.getInstance().getEntry(json.get("texture").asString(),
                 TextureRegion.class);
 
-        // TODO 1: set filmstrips
-        // neutralTexture =
-        // JsonAssetManager.getInstance().getEntry(json.get("texture").asString(),
-        // FilmStrip.class);
-        // setFilmStrip(EnemyState.NEUTRAL, neutralTexture);
-
         // example Filmstrip extraction
         String entitytype = json.get("entitytype").asString();
         FilmStrip test = JsonAssetManager.getInstance().getEntry("turret_shooting" + "_" + entitytype, FilmStrip.class);
@@ -671,24 +665,17 @@ public class Enemy extends CapsuleObstacle {
      * @param canvas Drawing context
      */
     public void draw(GameCanvas canvas) {
-        // TODO 2: uncomment this after [TODO 1] has been done
-        // Draw enemy filmstrip
-         if (currentStrip != null) {
-         canvas.draw(currentStrip, Color.WHITE, origin.x, origin.y,
-         getX() * drawScale.x, getY() * drawScale.y, getAngle(),
-         0.024f * drawScale.x, 0.0225f * drawScale.y);
-         }
 
-        // Old draw texture method
-        if (texture != null) {
-            canvas.draw(texture, Color.WHITE, origin.x, origin.y, getX() * drawScale.x, getY() * drawScale.y,
+        // Draw enemy filmstrip
+        if (currentStrip != null) {
+            canvas.draw(currentStrip, Color.WHITE, origin.x, origin.y, getX() * drawScale.x, getY() * drawScale.y,
                     getAngle(), 0.024f * drawScale.x * faceDirection, 0.0225f * drawScale.y);
         }
     }
 
     public void drawFade(GameCanvas canvas, float frames) {
-        if (texture != null) {
-            canvas.draw(texture, new Color(1,1,1, .017f * frames), origin.x, origin.y,
+        if (currentStrip != null) {
+            canvas.draw(currentStrip, new Color(1,1,1, .017f * frames), origin.x, origin.y,
                     getX() * drawScale.x, getY() * drawScale.y, getAngle(),
                     0.024f * drawScale.x * faceDirection, 0.0225f * drawScale.y);
         }
