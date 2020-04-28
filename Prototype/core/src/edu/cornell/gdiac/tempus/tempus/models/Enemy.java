@@ -70,6 +70,9 @@ public class Enemy extends CapsuleObstacle {
     /** The texture filmstrip for the attacking animation */
     private FilmStrip attackingStrip;
 
+    /** Minimize the size of the texture by the factor */
+    private float minimizeScale = 1;
+
     /** The frame rate for the animation */
     private static final float FRAME_RATE = 10;
     /** The frame cooldown for the animation */
@@ -223,17 +226,18 @@ public class Enemy extends CapsuleObstacle {
         case 2:
             ai = EnemyType.TELEPORT;
             neutralTexture = JsonAssetManager.getInstance().getEntry(("enemyteleporting" + "_" + entitytype), FilmStrip.class);
+            minimizeScale = 0.35f;
             break;
 
         case 3:
             ai = EnemyType.GUN;
             neutralTexture = JsonAssetManager.getInstance().getEntry(("enemyshooting" + "_" + entitytype), FilmStrip.class);
-//            System.out.println("type: " + entitytype);
             break;
 
         case 4:
             ai = EnemyType.FLY;
             neutralTexture = JsonAssetManager.getInstance().getEntry(("enemyflying" + "_" + entitytype), FilmStrip.class);
+            minimizeScale = 0.5f;
             break;
         }
         System.out.println("type: " + entitytype);
@@ -669,7 +673,7 @@ public class Enemy extends CapsuleObstacle {
         // Draw enemy filmstrip
         if (currentStrip != null) {
             canvas.draw(currentStrip, Color.WHITE, origin.x, origin.y, getX() * drawScale.x, getY() * drawScale.y,
-                    getAngle(), 0.024f * drawScale.x * faceDirection, 0.0225f * drawScale.y);
+                    getAngle(), 0.024f * minimizeScale * drawScale.x * faceDirection, 0.0225f * minimizeScale * drawScale.y);
         }
     }
 
@@ -677,7 +681,7 @@ public class Enemy extends CapsuleObstacle {
         if (currentStrip != null) {
             canvas.draw(currentStrip, new Color(1,1,1, .017f * frames), origin.x, origin.y,
                     getX() * drawScale.x, getY() * drawScale.y, getAngle(),
-                    0.024f * drawScale.x * faceDirection, 0.0225f * drawScale.y);
+                    0.024f * minimizeScale * drawScale.x * faceDirection, 0.0225f * minimizeScale * drawScale.y);
         }
     }
 }
