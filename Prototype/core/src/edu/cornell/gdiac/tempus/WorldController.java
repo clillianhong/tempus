@@ -545,6 +545,21 @@ public abstract class WorldController implements Screen {
 				e.update(dt);
 			}
 		}
+
+		InputController input = InputController.getInstance();
+		if (input.didAdvance()) {
+			listener.exitScreen(this, ScreenExitCodes.EXIT_NEXT.ordinal());
+		} else if (input.didRetreat()) {
+			listener.exitScreen(this, ScreenExitCodes.EXIT_PREV.ordinal());
+		} else if (countdown > 0) {
+			countdown--;
+		} else if (countdown == 0) {
+			if (failed) {
+				reset();
+			} else if (complete) {
+				listener.exitScreen(this, ScreenExitCodes.EXIT_NEXT.ordinal());
+			}
+		}
 	}
 	
 	/**
