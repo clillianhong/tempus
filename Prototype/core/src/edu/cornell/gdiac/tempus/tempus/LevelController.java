@@ -1136,7 +1136,7 @@ public class LevelController extends WorldController {
 		avatar.applyForce();
 		// enemy.applyForce();
 
-		// Update animation state
+		// Update avatar animation state
 		if (InputController.getInstance().pressedLeftMouseButton()
 				|| InputController.getInstance().pressedRightMouseButton()) {
 			// If either mouse button is held, set animation to be crouching
@@ -1152,8 +1152,10 @@ public class LevelController extends WorldController {
 		} else {
 			avatar.animate(Avatar.AvatarState.FALLING, false);
 			avatar.setAnimationState(Avatar.AvatarState.FALLING);
-
 		}
+
+		// Update enemy animation state
+//		enemyController.animateEnemies();
 
 		/*
 		 * if (avatar.isJumping()) { JsonValue data =

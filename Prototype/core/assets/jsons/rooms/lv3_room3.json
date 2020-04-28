@@ -201,7 +201,7 @@
       "cooldown": 360,
       "bodytype": "dynamic",
       "density": 1.0,
-      "aitype": 1
+      "aitype": 4
     },
     "enemy2": {
       "pos": [15.625, 11.03125],
@@ -211,7 +211,7 @@
       "cooldown": 360,
       "bodytype": "dynamic",
       "density": 1.0,
-      "aitype": 1
+      "aitype": 2
     }
   },
   "turrets": {

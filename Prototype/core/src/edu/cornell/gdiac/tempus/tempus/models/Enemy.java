@@ -21,7 +21,9 @@ public class Enemy extends CapsuleObstacle {
         /** When enemy is chilling */
         NEUTRAL,
         /** When enemy is attacking */
-        ATTACKING
+        ATTACKING,
+        /** Special state after teleporting */
+        TPEND
     };
 
     public enum EnemyType {
@@ -58,10 +60,12 @@ public class Enemy extends CapsuleObstacle {
     private static final String CENTER_SENSOR_NAME = "EnemyCenterSensor";
 
     // ANIMATION FIELDS
-    /** Texture filmstrip for avatar dashing */
+    /** Texture filmstrip for enemy chilling */
     private FilmStrip neutralTexture;
-    /** Texture filmstrip for avatar falling */
+    /** Texture filmstrip for enemy attacking */
     private FilmStrip attackingTexture;
+    /** Texture filmstrip for enemy after tp */
+    private FilmStrip tpEndTexture;
 
     /** The texture filmstrip for the current animation */
     private FilmStrip currentStrip;
@@ -69,9 +73,14 @@ public class Enemy extends CapsuleObstacle {
     private FilmStrip neutralStrip;
     /** The texture filmstrip for the attacking animation */
     private FilmStrip attackingStrip;
+    /** The texture filmstrip for the tp end animation */
+    private FilmStrip tpEndStrip;
+
+    /** Minimize the size of the texture by the factor */
+    private float minimizeScale = 1;
 
     /** The frame rate for the animation */
-    private static final float FRAME_RATE = 10;
+    private static float FRAME_RATE = 10;
     /** The frame cooldown for the animation */
     private static float frame_cooldown = FRAME_RATE;
 
@@ -145,20 +154,13 @@ public class Enemy extends CapsuleObstacle {
         TextureRegion texture = JsonAssetManager.getInstance().getEntry(json.get("texture").asString(),
                 TextureRegion.class);
 
-        // TODO 1: set filmstrips
-        // neutralTexture =
-        // JsonAssetManager.getInstance().getEntry(json.get("texture").asString(),
-        // FilmStrip.class);
-        // setFilmStrip(EnemyState.NEUTRAL, neutralTexture);
-        // attackingTexture =
-        // JsonAssetManager.getInstance().getEntry(json.get("texture").asString(),
-        // FilmStrip.class);
-        // setFilmStrip(EnemyState.ATTACKING, attackingTexture);
-
         // example Filmstrip extraction
         String entitytype = json.get("entitytype").asString();
         FilmStrip test = JsonAssetManager.getInstance().getEntry("turret_shooting" + "_" + entitytype, FilmStrip.class);
         setTexture(texture);
+
+        neutralTexture = JsonAssetManager.getInstance().getEntry("turret_shooting" + "_" + entitytype, FilmStrip.class);
+        setFilmStrip(EnemyState.NEUTRAL, neutralTexture);
 
         setPosition(pos[0], pos[1]);
         setDimension(texture.getRegionWidth() * shrink[0], texture.getRegionHeight() * shrink[1]);
@@ -192,7 +194,6 @@ public class Enemy extends CapsuleObstacle {
         TextureRegion texture = JsonAssetManager.getInstance()
                 .getEntry(json.get("texture").asString() + "_type" + (json.get("aitype").asInt()), TextureRegion.class);
 
-
         String entitytype = json.get("entitytype").asString();
 
         // example filmstrip extraction
@@ -225,20 +226,38 @@ public class Enemy extends CapsuleObstacle {
         switch (json.get("aitype").asInt()) {
         case 1:
             ai = EnemyType.WALK;
+            neutralTexture = JsonAssetManager.getInstance().getEntry(("enemywalking" + "_" + entitytype), FilmStrip.class);
+            attackingTexture = neutralTexture;
             break;
 
         case 2:
             ai = EnemyType.TELEPORT;
+            FRAME_RATE = 11;
+            neutralTexture = JsonAssetManager.getInstance().getEntry(("enemyteleporting" + "_" + entitytype), FilmStrip.class);
+            attackingTexture = JsonAssetManager.getInstance().getEntry(("enemyteleporting_activate"), FilmStrip.class);
+            tpEndTexture = JsonAssetManager.getInstance().getEntry(("enemyteleporting_deactivate"), FilmStrip.class);
+            setFilmStrip(EnemyState.TPEND, tpEndTexture);
+            minimizeScale = 0.35f;
             break;
 
         case 3:
             ai = EnemyType.GUN;
+            neutralTexture = JsonAssetManager.getInstance().getEntry(("enemyshooting" + "_" + entitytype), FilmStrip.class);
+            attackingTexture = neutralTexture;
             break;
 
         case 4:
             ai = EnemyType.FLY;
+            FRAME_RATE = 6;
+            neutralTexture = JsonAssetManager.getInstance().getEntry(("enemyflying" + "_" + entitytype), FilmStrip.class);
+            attackingTexture = neutralTexture;
+            minimizeScale = 0.5f;
             break;
         }
+        setFilmStrip(EnemyState.NEUTRAL, neutralTexture);
+        setFilmStrip(EnemyState.ATTACKING, attackingTexture);
+        setFilmStrip(EnemyState.TPEND, neutralTexture);
+
         if (ai.equals(EnemyType.WALK)) {
             sight = new LineOfSight(this);
             setName("enemy");
@@ -594,6 +613,9 @@ public class Enemy extends CapsuleObstacle {
         case ATTACKING:
             attackingStrip = strip;
             break;
+        case TPEND:
+            tpEndStrip = strip;
+            break;
         default:
             assert false : "Invalid EnemyState enumeration";
         }
@@ -613,6 +635,9 @@ public class Enemy extends CapsuleObstacle {
         case ATTACKING:
             currentStrip = attackingStrip;
             break;
+        case TPEND:
+            currentStrip = tpEndStrip;
+            break;
         default:
             assert false : "Invalid EnemyState enumeration";
         }
@@ -625,6 +650,9 @@ public class Enemy extends CapsuleObstacle {
             frame_cooldown = FRAME_RATE;
 
         // Manage current frame to draw
+//        System.out.println("curr frame: " + currentStrip.getFrame());
+//        System.out.println("size: " + currentStrip.getSize());
+
         if (currentStrip.getFrame() < currentStrip.getSize() - 1) {
             currentStrip.setFrame(currentStrip.getFrame() + 1);
         } else {
@@ -661,26 +689,19 @@ public class Enemy extends CapsuleObstacle {
      * @param canvas Drawing context
      */
     public void draw(GameCanvas canvas) {
-        // TODO 2: uncomment this after [TODO 1] has been done
-        // Draw enemy filmstrip
-        // if (currentStrip != null) {
-        // canvas.draw(currentStrip, Color.WHITE, origin.x, origin.y,
-        // getX() * drawScale.x, getY() * drawScale.y, getAngle(),
-        // 0.024f * drawScale.x, 0.0225f * drawScale.y);
-        // }
 
-        // Old draw texture method
-        if (texture != null) {
-            canvas.draw(texture, Color.WHITE, origin.x, origin.y, getX() * drawScale.x, getY() * drawScale.y,
-                    getAngle(), 0.024f * drawScale.x * faceDirection, 0.0225f * drawScale.y);
+        // Draw enemy filmstrip
+        if (currentStrip != null) {
+            canvas.draw(currentStrip, Color.WHITE, origin.x, origin.y, getX() * drawScale.x, getY() * drawScale.y,
+                    getAngle(), 0.024f * minimizeScale * drawScale.x * faceDirection, 0.0225f * minimizeScale * drawScale.y);
         }
     }
 
     public void drawFade(GameCanvas canvas, float frames) {
-        if (texture != null) {
-            canvas.draw(texture, new Color(1,1,1, .017f * frames), origin.x, origin.y,
+        if (currentStrip != null) {
+            canvas.draw(currentStrip, new Color(1,1,1, .017f * frames), origin.x, origin.y,
                     getX() * drawScale.x, getY() * drawScale.y, getAngle(),
-                    0.024f * drawScale.x * faceDirection, 0.0225f * drawScale.y);
+                    0.024f * minimizeScale * drawScale.x * faceDirection, 0.0225f * minimizeScale * drawScale.y);
         }
     }
 }
