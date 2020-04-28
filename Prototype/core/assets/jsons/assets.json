@@ -298,6 +298,12 @@
       "cols": 5,
       "size": 16
     },
+    "enemyteleporting_deactivate": {
+      "file": "filmstrips/enemy/enemy_teleporting_deactivate.png",
+      "rows": 4,
+      "cols": 5,
+      "size": 16
+    },
     "turret_shooting_present": {
       "file": "filmstrips/turret/turret_present_lv_1.png",
       "rows": 1,

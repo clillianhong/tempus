@@ -377,7 +377,9 @@ public class EnemyController {
     //Update enemy animation state
     public void animateEnemies() {
         for (Enemy e: enemies) {
-            e.animate(Enemy.EnemyState.NEUTRAL, true);
+            if (e.getAi() != Enemy.EnemyType.TELEPORT) {
+                e.animate(Enemy.EnemyState.NEUTRAL, true);
+            }
         }
     }
 
@@ -391,14 +393,18 @@ public class EnemyController {
                 }
                 if (e.getAi() == Enemy.EnemyType.TELEPORT) {
                     if (e.getTeleportTo() != null && e.getFramesTillFire() < 60) {
+                        e.animate(Enemy.EnemyState.ATTACKING, false);
                         e.drawFade(canvas, e.getFramesTillFire());
                     } else if (framesAfterMove > 0 && framesAfterMove < 60) {
+                        e.animate(Enemy.EnemyState.ATTACKING, false);
                         e.drawFade(canvas, framesAfterMove);
                         framesAfterMove += 1;
                     } else {
+                        e.animate(Enemy.EnemyState.NEUTRAL, true);
                         e.draw(canvas);
                     }
                 } else {
+                    e.animate(Enemy.EnemyState.NEUTRAL, true);
                     e.draw(canvas);
                 }
 //            } else if (!shifted && (e.getSpace() == 1)) { // present world

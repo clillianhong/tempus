@@ -21,7 +21,9 @@ public class Enemy extends CapsuleObstacle {
         /** When enemy is chilling */
         NEUTRAL,
         /** When enemy is attacking */
-        ATTACKING
+        ATTACKING,
+        /** Special state after teleporting */
+        TPEND
     };
 
     public enum EnemyType {
@@ -58,10 +60,12 @@ public class Enemy extends CapsuleObstacle {
     private static final String CENTER_SENSOR_NAME = "EnemyCenterSensor";
 
     // ANIMATION FIELDS
-    /** Texture filmstrip for avatar dashing */
+    /** Texture filmstrip for enemy chilling */
     private FilmStrip neutralTexture;
-    /** Texture filmstrip for avatar falling */
+    /** Texture filmstrip for enemy attacking */
     private FilmStrip attackingTexture;
+    /** Texture filmstrip for enemy after tp */
+    private FilmStrip tpEndTexture;
 
     /** The texture filmstrip for the current animation */
     private FilmStrip currentStrip;
@@ -69,12 +73,14 @@ public class Enemy extends CapsuleObstacle {
     private FilmStrip neutralStrip;
     /** The texture filmstrip for the attacking animation */
     private FilmStrip attackingStrip;
+    /** The texture filmstrip for the tp end animation */
+    private FilmStrip tpEndStrip;
 
     /** Minimize the size of the texture by the factor */
     private float minimizeScale = 1;
 
     /** The frame rate for the animation */
-    private static final float FRAME_RATE = 10;
+    private static float FRAME_RATE = 10;
     /** The frame cooldown for the animation */
     private static float frame_cooldown = FRAME_RATE;
 
@@ -221,28 +227,36 @@ public class Enemy extends CapsuleObstacle {
         case 1:
             ai = EnemyType.WALK;
             neutralTexture = JsonAssetManager.getInstance().getEntry(("enemywalking" + "_" + entitytype), FilmStrip.class);
+            attackingTexture = neutralTexture;
             break;
 
         case 2:
             ai = EnemyType.TELEPORT;
+            FRAME_RATE = 11;
             neutralTexture = JsonAssetManager.getInstance().getEntry(("enemyteleporting" + "_" + entitytype), FilmStrip.class);
+            attackingTexture = JsonAssetManager.getInstance().getEntry(("enemyteleporting_activate"), FilmStrip.class);
+            tpEndTexture = JsonAssetManager.getInstance().getEntry(("enemyteleporting_deactivate"), FilmStrip.class);
+            setFilmStrip(EnemyState.TPEND, tpEndTexture);
             minimizeScale = 0.35f;
             break;
 
         case 3:
             ai = EnemyType.GUN;
             neutralTexture = JsonAssetManager.getInstance().getEntry(("enemyshooting" + "_" + entitytype), FilmStrip.class);
+            attackingTexture = neutralTexture;
             break;
 
         case 4:
             ai = EnemyType.FLY;
+            FRAME_RATE = 6;
             neutralTexture = JsonAssetManager.getInstance().getEntry(("enemyflying" + "_" + entitytype), FilmStrip.class);
+            attackingTexture = neutralTexture;
             minimizeScale = 0.5f;
             break;
         }
-        System.out.println("type: " + entitytype);
         setFilmStrip(EnemyState.NEUTRAL, neutralTexture);
-        setFilmStrip(EnemyState.ATTACKING, neutralTexture); //TODO : CHANGE LATER
+        setFilmStrip(EnemyState.ATTACKING, attackingTexture);
+        setFilmStrip(EnemyState.TPEND, neutralTexture);
 
         if (ai.equals(EnemyType.WALK)) {
             sight = new LineOfSight(this);
@@ -599,6 +613,9 @@ public class Enemy extends CapsuleObstacle {
         case ATTACKING:
             attackingStrip = strip;
             break;
+        case TPEND:
+            tpEndStrip = strip;
+            break;
         default:
             assert false : "Invalid EnemyState enumeration";
         }
@@ -617,6 +634,9 @@ public class Enemy extends CapsuleObstacle {
             break;
         case ATTACKING:
             currentStrip = attackingStrip;
+            break;
+        case TPEND:
+            currentStrip = tpEndStrip;
             break;
         default:
             assert false : "Invalid EnemyState enumeration";

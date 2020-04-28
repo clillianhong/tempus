@@ -1154,7 +1154,7 @@ public class LevelController extends WorldController {
 		}
 
 		// Update enemy animation state
-		enemyController.animateEnemies();
+//		enemyController.animateEnemies();
 
 		/*
 		 * if (avatar.isJumping()) { JsonValue data =
