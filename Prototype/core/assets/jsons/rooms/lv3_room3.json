@@ -198,20 +198,20 @@
       "shrink": [0.0168, 0.021375],
       "texture": "enemypresent",
       "entitytype": "present",
-      "cooldown": 120,
+      "cooldown": 360,
       "bodytype": "dynamic",
       "density": 1.0,
-      "aitype": 1,
+      "aitype": 1
     },
     "enemy2": {
       "pos": [15.625, 11.03125],
       "shrink": [0.0168, 0.021375],
       "texture": "enemypast",
       "entitytype": "past",
-      "cooldown": 120,
+      "cooldown": 360,
       "bodytype": "dynamic",
       "density": 1.0,
-      "aitype": 1,
+      "aitype": 1
     }
   },
   "turrets": {

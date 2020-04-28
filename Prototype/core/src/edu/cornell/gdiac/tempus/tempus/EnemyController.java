@@ -42,6 +42,11 @@ public class EnemyController {
     /** Present or past */
     private boolean shifted;
 
+    /** Frames after enemy teleports */
+    private float framesAfterMove;
+    /** Waiting to teleport to fire */
+    private boolean waitToFire;
+
     /** Cache for internal force calculations */
     private Vector2 forceCache = new Vector2();
 
@@ -75,6 +80,8 @@ public class EnemyController {
         jsonReader = new JsonReader();
         this.assetDirectory = assetDirectory;
         canvas = worldController.getCanvas();
+        framesAfterMove = 0;
+        waitToFire = true;
     }
 
     /**
@@ -149,15 +156,22 @@ public class EnemyController {
         enemy.setProjVel(projVel);
     }
 
+    /**
+     * Set the velocity of a flying enemy
+     *
+     * @param enemy the enemy whose flying velocity needs to be set
+     */
     public void setFlyingVelocity (Enemy enemy) {
         Vector2 vel = target.getPosition().sub(enemy.getPosition());
         if (vel != enemy.getFlyingVelocity()) {
             enemy.setLinearVelocity(new Vector2(0,0));
-            enemy.setAngularVelocity(0);
             enemy.setFlyingVelocity(vel);
         }
     }
 
+    /**
+     * Processes actions for the enemy during every update
+     */
     public void processAction() {
         for (Enemy e: enemies) {
             if (e.isTurret()) {
@@ -170,7 +184,11 @@ public class EnemyController {
                     fire(e);
                 } else if (e.getAi() == Enemy.EnemyType.TELEPORT) {
                     e.coolDown(true);
-                    setBulletVelocity(BULLET_OFFSET, e);
+                    if (framesAfterMove == 59 && waitToFire) {
+                        setBulletVelocity(BULLET_OFFSET, e);
+                        createBullet(e);
+                        waitToFire = false;
+                    }
                     findPlatform(e);
                 } else if (e.getAi() == Enemy.EnemyType.GUN) {
                     createLineOfSight(world, BULLET_OFFSET, e);
@@ -187,6 +205,11 @@ public class EnemyController {
         }
     }
 
+    /**
+     * Applies force to flying enemies to make them fly
+     *
+     * @param e enemy that is flying
+     */
     public void fly(Enemy e) {
         // Velocity too high, clamp it
         if (Math.abs(e.getVX()) >= e.getMaxSpeed()) {
@@ -199,6 +222,12 @@ public class EnemyController {
         e.getBody().applyForce(forceCache, e.getPosition(), true);
     }
 
+    /**
+     * Finds an available platform for the enemy to teleport to
+     * Will only teleport to a platform where it can shoot the avatar and the avatar is not currently on
+     *
+     * @param e enemy that is teleporting
+     */
     public void findPlatform(Enemy e) {
         for (Obstacle ob: objects) {
             if (ob instanceof Platform &&
@@ -215,16 +244,29 @@ public class EnemyController {
         }
     }
 
+    /**
+     * Moves the enemy to the platform and fire a bullet at the avatar
+     *
+     * @param e the enemy that is teleporting and firing
+     * @param p the platform the enemy teleports to
+     */
     public void teleport(Enemy e, Platform p) {
         Vector2 newPos = p.getPosition();
         newPos.y += p.getHeight() + (e.getHeight() / 2);
         newPos.x += p.getWidth() / 2;
         e.setPosition(newPos);
         e.setCurrPlatform(p);
-        setBulletVelocity(BULLET_OFFSET, e);
-        createBullet(e);
+        e.setTeleportTo(null);
+        e.coolDown(false);
+        framesAfterMove = 1;
+        waitToFire = true;
     }
 
+    /**
+     * Fires a projectile at the avatar
+     *
+     * @param e enemy that is firing
+     */
     public void fire(Enemy e) {
         if (e.canFire()) {
             createBullet(e);
@@ -233,29 +275,6 @@ public class EnemyController {
         }
     }
 
-//    public void fire() {
-//        for (Enemy e: enemies) {
-//            if (e.isTurret()) {
-//                if (e.canFire()) {
-//                    createBullet(e);
-//                } else
-//                    e.coolDown(true);
-//            } else if ((!shifted && e.getSpace() == 1) || (shifted && e.getSpace() == 2)) {
-//                if (e.getLeftFixture() != null && e.getRightFixture() != null) {
-//                    createLineOfSight(world, BULLET_OFFSET, e);
-//                    applyForce(e);
-//                    if (e.canFire()) {
-//                        if (e.getName() == "enemy") {
-//                            setBulletVelocity(BULLET_OFFSET, e);
-//                        }
-//                        createBullet(e);
-//                    } else
-//                        e.coolDown(true);
-//                }
-//            }
-//        }
-//    }
-
     /**
      * Add a new bullet to the world and send it in the right direction.
      *
@@ -263,14 +282,6 @@ public class EnemyController {
      */
     private void createBullet(Enemy enemy) {
         float offset = BULLET_OFFSET;
-
-//		//TODO: quick fix for enemy projectile offsets
-//		if (!enemy.isTurret() && enemy.getType() == PAST) {
-//			offset = 2.5f;
-//		}
-//		if (!enemy.isTurret() && enemy.getType() == PRESENT) {
-//			offset = 1.5f;
-//		}
 
         TextureRegion bulletBigTexture = JsonAssetManager.getInstance().getEntry("bulletbig", TextureRegion.class);
         TextureRegion presentBullet = JsonAssetManager.getInstance().getEntry("projpresent", TextureRegion.class);
@@ -325,6 +336,12 @@ public class EnemyController {
         world.rayCast(e.getSight(), shootPos, target.getPosition());
     }
 
+    /**
+     * Checks the line of sight at a potential place to teleport to
+     *
+     * @param p platform the enemy could potentially teleport to
+     * @param e enemy that is teleporting
+     */
     public void teleportLineOfSight(Platform p, Enemy e) {
         e.setTeleportTo(p);
         Vector2 aim = p.getPosition();
@@ -333,6 +350,9 @@ public class EnemyController {
         world.rayCast(e.getSight(), aim, target.getPosition());
     }
 
+    /**
+     * Makes the enemies inactive if they are not in the world
+     */
     public void sleepIfNotInWorld() {
         for (Enemy e: enemies) {
             if (!e.isTurret()) {
@@ -364,18 +384,36 @@ public class EnemyController {
         }
     }
 
+    /** Draws the enemies in the world */
     public void drawEnemiesInWorld() {
         for (Enemy e: enemies) {
             if (e.getSpace() == 3) {
                 e.draw(canvas);
-            } else if (shifted && (e.getSpace() == 2)) { // past world
-                e.draw(canvas);
-            } else if (!shifted && (e.getSpace() == 1)) { // present world
-                e.draw(canvas);
+            } else if ((shifted && (e.getSpace() == 2)) || (!shifted && (e.getSpace() == 1))) { // past world
+                if (e.getAi() != Enemy.EnemyType.WALK) {
+                    e.setFaceDirection((e.getX() - target.getX()) < 0 ? 1 : -1);
+                }
+                if (e.getAi() == Enemy.EnemyType.TELEPORT) {
+                    if (e.getTeleportTo() != null && e.getFramesTillFire() < 60) {
+                        e.drawFade(canvas, e.getFramesTillFire());
+                    } else if (framesAfterMove > 0 && framesAfterMove < 60) {
+                        e.drawFade(canvas, framesAfterMove);
+                        framesAfterMove += 1;
+                    } else {
+                        e.draw(canvas);
+                    }
+                } else {
+                    e.draw(canvas);
+                }
+//            } else if (!shifted && (e.getSpace() == 1)) { // present world
+//                e.draw(canvas);
             }
         }
     }
 
+    /**
+     * Draws the debug for enemies in the world
+     */
     public void drawEnemiesDebugInWorld() {
         for (Enemy e: enemies) {
             if (e.getSpace() == 3) {
