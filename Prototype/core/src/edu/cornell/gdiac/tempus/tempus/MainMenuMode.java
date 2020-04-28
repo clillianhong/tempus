@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -23,6 +24,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import edu.cornell.gdiac.tempus.GameCanvas;
 import edu.cornell.gdiac.tempus.tempus.models.ScreenExitCodes;
+import edu.cornell.gdiac.util.GifDecoder;
 import edu.cornell.gdiac.util.JsonAssetManager;
 import edu.cornell.gdiac.util.ScreenListener;
 
@@ -42,6 +44,10 @@ public class MainMenuMode implements Screen {
     private boolean active;
     /** background texture region */
     TextureRegion backgroundTexture;
+    TextureRegion glow;
+    Animation anim;
+    float frameCounter;
+
 
 
     /** Reference to the game canvas */
@@ -57,6 +63,8 @@ public class MainMenuMode implements Screen {
         canvas = null;
         scale = new Vector2();
         active = false;
+        batch = new SpriteBatch();
+        frameCounter = 0;
     }
 
     /* set the canvas for this mode */
@@ -91,6 +99,9 @@ public class MainMenuMode implements Screen {
         stage = new Stage(new ScreenViewport());
     }
 
+    float sw;
+    float sh;
+
     private void exitGame(){
         listener.exitScreen(this, ScreenExitCodes.EXIT_QUIT.ordinal());
     }
@@ -103,8 +114,8 @@ public class MainMenuMode implements Screen {
     public void show() {
         active = true;
 
-        float sw = Gdx.graphics.getWidth();
-        float sh = Gdx.graphics.getHeight();
+        sw = Gdx.graphics.getWidth();
+        sh = Gdx.graphics.getHeight();
 
         System.out.println("SW: " + sw);
         System.out.println("SH: " + sh);
@@ -120,7 +131,7 @@ public class MainMenuMode implements Screen {
         //table container to center main table
         Container<Table> tableContainer = new Container<Table>();
         tableContainer.setSize(cw, ch);
-        tableContainer.setPosition((sw - cw) / 2.0f, (sh - ch) / 2.0f);
+        tableContainer.setPosition((sw - cw) / 2.0f, (sh - ch)/4.0f);
         tableContainer.fillX();
 
         //Stage should controller input:
@@ -130,8 +141,9 @@ public class MainMenuMode implements Screen {
 
         mainTable.setWidth(stage.getWidth());
 
+        anim = GifDecoder.loadGIFAnimation(Animation.PlayMode.LOOP, Gdx.files.internal("textures/gui/tempus_logo_stationary.gif").read());
+        glow = new TextureRegion(new Texture(Gdx.files.internal("textures/gui/glow_logo.png")));
         //Create header
-        Image header = new Image( new TextureRegion(new Texture(Gdx.files.internal("textures/gui/header.png"))));
 
         //Create buttons
         Button startButton = new Button(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/start_button.png")))));
@@ -164,7 +176,6 @@ public class MainMenuMode implements Screen {
 
         //add header
         mainTable.row();
-        mainTable.add(header).width(cw/2).height(ch/2).colspan(4);
         mainTable.row();
         mainTable.row().expandX().fillX();
 
@@ -180,6 +191,7 @@ public class MainMenuMode implements Screen {
         stage.addActor(tableContainer);
     }
 
+
     @Override
     public void render(float delta) {
         if(active){
@@ -190,12 +202,20 @@ public class MainMenuMode implements Screen {
             canvas.begin();
 
             canvas.draw(backgroundTexture, Color.WHITE, 0, 0, canvas.getWidth(), canvas.getHeight());
-
             canvas.end();
 
             stage.act();
             stage.draw();
+
+
         }
+        frameCounter += 5 * Gdx.graphics.getDeltaTime();
+
+        TextureRegion an = (TextureRegion) anim.getKeyFrame(frameCounter, true);
+        batch.begin();
+        batch.draw(glow, sw/4*0.94f, sh/2*0.98f, sw/2*1.08f, sh/3*1.04f);
+        batch.draw(an,sw/4, sh/2, sw/2, sh/3);
+        batch.end();
     }
 
     @Override
