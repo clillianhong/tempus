@@ -1,8 +1,10 @@
 {
   "level": 1,
-  "room_count": 1,
+  "room_count": 3,
   "rooms" : [
-    "jsons/rooms/lv1_room1.json"
+    "jsons/rooms/1-1.json",
+    "jsons/rooms/1-2.json",
+    "jsons/rooms/1-3.json"
   ]
 }
 
