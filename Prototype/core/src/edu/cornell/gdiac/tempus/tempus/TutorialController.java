@@ -21,7 +21,7 @@ import edu.cornell.gdiac.tempus.tempus.models.Avatar;
 import edu.cornell.gdiac.util.JsonAssetManager;
 import edu.cornell.gdiac.util.SoundController;
 
-import javax.xml.soap.Text;
+//import javax.xml.soap.Text;
 
 public class TutorialController extends LevelController {
 
