@@ -1,23 +1,26 @@
 {
   "gravity": -14.7,
-  "bounds": [32, 18],
+  "bounds": [
+    32,
+    18
+  ],
   "present_background": "present_background2",
   "past_background": "past_background2",
-  "diamondshape": [0.4, 1.8, 0.5, 1.8, 2.1, 1.8, 2.2, 1.8, 1.4, 0.1],
-  "capsuleshape": [0.4, 1.1, 0.5, 1.1, 2.6, 1.1, 2.7, 1.1, 2.6, 0.6, 2, 0.2, 1.1, 0.2, 0.5, 0.6],
-  "roundshape": [0.4, 1.4, 0.8, 1.7, 2.1, 1.7, 2.4, 1.4, 2.3, 0.8, 1.7, 0.3, 1.1, 0.3],
-  "spikeshape": [0.3, -0.6, 0, -0.2, -0.6, 0, -0.5, 0.4, 0, 0.6, 0.4, -0.2, 0.6, -0.3],
   "density": 0,
   "heavy_density": 10,
   "friction": 0.6,
   "restitution": 0.1,
   "bullet_offset": 0.7,
   "effect_volume": 0.8,
-  "past_music": "past2",
-  "present_music": "present2",
   "door": {
-    "pos": [29.788, 6.619999999999998],
-    "size": [1.92, 1.92],
+    "pos": [
+      29.724,
+      16.130000000000003
+    ],
+    "size": [
+      1.92,
+      1.92
+    ],
     "bodytype": "static",
     "density": 0,
     "friction": 0,
@@ -28,8 +31,14 @@
     "space": 3
   },
   "avatar": {
-    "pos": [8.964, 10.4],
-    "shrink": [0.0216, 0.01125],
+    "pos": [
+      3.636,
+      5.21
+    ],
+    "shrink": [
+      0.0216,
+      0.01125
+    ],
     "texture": "dude",
     "density": 1,
     "bodytype": "dynamic",
@@ -39,21 +48,33 @@
     "avatarfalling": "avatarfalling"
   },
   "turrets": {
-    "turret7": {
-      "pos": [28.712, 8.04],
-      "shrink": [0.0168, 0.021375],
+    "turret6": {
+      "pos": [
+        23.504,
+        4
+      ],
+      "shrink": [
+        0.0168,
+        0.021375
+      ],
       "texture": "past_turret",
       "density": 1,
       "bodytype": "static",
       "entitytype": "past",
       "cooldown": 360,
-      "direction": [-3, 0]
+      "direction": [
+        0,
+        3
+      ]
     }
   },
   "capsules": {
     "bothcapsule10": {
       "name": "both_capsule",
-      "pos": [7.4, 8.76],
+      "pos": [
+        2.328,
+        3.75
+      ],
       "bodytype": "static",
       "density": 0,
       "friction": 0.6,
@@ -61,21 +82,53 @@
       "texture": "both_capsule",
       "space": 3
     },
-    "presentcapsule14": {
+    "presentcapsule18": {
       "name": "present_capsule",
-      "pos": [17.128, 11.4],
+      "pos": [
+        4.2,
+        12.03
+      ],
       "bodytype": "static",
       "density": 0,
       "friction": 0.6,
       "restitution": 0.1,
       "texture": "present_capsule",
       "space": 1
+    },
+    "presentcapsule19": {
+      "name": "present_capsule",
+      "pos": [
+        18.792,
+        7.29
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "present_capsule",
+      "space": 1
+    },
+    "bothcapsule25": {
+      "name": "both_capsule",
+      "pos": [
+        28.024,
+        6
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_capsule",
+      "space": 3
     }
   },
   "diamonds": {
-    "presentdiamond12": {
+    "presentdiamond15": {
       "name": "present_diamond",
-      "pos": [2.984, 4.02],
+      "pos": [
+        0.0,
+        7.44
+      ],
       "bodytype": "static",
       "density": 0,
       "friction": 0.6,
@@ -83,68 +136,36 @@
       "texture": "present_diamond",
       "space": 1
     },
-    "pastdiamond15": {
-      "name": "past_diamond",
-      "pos": [17.512, 3.9],
+    "bothdiamond22": {
+      "name": "both_diamond",
+      "pos": [
+        25.328,
+        11.25
+      ],
       "bodytype": "static",
       "density": 0,
       "friction": 0.6,
       "restitution": 0.1,
-      "texture": "past_diamond",
-      "space": 2
-    }
-  },
-  "rounds": {
-    "presentround11": {
-      "name": "present_round",
-      "pos": [3.08, 13.17],
-      "bodytype": "static",
-      "density": 0,
-      "friction": 0.6,
-      "restitution": 0.1,
-      "texture": "present_round",
-      "space": 1
-    },
-    "bothround13": {
-      "name": "both_round",
-      "pos": [11.208, 4.320000000000001],
-      "bodytype": "static",
-      "density": 0,
-      "friction": 0.6,
-      "restitution": 0.1,
-      "texture": "both_round",
+      "texture": "both_diamond",
       "space": 3
-    },
-    "pastround16": {
-      "name": "past_round",
-      "pos": [23.496, 3.81],
-      "bodytype": "static",
-      "density": 0,
-      "friction": 0.6,
-      "restitution": 0.1,
-      "texture": "past_round",
-      "space": 2
-    },
-    "presentround17": {
-      "name": "present_round",
-      "pos": [14.344, 7.62],
-      "bodytype": "static",
-      "density": 0,
-      "friction": 0.6,
-      "restitution": 0.1,
-      "texture": "present_round",
-      "space": 1
     }
   },
+  "rounds": {},
   "enemies": {
-    "enemy6": {
-      "pos": [27.56, 15.96],
-      "shrink": [0.0168, 0.021375],
+    "enemy7": {
+      "pos": [
+        15.944,
+        13.05
+      ],
+      "shrink": [
+        0.0168,
+        0.021375
+      ],
       "texture": "enemypresent",
       "density": 1,
       "bodytype": "dynamic",
       "entitytype": "present",
-      "cooldown": 300,
+      "cooldown": 250,
       "aitype": 4
     }
   },
