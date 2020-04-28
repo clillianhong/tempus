@@ -37,6 +37,9 @@ public class LevelModel {
         canvas = null;
     }
 
+    public int getRoomCount(){
+        return rooms.length;
+    }
     public void preloadLevel(){
         for(LevelController rc: rooms ) {
             rc.preLoadContent();

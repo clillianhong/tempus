@@ -178,7 +178,7 @@
       "density": 1,
       "bodytype": "dynamic",
       "entitytype": "present",
-      "cooldown": 120,
+      "cooldown": 250,
       "aitype": 1
     },
     "enemy7": {
@@ -194,7 +194,7 @@
       "density": 1,
       "bodytype": "dynamic",
       "entitytype": "present",
-      "cooldown": 120,
+      "cooldown": 250,
       "aitype": 1
     }
   },
