@@ -593,6 +593,23 @@ public class Enemy extends CapsuleObstacle {
             sensorDef.shape = sensorShapeGround;
 
             sensorFixtureGround = body.createFixture(sensorDef);
+            sensorFixtureGround.setUserData(CENTER_SENSOR_NAME);
+        }
+        if(getAi() == EnemyType.FLY){
+
+            Vector2 sensorSky = new Vector2(0, 0);
+//            sensorShapeGround = new PolygonShape();
+//            sensorShapeGround.setAsBox(getWidth() / 4, SENSOR_HEIGHT, sensorSky, 0f);
+
+            FixtureDef sensorDef = new FixtureDef();
+            sensorDef.density = DENSITY;
+            sensorDef.isSensor = true;
+            sensorShapeCenter = new CircleShape();
+            sensorShapeCenter.setRadius(getWidth());
+            sensorShapeCenter.setPosition(sensorSky);
+            sensorDef.shape = sensorShapeCenter;
+
+            sensorFixtureGround = body.createFixture(sensorDef);
             sensorFixtureGround.setUserData(GROUND_SENSOR_NAME);
         }
 
@@ -690,19 +707,38 @@ public class Enemy extends CapsuleObstacle {
      */
     public void draw(GameCanvas canvas) {
 
-        // Draw enemy filmstrip
-        if (currentStrip != null) {
-            canvas.draw(currentStrip, Color.WHITE, origin.x, origin.y, getX() * drawScale.x, getY() * drawScale.y,
-                    getAngle(), 0.024f * minimizeScale * drawScale.x * faceDirection, 0.0225f * minimizeScale * drawScale.y);
+        if(getAi() == EnemyType.FLY){
+            float faceoffset = 2*getWidth() * faceDirection;
+
+            System.out.println("GET X: "+ getX());
+            System.out.println("GET ORIGIN X: " + origin.x);
+            System.out.println("GET Y: " + getY());
+            System.out.println("GET ORIGIN Y: " + origin.y);
+            canvas.draw(currentStrip, Color.WHITE, origin.x, origin.y,  (getX() - faceoffset) * drawScale.x, (getY()-getHeight()) * drawScale.y,
+                    getAngle(), 0.024f * minimizeScale * drawScale.x * faceDirection , 0.0225f * minimizeScale * drawScale.y);
+        }else{
+            // Draw enemy filmstrip
+            if (currentStrip != null) {
+                canvas.draw(currentStrip, Color.WHITE, origin.x, origin.y, getX() * drawScale.x, getY() * drawScale.y,
+                        getAngle(), 0.024f * minimizeScale * drawScale.x * faceDirection, 0.0225f * minimizeScale * drawScale.y);
+            }
         }
+
     }
 
     public void drawFade(GameCanvas canvas, float frames) {
-        if (currentStrip != null) {
+        if(getAi() == EnemyType.FLY){
             canvas.draw(currentStrip, new Color(1,1,1, .017f * frames), origin.x, origin.y,
                     getX() * drawScale.x, getY() * drawScale.y, getAngle(),
                     0.024f * minimizeScale * drawScale.x * faceDirection, 0.0225f * minimizeScale * drawScale.y);
+        }else{
+            if (currentStrip != null) {
+                canvas.draw(currentStrip, new Color(1,1,1, .017f * frames), origin.x, origin.y,
+                        getX() * drawScale.x, getY() * drawScale.y, getAngle(),
+                        0.024f * minimizeScale * drawScale.x * faceDirection, 0.0225f * minimizeScale * drawScale.y);
+            }
         }
+
     }
 }
 
