@@ -301,7 +301,6 @@ public class SelectLevelMode implements Screen {
             levelTable.add(lev.button).size(cw/2*0.9f, ch/3*0.5f).expandX().fillX();
             levelTable.row().padBottom(ch * 0.08f);
         }
-        levelTable.debugAll();
 
         Container<Table> levelTableContainer = new Container<>();
         levelTableContainer.setActor(levelTable);
