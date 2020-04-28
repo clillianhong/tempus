@@ -209,12 +209,13 @@ public class MainMenuMode implements Screen {
 
 
         }
-        frameCounter += 5 * Gdx.graphics.getDeltaTime();
-
+        frameCounter += 6 * Gdx.graphics.getDeltaTime();
+        float mult = 1.1f;
+        float anti_mult = 0.9f;
         TextureRegion an = (TextureRegion) anim.getKeyFrame(frameCounter, true);
         batch.begin();
-        batch.draw(glow, sw/4*0.94f, sh/2*0.98f, sw/2*1.08f, sh/3*1.04f);
-        batch.draw(an,sw/4, sh/2, sw/2, sh/3);
+        batch.draw(glow, sw/4*0.94f*anti_mult, sh/2*0.98f*anti_mult, sw/2*1.08f*mult, sh/3*1.04f*mult);
+        batch.draw(an,sw/4*anti_mult, sh/2*anti_mult, sw/2*mult, sh/3*mult);
         batch.end();
     }
 
