@@ -159,8 +159,6 @@ public class TutorialController extends LevelController {
         /*
          * END PAUSE SCREEN SETUP---------------------
          */
-        TextureRegion rippleBG = new TextureRegion(new Texture(Gdx.files.internal("textures/gui/pause_filter_50.png")));
-        sprite = new Sprite(rippleBG);
 
         stage.addActor(edgeContainer);
         Gdx.input.setInputProcessor(stage);
