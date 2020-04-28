@@ -1,67 +1,11 @@
 {
   "gravity": -14.7,
-  "diamondshape": [0.4, 1.8, 0.5, 1.8, 2.1, 1.8, 2.2, 1.8, 1.4, 0.1],
-  "capsuleshape": [0.4, 1.1, 0.5, 1.1, 2.6, 1.1, 2.7, 1.1, 2.6, 0.6, 2.0, 0.2, 1.1, 0.2, 0.5, 0.6],
-  "roundshape": [0.4, 1.4, 0.8, 1.7, 2.1, 1.7, 2.4, 1.4, 2.3, 0.8, 1.7, 0.3, 1.1, 0.3],
-  "spikeshape": [0.3, -0.6, 0.0, -0.2, -0.6, 0.0, -0.5, 0.4, 0.0, 0.6, 0.4, -0.2, 0.6, -0.3],
   "bounds": [
     32,
     18
   ],
   "present_background": "present_background",
   "past_background": "past_background",
-  "diamondshape": [
-    0.2,
-    1.8,
-    2.4,
-    1.8,
-    1.4,
-    0.1
-  ],
-  "capsuleshape": [
-    0.2,
-    1.1,
-    2.9,
-    1.1,
-    2.9,
-    0.6,
-    1.7,
-    0.1,
-    0.2,
-    0.6
-  ],
-  "roundshape": [
-    0.1,
-    1.4,
-    0.5,
-    1.7,
-    2.4,
-    1.7,
-    2.7,
-    1.4,
-    2.6,
-    0.8,
-    2,
-    0.2,
-    0.8,
-    0.2
-  ],
-  "spikeshape": [
-    0.3,
-    -0.6,
-    0,
-    -0.2,
-    -0.6,
-    0,
-    -0.5,
-    0.4,
-    0,
-    0.6,
-    0.4,
-    -0.2,
-    0.6,
-    -0.3
-  ],
   "density": 0,
   "heavy_density": 10,
   "friction": 0.6,
@@ -72,7 +16,7 @@
   "present_music": "present2",
   "door": {
     "pos": [
-      14.044,
+      20.044,
       15.800000000000002
     ],
     "size": [
@@ -90,7 +34,7 @@
   },
   "avatar": {
     "pos": [
-      14.372,
+      11.372,
       5.899999999999999
     ],
     "shrink": [
@@ -110,8 +54,33 @@
     "bothcapsule12": {
       "name": "both_capsule",
       "pos": [
-        13.16,
+        10.16,
+        1.93
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_capsule",
+      "space": 3
+    },"bothcapsule13": {
+      "name": "both_capsule",
+      "pos": [
+        17.16,
         3.93
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_capsule",
+      "space": 3
+    },
+    "bothcapsule14": {
+      "name": "both_capsule",
+      "pos": [
+        12.56,
+        7.67
       ],
       "bodytype": "static",
       "density": 0,
@@ -125,8 +94,8 @@
     "bothdiamond13": {
       "name": "both_diamond",
       "pos": [
-        17.864,
-        6.45
+        23.864,
+        5.45
       ],
       "bodytype": "static",
       "density": 0,
@@ -138,7 +107,7 @@
     "bothdiamond16": {
       "name": "both_diamond",
       "pos": [
-        17.704,
+        23.704,
         10.89
       ],
       "bodytype": "static",
@@ -153,7 +122,7 @@
     "bothround14": {
       "name": "both_round",
       "pos": [
-        11.56,
+        17.56,
         8.67
       ],
       "bodytype": "static",
