@@ -157,6 +157,13 @@ public class GameStateManager {
         return null;
     }
 
+    /**
+     * true if the current room is the last room in the level
+     */
+    public boolean lastRoom(){
+        return currentLevel.getCurrentRoomNumber() == (currentLevel.getRoomCount() - 1);
+    }
+
 
     /**
      * Loads the game state from json.
