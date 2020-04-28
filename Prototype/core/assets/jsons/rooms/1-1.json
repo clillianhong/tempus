@@ -1,0 +1,15 @@
+{"gravity":-14.7,
+  "bounds":[32,18],
+  "present_background":"present_background",
+  "past_background":"past_background",
+  "density":0,
+  "heavy_density":10,
+  "friction":0.6,"restitution":0.1,"bullet_offset":0.7,"effect_volume":0.8,
+  "door":{"pos":[25.628,13.489999999999998],"size":[1.92,1.92],"bodytype":"static","density":0,"friction":0,"restitution":0,"texture":"goal","sensor":true,"nextlevel":0,"space":3},"avatar":{"pos":[6.628,2.6600000000000006],"shrink":[0.0216,0.01125],"texture":"dude","density":1,"bodytype":"dynamic","avatarstanding":"avatarstanding","avatarcrouching":"avatarcrouching","avatardashing":"avatardashing","avatarfalling":"avatarfalling"},
+  "turrets":{
+    "turret6":{"pos":[11.784,8.249999999999998],"shrink":[0.0168,0.021375],"texture":"present_turret","density":1,"bodytype":"static","entitytype":"present","cooldown":360,"direction":[0,3]},
+    "turret7":{"pos":[21.032,8.01],"shrink":[0.0168,0.021375],"texture":"past_turret","density":1,"bodytype":"static","entitytype":"past","cooldown":360,"direction":[0,3]}},
+  "capsules":{
+    "bothcapsule14":{"name":"both_capsule","pos":[6.184,15.0],"bodytype":"static","density":0,"friction":0.6,"restitution":0.1,"texture":"both_capsule","space":3},
+    "bothcapsule15":{"name":"both_capsule","pos":[15.656,15.0],"bodytype":"static","density":0,"friction":0.6,"restitution":0.1,"texture":"both_capsule","space":3}},
+  "diamonds":{"presentdiamond11":{"name":"present_diamond","pos":[1.256,4.739999999999999],"bodytype":"static","density":0,"friction":0.6,"restitution":0.1,"texture":"present_diamond","space":1},"bothdiamond12":{"name":"both_diamond","pos":[6.792,7.95],"bodytype":"static","density":0,"friction":0.6,"restitution":0.1,"texture":"both_diamond","space":3},"pastdiamond13":{"name":"past_diamond","pos":[1.256,12.44],"bodytype":"static","density":0,"friction":0.6,"restitution":0.1,"texture":"past_diamond","space":2}},"rounds":{"bothround10":{"name":"both_round","pos":[5.224,0.45],"bodytype":"static","density":0,"friction":0.6,"restitution":0.1,"texture":"both_round","space":3}},"enemies":{},"spikes":{}}

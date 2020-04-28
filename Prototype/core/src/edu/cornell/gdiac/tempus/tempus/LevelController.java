@@ -368,6 +368,7 @@ public class LevelController extends WorldController {
 		 * past_music.setLooping(true);
 		 */
 		populateLevel();
+		goalDoor.setOpen(false);
 		timeFreeze = false;
 	}
 
@@ -990,7 +991,7 @@ public class LevelController extends WorldController {
 			avatar.setStartedDashing(t);
 		}
 		// System.out.println(numEnemies);
-		if (numEnemies == 0) {
+		if (enemyController.getEnemies() == 0) {
 			goalDoor.setOpen(true);
 		} else {
 			goalDoor.setOpen(false);
@@ -1368,14 +1369,14 @@ public class LevelController extends WorldController {
 		// System.out.println(scale);
 		if (!avatar.isHolding()) {
 			canvas.draw(circle, Color.WHITE, circle.getRegionWidth() / 2, circle.getRegionHeight() / 2,
-					avatar.getX() * scale.x, avatar.getY() * scale.y, redirection.angle() / 57, 0.0095f * scale.x * dist,
-					0.0095f * scale.y * dist);
+					avatar.getX() * scale.x, avatar.getY() * scale.y, redirection.angle() / 57, 0.0095f * scale.x * dist* 1.5f,
+					0.0095f * scale.y * dist* 1.5f);
 			canvas.draw(arrow, Color.WHITE, 0, arrow.getRegionHeight() / 2, avatar.getX() * scale.x, avatar.getY() * scale.y,
-					(180 + redirection.angle()) / 57, 0.0075f * scale.x * dist, 0.0075f * scale.y * dist);
+					(180 + redirection.angle()) / 57, 0.0075f * scale.x * dist* 1.5f, 0.0075f * scale.y * dist* 1.5f);
 		} else {
 			canvas.draw(arrow, Color.WHITE, 0, arrow.getRegionHeight() / 2, avatar.getX() * scale.x, avatar.getY() * scale.y,
-					(180 + redirection.angle()) / 57, 0.0075f * scale.x * avatar.getDashRange(),
-					0.0075f * scale.y * avatar.getDashRange());
+					(180 + redirection.angle()) / 57, 0.0075f * scale.x * avatar.getDashRange()* 1.5f,
+					0.0075f * scale.y * avatar.getDashRange()* 1.5f);
 		}
 		canvas.end();
 		// If player is holding a projectile, draw projectile indicator
@@ -1388,10 +1389,10 @@ public class LevelController extends WorldController {
 		canvas.begin();
 		if (avatar.isHolding()) {
 			canvas.draw(projCircle, Color.GOLD, projCircle.getRegionWidth() / 2, projCircle.getRegionHeight() / 2,
-					avatar.getX() * scale.x, avatar.getY() * scale.y, redirection.angle() / 57, 0.0073f * scale.x,
-					0.0073f * scale.y);
+					avatar.getX() * scale.x, avatar.getY() * scale.y, redirection.angle() / 57, 0.0073f * scale.x* 1.5f,
+					0.0073f * scale.y* 1.5f);
 			canvas.draw(projArrow, Color.GOLD, 0, projArrow.getRegionHeight() / 2, avatar.getX() * scale.x,
-					avatar.getY() * scale.y, (redirection.angle()) / 57, 0.0061f * scale.x, 0.0061f * scale.y);
+					avatar.getY() * scale.y, (redirection.angle()) / 57, 0.0061f * scale.x * 1.5f, 0.0061f * scale.y* 1.5f);
 		}
 		canvas.end();
 	}

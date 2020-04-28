@@ -50,7 +50,7 @@ public class Spikes extends PolygonObstacle {
         TextureRegion texture = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
         setTexture(texture);
         setSpace(json.get("space").asInt());
-        setAngle(json.get("angle").asFloat());
+        setAngle(-1 * (float) Math.toRadians(json.get("angle").asFloat()));
         getFilterData().groupIndex = -1;
     }
 

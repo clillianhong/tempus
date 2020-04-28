@@ -53,6 +53,16 @@ public class EnemyController {
     private WorldController worldController;
     private GameCanvas canvas;
 
+    public int getEnemies() {
+        int result = enemies.size();
+        for (Enemy e: enemies) {
+            if (e.isTurret()){
+                result --;
+            }
+        }
+        return result;
+    }
+
     public EnemyController(PooledList<Enemy> enemies, PooledList<Obstacle> objects, Avatar target, World world,
                            Vector2 scale, WorldController worldController, JsonValue assetDirectory) {
         this.enemies = enemies;
