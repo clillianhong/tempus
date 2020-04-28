@@ -27,6 +27,7 @@ public class TutorialController extends LevelController {
 
 
     private TextureRegionDrawable tutorial_card;
+    private boolean first;
     private TextureRegionDrawable press_h_card;
     Table helpCard;
     private int beginDisplay;
@@ -42,14 +43,14 @@ public class TutorialController extends LevelController {
     public TutorialController(String json) {
         super(json);
         isHelp = false;
-        beginDisplay = 0;
+        beginDisplay = 150;
         isTutorial = true;
     }
 
     public void setCard(TextureRegionDrawable card){
         tutorial_card = card;
     }
-
+    public void setFirst(boolean b) {first = b;};
     @Override
     public void preLoadContent() {
         super.preLoadContent();
@@ -92,8 +93,7 @@ public class TutorialController extends LevelController {
 
 
         press_h_card = new TextureRegionDrawable(
-                new TextureRegion(new Texture(Gdx.files.internal("textures/gui/pause_exit_button.png"))));
-
+                new TextureRegion(new Texture(Gdx.files.internal("tutorial/helpcard.png"))));
 
         pauseButtonContainer = new Container<>();
         pauseButtonContainer.setBackground(pauseBG);
@@ -147,7 +147,9 @@ public class TutorialController extends LevelController {
         tutorialCard.setVisible(false);
 
         helpCard = new Table();
-        helpCard.setBackground(press_h_card);
+        if(first){
+            helpCard.setBackground(press_h_card);
+        }
         tableStack.add(table);
         tableStack.add(pauseButtonContainer);
         tableStack.add(tutorialCard);
@@ -163,7 +165,9 @@ public class TutorialController extends LevelController {
         stage.addActor(edgeContainer);
         Gdx.input.setInputProcessor(stage);
 
-        showTutorial();
+        if(first){
+            showTutorial();
+        }
 
     }
 
@@ -178,12 +182,15 @@ public class TutorialController extends LevelController {
     @Override
     public boolean preUpdate(float dt) {
         failed = false;
-        if(beginDisplay >0){
-            beginDisplay--;
-            return false;
-        }else{
-            helpCard.setVisible(false);
+        if(first){
+            if(beginDisplay >0){
+                beginDisplay--;
+                return false;
+            }else {
+                helpCard.setVisible(false);
+            }
         }
+
         if(InputController.getInstance().didHelp()){
             isHelp = !isHelp;
         }
