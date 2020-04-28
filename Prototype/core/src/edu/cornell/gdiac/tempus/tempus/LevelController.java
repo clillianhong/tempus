@@ -34,13 +34,10 @@ import edu.cornell.gdiac.audio.MusicBuffer;
 import edu.cornell.gdiac.tempus.InputController;
 import edu.cornell.gdiac.tempus.MusicController;
 import edu.cornell.gdiac.tempus.WorldController;
-import edu.cornell.gdiac.util.JsonAssetManager;
+import edu.cornell.gdiac.util.*;
 import edu.cornell.gdiac.tempus.GameCanvas;
 import edu.cornell.gdiac.tempus.obstacle.*;
 import edu.cornell.gdiac.tempus.tempus.models.*;
-import edu.cornell.gdiac.util.FilmStrip;
-import edu.cornell.gdiac.util.PooledList;
-import edu.cornell.gdiac.util.SoundController;
 
 import static edu.cornell.gdiac.tempus.tempus.models.EntityType.PAST;
 import static edu.cornell.gdiac.tempus.tempus.models.EntityType.PRESENT;
@@ -290,6 +287,9 @@ public class LevelController extends WorldController {
 	/** FILEPATH TO JSON RESOURCE FOR THE LEVEL **/
 	protected String json_filepath;
 
+	/** TextureRegion for room win state **/
+	protected TextureRegion win_room;
+
 	/**
 	 * Creates and initialize a new instance of the platformer game
 	 *
@@ -395,6 +395,7 @@ public class LevelController extends WorldController {
 		table.align(Align.center | Align.top);
 		table.setPosition(0, Gdx.graphics.getHeight());
 
+		win_room = new TextureRegion(new Texture(Gdx.files.local("textures/gui/level_complete.png")));
 		createUI();
 
 		// Initializes the world
@@ -1435,9 +1436,7 @@ public class LevelController extends WorldController {
 		// update ripple params
 		shaderprog.setUniformf("u_rippleDistance", m_rippleDistance);
 		shaderprog.setUniformf("u_rippleRange", m_rippleRange);
-
 		shaderprog.end();
-
 	}
 
 	/**
@@ -1523,10 +1522,13 @@ public class LevelController extends WorldController {
 		if (complete && !failed) {
 			displayFont.setColor(Color.YELLOW);
 			canvas.begin(); // DO NOT SCALE
-			canvas.drawTextCentered("VICTORY!", displayFont, 0.0f);
+			if(GameStateManager.getInstance().lastRoom()){
+				canvas.draw(win_room,Color.WHITE, 0f,0f, (float)Gdx.graphics.getWidth(), (float) Gdx.graphics.getHeight());
+			}
+//			canvas.drawTextCentered("VICTORY!", displayFont, 0.0f);
 			canvas.end();
 		} else if (failed) {
-			displayFont.setColor(Color.RED);
+			displayFont.setColor(Color.WHITE);
 			canvas.begin(); // DO NOT SCALE
 			canvas.drawTextCentered("FAILURE!", displayFont, 0.0f);
 			canvas.end();
