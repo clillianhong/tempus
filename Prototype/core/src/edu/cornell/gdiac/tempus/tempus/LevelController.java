@@ -1028,11 +1028,19 @@ public class LevelController extends WorldController {
 			m_rippleDistance = 0;
 			m_rippleRange = 0;
 
+
 			if (avatar.isSticking()) {
 				avatar.resetDashNum(-1);
 			}
 			shifted = !shifted;
 			avatar.setShifted(6);
+			if (shifted) {
+				JsonValue ripple = assetDirectory.get("sounds").get("ripple_to_past");
+				SoundController.getInstance().play(ripple.get("file").asString(), ripple.get("file").asString(), false, EFFECT_VOLUME * 2);
+			} else {
+				JsonValue ripple = assetDirectory.get("sounds").get("ripple_to_present");
+				SoundController.getInstance().play(ripple.get("file").asString(), ripple.get("file").asString(), false, EFFECT_VOLUME * 2);
+			}
 			// MusicController.getInstance().shift(shifted);
 			// avatar.resetDashNum();
 			/*
