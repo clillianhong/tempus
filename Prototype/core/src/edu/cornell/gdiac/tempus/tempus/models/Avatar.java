@@ -926,7 +926,7 @@ public class Avatar extends CapsuleObstacle {
         //System.out.println(lives);
         wingsActive();
         if (spliced){
-            // .out.println("fwiuefnwf");
+            System.out.println("fwiuefnwf");
             setLinearVelocity(new Vector2(0,0));
             setPosition(currentPlat.getPosition().cpy().add(new Vector2(getWidth()* 3 / 2, getHeight() * 4)));
             spliced = false;
@@ -959,7 +959,7 @@ public class Avatar extends CapsuleObstacle {
             if(dist > getDashDistance()){
 //                System.out.println("DASHED TOO FAR");
                 setDashing(false);
-                //System.out.println("VELOCITY: " + getLinearVelocity());
+                System.out.println("VELOCITY: " + getLinearVelocity());
                 endDashVelocity = getPosition();
 //                this.setLinearVelocity(new Vector2(0,0));
 //                System.out.println(getDashDistance());

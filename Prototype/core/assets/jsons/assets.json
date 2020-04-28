@@ -191,6 +191,14 @@
     "pop": {
       "file": "sounds/plop.mp3",
       "volume": 0.8
+    },
+    "ripple_to_past": {
+      "file": "sounds/ripple_more_piercing.mp3",
+      "volume": 0.8
+    },
+    "ripple_to_present": {
+      "file": "sounds/ripple_less_piercing.mp3",
+      "volume": 0.8
     }
   },
   "music": {

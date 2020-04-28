@@ -1323,7 +1323,7 @@ public class LevelController extends WorldController {
 	private void printCoordinates() {
 		if (InputController.getInstance().pressedXKey()) {
 			Vector2 pos = InputController.getInstance().getMousePosition();
-			//System.out.println("Mouse position: " + pos);
+			System.out.println("Mouse position: " + pos);
 		}
 	}
 
