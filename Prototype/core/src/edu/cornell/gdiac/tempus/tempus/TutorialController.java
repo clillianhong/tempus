@@ -182,6 +182,7 @@ public class TutorialController extends LevelController {
     @Override
     public boolean preUpdate(float dt) {
         failed = false;
+
         if(first){
             if(beginDisplay >0){
                 beginDisplay--;
