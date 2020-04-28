@@ -187,7 +187,6 @@ public class Enemy extends CapsuleObstacle {
         TextureRegion texture = JsonAssetManager.getInstance()
                 .getEntry(json.get("texture").asString() + "_type" + (json.get("aitype").asInt()), TextureRegion.class);
 
-
         String entitytype = json.get("entitytype").asString();
 
         // example filmstrip extraction
@@ -230,6 +229,7 @@ public class Enemy extends CapsuleObstacle {
         case 3:
             ai = EnemyType.GUN;
             neutralTexture = JsonAssetManager.getInstance().getEntry(("enemyshooting" + "_" + entitytype), FilmStrip.class);
+//            System.out.println("type: " + entitytype);
             break;
 
         case 4:
@@ -237,6 +237,7 @@ public class Enemy extends CapsuleObstacle {
             neutralTexture = JsonAssetManager.getInstance().getEntry(("enemyflying" + "_" + entitytype), FilmStrip.class);
             break;
         }
+        System.out.println("type: " + entitytype);
         setFilmStrip(EnemyState.NEUTRAL, neutralTexture);
         setFilmStrip(EnemyState.ATTACKING, neutralTexture); //TODO : CHANGE LATER
 
@@ -532,6 +533,9 @@ public class Enemy extends CapsuleObstacle {
             frame_cooldown = FRAME_RATE;
 
         // Manage current frame to draw
+//        System.out.println("curr frame: " + currentStrip.getFrame());
+//        System.out.println("size: " + currentStrip.getSize());
+
         if (currentStrip.getFrame() < currentStrip.getSize() - 1) {
             currentStrip.setFrame(currentStrip.getFrame() + 1);
         } else {
