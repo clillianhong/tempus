@@ -15,6 +15,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -97,6 +98,7 @@ public class MainMenuMode implements Screen {
 
 
         stage = new Stage(new ScreenViewport());
+
     }
 
     float sw;
@@ -112,6 +114,9 @@ public class MainMenuMode implements Screen {
 
     @Override
     public void show() {
+
+        //Stage should controller input:
+        Gdx.input.setInputProcessor(stage);
         active = true;
 
         sw = Gdx.graphics.getWidth();
@@ -134,8 +139,6 @@ public class MainMenuMode implements Screen {
         tableContainer.setPosition((sw - cw) / 2.0f, (sh - ch)/4.0f);
         tableContainer.fillX();
 
-        //Stage should controller input:
-        Gdx.input.setInputProcessor(stage);
 
         Table mainTable = new Table(skin);
 
@@ -146,24 +149,21 @@ public class MainMenuMode implements Screen {
         //Create header
 
         //Create buttons
-        Button startButton = new Button(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/start_button.png")))));
-//        startButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/start_button.png"))));
-//        startButton.getStyle().imageDown = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/start_button.png"))));
+        final Button startButton = new Button(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/start_button.png")))));
         Button exitButton = new Button(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/quit_button.png")))));
-//        exitButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/quit_button.png"))));
-//        exitButton.getStyle().imageDown = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/quit_button.png"))));
         Button helpButton = new Button(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/help_button.png")))));
-//        helpButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/help_button.png"))));
-//        helpButton.getStyle().imageDown = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/help_button.png"))));
         Button aboutButton = new Button(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/about_button.png")))));
-//        aboutButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/about_button.png"))));
-//        aboutButton.getStyle().imageDown = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/about_button.png"))));
 
         //Add listeners to buttons
         startButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                exitLevelSelector();
+                stage.addAction(Actions.sequence(Actions.fadeOut(1f), Actions.run(new Runnable() {
+                    @Override
+                    public void run() {
+                        exitLevelSelector();
+                    }
+                })));
             }
         });
         exitButton.addListener(new ClickListener(){
@@ -188,35 +188,34 @@ public class MainMenuMode implements Screen {
 
         tableContainer.setActor(mainTable);
         //Add table to stage
+        //
         stage.addActor(tableContainer);
+
     }
 
 
     @Override
     public void render(float delta) {
         if(active){
-            Gdx.gl.glClearColor(.1f, .12f, .16f, 1);
+            Gdx.gl.glClearColor(0, 0, 0, 1);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-            canvas.clear();
-            canvas.begin();
 
-            canvas.draw(backgroundTexture, Color.WHITE, 0, 0, canvas.getWidth(), canvas.getHeight());
-            canvas.end();
+            frameCounter += 6 * Gdx.graphics.getDeltaTime();
+            float mult = 1.1f;
+            float anti_mult = 0.9f;
+            TextureRegion an = (TextureRegion) anim.getKeyFrame(frameCounter, true);
+            stage.getBatch().begin();
+            stage.getBatch().draw(backgroundTexture, 0, 0, canvas.getWidth(), canvas.getHeight());
+            stage.getBatch().draw(glow, sw/4*0.94f*anti_mult, sh/2*0.98f*anti_mult, sw/2*1.08f*mult, sh/3*1.04f*mult);
+            stage.getBatch().draw(an,sw/4*anti_mult, sh/2*anti_mult, sw/2*mult, sh/3*mult);
+            stage.getBatch().end();
 
             stage.act();
             stage.draw();
 
-
         }
-        frameCounter += 6 * Gdx.graphics.getDeltaTime();
-        float mult = 1.1f;
-        float anti_mult = 0.9f;
-        TextureRegion an = (TextureRegion) anim.getKeyFrame(frameCounter, true);
-        batch.begin();
-        batch.draw(glow, sw/4*0.94f*anti_mult, sh/2*0.98f*anti_mult, sw/2*1.08f*mult, sh/3*1.04f*mult);
-        batch.draw(an,sw/4*anti_mult, sh/2*anti_mult, sw/2*mult, sh/3*mult);
-        batch.end();
+
     }
 
     @Override
@@ -241,6 +240,7 @@ public class MainMenuMode implements Screen {
 
     @Override
     public void dispose() {
-
+        active = false;
+        stage.clear();
     }
 }

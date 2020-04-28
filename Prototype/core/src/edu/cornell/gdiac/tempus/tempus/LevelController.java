@@ -1382,7 +1382,6 @@ public class LevelController extends WorldController {
 			canvas.draw(projArrow, Color.GOLD, 0, projArrow.getRegionHeight() / 2, avatar.getX() * scale.x,
 					avatar.getY() * scale.y, (redirection.angle()) / 57, 0.0061f * scale.x * 1.5f, 0.0061f * scale.y* 1.5f);
 		}
-		//canvas.end();
 	}
 
 	public void drawLives(GameCanvas canvas) {
