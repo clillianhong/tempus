@@ -217,7 +217,6 @@ public class CollisionController implements ContactListener {
         // then remove enemy
         if (proj.getType() != e.getType() && !e.getName().equals("turret")) {
             Enemy obs = (Enemy) enemyBody.getUserData();
-            controller.removeEnemy();
             obs.markRemoved(true);
         }
 
@@ -326,7 +325,21 @@ public class CollisionController implements ContactListener {
             //handle platform-avatar collisions first (outside of processcontact
             if (((objA instanceof Avatar) && (objB instanceof Platform)) || ((objB instanceof Avatar) && (objA instanceof Platform))) {
                 //if(avatar.getCurrentPlatform() != objB && avatar.getCurrentPlatform() != objA) {
-                if (avatar.getShifted() > 0){
+                if (objB instanceof Platform) {
+                    if (avatar.getShifted() > 0 && ((SimpleObstacle) objB).getSpace() != 3 ){
+                        avatar.setSpliced(true);
+                        avatar.setCurrentPlatform((Platform) objB);
+                        return;
+                    }
+                }
+                if (objA instanceof Platform) {
+                    if (avatar.getShifted() > 0 && ((SimpleObstacle) objA).getSpace() != 3 ){
+                        avatar.setSpliced(true);
+                        avatar.setCurrentPlatform((Platform) objA);
+                        return;
+                    }
+                }
+                /*if (avatar.getShifted() > 0 && ((SimpleObstacle) objB).getSpace() != 3 && ((SimpleObstacle) objA).getSpace() != 3){
                     avatar.setSpliced(true);
                     if (objB instanceof Platform) {
                         avatar.setCurrentPlatform((Platform) objB);
@@ -334,7 +347,7 @@ public class CollisionController implements ContactListener {
                         avatar.setCurrentPlatform((Platform) objA);
                     }
                     return;
-                }
+                }*/
                 boolean latentCol = false;
                 if (avatar.getStartedDashing() == 1) {
                     if (avatar.getCurrentPlatform() == objA || avatar.getCurrentPlatform() == objB) {

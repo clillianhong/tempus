@@ -30,6 +30,7 @@ public class TutorialModel extends LevelModel {
         for(int i = 0; i<rooms.length; i++) {
             TutorialController rc = (TutorialController) rooms[i];
             rc.loadContent();
+            rc.setFirst(i==0);
             rc.setCard(tutorials[i]);
             rc.setScreenListener(listener);
             rc.setCanvas(canvas);

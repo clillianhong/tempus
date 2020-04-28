@@ -437,6 +437,8 @@ public class SelectLevelMode implements Screen {
 
     @Override
     public void dispose() {
+        stage.clear();
+        stage.dispose();
 
     }
 }
