@@ -759,7 +759,7 @@ public class Avatar extends CapsuleObstacle {
         setDashStartPos(new Vector2 (pos[0],pos[1]));
         float dwidth = avatarTexture.getRegionWidth();
 		float dheight = avatarTexture.getRegionHeight();
-		setDimension(dwidth*shrink[0],dheight*shrink[1]);
+		setDimension(dwidth*shrink[0],dheight*shrink[1] * 1.5f);
         setPosition(pos[0],pos[1]);
 		setTexture(avatarTexture);
         setDensity(json.get("density").asFloat());
