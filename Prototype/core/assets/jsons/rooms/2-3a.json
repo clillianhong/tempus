@@ -14,8 +14,8 @@
   "effect_volume": 0.8,
   "door": {
     "pos": [
-      29.724,
-      16.130000000000003
+      29.788,
+      6.619999999999998
     ],
     "size": [
       1.92,
@@ -32,8 +32,8 @@
   },
   "avatar": {
     "pos": [
-      3.636,
-      5.21
+      8.964,
+      10.4
     ],
     "shrink": [
       0.0216,
@@ -48,10 +48,10 @@
     "avatarfalling": "avatarfalling"
   },
   "turrets": {
-    "turret6": {
+    "turret7": {
       "pos": [
-        23.504,
-        4
+        28.712,
+        8.04
       ],
       "shrink": [
         0.0168,
@@ -63,8 +63,8 @@
       "entitytype": "past",
       "cooldown": 360,
       "direction": [
-        0,
-        3
+        -3,
+        0
       ]
     }
   },
@@ -72,8 +72,8 @@
     "bothcapsule10": {
       "name": "both_capsule",
       "pos": [
-        2.328,
-        3.75
+        7.4,
+        8.76
       ],
       "bodytype": "static",
       "density": 0,
@@ -82,11 +82,11 @@
       "texture": "both_capsule",
       "space": 3
     },
-    "presentcapsule18": {
+    "presentcapsule14": {
       "name": "present_capsule",
       "pos": [
-        4.2,
-        12.03
+        17.128,
+        11.4
       ],
       "bodytype": "static",
       "density": 0,
@@ -94,40 +94,14 @@
       "restitution": 0.1,
       "texture": "present_capsule",
       "space": 1
-    },
-    "presentcapsule19": {
-      "name": "present_capsule",
-      "pos": [
-        18.792,
-        7.29
-      ],
-      "bodytype": "static",
-      "density": 0,
-      "friction": 0.6,
-      "restitution": 0.1,
-      "texture": "present_capsule",
-      "space": 1
-    },
-    "bothcapsule25": {
-      "name": "both_capsule",
-      "pos": [
-        28.024,
-        6
-      ],
-      "bodytype": "static",
-      "density": 0,
-      "friction": 0.6,
-      "restitution": 0.1,
-      "texture": "both_capsule",
-      "space": 3
     }
   },
   "diamonds": {
-    "presentdiamond15": {
+    "presentdiamond12": {
       "name": "present_diamond",
       "pos": [
-        0.0,
-        7.44
+        2.984,
+        4.02
       ],
       "bodytype": "static",
       "density": 0,
@@ -136,26 +110,79 @@
       "texture": "present_diamond",
       "space": 1
     },
-    "bothdiamond22": {
-      "name": "both_diamond",
+    "pastdiamond15": {
+      "name": "past_diamond",
       "pos": [
-        25.328,
-        11.25
+        17.512,
+        3.9
       ],
       "bodytype": "static",
       "density": 0,
       "friction": 0.6,
       "restitution": 0.1,
-      "texture": "both_diamond",
-      "space": 3
+      "texture": "past_diamond",
+      "space": 2
     }
   },
-  "rounds": {},
-  "enemies": {
-    "enemy7": {
+  "rounds": {
+    "presentround11": {
+      "name": "present_round",
       "pos": [
-        15.944,
-        13.05
+        3.08,
+        13.17
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "present_round",
+      "space": 1
+    },
+    "bothround13": {
+      "name": "both_round",
+      "pos": [
+        11.208,
+        4.320000000000001
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_round",
+      "space": 3
+    },
+    "pastround16": {
+      "name": "past_round",
+      "pos": [
+        23.496,
+        3.81
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "past_round",
+      "space": 2
+    },
+    "presentround17": {
+      "name": "present_round",
+      "pos": [
+        14.344,
+        7.62
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "present_round",
+      "space": 1
+    }
+  },
+  "enemies": {
+    "enemy6": {
+      "pos": [
+        15.56,
+        15.96
       ],
       "shrink": [
         0.0168,
@@ -165,7 +192,7 @@
       "density": 1,
       "bodytype": "dynamic",
       "entitytype": "present",
-      "cooldown": 250,
+      "cooldown": 300,
       "aitype": 4
     }
   },
