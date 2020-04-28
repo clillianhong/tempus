@@ -398,6 +398,7 @@ public class CollisionController implements ContactListener {
                                 (fix2 != enemy.getPlatformFixture() && objB instanceof Platform)) {
                             enemy.setNextDirection(-1 * enemy.getNextDirection());
                             enemy.setMovement(0);
+                            enemy.setFaceDirection(-1 * enemy.getFaceDirection());
                         }
                     }
                 } else if (enemy.getAi() == Enemy.EnemyType.FLY) {

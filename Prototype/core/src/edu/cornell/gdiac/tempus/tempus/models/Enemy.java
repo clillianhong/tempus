@@ -122,7 +122,11 @@ public class Enemy extends CapsuleObstacle {
     /** Flying angle */
     private Float flyAngle;
 
+    /** Whether the enemy is a turret or not */
     private boolean isTurret;
+
+    /** Direction the enemy faces */
+    private float faceDirection;
 
     /** Texture asset for present enemy */
     private TextureRegion enemyPresentTexture;
@@ -215,6 +219,7 @@ public class Enemy extends CapsuleObstacle {
         setFixedRotation(true);
         limiter = 4;
         isTurret = false;
+        faceDirection = 1f;
         switch (json.get("aitype").asInt()) {
         case 1:
             ai = EnemyType.WALK;
@@ -275,58 +280,142 @@ public class Enemy extends CapsuleObstacle {
         return sensorFixtureCenter;
     }
 
+    /**
+     * Set the direction the enemy faces
+     *
+     * @param faceDirection float of direction enemy faces
+     */
+    public void setFaceDirection(float faceDirection) {
+        this.faceDirection = faceDirection;
+    }
+
+    /**
+     * Get the direction the enemy faces
+     *
+     * @return direction the enemy faces
+     */
+    public float getFaceDirection() {
+        return faceDirection;
+    }
+
+    /**
+     * Sets the velocity of the flying enemy
+     *
+     * @param vel vector the the flying enemy velocity
+     */
     public void setFlyingVelocity(Vector2 vel) {
         this.flyingVelocity = vel.scl(FORCE);
     }
 
+    /**
+     * Returns the velocity of the flying enemy
+     *
+     * @return velocity of flying enemy
+     */
     public Vector2 getFlyingVelocity() {
         return flyingVelocity;
     }
 
+    /**
+     * Sets the platform the enemy is currently on
+     *
+     * @param currPlatform platform the enemy is currently on
+     */
     public void setCurrPlatform(Platform currPlatform) {
         this.currPlatform = currPlatform;
     }
 
+    /**
+     * Returns the platform the enemy is currently on
+     *
+     * @return platform the enemy is currently on
+     */
     public Platform getCurrPlatform() {
         return currPlatform;
     }
 
+    /**
+     * Sets the platform the enemy plans to teleport to
+     *
+     * @param platform platform the enemy plans to teleport to
+     */
     public void setTeleportTo(Platform platform) {
         teleportTo = platform;
     }
 
+    /**
+     * Returns the platform the enemy is planning on teleporting to
+     *
+     * @return platform the enemy plans to teleport to
+     */
     public Platform getTeleportTo() {
         return teleportTo;
     }
 
+    /**
+     * Returns the velocity of the projectile
+     *
+     * @return velocity of projectile
+     */
     public Vector2 getProjVel() {
         return projVel;
     }
 
+    /**
+     * Sets the velocity of the projectile
+     *
+     * @param projVel vector of the velocity
+     */
     public void setProjVel(Vector2 projVel) {
         this.projVel = projVel;
     }
 
+    /**
+     * Returns the ray cast used for line of sight
+     *
+     * @return ray cast used for line of sight
+     */
     public RayCastCallback getSight() {
         return sight;
     }
+
 
     public void setLimiter(float limiter) {
         this.limiter = limiter;
     }
 
+    /**
+     * Returns the type of ai the enemy uses
+     *
+     * @return ai the enemy uses
+     */
     public EnemyType getAi() {
         return ai;
     }
 
+    /**
+     * Sets the fixture the enemy stands on
+     *
+     * @param f fixture the enemy stands on
+     */
     public void setPlatformFixture(Fixture f) {
         platformFixture = f;
     }
 
+    /**
+     * Returns the fixture that the enemy stands on
+     *
+     * @return fixture enemy stands on
+     */
     public Fixture getPlatformFixture() {
         return platformFixture;
     }
 
+    /**
+     * Returns whether the enemy is a turret or not
+     *
+     * @return boolean whether enemy is a turret
+     */
     public boolean isTurret() {
         return isTurret;
     }
@@ -358,10 +447,20 @@ public class Enemy extends CapsuleObstacle {
         isFiring = a;
     }
 
+    /**
+     * Remembers through shift whether an enemy is firing
+     *
+     * @return boolean whether the enemy is meant to be firing
+     */
     public boolean getShiftedFiring() {
         return shiftedActive;
     }
 
+    /**
+     * Sets whether the enemy is firing to remember after shift
+     *
+     * @param a boolean whether the enemy is firing
+     */
     public void setShiftedFiring(boolean a) {
         shiftedActive = a;
     }
@@ -581,10 +680,18 @@ public class Enemy extends CapsuleObstacle {
          }
 
         // Old draw texture method
-//        if (texture != null) {
-//            canvas.draw(texture, Color.WHITE, origin.x, origin.y, getX() * drawScale.x, getY() * drawScale.y,
-//                    getAngle(), 0.024f * drawScale.x, 0.0225f * drawScale.y);
-//        }
+        if (texture != null) {
+            canvas.draw(texture, Color.WHITE, origin.x, origin.y, getX() * drawScale.x, getY() * drawScale.y,
+                    getAngle(), 0.024f * drawScale.x * faceDirection, 0.0225f * drawScale.y);
+        }
+    }
+
+    public void drawFade(GameCanvas canvas, float frames) {
+        if (texture != null) {
+            canvas.draw(texture, new Color(1,1,1, .017f * frames), origin.x, origin.y,
+                    getX() * drawScale.x, getY() * drawScale.y, getAngle(),
+                    0.024f * drawScale.x * faceDirection, 0.0225f * drawScale.y);
+        }
     }
 }
 
