@@ -126,7 +126,7 @@ public class MainMenuMode implements Screen {
         float cw = sw * 0.7f;
         float ch = sh * 0.5f;
 
-        backgroundTexture = new TextureRegion(JsonAssetManager.getInstance().get("textures/background/past_room2.png", Texture.class));
+        backgroundTexture = new TextureRegion(JsonAssetManager.getInstance().get("textures/background/bg_past_lv_1.jpg", Texture.class));
 
         //table container to center main table
         Container<Table> tableContainer = new Container<Table>();

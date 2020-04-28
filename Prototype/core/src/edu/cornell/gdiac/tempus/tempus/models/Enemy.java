@@ -196,12 +196,6 @@ public class Enemy extends CapsuleObstacle {
 
         String entitytype = json.get("entitytype").asString();
 
-        // example filmstrip extraction
-        FilmStrip test = JsonAssetManager.getInstance().getEntry(("enemywalking" + "_" + entitytype), FilmStrip.class);
-        test = JsonAssetManager.getInstance().getEntry(("enemyshooting" + "_" + entitytype), FilmStrip.class);
-        test = JsonAssetManager.getInstance().getEntry(("enemyflying" + "_" + entitytype), FilmStrip.class);
-        test = JsonAssetManager.getInstance().getEntry(("enemyteleporting" + "_" + entitytype), FilmStrip.class);
-
         setTexture(texture);
 
         setPosition(pos[0], pos[1]);

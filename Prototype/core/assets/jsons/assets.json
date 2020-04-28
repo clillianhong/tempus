@@ -92,28 +92,28 @@
       "file": "textures/enemy/turret/turret_past_lv_1.png",
       "wrap": false
     },
-    "past_background": {
-      "file": "textures/background/past_room2.png",
+    "past_background1": {
+      "file": "textures/background/bg_past_lv_1.jpg",
       "wrap": false
     },
-    "present_background": {
-      "file": "textures/background/present_level1.png",
-      "wrap": false
-    },
-    "background": {
-      "file": "textures/background/bg_present_lv_1.png",
+    "present_background1": {
+      "file": "textures/background/bg_present_lv_1.jpg",
       "wrap": false
     },
     "past_background2": {
-      "file": "textures/background/past_room2.png",
+      "file": "textures/background/bg_past_lv_2.jpg",
       "wrap": false
     },
     "present_background2": {
-      "file": "textures/background/present_room2.png",
+      "file": "textures/background/bg_present_lv_2.jpg",
       "wrap": false
     },
     "past_background3": {
-      "file": "textures/background/past-3.png",
+      "file": "textures/background/bg_past_lv_3.jpg",
+      "wrap": false
+    },
+    "present_background3": {
+      "file": "textures/background/bg_present_lv_3.jpg",
       "wrap": false
     },
     "enemypresent_type1": {
