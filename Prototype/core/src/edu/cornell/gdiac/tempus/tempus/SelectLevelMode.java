@@ -164,6 +164,9 @@ public class SelectLevelMode implements Screen {
     private Level tutorial;
 
 
+    int sw = 1920/2;
+    int sh = 1080/2;
+
     /** Reference to the game canvas */
     protected GameCanvas canvas;
     protected Vector2 scale;
@@ -208,14 +211,14 @@ public class SelectLevelMode implements Screen {
                 "this is level 3");
 
         batch = new SpriteBatch();
-        camera = new OrthographicCamera();
-        viewport = new FitViewport(bounds.getWidth(),bounds.getHeight(), camera);
+        camera = new OrthographicCamera(sw,sh);
+        viewport = new FitViewport(sw, sh, camera);
         viewport.apply();
 
         camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
         camera.update();
 
-        stage = new Stage(new ScreenViewport());
+        stage = new Stage(viewport);
 
     }
 
@@ -239,7 +242,7 @@ public class SelectLevelMode implements Screen {
     public void createMode(){
 //        atlas = new TextureAtlas("skin.atlas");
         camera.update();
-        stage = new Stage(new ScreenViewport());
+        stage = new Stage(viewport);
 
     }
 
@@ -268,8 +271,7 @@ public class SelectLevelMode implements Screen {
 
         active = true;
 
-        float sw = Gdx.graphics.getWidth();
-        float sh = Gdx.graphics.getHeight();
+
         float cw = sw * 0.9f;
         float ch = sh * 0.8f;
 
@@ -404,8 +406,11 @@ public class SelectLevelMode implements Screen {
             Gdx.gl.glClearColor(0, 0, 0, 1);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);;
 
+            stage.getBatch().setProjectionMatrix(stage.getCamera().combined);
+            stage.getCamera().update();
+
             stage.getBatch().begin();
-            stage.getBatch().draw(backgroundTexture, 0, 0, canvas.getWidth(), canvas.getHeight());
+            stage.getBatch().draw(backgroundTexture, 0, 0, sw, sh);
             stage.getBatch().end();
 
             stage.act();
@@ -415,7 +420,11 @@ public class SelectLevelMode implements Screen {
 
     @Override
     public void resize(int width, int height) {
-
+        stage.getViewport().update(width, height);
+        stage.getCamera().viewportWidth = sw;
+        stage.getCamera().viewportHeight = sh;
+        stage.getCamera().position.set(stage.getCamera().viewportWidth / 2, stage.getCamera().viewportHeight / 2, 0);
+        stage.getCamera().update();
     }
 
     @Override
