@@ -1325,7 +1325,7 @@ public class LevelController extends WorldController {
 			bullet.setSpace(1); // present world
 		addQueuedObject(bullet);
 		JsonValue pew = assetDirectory.get("sounds").get("pew");
-		SoundController.getInstance().play(pew.get("file").asString(), pew.get("file").asString(), false, EFFECT_VOLUME);
+		SoundController.getInstance().play(pew.get("file").asString(), pew.get("file").asString(), false, pew.get("volume").asFloat());
 	}
 
 	/**
