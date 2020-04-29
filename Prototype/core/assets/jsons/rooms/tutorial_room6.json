@@ -83,5 +83,8 @@
       "aitype": 1
     }
   },
-  "spikes": {}
+  "spikes": {},
+  "pillars": {},
+  "longcapsules": {},
+  "talls": {}
 }

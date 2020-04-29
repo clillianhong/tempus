@@ -68,6 +68,9 @@
       ]
     }
   },
+  "pillars": {},
+  "longcapsules": {},
+  "talls": {},
   "capsules": {
     "bothcapsule11": {
       "name": "both_capsule",
