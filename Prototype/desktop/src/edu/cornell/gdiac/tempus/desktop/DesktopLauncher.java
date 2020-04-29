@@ -44,8 +44,6 @@ public class DesktopLauncher {
 		float resolution_multiplier = 0.3f;
 		settings.width  = (int) (lillian_width * resolution_multiplier);
 		settings.height = (int) (lillian_height * resolution_multiplier);
-		settings.resizable = false;
-//		settings.fullscreen = true;
 		settings.resizable = true;
 		new GDXApp(new GDXRoot(), settings);
 	}

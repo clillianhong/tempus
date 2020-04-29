@@ -50,9 +50,23 @@ import jdk.nashorn.internal.runtime.JSONFunctions;
 public class LoadingMode implements Screen {
 	// Textures necessary to support the loading screen 
 	private static final String BACKGROUND_FILE = "textures/background/loadingbackground.png";
+	private static final String FLOWER_1_FILE = "textures/gui/loadingmode/flower1.png";
+	private static final String FLOWER_2_FILE = "textures/gui/loadingmode/flower2.png";
+	private static final String FLOWER_3_FILE = "textures/gui/loadingmode/flower3.png";
+	private static final String FLOWER_4_FILE = "textures/gui/loadingmode/flower4.png";
+
 	private boolean shouldBeRendered;
 	/** Background texture for start-up */
 	private Texture background;
+	/** Flower texture 1 */
+	private Texture flower1;
+	/** Flower texture 2 */
+	private Texture flower2;
+	/** Flower texture 3 */
+	private Texture flower3;
+	/** Flower texture 4 */
+	private Texture flower4;
+
 
 
 	int sw = 1920/2;
@@ -70,8 +84,8 @@ public class LoadingMode implements Screen {
 	/** Stage for drawing assets */
 	private Stage stage;
 
-	private float scale;
-	
+
+
 	/** Current progress (0 to 1) of the asset manager */
 	private float progress;
 
@@ -139,6 +153,10 @@ public class LoadingMode implements Screen {
 		budget = millis;
 
 		background = new Texture(BACKGROUND_FILE);
+		flower1 = new Texture(FLOWER_1_FILE);
+		flower2 = new Texture(FLOWER_2_FILE);
+		flower3 = new Texture(FLOWER_3_FILE);
+		flower4 = new Texture(FLOWER_4_FILE);
 
 		active = true;
 
@@ -195,7 +213,7 @@ public class LoadingMode implements Screen {
 		float loadingWidth = glyphLayout.width;
 		canvas.drawText(loadingMessage, font, canvas.getWidth()- 1.3f*loadingWidth, canvas.getHeight()/2);
 
-		String percentMessage = "100%";
+		String percentMessage = (this.progress*100) + "%";
 		font.getData().setScale(0.75f);
 		glyphLayout.setText(font, percentMessage);
 		canvas.drawText(percentMessage, font, canvas.getWidth()- 1.3f*loadingWidth, canvas.getHeight()/2 - loadingHeight*1.3f );
@@ -213,7 +231,15 @@ public class LoadingMode implements Screen {
 	 * @param canvas The drawing context
 	 */	
 	private void drawProgress(GameCanvas canvas) {	
+			if(this.progress <= 0.25){
 
+			}else if (this.progress <= 0.5){
+
+			}else if(this.progress <= 0.75){
+
+			}else {
+
+			}
 	}
 
 	// ADDITIONAL SCREEN METHODS
