@@ -2,10 +2,12 @@ package edu.cornell.gdiac.tempus.tempus;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -30,9 +32,17 @@ public class TutorialController extends LevelController {
     private boolean first;
     private TextureRegionDrawable press_h_card;
     Table helpCard;
+
+    @Override
+    public void render(float delta) {
+        super.render(delta);
+    }
+
     private int beginDisplay;
     private Table tutorialCard;
     private boolean isHelp;
+
+
     /**
      * Creates and initialize a new instance of the tutorial level
      *
@@ -45,6 +55,7 @@ public class TutorialController extends LevelController {
         isHelp = false;
         beginDisplay = 150;
         isTutorial = true;
+
     }
 
     public void setCard(TextureRegionDrawable card){
@@ -62,9 +73,15 @@ public class TutorialController extends LevelController {
     }
 
     @Override
+    public void resize(int width, int height) {
+
+        super.resize(width, height);
+    }
+
+    @Override
     public void createUI() {
-        float sw = Gdx.graphics.getWidth();
-        float sh = Gdx.graphics.getHeight();
+        float sw = canvas.getWidth();
+        float sh = canvas.getHeight();
 
         // table container to center main table
         Container<Stack> edgeContainer = new Container<Stack>();
@@ -162,6 +179,8 @@ public class TutorialController extends LevelController {
 
         stage.addActor(edgeContainer);
         Gdx.input.setInputProcessor(stage);
+        stage.getCamera().update();
+        stage.getViewport().apply();
 
         if(first){
             showTutorial();

@@ -1004,7 +1004,11 @@ public class LevelController extends WorldController {
 				avatar.setBodyType(BodyDef.BodyType.StaticBody);
 			} else if (InputController.getInstance().releasedRightMouseButton()) {
 				timeFreeze = false;
-				Vector2 mousePos = canvas.getViewport().unproject(InputController.getInstance().getMousePosition());
+				cursor = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+				cursor = camera.unproject(cursor);
+				cursor.scl(1/scale.x, 1/scale.y,0);
+				Vector2 mousePos = new Vector2(cursor.x , cursor.y );
+//				Vector2 mousePos = canvas.getViewport().unproject(InputController.getInstance().getMousePosition());
 				avatar.setBodyType(BodyDef.BodyType.DynamicBody);
 				avatar.setSticking(false);
 				avatar.setWasSticking(false);
@@ -1123,7 +1127,11 @@ public class LevelController extends WorldController {
 
 		// Sets which direction the avatar is facing (left or right)
 		if (InputController.getInstance().pressedLeftMouseButton()) {
-			Vector2 mousePos = canvas.getViewport().unproject(InputController.getInstance().getMousePosition());
+			cursor = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+			cursor = camera.unproject(cursor);
+			cursor.scl(1/scale.x, 1/scale.y,0);
+			Vector2 mousePos = new Vector2(cursor.x , cursor.y );
+//			Vector2 mousePos = canvas.getViewport().unproject(InputController.getInstance().getMousePosition());
 			Vector2 avatarPos = avatar.getPosition().cpy();
 			avatar.setMovement(mousePos.x - avatarPos.x);
 		}
@@ -1297,7 +1305,12 @@ public class LevelController extends WorldController {
 	 * Add a new bullet to the world and send it in the right direction.
 	 */
 	protected void createRedirectedProj() {
-		Vector2 mousePos = canvas.getViewport().unproject(InputController.getInstance().getMousePosition());
+		cursor = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+		cursor = camera.unproject(cursor);
+		cursor.scl(1/scale.x, 1/scale.y,0);
+		Vector2 mousePos = new Vector2(cursor.x , cursor.y );
+//		Vector2 mousePos = canvas.getViewport().u
+//		nproject(InputController.getInstance().getMousePosition());
 		Vector2 redirection = avatar.getPosition().cpy().sub(mousePos).nor();
 		float x0 = avatar.getX() + (redirection.x * avatar.getWidth() * 1.5f);
 		float y0 = avatar.getY() + (redirection.y * avatar.getHeight() * 1.5f);
@@ -1337,8 +1350,11 @@ public class LevelController extends WorldController {
 	 */
 	private void printCoordinates() {
 		if (InputController.getInstance().pressedXKey()) {
-			Vector2 pos = canvas.getViewport().unproject(InputController.getInstance().getMousePosition());
-			System.out.println("Mouse position: " + pos);
+			cursor = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+			cursor = camera.unproject(cursor);
+			cursor.scl(1/scale.x, 1/scale.y,0);
+			Vector2 mousePos = new Vector2(cursor.x , cursor.y );
+			System.out.println("Mouse position: " + mousePos);
 		}
 	}
 
@@ -1509,7 +1525,11 @@ public class LevelController extends WorldController {
 
 		canvas.clear();
 
+		//VIEWPORT UPDATES
 		batch.setProjectionMatrix(canvas.getViewport().getCamera().combined);
+		stage.getBatch().setProjectionMatrix(stage.getCamera().combined);
+		stage.getCamera().update();
+
 		// render batch with shader
 		batch.begin();
 		if (rippleOn) {
@@ -1562,8 +1582,6 @@ public class LevelController extends WorldController {
 
 		canvas.end();
 
-
-
 		stage.act(Gdx.graphics.getDeltaTime());
 		stage.draw();
 
@@ -1581,6 +1599,7 @@ public class LevelController extends WorldController {
 
 	@Override
 	public void resize(int width, int height) {
+		//viewport UPDATES
 		viewport.update(width, height);
 		viewport.apply();
 		camera.update();
