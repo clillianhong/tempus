@@ -483,6 +483,7 @@ public abstract class WorldController implements Screen {
 			countdown--;
 		} else if (countdown == 0) {
 			if (failed) {
+				System.out.println("resetting game here");
 				reset();
 			} else if (complete) {
 				listener.exitScreen(this, ScreenExitCodes.EXIT_NEXT.ordinal());

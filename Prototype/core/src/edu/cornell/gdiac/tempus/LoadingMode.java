@@ -81,6 +81,10 @@ public class LoadingMode implements Screen {
 	/** Whether or not this player mode is still active */
 	private boolean active;
 
+	/** Font */
+	private BitmapFont font;
+	/** Glyph layout for on the fly generation */
+	private static GlyphLayout glyphLayout;
 	/**
 	 * Returns the budget for the asset loader.
 	 *
@@ -141,6 +145,9 @@ public class LoadingMode implements Screen {
 		stage = new Stage(canvas.getViewport());
 		Gdx.input.setInputProcessor(stage);
 
+		font = new BitmapFont(Gdx.files.internal("fonts/carterone.fnt"));
+		glyphLayout  = new GlyphLayout();
+
 	}
 	
 	/**
@@ -181,6 +188,18 @@ public class LoadingMode implements Screen {
 		canvas.begin();
 		canvas.draw(background, Color.WHITE, 0, 0, sw, sh);
 
+		String loadingMessage = "Loading . . .";
+		font.getData().setScale(1.5f);
+		glyphLayout.setText(font, loadingMessage);
+		float loadingHeight = glyphLayout.height;
+		float loadingWidth = glyphLayout.width;
+		canvas.drawText(loadingMessage, font, canvas.getWidth()- 1.3f*loadingWidth, canvas.getHeight()/2);
+
+		String percentMessage = "100%";
+		font.getData().setScale(0.75f);
+		glyphLayout.setText(font, percentMessage);
+		canvas.drawText(percentMessage, font, canvas.getWidth()- 1.3f*loadingWidth, canvas.getHeight()/2 - loadingHeight*1.3f );
+
 		canvas.end();
 	}
 	
@@ -215,6 +234,9 @@ public class LoadingMode implements Screen {
 			update(delta);
 
 			draw();
+
+
+
 
 			// We are are ready, notify our listener
 			if(progress >= 1.0f){
