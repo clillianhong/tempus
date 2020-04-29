@@ -206,6 +206,10 @@ public class Avatar extends CapsuleObstacle {
     /** The texture for the caught projectile of type past */
     private TextureRegion projPastCaughtTexture;
 
+    public void setDashCounter( int n) {
+        dashCounter = n;
+    }
+
     public int getShifted(){
         return shifted;
     }
@@ -1020,13 +1024,13 @@ public class Avatar extends CapsuleObstacle {
             setDensity(density);
         }
 
-        /*if (dashCounter > 1) {
+        if (dashCounter > 1) {
             dashCounter--;
         } else if (dashCounter == 1){
             dashCounter = 0;
             setDimension(width, height);
             setDensity(density);
-        }*/
+        }
 
         if (isJumping()) {
             jumpCooldown = JUMP_COOLDOWN;
