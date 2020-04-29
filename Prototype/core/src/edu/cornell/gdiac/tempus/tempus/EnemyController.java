@@ -395,7 +395,22 @@ public class EnemyController {
 
     public void drawEnemiesInWorld() {
         for (Enemy e: enemies) {
-            if (e.getSpace() == 3) {
+            if (e.isDead()) {
+                e.decRemovalFrames();
+                if (e.getRemovalFrames() == 0) {
+                    e.markRemoved(true);
+                } else if ((shifted && (e.getSpace() == 2)) || (!shifted && (e.getSpace() == 1))) {
+                    if (e.getRemovalFrames() > 0) {
+                        if (e.getRemovalFrames() < 30) {
+                            e.drawFade(canvas, e.getRemovalFrames(), 1f / 30f);
+                        } else if (e.getRemovalFrames() < 50) {
+                            e.drawFade(canvas, 45 - e.getRemovalFrames(), 1f / 10f);
+                        } else if (e.getRemovalFrames() < 60) {
+                            e.drawFade(canvas, e.getRemovalFrames() - 45, 1f / 10f);
+                        }
+                    }
+                }
+            } else if (e.getSpace() == 3) {
                 e.draw(canvas);
             } else if ((shifted && (e.getSpace() == 2)) || (!shifted && (e.getSpace() == 1))) { // past world
                 if (e.getAi() != Enemy.EnemyType.WALK) {
@@ -404,10 +419,10 @@ public class EnemyController {
                 if (e.getAi() == Enemy.EnemyType.TELEPORT) {
                     if (e.getTeleportTo() != null && e.getFramesTillFire() < 60) {
                         e.animate(Enemy.EnemyState.ATTACKING, false);
-                        e.drawFade(canvas, e.getFramesTillFire());
+                        e.drawFade(canvas, e.getFramesTillFire(), 1f / 60f);
                     } else if (framesAfterMove > 0 && framesAfterMove < 60) {
                         e.animate(Enemy.EnemyState.ATTACKING, false);
-                        e.drawFade(canvas, framesAfterMove);
+                        e.drawFade(canvas, framesAfterMove, 1f / 60f);
                         framesAfterMove += 1;
                     } else {
                         e.animate(Enemy.EnemyState.NEUTRAL, true);
