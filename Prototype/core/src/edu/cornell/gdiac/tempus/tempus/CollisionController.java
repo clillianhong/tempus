@@ -217,7 +217,7 @@ public class CollisionController implements ContactListener {
         // then remove enemy
         if (proj.getType() != e.getType() && !e.getName().equals("turret")) {
             Enemy obs = (Enemy) enemyBody.getUserData();
-            obs.markRemoved(true);
+            obs.setDead();
         }
 
         if (e.getBody().getUserData() != proj.getSourceData()) {

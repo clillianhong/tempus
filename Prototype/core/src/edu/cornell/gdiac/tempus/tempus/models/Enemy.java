@@ -137,6 +137,11 @@ public class Enemy extends CapsuleObstacle {
     /** Direction the enemy faces */
     private float faceDirection;
 
+    /** Whether the enemy has died */
+    private boolean dead;
+    /** Frames for enemy removal */
+    private float removalFrames;
+
     /** Texture asset for present enemy */
     private TextureRegion enemyPresentTexture;
     /** Texture asset for past enemy */
@@ -217,6 +222,7 @@ public class Enemy extends CapsuleObstacle {
         limiter = 4;
         isTurret = false;
         faceDirection = 1f;
+        removalFrames = 50;
         switch (json.get("aitype").asInt()) {
         case 1:
             ai = EnemyType.WALK;
@@ -284,6 +290,40 @@ public class Enemy extends CapsuleObstacle {
 
     public Fixture getSensorFixtureCenter() {
         return sensorFixtureCenter;
+    }
+
+    /**
+     * Returns the frames for the enemy removal
+     *
+     * @return frames for enemy removal
+     */
+    public float getRemovalFrames() {
+        return removalFrames;
+    }
+
+    /**
+     * Decreases the frames into the removal
+     */
+    public void decRemovalFrames() {
+        removalFrames -= 1;
+    }
+
+    /**
+     * Sets the enemy as dead
+     */
+    public void setDead() {
+        setMovement(0);
+        setNextDirection(0);
+        dead = true;
+    }
+
+    /**
+     * Returns whether the enemy is dead or not
+     *
+     * @return whether enemy is dead
+     */
+    public boolean isDead() {
+        return dead;
     }
 
     /**
@@ -477,7 +517,7 @@ public class Enemy extends CapsuleObstacle {
      * @return whether or not enemy can fire.
      */
     public boolean canFire() {
-        if (isTurret || isFiring) {
+        if ((isTurret || isFiring) && !dead) {
             return framesTillFire <= 0;
         } else {
             return false;
@@ -720,19 +760,25 @@ public class Enemy extends CapsuleObstacle {
 
     }
 
-    public void drawFade(GameCanvas canvas, float frames) {
+    /**
+     * Draws the enemy fading in or out
+     *
+     * @param canvas Drawing canvas
+     * @param frames How many frames into the fade the enemy is
+     * @param mul The multiplier for how fast the enemy is fading
+     */
+    public void drawFade(GameCanvas canvas, float frames, float mul) {
         if(getAi() == EnemyType.FLY){
-            canvas.draw(currentStrip, new Color(1,1,1, .017f * frames), origin.x, origin.y,
+            canvas.draw(currentStrip, new Color(1,1,1, mul * frames), origin.x, origin.y,
                     getX() * drawScale.x, getY() * drawScale.y, getAngle(),
                     0.024f * minimizeScale * drawScale.x * faceDirection, 0.0225f * minimizeScale * drawScale.y);
         }else{
             if (currentStrip != null) {
-                canvas.draw(currentStrip, new Color(1,1,1, .017f * frames), origin.x, origin.y,
+                canvas.draw(currentStrip, new Color(1,1,1, mul * frames), origin.x, origin.y,
                         getX() * drawScale.x, getY() * drawScale.y, getAngle(),
                         0.024f * minimizeScale * drawScale.x * faceDirection, 0.0225f * minimizeScale * drawScale.y);
             }
         }
-
     }
 }
 
