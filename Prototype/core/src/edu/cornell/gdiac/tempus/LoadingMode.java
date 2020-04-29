@@ -165,6 +165,8 @@ public class LoadingMode implements Screen {
 
 		font = new BitmapFont(Gdx.files.internal("fonts/carterone.fnt"));
 		glyphLayout  = new GlyphLayout();
+		Gdx.gl.glClearColor(0,0,0,1);
+
 
 	}
 	
@@ -200,6 +202,7 @@ public class LoadingMode implements Screen {
 	 * prefer this in lecture.
 	 */
 	private void draw() {
+		Gdx.gl.glClearColor(0,0,0,1);
 
 		canvas.clear();
 

@@ -134,6 +134,9 @@ public class GameCanvas {
 		local  = new Affine2();
 		global = new Matrix4();
 		vertex = new Vector2();
+
+		Gdx.gl.glClearColor(0,0,0,1);
+
 	}
 
 
@@ -328,7 +331,6 @@ public class GameCanvas {
 	 * weird scaling issues.
 	 */
 	public void resize(int width, int height) {
-		System.out.println("REISZEDADSED");
 		viewport.update(width, height);
 		camera.viewportWidth = sw;
 		camera.viewportHeight = sh;
@@ -368,7 +370,7 @@ public class GameCanvas {
 	public void updateSpriteBatch(){
 		spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
 		viewport.getCamera().update();
-
+		viewport.apply();
 	}
 	/**
 	 * Sets the color blending state for this canvas.
@@ -406,7 +408,7 @@ public class GameCanvas {
 	 */
 	public void clear() {
     	// Clear the screen
-		Gdx.gl.glClearColor(0.39f, 0.58f, 0.93f, 1.0f);  // Homage to the XNA years
+		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);		
 	}
 
