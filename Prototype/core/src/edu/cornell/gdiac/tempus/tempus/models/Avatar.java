@@ -1,8 +1,11 @@
 package edu.cornell.gdiac.tempus.tempus.models;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.gdiac.tempus.GameCanvas;
@@ -86,12 +89,13 @@ public class Avatar extends CapsuleObstacle {
 
     /** The current immortality frame */
     private int immortality;
+    private GameCanvas canvas;
     /** The threshold for immortality */
     private static final int threshold = 120;
     private int shifted;
     private boolean spliced;
-    private float width;
-    private float height;
+    public float width;
+    public float height;
     private float density;
     private int dashCounter;
 
@@ -270,6 +274,7 @@ public class Avatar extends CapsuleObstacle {
         return isDashing;
     }
 
+    private Vector3 cursor;
     /** Enacts a dash
      *
      * @return true if there the player did a dash (still has dashes left) **/
@@ -280,7 +285,11 @@ public class Avatar extends CapsuleObstacle {
         }
         boolean candash = canDash();
         if(candash){
-            Vector2 mousePos = InputController.getInstance().getMousePosition();
+            cursor = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+            cursor = camera.unproject(cursor);
+            cursor.scl(1/scale.x, 1/scale.y,0);
+            Vector2 mousePos = new Vector2(cursor.x , cursor.y );
+//            Vector2 mousePos = canvas.getViewport().unproject(InputController.getInstance().getMousePosition());
             this.setBodyType(BodyDef.BodyType.DynamicBody);
             this.setSticking(false);
             this.setWasSticking(false);
@@ -333,6 +342,10 @@ public class Avatar extends CapsuleObstacle {
         }
     }
 
+    private OrthographicCamera camera;
+    public void setCanvas(OrthographicCamera canv){
+        camera = canv;
+    }
     /**
      * Returns the avatar orientation enum
      *
@@ -679,6 +692,13 @@ public class Avatar extends CapsuleObstacle {
     }
 
 
+    public void resetDashes(){
+        numDashes = maxDashes;
+    }
+
+    public void decDash(){
+        numDashes--;
+    }
     /**
      * Creates a new dude avatar with degenerate settings.
      */
@@ -711,6 +731,8 @@ public class Avatar extends CapsuleObstacle {
         spliced = false;
         dashCounter = 0;
     }
+
+    private Vector2 scale;
     /**
      * Creates a new dude avatar at the given position.
      *
@@ -728,7 +750,7 @@ public class Avatar extends CapsuleObstacle {
         setDensity(DENSITY);
 //        setFriction(FRICTION);  /// HE WILL STICK TO WALLS IF YOU FORGET
         setFixedRotation(true);
-
+        this.scale = scale;
         // Gameplay attributes
         lives = 3;
         state = AvatarState.STANDING;
@@ -743,6 +765,7 @@ public class Avatar extends CapsuleObstacle {
         dashDistance = DASH_RANGE;
         dashStartPos = new Vector2(x,y);
         startedDashing = 0;
+        canvas = null;
         numDashes = maxDashes;
         endDashVelocity = new Vector2(0f,0f);
         enemyTicks = 0;
@@ -824,6 +847,8 @@ public class Avatar extends CapsuleObstacle {
         sensorFixtureTop.setUserData(getTopSensorName());
         return true;
     }
+
+
 
     /*public void wingSensorsActive(boolean active){
         if (active) {

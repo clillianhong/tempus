@@ -28,6 +28,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 /**
@@ -95,7 +96,11 @@ public class GameCanvas {
 	private Vector2 vertex;
 	/** Cache object to handle raw textures */
 	private TextureRegion holder;
+	/** Fit Viewport for maintaining aspect ratio */
+	private FitViewport viewport;
 
+	int sw = 1920/2;
+	int sh = 1080/2;
 
 
 	/**
@@ -109,10 +114,14 @@ public class GameCanvas {
 		active = DrawPass.INACTIVE;
 		spriteBatch = new PolygonSpriteBatch();
 		debugRender = new ShapeRenderer();
-		
-		// Set the projection matrix (for proper scaling)
-		camera = new OrthographicCamera(getWidth(),getHeight());
-		camera.setToOrtho(false);
+
+		camera = new OrthographicCamera(sw, sh);
+		viewport = new FitViewport(sw,sh, camera);
+		viewport.apply();
+		camera.position.set(camera.viewportWidth/2, camera.viewportHeight/2,0);
+		camera.update();
+
+//		camera.setToOrtho(false);
 		spriteBatch.setProjectionMatrix(camera.combined);
 		debugRender.setProjectionMatrix(camera.combined);
 		System.out.println(
@@ -125,8 +134,12 @@ public class GameCanvas {
 		local  = new Affine2();
 		global = new Matrix4();
 		vertex = new Vector2();
+
+		Gdx.gl.glClearColor(0,0,0,1);
+
 	}
-		
+
+
     /**
      * Eliminate any resources that should be garbage collected manually.
      */
@@ -146,12 +159,12 @@ public class GameCanvas {
 	/**
 	 * Returns the width of this canvas
 	 *
-	 * This currently gets its value from Gdx.graphics.getWidth()
+	 * This currently gets its value from viewport
 	 *
 	 * @return the width of this canvas
 	 */
 	public int getWidth() {
-		return Gdx.graphics.getWidth();
+		return (int) camera.viewportWidth;
 	}
 	
 	/**
@@ -182,8 +195,11 @@ public class GameCanvas {
 	 * @return the height of this canvas
 	 */
 	public int getHeight() {
-		return Gdx.graphics.getHeight();
+		return (int)viewport.getCamera().viewportHeight;
+//		return Gdx.graphics.getHeight();
+//		return sh;
 	}
+
 	
 	/**
 	 * Changes the height of this canvas
@@ -211,7 +227,9 @@ public class GameCanvas {
 	 * @return the dimensions of this canvas
 	 */
 	public Vector2 getSize() {
-		return new Vector2(Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
+//		return new Vector2(Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
+		return new Vector2(viewport.getCamera().viewportWidth, viewport.getCamera().viewportHeight);
+//		return new Vector2(sw, sh);
 	}
 	
 	/**
@@ -257,7 +275,7 @@ public class GameCanvas {
 	 * This method raises an IllegalStateException if called while drawing is
 	 * active (e.g. in-between a begin-end pair).
 	 *
-	 * @param fullscreen Whether this canvas should change to fullscreen.
+	 * @param value Whether this canvas should change to fullscreen.
 	 * @param desktop 	 Whether to use the current desktop resolution
 	 */	 
 	public void setFullscreen(boolean value, boolean desktop) {
@@ -271,7 +289,10 @@ public class GameCanvas {
 			Gdx.graphics.setWindowedMode(width, height);
 		}
 	}
-	
+
+	public FitViewport getViewport(){
+		return viewport;
+	}
 	/**
 	 * Resets the SpriteBatch camera when this canvas is resized.
 	 *
@@ -279,8 +300,59 @@ public class GameCanvas {
 	 * weird scaling issues.
 	 */
 	 public void resize() {
-		// Resizing screws up the spriteBatch projection matrix
-		spriteBatch.getProjectionMatrix().setToOrtho2D(0, 0, getWidth(), getHeight());
+		 viewport.update(getWidth(), getHeight());
+		 camera.viewportWidth = sw;
+		 camera.viewportHeight = sh;
+		 camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
+		 camera.update();
+		 viewport.apply();
+		 spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
+		 camera.update();
+
+//		 camera.position.set(camera.viewportWidth/2,camera.viewportHeight/2,0);
+//		 spriteBatch.getProjectionMatrix().setToOrtho2D(0, 0, getWidth(), getHeight());
+//
+//		 viewport.update(width,height);
+//		 camera.viewportWidth = sw;
+//		 camera.viewportHeight = sh;
+//		 camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
+//		 camera.update();
+//		 viewport.apply();
+////		 camera.position.set(camera.viewportWidth/2,camera.viewportHeight/2,0);
+//		// Resizing screws up the spriteBatch projection matrix
+//		 spriteBatch.setProjectionMatrix(camera.combined);
+////		 spriteBatch.getProjectionMatrix().setToOrtho2D(0, 0, sw, sh);
+	}
+
+	/**
+	 * Resets the SpriteBatch camera when this canvas is resized.
+	 *
+	 * If you do not call this when the window is resized, you will get
+	 * weird scaling issues.
+	 */
+	public void resize(int width, int height) {
+		viewport.update(width, height);
+		camera.viewportWidth = sw;
+		camera.viewportHeight = sh;
+		camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
+		camera.update();
+		viewport.apply();
+		spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
+		camera.update();
+
+//		 camera.position.set(camera.viewportWidth/2,camera.viewportHeight/2,0);
+//		 spriteBatch.getProjectionMatrix().setToOrtho2D(0, 0, getWidth(), getHeight());
+//
+//		 viewport.update(width,height);
+//		 camera.viewportWidth = sw;
+//		 camera.viewportHeight = sh;
+//		 camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
+//		 camera.update();
+//		 viewport.apply();
+////		 camera.position.set(camera.viewportWidth/2,camera.viewportHeight/2,0);
+//		// Resizing screws up the spriteBatch projection matrix
+//		 spriteBatch.setProjectionMatrix(camera.combined);
+////		 spriteBatch.getProjectionMatrix().setToOrtho2D(0, 0, sw, sh);
 	}
 	
 	/**
@@ -294,7 +366,12 @@ public class GameCanvas {
 	public BlendState getBlendState() {
 		return blend;
 	}
-	
+
+	public void updateSpriteBatch(){
+		spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
+		viewport.getCamera().update();
+		viewport.apply();
+	}
 	/**
 	 * Sets the color blending state for this canvas.
 	 *
@@ -331,7 +408,7 @@ public class GameCanvas {
 	 */
 	public void clear() {
     	// Clear the screen
-		Gdx.gl.glClearColor(0.39f, 0.58f, 0.93f, 1.0f);  // Homage to the XNA years
+		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);		
 	}
 
@@ -402,7 +479,6 @@ public class GameCanvas {
 	 * at the given coordinates.
 	 *
 	 * @param image The texture to draw
-	 * @param tint  The color tint
 	 * @param x 	The x-coordinate of the bottom left corner
 	 * @param y 	The y-coordinate of the bottom left corner
 	 */
@@ -555,7 +631,6 @@ public class GameCanvas {
 	 * at the given coordinates.
 	 *
 	 * @param region The texture to draw
-	 * @param tint  The color tint
 	 * @param x 	The x-coordinate of the bottom left corner
 	 * @param y 	The y-coordinate of the bottom left corner
 	 */
@@ -580,7 +655,7 @@ public class GameCanvas {
 	 * the texture will be unscaled.  The bottom left of the texture will be positioned
 	 * at the given coordinates.
 	 *region
-	 * @param image The texture to draw
+	 * @param region The texture to draw
 	 * @param tint  The color tint
 	 * @param x 	The x-coordinate of the bottom left corner
 	 * @param y 	The y-coordinate of the bottom left corner
@@ -682,11 +757,11 @@ public class GameCanvas {
 	 * The local transformations in this method are applied in the following order: 
 	 * scaling, then rotation, then translation (e.g. placement at (sx,sy)).
 	 *
-	 * @param image The region to draw
+	 * @param region The region to draw
 	 * @param tint  The color tint
 	 * @param ox 	The x-coordinate of texture origin (in pixels)
 	 * @param oy 	The y-coordinate of texture origin (in pixels)
-	 * @param transform  The image transform
+	 * @param affine  The image transform
 	 */	
 	public void draw(TextureRegion region, Color tint, float ox, float oy, Affine2 affine) {
 		if (active != DrawPass.STANDARD) {
@@ -717,7 +792,6 @@ public class GameCanvas {
 	 * scaling, then rotation, then translation (e.g. placement at (sx,sy)).
 	 *
 	 * @param region The polygon to draw
-	 * @param tint  The color tint
 	 * @param x 	The x-coordinate of the bottom left corner
 	 * @param y 	The y-coordinate of the bottom left corner
 	 */	
@@ -862,7 +936,7 @@ public class GameCanvas {
 	 * @param tint  The color tint
 	 * @param ox 	The x-coordinate of texture origin (in pixels)
 	 * @param oy 	The y-coordinate of texture origin (in pixels)
-	 * @param transform  The image transform
+	 * @param affine  The image transform
 	 */	
 	public void draw(PolygonRegion region, Color tint, float ox, float oy, Affine2 affine) {
 		if (active != DrawPass.STANDARD) {
