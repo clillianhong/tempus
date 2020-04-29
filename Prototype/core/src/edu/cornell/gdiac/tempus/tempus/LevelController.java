@@ -387,6 +387,12 @@ public class LevelController extends WorldController {
 		timeFreeze = false;
 		canvas.updateSpriteBatch();
 		canvas.resize();
+		viewport.getCamera().update();
+		viewport.apply();
+		stage.getCamera().update();
+		stage.getViewport().apply();
+
+
 	}
 
 	protected void exitGame() {
@@ -1556,8 +1562,31 @@ public class LevelController extends WorldController {
 	 */
 	public void draw(float delta) {
 
-		canvas.updateSpriteBatch();
 
+		// Final message
+		if (complete && !failed) {
+			if(GameStateManager.getInstance().lastRoom()){
+				canvas.begin();
+				displayFont.setColor(Color.YELLOW);
+				canvas.draw(win_room,Color.WHITE, 0f,0f, (float)sw, (float) sh);
+				canvas.end();
+				reset();
+			}else{
+				stage.addAction(Actions.sequence(Actions.fadeOut(0.3f), Actions.run(new Runnable() {
+					@Override
+					public void run() {
+						exitNextRoom();
+					}
+				})));
+			}
+		} else if (failed) {
+			canvas.begin();
+			displayFont.setColor(Color.WHITE);
+			canvas.drawTextCentered("FAILURE", displayFont, 0.0f);
+			canvas.end();
+		}
+
+		canvas.updateSpriteBatch();
 		canvas.clear();
 
 		//VIEWPORT UPDATES
@@ -1583,23 +1612,6 @@ public class LevelController extends WorldController {
 
 		canvas.begin();
 
-		// Final message
-		if (complete && !failed) {
-			if(GameStateManager.getInstance().lastRoom()){
-				displayFont.setColor(Color.YELLOW);
-				canvas.draw(win_room,Color.WHITE, 0f,0f, (float)sw, (float) sh);
-			}else{
-				stage.addAction(Actions.sequence(Actions.fadeOut(0.3f), Actions.run(new Runnable() {
-					@Override
-					public void run() {
-						exitNextRoom();
-					}
-				})));
-			}
-		} else if (failed) {
-			displayFont.setColor(Color.WHITE);
-			canvas.drawTextCentered("FAILURE", displayFont, 0.0f);
-		}
 
 
 		drawObjectInWorld();
