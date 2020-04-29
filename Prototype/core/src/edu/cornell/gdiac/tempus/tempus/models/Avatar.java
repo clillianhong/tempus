@@ -90,6 +90,10 @@ public class Avatar extends CapsuleObstacle {
     private static final int threshold = 120;
     private int shifted;
     private boolean spliced;
+    private float width;
+    private float height;
+    private float density;
+    private int dashCounter;
 
     private boolean wasDamaged;
     private boolean hitByProjctile;
@@ -284,7 +288,10 @@ public class Avatar extends CapsuleObstacle {
             this.setDashStartPos(this.getPosition().cpy());
             this.setDashDistance(Math.min(this.getDashRange(), mousePos.cpy().sub(this.getPosition()).len()));
             this.setDashForceDirection(mousePos.cpy().sub(this.getPosition()));
-            this.setStartedDashing(1);
+            //this.setStartedDashing(2);
+            this.setDimension(width/4f, height/4f);
+            this.setDensity(density * 16f);
+            dashCounter = 10;
             numDashes--;
         }
         return candash;
@@ -698,6 +705,7 @@ public class Avatar extends CapsuleObstacle {
         wasDamaged = false;
         shifted = 0;
         spliced = false;
+        dashCounter = 0;
     }
     /**
      * Creates a new dude avatar at the given position.
@@ -760,9 +768,12 @@ public class Avatar extends CapsuleObstacle {
         float dwidth = avatarTexture.getRegionWidth();
 		float dheight = avatarTexture.getRegionHeight();
 		setDimension(dwidth*shrink[0],dheight*shrink[1] * 1.5f);
+		width = dwidth*shrink[0];
+		height = dheight*shrink[1] * 1.5f;
         setPosition(pos[0],pos[1]);
 		setTexture(avatarTexture);
         setDensity(json.get("density").asFloat());
+        density = getDensity();
         setBodyType(json.get("bodytype").asString().equals("static") ? BodyDef.BodyType.StaticBody : BodyDef.BodyType.DynamicBody);
 
         avatarStandingTexture = JsonAssetManager.getInstance().getEntry(json.get("avatarstanding").asString(), FilmStrip.class);
@@ -926,9 +937,17 @@ public class Avatar extends CapsuleObstacle {
         //System.out.println(lives);
         wingsActive();
         if (spliced){
-            System.out.println("fwiuefnwf");
+            System.out.println("spliced!");
             setLinearVelocity(new Vector2(0,0));
-            setPosition(currentPlat.getPosition().cpy().add(new Vector2(getWidth()* 3 / 2, getHeight() * 4)));
+            if (currentPlat.getName().contains("capsule")) {
+                setPosition(currentPlat.getPosition().cpy().add(new Vector2(getWidth() * 3 / 2, getHeight() * 3)));
+
+            } else if (!(currentPlat.getName().contains("tall") || currentPlat.getName().contains("pillar"))) {
+                setPosition(currentPlat.getPosition().cpy().add(new Vector2(getWidth() * 3 / 2, getHeight() * 4)));
+            } else
+            {
+                setPosition(currentPlat.getPosition().cpy().add(new Vector2(getWidth() * 3 / 2, getHeight() * 6)));
+            }
             spliced = false;
         }
         // Apply cooldowns
@@ -948,18 +967,19 @@ public class Avatar extends CapsuleObstacle {
             }
             projectileTicks = 0;
             hitByProjctile = false;
-        }*/
+        }
         if(!isSticking){
             setAngle(0);
-        }
+        }*/
         //check if dash must end
-        if(isDashing){
+        if(isDashing) {
             //setCurrentPlatform(null);
             float dist = getPosition().dst(getDashStartPos());
-            if(dist > getDashDistance()){
+            if (dist > getDashDistance()) {
 //                System.out.println("DASHED TOO FAR");
                 setDashing(false);
-                System.out.println("VELOCITY: " + getLinearVelocity());
+                setAngle(0);
+                //System.out.println("VELOCITY: " + getLinearVelocity());
                 endDashVelocity = getPosition();
 //                this.setLinearVelocity(new Vector2(0,0));
 //                System.out.println(getDashDistance());
@@ -968,6 +988,13 @@ public class Avatar extends CapsuleObstacle {
             }
         }
 
+        if (dashCounter > 1) {
+            dashCounter--;
+        } else if (dashCounter == 1){
+            dashCounter = 0;
+            setDimension(width, height);
+            setDensity(density);
+        }
 
         if (isJumping()) {
             jumpCooldown = JUMP_COOLDOWN;
@@ -1080,24 +1107,27 @@ public class Avatar extends CapsuleObstacle {
         if (getAngle() > -0.3 && getAngle() < 0.3) {
             faceDirection = faceRight ? 1.0f : -1.0f;
         }
-
+        float angle = getAngle();
+        if (!isSticking){
+            angle = 0;
+        }
         // Draw avatar body
         if (currentStrip != null) {
             if(isImmortal()) { //If the player is immortal, make the player blink.
                 if (getImmmortality()%20<10) {
                     canvas.draw(currentStrip, (new Color(1, 1, 1, 0.5f)), origin.x + 84f, origin.y + 60f,
-                            getX() * drawScale.x, getY() * drawScale.y, getAngle(),
+                            getX() * drawScale.x, getY() * drawScale.y, angle,
                             0.02f * drawScale.x * faceDirection, 0.01875f * drawScale.y);
                 }
                 else {
                     canvas.draw(currentStrip, (new Color(1, 1, 1, 1f)), origin.x + 84f, origin.y + 60f,
-                            getX() * drawScale.x, getY() * drawScale.y, getAngle(),
+                            getX() * drawScale.x, getY() * drawScale.y, angle,
                             0.02f * drawScale.x * faceDirection, 0.01875f * drawScale.y);
                 }
             }
             else{
                 canvas.draw(currentStrip, Color.WHITE, origin.x + 84f, origin.y + 60f,
-                        getX() * drawScale.x, getY() * drawScale.y, getAngle(),
+                        getX() * drawScale.x, getY() * drawScale.y, angle,
                         0.02f * drawScale.x * faceDirection, 0.01875f * drawScale.y);
             }
         }
@@ -1110,11 +1140,11 @@ public class Avatar extends CapsuleObstacle {
             switch (projType) {
                 case PRESENT:
                     canvas.draw(projPresentCaughtTexture, Color.WHITE,origin.x + 10,origin.y,
-                            getX()*drawScale.x + 10,getY()*drawScale.y, getAngle(),0.024f * drawScale.x,0.0225f * drawScale.y);
+                            getX()*drawScale.x + 10,getY()*drawScale.y, angle,0.024f * drawScale.x,0.0225f * drawScale.y);
                     break;
                 case PAST:
                     canvas.draw(projPastCaughtTexture, Color.WHITE,origin.x,origin.y,
-                            getX()*drawScale.x,getY()*drawScale.y, getAngle(),0.024f * drawScale.x,0.0225f * drawScale.y);
+                            getX()*drawScale.x,getY()*drawScale.y, angle,0.024f * drawScale.x,0.0225f * drawScale.y);
                     break;
                 default:
                     assert false : "Invalid projectile type";
