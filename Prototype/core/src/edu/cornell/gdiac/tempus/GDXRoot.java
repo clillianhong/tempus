@@ -209,9 +209,10 @@ public class GDXRoot extends Game implements ScreenListener {
 			gameManager.stepGame(true);
 			gameManager.updateGameState();
 			MusicController.getInstance().stopAll();
-			levelselect.createMode();
 			levelselect.setScreenListener(this);
 			levelselect.setCanvas(canvas);
+			levelselect.createMode();
+
 			setScreen(levelselect);
 		} else if (exitCode == ScreenExitCodes.EXIT_QUIT.ordinal()) {
 			// We quit the main application

@@ -11,10 +11,8 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -92,7 +90,12 @@ public class SelectLevelMode implements Screen {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     if(unlocked){
-                        exitToLevel(level);
+                        stage.addAction(Actions.sequence(Actions.fadeOut(0.5f), Actions.run(new Runnable() {
+                            @Override
+                            public void run() {
+                                exitToLevel(level);
+                            }
+                        })));
                     }
                 }
 
@@ -204,6 +207,15 @@ public class SelectLevelMode implements Screen {
                 "textures/gui/selectmode/level3locked.png",
                 "this is level 3");
 
+        batch = new SpriteBatch();
+        camera = new OrthographicCamera();
+        viewport = new FitViewport(bounds.getWidth(),bounds.getHeight(), camera);
+        viewport.apply();
+
+        camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
+        camera.update();
+
+        stage = new Stage(new ScreenViewport());
 
     }
 
@@ -226,22 +238,15 @@ public class SelectLevelMode implements Screen {
 
     public void createMode(){
 //        atlas = new TextureAtlas("skin.atlas");
-
-        batch = new SpriteBatch();
-        camera = new OrthographicCamera();
-        viewport = new FitViewport(bounds.getWidth(),bounds.getHeight(), camera);
-        viewport.apply();
-
-        camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
         camera.update();
-
         stage = new Stage(new ScreenViewport());
-
-
 
     }
 
 
+    /**
+     * updates the preview panes based on the level button currently in focus.
+     */
     public void updatePreview(){
         Texture prevTexture = new Texture(Gdx.files.internal(levels[currentLevel].getFilePreview()));
         Image previewImg = new Image( new TextureRegion(prevTexture));
@@ -251,9 +256,10 @@ public class SelectLevelMode implements Screen {
         Image loreImage = new Image( new TextureRegion(new Texture(Gdx.files.internal(levels[currentLevel].getFileLore()))));
         lbContainer.setActor(loreImage);
     }
+
     @Override
     public void show() {
-
+        Gdx.input.setInputProcessor(stage);
         GameStateManager gameManager = GameStateManager.getInstance();
         for(Level l : levels){
             LevelModel mod = gameManager.getLevel(l.getLevel());
@@ -264,14 +270,8 @@ public class SelectLevelMode implements Screen {
 
         float sw = Gdx.graphics.getWidth();
         float sh = Gdx.graphics.getHeight();
-
-        float row_height = sw / 12;
-        float col_width = sh / 12;
-
         float cw = sw * 0.9f;
         float ch = sh * 0.8f;
-
-
 
         backgroundTexture = new TextureRegion(new Texture(Gdx.files.internal("textures/gui/selectmode/background.png")));
 
@@ -314,12 +314,15 @@ public class SelectLevelMode implements Screen {
         backButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                exitBack();
+                stage.addAction(Actions.sequence(Actions.fadeOut(0.5f), Actions.run(new Runnable() {
+                    @Override
+                    public void run() {
+                        exitBack();
+                    }
+                })));
             }
         });
         overlayBackButton.add(backButton).width(cw/14f).height(cw/15f).expand().bottom().left();
-
-
 
         Table overlayPageHeader = new Table();
         //back button
@@ -351,8 +354,6 @@ public class SelectLevelMode implements Screen {
         Image previewImg = new Image( new TextureRegion(prevTexture));
 
         pIContainer.setActor(previewImg);
-
-
         prevStack.add(pbContainer);
         prevStack.add(pIContainer);
 
@@ -387,7 +388,8 @@ public class SelectLevelMode implements Screen {
 
         });
 
-        Gdx.input.setInputProcessor(stage);
+//        stage.addAction(Actions.alpha(0f));
+//        stage.addAction(Actions.fadeIn(1f));
 
     }
 
@@ -397,17 +399,14 @@ public class SelectLevelMode implements Screen {
 
     @Override
     public void render(float delta) {
+
         if(active){
-            Gdx.gl.glClearColor(.1f, .12f, .16f, 1);
-            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+            Gdx.gl.glClearColor(0, 0, 0, 1);
+            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);;
 
-            canvas.clear();
-            canvas.begin();
-
-            canvas.draw(backgroundTexture, Color.WHITE, 0, 0, canvas.getWidth(), canvas.getHeight());
-
-
-            canvas.end();
+            stage.getBatch().begin();
+            stage.getBatch().draw(backgroundTexture, 0, 0, canvas.getWidth(), canvas.getHeight());
+            stage.getBatch().end();
 
             stage.act();
             stage.draw();
@@ -437,7 +436,5 @@ public class SelectLevelMode implements Screen {
     @Override
     public void dispose() {
         stage.clear();
-        stage.dispose();
-
     }
 }
