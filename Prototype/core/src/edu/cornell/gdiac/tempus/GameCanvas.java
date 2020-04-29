@@ -300,6 +300,7 @@ public class GameCanvas {
 	 * weird scaling issues.
 	 */
 	 public void resize() {
+		 System.out.println("resizing NO PARAMS");
 		 viewport.update(getWidth(), getHeight());
 		 camera.viewportWidth = sw;
 		 camera.viewportHeight = sh;
@@ -308,6 +309,8 @@ public class GameCanvas {
 		 viewport.apply();
 		 spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
 		 camera.update();
+
+
 
 //		 camera.position.set(camera.viewportWidth/2,camera.viewportHeight/2,0);
 //		 spriteBatch.getProjectionMatrix().setToOrtho2D(0, 0, getWidth(), getHeight());
@@ -331,6 +334,8 @@ public class GameCanvas {
 	 * weird scaling issues.
 	 */
 	public void resize(int width, int height) {
+		System.out.println("resizing with params");
+
 		viewport.update(width, height);
 		camera.viewportWidth = sw;
 		camera.viewportHeight = sh;
