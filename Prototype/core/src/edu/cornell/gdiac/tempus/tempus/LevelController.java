@@ -15,6 +15,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
@@ -32,6 +33,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.*;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import edu.cornell.gdiac.audio.MusicBuffer;
@@ -79,6 +81,8 @@ public class LevelController extends WorldController {
 	SpriteBatch batch;
 	/** background sprite for rendering w shader */
 	Sprite bgSprite;
+
+
 
 	/*SHADER IMPLEMENTATION*/
 	/** time ticks for sine/cosine wave in frag shader */
@@ -291,8 +295,12 @@ public class LevelController extends WorldController {
 	/** TextureRegion for room win state **/
 	protected TextureRegion win_room;
 
+	/** VIEWPORT CODE **/
 	int sw = 1920/2;
 	int sh = 1080/2;
+
+	private FitViewport viewport;
+	private ExtendViewport extendViewport;
 
 	protected Vector3 cursor;
 
@@ -340,10 +348,11 @@ public class LevelController extends WorldController {
 
 		camera = new OrthographicCamera(sw,sh);
 		viewport = new FitViewport(sw, sh, camera);
+		extendViewport = new ExtendViewport(sw,sh);
 		viewport.apply();
 	}
 
-	private FitViewport viewport;
+
 
 	/**
 	 * Resets the status of the game so that we can play again.
@@ -1425,10 +1434,16 @@ public class LevelController extends WorldController {
 
 	@Override
 	public void render(float delta) {
+//		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+		extendViewport.getCamera().update();
+		extendViewport.apply();
+
 		canvas.updateSpriteBatch();
 		camera.update();
 		stage.getBatch().setProjectionMatrix(stage.getCamera().combined);
 		stage.getCamera().update();
+		stage.getViewport().apply();
 		super.render(delta);
 	}
 
@@ -1553,6 +1568,8 @@ public class LevelController extends WorldController {
 	 */
 	public void draw(float delta) {
 
+		canvas.clear();
+		canvas.updateSpriteBatch();
 
 		// Final message
 		if (complete && !failed) {
@@ -1577,14 +1594,13 @@ public class LevelController extends WorldController {
 			canvas.end();
 		}
 
-		canvas.updateSpriteBatch();
-		canvas.clear();
+
+		//VIEWPORT UPDATES
+
+		canvas.getViewport().apply();
 
 		//VIEWPORT UPDATES
 		batch.setProjectionMatrix(canvas.getViewport().getCamera().combined);
-		stage.getBatch().setProjectionMatrix(stage.getCamera().combined);
-		stage.getCamera().update();
-
 		// render batch with shader
 		batch.begin();
 		if (rippleOn) {
@@ -1603,8 +1619,6 @@ public class LevelController extends WorldController {
 
 		canvas.begin();
 
-
-
 		drawObjectInWorld();
 		drawIndicator(canvas);
 
@@ -1620,6 +1634,9 @@ public class LevelController extends WorldController {
 
 		canvas.end();
 
+
+		stage.getBatch().setProjectionMatrix(stage.getCamera().combined);
+		stage.getCamera().update();
 		stage.act(Gdx.graphics.getDeltaTime());
 		stage.draw();
 
@@ -1639,7 +1656,10 @@ public class LevelController extends WorldController {
 	public void resize(int width, int height) {
 		//viewport UPDATES
 		viewport.update(width, height);
-		viewport.apply();
+		extendViewport.update(width, height);
+		extendViewport.getCamera().position.set(extendViewport.getCamera().viewportWidth / 2, extendViewport.getCamera().viewportHeight / 2, 0);
+		extendViewport.getCamera().update();
+
 		camera.update();
 		stage.getViewport().update(width, height);
 		stage.getCamera().viewportWidth = sw;
