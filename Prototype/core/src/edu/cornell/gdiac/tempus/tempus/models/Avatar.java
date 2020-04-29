@@ -94,8 +94,8 @@ public class Avatar extends CapsuleObstacle {
     private static final int threshold = 120;
     private int shifted;
     private boolean spliced;
-    private float width;
-    private float height;
+    public float width;
+    public float height;
     private float density;
     private int dashCounter;
 
@@ -847,6 +847,8 @@ public class Avatar extends CapsuleObstacle {
         sensorFixtureTop.setUserData(getTopSensorName());
         return true;
     }
+
+
 
     /*public void wingSensorsActive(boolean active){
         if (active) {

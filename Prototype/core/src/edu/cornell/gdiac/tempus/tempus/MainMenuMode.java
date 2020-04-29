@@ -183,7 +183,6 @@ public class MainMenuMode implements Screen {
         tableContainer.setActor(mainTable);
         //Add table to stage
         //
-        stage.setDebugAll(true);
         stage.addActor(tableContainer);
         stage.getViewport().apply();
 
