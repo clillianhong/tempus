@@ -394,13 +394,13 @@ public class LevelController extends WorldController {
 		populateLevel();
 		goalDoor.setOpen(false);
 		timeFreeze = false;
+
 		canvas.updateSpriteBatch();
-		canvas.resize();
+//		canvas.resize();
 		viewport.getCamera().update();
 		viewport.apply();
 		stage.getCamera().update();
 		stage.getViewport().apply();
-
 
 	}
 
@@ -951,6 +951,11 @@ public class LevelController extends WorldController {
 		if (begincount > 0) {
 			begincount--;
 			return false;
+		}
+
+		if(failed){
+			System.out.println("reset here");
+			reset();
 		}
 
 		// enemy.createLineOfSight(world);
@@ -1571,28 +1576,6 @@ public class LevelController extends WorldController {
 		canvas.clear();
 		canvas.updateSpriteBatch();
 
-		// Final message
-		if (complete && !failed) {
-			if(GameStateManager.getInstance().lastRoom()){
-				canvas.begin();
-				displayFont.setColor(Color.YELLOW);
-				canvas.draw(win_room,Color.WHITE, 0f,0f, (float)sw, (float) sh);
-				canvas.end();
-//				reset();
-			}else{
-				stage.addAction(Actions.sequence(Actions.fadeOut(0.3f), Actions.run(new Runnable() {
-					@Override
-					public void run() {
-						exitNextRoom();
-					}
-				})));
-			}
-		} else if (failed) {
-			canvas.begin();
-			displayFont.setColor(Color.WHITE);
-			canvas.drawTextCentered("FAILURE", displayFont, 0.0f);
-			canvas.end();
-		}
 
 
 		//VIEWPORT UPDATES
@@ -1639,6 +1622,31 @@ public class LevelController extends WorldController {
 		stage.getCamera().update();
 		stage.act(Gdx.graphics.getDeltaTime());
 		stage.draw();
+
+
+		// Final message
+		if (complete && !failed) {
+			System.out.println("CHANGE ROOMS ");
+			if(GameStateManager.getInstance().lastRoom()){
+				canvas.begin();
+				displayFont.setColor(Color.YELLOW);
+				canvas.draw(win_room,Color.WHITE, 0f,0f, (float)sw, (float) sh);
+				canvas.end();
+//				reset();
+			}
+			stage.addAction(Actions.sequence(Actions.fadeOut(0.3f), Actions.run(new Runnable() {
+				@Override
+				public void run() {
+					exitNextRoom();
+				}
+			})));
+
+		} else if (failed) {
+			canvas.begin();
+			displayFont.setColor(Color.WHITE);
+			canvas.drawTextCentered("FAILURE", displayFont, 0.0f);
+			canvas.end();
+		}
 
 
 
