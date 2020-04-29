@@ -86,6 +86,7 @@ public class GDXRoot extends Game implements ScreenListener {
 	 */
 	public void create() {
 		canvas = new GameCanvas();
+//		canvas.setFullscreen(true,true);
 		loading = new LoadingMode(canvas, 1);
 
 		gameManager.loadGameState("jsons/game.json");
@@ -97,6 +98,7 @@ public class GDXRoot extends Game implements ScreenListener {
 
 		current = 0;
 		loading.setScreenListener(this);
+
 		setScreen(loading);
 	}
 
@@ -135,7 +137,7 @@ public class GDXRoot extends Game implements ScreenListener {
 	 * @param height The new height in pixels
 	 */
 	public void resize(int width, int height) {
-		canvas.resize();
+		canvas.resize(width, height);
 		super.resize(width, height);
 	}
 
