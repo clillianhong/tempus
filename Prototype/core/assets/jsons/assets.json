@@ -40,40 +40,40 @@
       "file": "textures/platform/both_round.png",
       "wrap": false
     },
-    "present_tall": {
-      "file": "textures/platform/platform_tall_lv_2_present.png",
-      "wrap": false
-    },
-    "past_tall": {
-      "file": "textures/platform/platform_tall_lv_2_past.png",
-      "wrap": false
-    },
-    "both_tall": {
-      "file": "textures/platform/both_round.png",
-      "wrap": false
-    },
-    "present_pillar": {
-      "file": "textures/platform/platform_pillar_lv_2_present.png",
-      "wrap": false
-    },
-    "past_pillar": {
-      "file": "textures/platform/platform_pillar_lv_2_past.png",
-      "wrap": false
-    },
-    "both_pillar": {
-      "file": "textures/platform/both_round.png",
-      "wrap": false
-    },
-    "present_longcapsule": {
-      "file": "textures/platform/platform_longcapsule_lv_2_present.png",
+    "both_longcapsule": {
+      "file": "textures/platform/platform_longcapsule_lv_2_both.png",
       "wrap": false
     },
     "past_longcapsule": {
       "file": "textures/platform/platform_longcapsule_lv_2_past.png",
       "wrap": false
     },
-    "both_longcapsule": {
-      "file": "textures/platform/both_round.png",
+    "present_longcapsule": {
+      "file": "textures/platform/platform_longcapsule_lv_2_present.png",
+      "wrap": false
+    },
+    "both_pillar": {
+      "file": "textures/platform/platform_pillar_lv_2_both.png",
+      "wrap": false
+    },
+    "past_pillar": {
+      "file": "textures/platform/platform_pillar_lv_2_past.png",
+      "wrap": false
+    },
+    "present_pillar": {
+      "file": "textures/platform/platform_pillar_lv_2_present.png",
+      "wrap": false
+    },
+    "both_tall": {
+      "file": "textures/platform/platform_tall_lv_2_both.png",
+      "wrap": false
+    },
+    "present_tall": {
+      "file": "textures/platform/platform_tall_lv_2_present.png",
+      "wrap": false
+    },
+    "past_tall": {
+      "file": "textures/platform/platform_tall_lv_2_past.png",
       "wrap": false
     },
     "spikes": {
@@ -221,7 +221,15 @@
       "volume": 0.8
     },
     "pew": {
-      "file": "sounds/pew.mp3",
+      "file": "sounds/turrent_sound_1.mp3",
+      "volume": 0.4
+    },
+    "pew_past": {
+      "file": "sounds/turrent_sound_rhodes.mp3",
+      "volume": 0.4
+    },
+    "pew_present": {
+      "file": "sounds/whip_sample_1.mp3",
       "volume": 0.1
     },
     "pop": {
