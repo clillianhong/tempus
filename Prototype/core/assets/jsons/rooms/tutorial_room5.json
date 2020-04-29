@@ -129,5 +129,8 @@
     }
   },
   "enemies": {},
-  "spikes": {}
+  "spikes": {},
+  "pillars": {},
+  "longcapsules": {},
+  "talls": {}
 }

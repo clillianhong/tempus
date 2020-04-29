@@ -492,6 +492,13 @@ public class LevelController extends WorldController {
 		float[] newPlatDiamond = {0.4f, 1.8f, 0.5f, 1.8f, 2.1f, 1.8f, 2.2f, 1.8f, 1.4f, 0.1f};
 		float[] newPlatRounded = {0.4f, 1.4f, 0.8f, 1.7f, 2.1f, 1.7f, 2.4f, 1.4f, 2.3f, 0.8f, 1.7f, 0.3f, 1.1f, 0.3f};
 		float[] newSpikes = {0.3f, -0.6f, 0.0f, -0.2f, -0.6f, 0.0f, -0.5f, 0.4f, 0.0f, 0.6f, 0.4f, -0.2f, 0.6f, -0.3f};
+		float[] newPlatLongcapsule = {0.4f, 1.1f, 0.5f, 1.1f, 2.7f, 1.1f,
+				4.9f, 1.1f, 5.0f, 1.1f,
+				4.9f, 0.6f, 4.3f, 0.3f, 3.4f, 0.3f,
+				2.7f, 0.5f, 2.0f, 0.3f, 1.1f, 0.3f, 0.5f, 0.6f};
+		float[] newPlatTall = {0.4f, 3.9f, 0.5f, 3.9f, 1.6f, 3.9f, 1.7f, 3.9f, 1.1f, 0.5f};
+		float[] newPlatPillar = {1.2f, 4.0f, 1.3f, 4.0f, 2.0f, 4.0f, 2.1f, 4.0f, 2.1f, 1.0f, 1.2f, 1.0f};
+
 
 		JsonValue capsule = levelFormat.get("capsules").child();
 		while (capsule != null) {
@@ -500,6 +507,33 @@ public class LevelController extends WorldController {
 			obj.setDrawScale(scale);
 			addObject(obj);
 			capsule = capsule.next();
+		}
+
+		JsonValue longcapsule = levelFormat.get("longcapsules").child();
+		while (longcapsule != null) {
+			Platform obj = new Platform(newPlatLongcapsule);
+			obj.initialize(longcapsule);
+			obj.setDrawScale(scale);
+			addObject(obj);
+			longcapsule = longcapsule.next();
+		}
+
+		JsonValue pillar = levelFormat.get("pillars").child();
+		while (pillar != null) {
+			Platform obj = new Platform(newPlatPillar);
+			obj.initialize(pillar);
+			obj.setDrawScale(scale);
+			addObject(obj);
+			pillar = pillar.next();
+		}
+
+		JsonValue tall = levelFormat.get("talls").child();
+		while (tall != null) {
+			Platform obj = new Platform(newPlatTall);
+			obj.initialize(tall);
+			obj.setDrawScale(scale);
+			addObject(obj);
+			tall = tall.next();
 		}
 		// TODO: Delete
 		// for (int ii = 0; ii < PRESENT_CAPSULES.length; ii++) {
@@ -998,6 +1032,7 @@ public class LevelController extends WorldController {
 		}
 
 		if (avatar.isHolding()) {
+			avatar.setAngle(0);
 			timeFreeze = true;
 			avatar.resetDashNum(1);
 			if (avatar.getBodyType() != BodyDef.BodyType.StaticBody) {
@@ -1037,7 +1072,7 @@ public class LevelController extends WorldController {
 				avatar.resetDashNum(-1);
 			}
 			shifted = !shifted;
-			avatar.setShifted(6);
+			avatar.setShifted(15);
 			if (shifted) {
 				JsonValue ripple = assetDirectory.get("sounds").get("ripple_to_past");
 				SoundController.getInstance().play(ripple.get("file").asString(), ripple.get("file").asString(), false, EFFECT_VOLUME * 2);
@@ -1341,7 +1376,7 @@ public class LevelController extends WorldController {
 			bullet.setSpace(1); // present world
 		addQueuedObject(bullet);
 		JsonValue pew = assetDirectory.get("sounds").get("pew");
-		SoundController.getInstance().play(pew.get("file").asString(), pew.get("file").asString(), false, EFFECT_VOLUME);
+		SoundController.getInstance().play(pew.get("file").asString(), pew.get("file").asString(), false, pew.get("volume").asFloat());
 	}
 
 	/**

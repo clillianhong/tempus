@@ -76,6 +76,9 @@
       "space": 3
     }
   },
+  "pillars": {},
+  "longcapsules": {},
+  "talls": {},
   "diamonds": {
     "presentdiamond11": {
       "name": "present_diamond",

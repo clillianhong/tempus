@@ -312,10 +312,10 @@ public class EnemyController {
         }
 
         if (shifted && enemy.getSpace() == 2) { // past world
-            JsonValue data = assetDirectory.get("sounds").get("pew");
+            JsonValue data = assetDirectory.get("sounds").get("pew_past");
             SoundController.getInstance().play("pew", data.get("file").asString(), false, data.get("volume").asFloat());
         } else if (!shifted && enemy.getSpace() == 1) { // present world
-            JsonValue data = assetDirectory.get("sounds").get("pew");
+            JsonValue data = assetDirectory.get("sounds").get("pew_present");
             SoundController.getInstance().play("pew", data.get("file").asString(), false, data.get("volume").asFloat());
         }
 
