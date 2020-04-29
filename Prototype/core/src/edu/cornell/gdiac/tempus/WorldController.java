@@ -309,8 +309,10 @@ public abstract class WorldController implements Screen {
 	 */
 	public void setCanvas(GameCanvas canvas) {
 		this.canvas = canvas;
-		this.scale.x = canvas.getWidth()/bounds.getWidth();
-		this.scale.y = canvas.getHeight()/bounds.getHeight();
+//		this.scale.x = 1;
+//		this.scale.y = 1;
+		this.scale.x = canvas.getViewport().getCamera().viewportWidth/bounds.getWidth();
+		this.scale.y = canvas.getViewport().getCamera().viewportHeight/bounds.getHeight();
 	}
 	
 	/**
@@ -606,7 +608,7 @@ public abstract class WorldController implements Screen {
 	 * @param height The new height in pixels
 	 */
 	public void resize(int width, int height) {
-		// IGNORE FOR NOW
+		canvas.resize(width, height);
 	}
 
 	/**

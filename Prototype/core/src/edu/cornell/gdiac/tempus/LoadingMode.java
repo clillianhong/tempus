@@ -29,6 +29,7 @@ import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.controllers.*;
+import edu.cornell.gdiac.tempus.tempus.models.ScreenExitCodes;
 import edu.cornell.gdiac.util.*;
 
 /**
@@ -69,14 +70,15 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
 	/** Middle portion of the status forground (colored region) */
 	private TextureRegion statusFrgMiddle;
 	/** Right cap to the status forground (colored region) */
-	private TextureRegion statusFrgRight;	
-
+	private TextureRegion statusFrgRight;
+	int sw = 1920/2;
+	int sh = 1080/2;
 	/** Default budget for asset loader (do nothing but load 60 fps) */
-	private static int DEFAULT_BUDGET = 15;
+	private static int DEFAULT_BUDGET = 50;
 	/** Standard window size (for scaling) */
-	private static int STANDARD_WIDTH  = 800;
+	private static int STANDARD_WIDTH  =  1920/2;
 	/** Standard window height (for scaling) */
-	private static int STANDARD_HEIGHT = 700;
+	private static int STANDARD_HEIGHT =  1080/2;
 	/** Ratio of the bar width to the screen */
 	private static float BAR_WIDTH_RATIO  = 0.66f;
 	/** Ration of the bar height to the screen */
@@ -187,7 +189,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
 		budget = millis;
 		
 		// Compute the dimensions from the canvas
-		resize(canvas.getWidth(),canvas.getHeight());
+//		resize(canvas.getWidth(),canvas.getHeight());
 
 		// Load the next two images immediately.
 		playButton = null;
@@ -271,13 +273,17 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
 	 * prefer this in lecture.
 	 */
 	private void draw() {
+
+		canvas.clear();
+
+
 		canvas.begin();
-		canvas.draw(background, Color.WHITE, 0, 0, canvas.getWidth(), canvas.getHeight());
+		canvas.draw(background, Color.WHITE, 0, 0, sw, sh);
 		if (playButton == null) {
 			drawProgress(canvas);
 		} else {
 			Color tint = (pressState == 1 ? Color.GRAY: Color.WHITE);
-			canvas.draw(playButton, tint, playButton.getWidth()/2, playButton.getHeight()/2, 
+			canvas.draw(playButton, tint, playButton.getWidth()/2, playButton.getHeight()/2,
 						centerX, centerY, 0, BUTTON_SCALE*scale, BUTTON_SCALE*scale);
 		}
 		canvas.end();
@@ -318,10 +324,16 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
 	 */
 	public void render(float delta) {
 		if (active) {
+//			canvas.getCamera().update();
+			canvas.updateSpriteBatch();
+
 			update(delta);
 			draw();
 
 			// We are are ready, notify our listener
+//			if(progress >= 1.0f){
+//				listener.exitScreen(this, 0);
+//				}
 			if (isReady() && listener != null) {
 				listener.exitScreen(this, 0);
 			}
@@ -338,11 +350,12 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
 	 * @param height The new height in pixels
 	 */
 	public void resize(int width, int height) {
-		// Compute the drawing scale
+		canvas.resize(width, height);
+//		 Compute the drawing scale
 		float sx = ((float)width)/STANDARD_WIDTH;
 		float sy = ((float)height)/STANDARD_HEIGHT;
 		scale = (sx < sy ? sx : sy);
-		
+
 		this.width = (int)(BAR_WIDTH_RATIO*width);
 		centerY = (int)(BAR_HEIGHT_RATIO*height);
 		centerX = width/2;

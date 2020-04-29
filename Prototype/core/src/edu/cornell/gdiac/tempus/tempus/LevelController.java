@@ -15,20 +15,24 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.*;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import edu.cornell.gdiac.audio.MusicBuffer;
 import edu.cornell.gdiac.tempus.InputController;
@@ -287,6 +291,13 @@ public class LevelController extends WorldController {
 	/** TextureRegion for room win state **/
 	protected TextureRegion win_room;
 
+	int sw = 1920/2;
+	int sh = 1080/2;
+
+	protected Vector3 cursor;
+
+	protected OrthographicCamera camera;
+
 	/**
 	 * Creates and initialize a new instance of the platformer game
 	 *
@@ -319,14 +330,20 @@ public class LevelController extends WorldController {
 		m_rippleRange = 0;
 		ticks = 0;
 		time_incr = (float) 0.002;
-		ripple_reset = Gdx.graphics.getWidth() * 0.00025f;
+		ripple_reset = sw * 0.00025f;
 		shaderprog.setUniformf("time", ticks);
 		batch = new SpriteBatch();
 		mouse_pos = new Vector2(0.5f, 0.5f);
 		delta_x = 1000;
 		delta_y = 1000;
 		fish_pos = new Vector2(0, 0);
+
+		camera = new OrthographicCamera(sw,sh);
+		viewport = new FitViewport(sw, sh, camera);
+		viewport.apply();
 	}
+
+	private FitViewport viewport;
 
 	/**
 	 * Resets the status of the game so that we can play again.
@@ -335,6 +352,7 @@ public class LevelController extends WorldController {
 	 */
 	public void reset() {
 		// Vector2 gravity = new Vector2(world.getGravity());
+
 		numEnemies = 0;
 		paused = false;
 		prepause = false;
@@ -367,6 +385,8 @@ public class LevelController extends WorldController {
 		populateLevel();
 		goalDoor.setOpen(false);
 		timeFreeze = false;
+		canvas.updateSpriteBatch();
+		canvas.resize();
 	}
 
 	protected void exitGame() {
@@ -384,12 +404,12 @@ public class LevelController extends WorldController {
 
 		// tester stage!
 		skin = new Skin(Gdx.files.internal("jsons/uiskin.json"));
-		stage = new Stage(new ScreenViewport());
+		stage = new Stage(viewport);
 		Gdx.input.setInputProcessor(stage);//BUGGY CHANGE?
 		table = new Table();
 		table.setWidth(stage.getWidth());
 		table.align(Align.center | Align.top);
-		table.setPosition(0, Gdx.graphics.getHeight());
+		table.setPosition(0, sh);
 
 		//initialize backgrounds
 		pastBackgroundTexture = JsonAssetManager.getInstance().getEntry(levelFormat.get("past_background").asString(),
@@ -611,6 +631,7 @@ public class LevelController extends WorldController {
 		// Create avatar
 		JsonValue json = levelFormat.get("avatar");
 		avatar = new Avatar();
+		avatar.setCanvas(camera);
 		avatar.setDrawScale(scale);
 		avatar.initialize(json);
 		addObject(avatar);
@@ -720,8 +741,6 @@ public class LevelController extends WorldController {
 	 *
 	 */
 	public void createUI() {
-		float sw = Gdx.graphics.getWidth();
-		float sh = Gdx.graphics.getHeight();
 
 		// table container to center main table
 		Container<Stack> edgeContainer = new Container<Stack>();
@@ -985,7 +1004,7 @@ public class LevelController extends WorldController {
 				avatar.setBodyType(BodyDef.BodyType.StaticBody);
 			} else if (InputController.getInstance().releasedRightMouseButton()) {
 				timeFreeze = false;
-				Vector2 mousePos = InputController.getInstance().getMousePosition();
+				Vector2 mousePos = canvas.getViewport().unproject(InputController.getInstance().getMousePosition());
 				avatar.setBodyType(BodyDef.BodyType.DynamicBody);
 				avatar.setSticking(false);
 				avatar.setWasSticking(false);
@@ -1026,7 +1045,7 @@ public class LevelController extends WorldController {
 			// avatar.resetDashNum();
 			/*
 			 * if (!avatar.isHolding()) { avatar.setPosition(avatar.getPosition().x,
-			 * avatar.getPosition().y + 0.0001f * Gdx.graphics.getWidth()); }
+			 * avatar.getPosition().y + 0.0001f * sw); }
 			 */
 			if (avatar.getCurrentPlatform() != null) {
 				if (avatar.isSticking()) {
@@ -1063,7 +1082,26 @@ public class LevelController extends WorldController {
 		// prototype: Dash
 		boolean dashAttempt = InputController.getInstance().releasedLeftMouseButton();
 		if (dashAttempt) {
-			avatar.dash(); // handles checking if dashing is possible
+			if(avatar.isSticking()){
+				avatar.setDashing(false);
+				avatar.resetDashes();
+			}
+			boolean candash = avatar.canDash();
+			if(candash){
+				cursor = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+				cursor = camera.unproject(cursor);
+				cursor.scl(1/scale.x, 1/scale.y,0);
+				Vector2 mousePos = new Vector2(cursor.x , cursor.y );
+				avatar.setBodyType(BodyDef.BodyType.DynamicBody);
+				avatar.setSticking(false);
+				avatar.setWasSticking(false);
+				avatar.setDashing(true);
+				avatar.setDashStartPos(avatar.getPosition().cpy());
+				avatar.setDashDistance(Math.min(avatar.getDashRange(), mousePos.cpy().sub(avatar.getPosition()).len()));
+				avatar.setDashForceDirection(mousePos.cpy().sub(avatar.getPosition()));
+				avatar.setStartedDashing(1);
+				avatar.decDash();
+			}
 		}
 
 		if (rippleOn) {
@@ -1085,7 +1123,7 @@ public class LevelController extends WorldController {
 
 		// Sets which direction the avatar is facing (left or right)
 		if (InputController.getInstance().pressedLeftMouseButton()) {
-			Vector2 mousePos = InputController.getInstance().getMousePosition();
+			Vector2 mousePos = canvas.getViewport().unproject(InputController.getInstance().getMousePosition());
 			Vector2 avatarPos = avatar.getPosition().cpy();
 			avatar.setMovement(mousePos.x - avatarPos.x);
 		}
@@ -1259,7 +1297,7 @@ public class LevelController extends WorldController {
 	 * Add a new bullet to the world and send it in the right direction.
 	 */
 	protected void createRedirectedProj() {
-		Vector2 mousePos = InputController.getInstance().getMousePosition();
+		Vector2 mousePos = canvas.getViewport().unproject(InputController.getInstance().getMousePosition());
 		Vector2 redirection = avatar.getPosition().cpy().sub(mousePos).nor();
 		float x0 = avatar.getX() + (redirection.x * avatar.getWidth() * 1.5f);
 		float y0 = avatar.getY() + (redirection.y * avatar.getHeight() * 1.5f);
@@ -1299,7 +1337,7 @@ public class LevelController extends WorldController {
 	 */
 	private void printCoordinates() {
 		if (InputController.getInstance().pressedXKey()) {
-			Vector2 pos = InputController.getInstance().getMousePosition();
+			Vector2 pos = canvas.getViewport().unproject(InputController.getInstance().getMousePosition());
 			System.out.println("Mouse position: " + pos);
 		}
 	}
@@ -1322,6 +1360,15 @@ public class LevelController extends WorldController {
 		enemyController.drawEnemiesInWorld();
 	}
 
+	@Override
+	public void render(float delta) {
+		canvas.updateSpriteBatch();
+		camera.update();
+		stage.getBatch().setProjectionMatrix(stage.getCamera().combined);
+		stage.getCamera().update();
+		super.render(delta);
+	}
+
 	/**
 	 * Draws a line indicating the direction and distance of the dash.
 	 */
@@ -1339,12 +1386,20 @@ public class LevelController extends WorldController {
 		if (!avatar.canDash() && !avatar.isSticking() && !avatar.isHolding())
 			return;
 		// Draw dynamic dash indicator
-		Vector2 mousePos = InputController.getInstance().getMousePosition();
+		cursor = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+		cursor = camera.unproject(cursor);
+		cursor.scl(1/scale.x, 1/scale.y,0);
+		Vector2 mousePos = new Vector2(cursor.x , cursor.y );
+
+		System.out.println("MOUSE POSITION: " + mousePos.x + " " + mousePos.y);
+		System.out.println("AVATAR POSITION: " + avatar.getPosition().x + " " + avatar.getPosition().y);
+
 		Vector2 redirection = avatar.getPosition().cpy().sub(mousePos).nor();
 		TextureRegion circle = JsonAssetManager.getInstance().getEntry("circle", TextureRegion.class);
 		TextureRegion arrow = JsonAssetManager.getInstance().getEntry("arrow", TextureRegion.class);
 		Vector2 avPos = avatar.getPosition();
-		Vector2 mPos = InputController.getInstance().getMousePosition();
+//		Vector2 mPos = canvas.getViewport().unproject(InputController.getInstance().getMousePosition());
+		Vector2 mPos = mousePos;
 		Vector2 startPos = avPos.cpy().scl(scale);
 		mousePos = mPos.cpy().scl(scale);
 		// Vector2 alteredPos = mousePos.sub(startPos).nor();
@@ -1407,9 +1462,9 @@ public class LevelController extends WorldController {
 		shaderprog.setUniformf("time", ticks);
 
 		// shaderprog.setUniformf("mousePos", new Vector2(0 * scale.x /
-		// Gdx.graphics.getWidth() , 0 * scale.y / Gdx.graphics.getHeight()));
-		shaderprog.setUniformf("mousePos", new Vector2(avatar.getPosition().x * scale.x / Gdx.graphics.getWidth(),
-				(DEFAULT_HEIGHT - avatar.getPosition().y) * scale.y / Gdx.graphics.getHeight()));
+		// sw , 0 * scale.y / sh));
+		shaderprog.setUniformf("mousePos", new Vector2(avatar.getPosition().x * scale.x / sw,
+				(DEFAULT_HEIGHT - avatar.getPosition().y) * scale.y / sh));
 		shaderprog.setUniformf("deltax", Math.abs(delta_x / 100));
 		shaderprog.setUniformf("deltay", Math.abs(delta_y / 100));
 		// update ripple params
@@ -1450,9 +1505,11 @@ public class LevelController extends WorldController {
 	 */
 	public void draw(float delta) {
 
+		canvas.updateSpriteBatch();
+
 		canvas.clear();
 
-
+		batch.setProjectionMatrix(canvas.getViewport().getCamera().combined);
 		// render batch with shader
 		batch.begin();
 		if (rippleOn) {
@@ -1464,7 +1521,7 @@ public class LevelController extends WorldController {
 		} else {
 			bgSprite.setRegion(presentBackgroundTexture);
 		}
-		batch.draw(bgSprite, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		batch.draw(bgSprite, 0, 0, sw, sh);
 		batch.end();
 
 
@@ -1475,7 +1532,14 @@ public class LevelController extends WorldController {
 		if (complete && !failed) {
 			if(GameStateManager.getInstance().lastRoom()){
 				displayFont.setColor(Color.YELLOW);
-				canvas.draw(win_room,Color.WHITE, 0f,0f, (float)Gdx.graphics.getWidth(), (float) Gdx.graphics.getHeight());
+				canvas.draw(win_room,Color.WHITE, 0f,0f, (float)sw, (float) sh);
+			}else{
+				stage.addAction(Actions.sequence(Actions.fadeOut(0.3f), Actions.run(new Runnable() {
+					@Override
+					public void run() {
+						exitNextRoom();
+					}
+				})));
 			}
 		} else if (failed) {
 			displayFont.setColor(Color.WHITE);
@@ -1513,6 +1577,23 @@ public class LevelController extends WorldController {
 
 	/** Unused ContactListener method */
 	public void preSolve(Contact contact, Manifold oldManifold) {
+	}
+
+	@Override
+	public void resize(int width, int height) {
+		viewport.update(width, height);
+		viewport.apply();
+		camera.update();
+		stage.getViewport().update(width, height);
+		stage.getCamera().viewportWidth = sw;
+		stage.getCamera().viewportHeight = sh;
+		stage.getCamera().position.set(stage.getCamera().viewportWidth / 2, stage.getCamera().viewportHeight / 2, 0);
+		stage.getCamera().update();
+		super.resize(width, height);
+	}
+
+	public void exitNextRoom(){
+		listener.exitScreen(this, ScreenExitCodes.EXIT_NEXT.ordinal());
 	}
 
 	/**
