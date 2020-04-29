@@ -1137,6 +1137,7 @@ public class LevelController extends WorldController {
 				cursor = camera.unproject(cursor);
 				cursor.scl(1/scale.x, 1/scale.y,0);
 				Vector2 mousePos = new Vector2(cursor.x , cursor.y );
+
 				avatar.setBodyType(BodyDef.BodyType.DynamicBody);
 				avatar.setSticking(false);
 				avatar.setWasSticking(false);
@@ -1144,7 +1145,7 @@ public class LevelController extends WorldController {
 				avatar.setDashStartPos(avatar.getPosition().cpy());
 				avatar.setDashDistance(Math.min(avatar.getDashRange(), mousePos.cpy().sub(avatar.getPosition()).len()));
 				avatar.setDashForceDirection(mousePos.cpy().sub(avatar.getPosition()));
-				avatar.setStartedDashing(1);
+//				avatar.setStartedDashing(1);
 				if (Math.abs(mousePos.cpy().sub(avatar.getPosition()).angleRad() + Math.PI / 2 - avatar.getAngle()) > Math.PI / 2.5f) {
 					avatar.setDimension(avatar.width / 4f, avatar.height / 4f);
 					avatar.setDensity(avatar.getDensity() * 16f);
