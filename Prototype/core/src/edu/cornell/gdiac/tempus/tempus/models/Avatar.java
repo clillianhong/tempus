@@ -288,10 +288,14 @@ public class Avatar extends CapsuleObstacle {
             this.setDashStartPos(this.getPosition().cpy());
             this.setDashDistance(Math.min(this.getDashRange(), mousePos.cpy().sub(this.getPosition()).len()));
             this.setDashForceDirection(mousePos.cpy().sub(this.getPosition()));
+            System.out.println("dash angle: " + mousePos.cpy().sub(this.getPosition()).angleRad());
+            System.out.println("avatar angle: " + getAngle());
             //this.setStartedDashing(2);
-            this.setDimension(width/4f, height/4f);
-            this.setDensity(density * 16f);
-            dashCounter = 10;
+            if (Math.abs(mousePos.cpy().sub(this.getPosition()).angleRad() + Math.PI / 2 - getAngle()) > Math.PI / 6) {
+                this.setDimension(width / 4f, height / 4f);
+                this.setDensity(density * 16f);
+            }
+            //dashCounter = 10;
             numDashes--;
         }
         return candash;
@@ -986,15 +990,18 @@ public class Avatar extends CapsuleObstacle {
                 setLinearVelocity(getLinearVelocity().cpy().nor().scl(getDashDistance() * 3, getDashDistance() * 4));
 //                setLinearVelocity(new Vector2(0,0));
             }
+        } else {
+            setDimension(width, height);
+            setDensity(density);
         }
 
-        if (dashCounter > 1) {
+        /*if (dashCounter > 1) {
             dashCounter--;
         } else if (dashCounter == 1){
             dashCounter = 0;
             setDimension(width, height);
             setDensity(density);
-        }
+        }*/
 
         if (isJumping()) {
             jumpCooldown = JUMP_COOLDOWN;
