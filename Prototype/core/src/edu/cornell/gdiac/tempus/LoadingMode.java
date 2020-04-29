@@ -49,7 +49,7 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
 	private static final String BACKGROUND_FILE = "textures/loading.png";
 	private static final String PROGRESS_FILE = "textures/progressbar.png";
 	private static final String PLAY_BTN_FILE = "textures/play.png";
-	
+	private boolean shouldBeRendered;
 	/** Background texture for start-up */
 	private Texture background;
 	/** Play button to display when done */
@@ -222,6 +222,8 @@ public class LoadingMode implements Screen, InputProcessor, ControllerListener {
 	 * Called when this screen should release all resources.
 	 */
 	public void dispose() {
+		active = false;
+
 		 statusBkgLeft = null;
 		 statusBkgRight = null;
 		 statusBkgMiddle = null;

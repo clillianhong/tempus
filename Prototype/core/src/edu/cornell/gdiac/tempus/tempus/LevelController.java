@@ -74,7 +74,9 @@ public class LevelController extends WorldController {
 	/** background sprite batch for rendering w shader */
 	SpriteBatch batch;
 	/** background sprite for rendering w shader */
-	Sprite sprite;
+	Sprite bgSprite;
+
+	/*SHADER IMPLEMENTATION*/
 	/** time ticks for sine/cosine wave in frag shader */
 	float ticks;
 	/** current mouse position */
@@ -85,11 +87,11 @@ public class LevelController extends WorldController {
 	float delta_y;
 	/** tick value to reset */
 	float ripple_reset;
-
 	Vector2 fish_pos;
-
 	float m_rippleDistance;
-
+	float prev_m_rippleDistance;
+	float rippleSpeed = 0.25f;
+	float maxRippleDistance = 2f;
 	float m_rippleRange;
 	boolean rippleOn;
 
@@ -119,15 +121,10 @@ public class LevelController extends WorldController {
 	protected TextureRegion bulletBigTexture;
 	protected TextureRegion presentBullet = JsonAssetManager.getInstance().getEntry("projpresent", TextureRegion.class);
 	protected TextureRegion pastBullet = JsonAssetManager.getInstance().getEntry("projpast", TextureRegion.class);
-	/** Texture aobjects.sset for the turret */
-	protected TextureRegion turretTexture;
-	/** Texture asset for present enemy */
-	protected TextureRegion enemyPresentTexture;
-	/** Texture asset for past enemy */
-	protected TextureRegion enemyPastTexture;
 
 	/** Texture asset for the background */
-	protected TextureRegion backgroundTexture;
+	protected TextureRegion pastBackgroundTexture;
+	protected TextureRegion presentBackgroundTexture;
 
 	protected Music present_music;
 	protected Music past_music;
@@ -384,16 +381,22 @@ public class LevelController extends WorldController {
 	 * Lays out the game geography.
 	 */
 	private void populateLevel() {
-		float sw = Gdx.graphics.getWidth();
-		float sh = Gdx.graphics.getHeight();
 
 		// tester stage!
 		skin = new Skin(Gdx.files.internal("jsons/uiskin.json"));
 		stage = new Stage(new ScreenViewport());
+		Gdx.input.setInputProcessor(stage);//BUGGY CHANGE?
 		table = new Table();
 		table.setWidth(stage.getWidth());
 		table.align(Align.center | Align.top);
 		table.setPosition(0, Gdx.graphics.getHeight());
+
+		//initialize backgrounds
+		pastBackgroundTexture = JsonAssetManager.getInstance().getEntry(levelFormat.get("past_background").asString(),
+						TextureRegion.class);
+		presentBackgroundTexture = JsonAssetManager.getInstance().getEntry(levelFormat.get("present_background").asString(),
+				TextureRegion.class);
+		bgSprite = new Sprite(presentBackgroundTexture);
 
 		win_room = new TextureRegion(new Texture(Gdx.files.local("textures/gui/level_complete.png")));
 		createUI();
@@ -816,7 +819,7 @@ public class LevelController extends WorldController {
 		pauseTable.add(resumeButton).width(sw / 4 / 1.5f).height(sh / 5.1f / 1.5f).center().expandX().padBottom(sh / 20);
 		pauseTable.row();
 		pauseTable.add(restartButton).width(sw / 4 / 1.5f).height(sh / 5.1f / 1.5f).center().expandX().padBottom(sh / 20);
-		;
+
 		pauseTable.row();
 		pauseTable.add(exitButton).width(sw / 4 / 1.5f).height(sh / 5.1f / 1.5f).expandX();
 
@@ -826,28 +829,8 @@ public class LevelController extends WorldController {
 		/*
 		 * END PAUSE SCREEN SETUP---------------------
 		 */
-		TextureRegion rippleBG = new TextureRegion(new Texture(Gdx.files.internal("textures/gui/pause_filter_50.png")));
-		sprite = new Sprite(rippleBG);
-
-		// levelWonContainer = new Container<>();
-		// levelWonContainer.setBackground(pauseBG);
-		// levelWonContainer.setPosition(0, 0);
-		// levelWonContainer.fillX();
-		// levelWonContainer.fillY();
-		// table.add(pauseButton).width(sw / 15f).height(sw /
-		// 15f).expand().right().top();
-		//
-		// pauseTable = new Table();
-		// //pauseTable.background(pauseBox);
-		// levelWonContainer.setActor(pauseTable);
-		// levelWonContainer.setVisible(false);
-
-		/*
-		
-		 */
 
 		stage.addActor(edgeContainer);
-		Gdx.input.setInputProcessor(stage);
 
 	}
 
@@ -993,9 +976,6 @@ public class LevelController extends WorldController {
 		if (avatar.getShifted() > 0) {
 			avatar.setShifted(avatar.getShifted() - 1);
 		}
-		if (rippleOn) {
-			updateShader();
-		}
 
 		// test slow down time
 		if (timeFreeze) {
@@ -1118,8 +1098,7 @@ public class LevelController extends WorldController {
 		}
 
 		if (rippleOn) {
-			float rippleSpeed = 0.25f;
-			float maxRippleDistance = 2f;
+
 			ticks += time_incr;
 			if (ticks > ripple_reset) {
 				rippleOn = false;
@@ -1129,8 +1108,6 @@ public class LevelController extends WorldController {
 			}
 			m_rippleDistance += rippleSpeed * ticks;
 			m_rippleRange = (1 - m_rippleDistance / maxRippleDistance) * 0.009f;
-			updateShader();
-
 		}
 
 		// Process actions in object model
@@ -1233,7 +1210,7 @@ public class LevelController extends WorldController {
 			avatar.setStartedDashing(0);
 		}
 		if (rippleOn) {
-			updateShader();
+			updateShader(false);
 		}
 
 		if (avatar.isSticking() && !avatar.getWasSticking()) {
@@ -1407,7 +1384,7 @@ public class LevelController extends WorldController {
 		// Vector2 endPos = alteredPos.scl(dist).scl(scale);
 		// endPos.add(startPos);
 		// canvas.drawLine(startPos.x, startPos.y, endPos.x, endPos.y, 0, 1, 0.6f, 1);
-		canvas.begin();
+		//canvas.begin();
 		// System.out.println(scale);
 		if (!avatar.isHolding()) {
 			canvas.draw(circle, Color.WHITE, circle.getRegionWidth() / 2, circle.getRegionHeight() / 2,
@@ -1420,7 +1397,7 @@ public class LevelController extends WorldController {
 					(180 + redirection.angle()) / 57, 0.0075f * scale.x * avatar.getDashRange()* 1.5f,
 					0.0075f * scale.y * avatar.getDashRange()* 1.5f);
 		}
-		canvas.end();
+		//canvas.end();
 		// If player is holding a projectile, draw projectile indicator
 		// TODO: need to fix - line is a bit off
 		Vector2 projDir = startPos.cpy().sub(mousePos).scl(scale);
@@ -1428,7 +1405,7 @@ public class LevelController extends WorldController {
 		TextureRegion projCircle = JsonAssetManager.getInstance().getEntry("projectile_circle", TextureRegion.class);
 		TextureRegion projArrow = JsonAssetManager.getInstance().getEntry("projectile_arrow", TextureRegion.class);
 
-		canvas.begin();
+		//canvas.begin();
 		if (avatar.isHolding()) {
 			canvas.draw(projCircle, Color.GOLD, projCircle.getRegionWidth() / 2, projCircle.getRegionHeight() / 2,
 					avatar.getX() * scale.x, avatar.getY() * scale.y, redirection.angle() / 57, 0.0073f * scale.x* 1.5f,
@@ -1436,13 +1413,11 @@ public class LevelController extends WorldController {
 			canvas.draw(projArrow, Color.GOLD, 0, projArrow.getRegionHeight() / 2, avatar.getX() * scale.x,
 					avatar.getY() * scale.y, (redirection.angle()) / 57, 0.0061f * scale.x * 1.5f, 0.0061f * scale.y* 1.5f);
 		}
-		canvas.end();
 	}
 
 	public void drawLives(GameCanvas canvas) {
 		TextureRegion life = JsonAssetManager.getInstance().getEntry("life", TextureRegion.class);
 		TextureRegion streak = JsonAssetManager.getInstance().getEntry("streak", TextureRegion.class);
-		canvas.begin();
 		canvas.draw(streak, Color.WHITE, 0, 0, -0.8f * scale.x, canvas.getHeight() / 2 + 2 * scale.y, 9 * scale.x,
 				9 * scale.y);
 		for (int i = 0; i < avatar.getLives(); i++) {
@@ -1450,10 +1425,14 @@ public class LevelController extends WorldController {
 					life.getRegionWidth() * 0.002f * scale.x + (life.getRegionWidth() * 0.005f * scale.x * i),
 					canvas.getHeight() - life.getRegionHeight() * 0.007f * scale.y, scale.x, scale.y);
 		}
-		canvas.end();
 	}
 
-	public void updateShader() {
+	public void updateShader(boolean failedState) {
+
+		if(!failedState){
+			prev_m_rippleDistance = m_rippleRange;
+			m_rippleRange = (1 - m_rippleDistance / maxRippleDistance) * 0.02f;
+		}
 		// write to shader
 		shaderprog.begin();
 		shaderprog.setUniformf("time", ticks);
@@ -1468,6 +1447,8 @@ public class LevelController extends WorldController {
 		shaderprog.setUniformf("u_rippleDistance", m_rippleDistance);
 		shaderprog.setUniformf("u_rippleRange", m_rippleRange);
 		shaderprog.end();
+
+		m_rippleRange = prev_m_rippleDistance;
 	}
 
 	/**
@@ -1502,40 +1483,40 @@ public class LevelController extends WorldController {
 
 		canvas.clear();
 
-		if (rippleOn) {
-			updateShader();
-		}
 
 		// render batch with shader
 		batch.begin();
-		batch.setShader(shaderprog);
-
-		if (shifted) {
-			// System.out.println(backgroundTexture.getRegionWidth());
-			backgroundTexture = JsonAssetManager.getInstance().getEntry(levelFormat.get("past_background").asString(),
-					TextureRegion.class);
-		} else {
-			backgroundTexture = JsonAssetManager.getInstance().getEntry(levelFormat.get("present_background").asString(),
-					TextureRegion.class);
+		if (rippleOn) {
+			updateShader(false);
+			batch.setShader(shaderprog);
 		}
-
-		sprite = new Sprite(backgroundTexture);
-		batch.draw(sprite, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		if (shifted) {
+			bgSprite.setRegion(pastBackgroundTexture);
+		} else {
+			bgSprite.setRegion(presentBackgroundTexture);
+		}
+		batch.draw(bgSprite, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		batch.end();
 
-		canvas.begin();
-		/*
-		 * TextureRegion projCircle =
-		 * JsonAssetManager.getInstance().getEntry("projectile_circle",
-		 * TextureRegion.class); for (Obstacle obj : objects) { if (obj instanceof
-		 * Platform){ canvas.draw(projCircle, Color.GOLD, projCircle.getRegionWidth() /
-		 * 2, projCircle.getRegionHeight() / 2, obj.getX() * scale.x, obj.getY() *
-		 * scale.y, 0, 0.001f * scale.x, 0.001f * scale.y); } }
-		 */
-		drawObjectInWorld();
-		canvas.end();
 
+
+		canvas.begin();
+
+		// Final message
+		if (complete && !failed) {
+			if(GameStateManager.getInstance().lastRoom()){
+				displayFont.setColor(Color.YELLOW);
+				canvas.draw(win_room,Color.WHITE, 0f,0f, (float)Gdx.graphics.getWidth(), (float) Gdx.graphics.getHeight());
+			}
+		} else if (failed) {
+			displayFont.setColor(Color.WHITE);
+			canvas.drawTextCentered("FAILURE", displayFont, 0.0f);
+		}
+
+
+		drawObjectInWorld();
 		drawIndicator(canvas);
+
 		if(!isTutorial){
 			drawLives(canvas);
 		}
@@ -1546,24 +1527,14 @@ public class LevelController extends WorldController {
 			canvas.endDebug();
 		}
 
+		canvas.end();
+
+
+
 		stage.act(Gdx.graphics.getDeltaTime());
 		stage.draw();
 
-		// Final message
-		if (complete && !failed) {
-			displayFont.setColor(Color.YELLOW);
-			canvas.begin(); // DO NOT SCALE
-			if(GameStateManager.getInstance().lastRoom()){
-				canvas.draw(win_room,Color.WHITE, 0f,0f, (float)Gdx.graphics.getWidth(), (float) Gdx.graphics.getHeight());
-			}
-//			canvas.drawTextCentered("VICTORY!", displayFont, 0.0f);
-			canvas.end();
-		} else if (failed) {
-			displayFont.setColor(Color.WHITE);
-			canvas.begin(); // DO NOT SCALE
-			canvas.drawTextCentered("FAILURE!", displayFont, 0.0f);
-			canvas.end();
-		}
+
 
 	}
 
