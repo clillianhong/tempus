@@ -156,13 +156,11 @@ public class GameCanvas {
 	/**
 	 * Returns the width of this canvas
 	 *
-	 * This currently gets its value from Gdx.graphics.getWidth()
+	 * This currently gets its value from viewport
 	 *
 	 * @return the width of this canvas
 	 */
 	public int getWidth() {
-//		return Gdx.graphics.getWidth();
-//		System.out.println("VIEWPORT SCREEN WIDTH: " + camera.viewportWidth);
 		return (int) camera.viewportWidth;
 	}
 	
