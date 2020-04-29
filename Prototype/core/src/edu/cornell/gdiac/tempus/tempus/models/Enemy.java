@@ -222,7 +222,7 @@ public class Enemy extends CapsuleObstacle {
         limiter = 4;
         isTurret = false;
         faceDirection = 1f;
-        removalFrames = 50;
+        removalFrames = 60;
         switch (json.get("aitype").asInt()) {
         case 1:
             ai = EnemyType.WALK;

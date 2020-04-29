@@ -403,10 +403,10 @@ public class EnemyController {
                     if (e.getRemovalFrames() > 0) {
                         if (e.getRemovalFrames() < 30) {
                             e.drawFade(canvas, e.getRemovalFrames(), 1f / 30f);
-                        } else if (e.getRemovalFrames() < 50) {
-                            e.drawFade(canvas, 45 - e.getRemovalFrames(), 1f / 10f);
+                        } else if (e.getRemovalFrames() < 45) {
+                            e.drawFade(canvas, 45 - e.getRemovalFrames(), 1f / 15f);
                         } else if (e.getRemovalFrames() < 60) {
-                            e.drawFade(canvas, e.getRemovalFrames() - 45, 1f / 10f);
+                            e.drawFade(canvas, e.getRemovalFrames() - 45, 1f / 15f);
                         }
                     }
                 }
