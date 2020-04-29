@@ -221,7 +221,15 @@
       "volume": 0.8
     },
     "pew": {
-      "file": "sounds/pew.mp3",
+      "file": "sounds/turrent_sound_1.mp3",
+      "volume": 0.4
+    },
+    "pew_past": {
+      "file": "sounds/turrent_sound_rhodes.mp3",
+      "volume": 0.4
+    },
+    "pew_present": {
+      "file": "sounds/whip_sample_1.mp3",
       "volume": 0.1
     },
     "pop": {
