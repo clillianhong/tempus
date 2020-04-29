@@ -1437,9 +1437,6 @@ public class LevelController extends WorldController {
 			return;
 		}
 
-		// Do not draw while player is dashing or not holding a projectile
-		// if (avatar.isDashing() && !avatar.isHolding())
-		// return;
 		if (!avatar.canDash() && !avatar.isSticking() && !avatar.isHolding())
 			return;
 		// Draw dynamic dash indicator
@@ -1447,26 +1444,14 @@ public class LevelController extends WorldController {
 		cursor = camera.unproject(cursor);
 		cursor.scl(1/scale.x, 1/scale.y,0);
 		Vector2 mousePos = new Vector2(cursor.x , cursor.y );
-
-		System.out.println("MOUSE POSITION: " + mousePos.x + " " + mousePos.y);
-		System.out.println("AVATAR POSITION: " + avatar.getPosition().x + " " + avatar.getPosition().y);
-
 		Vector2 redirection = avatar.getPosition().cpy().sub(mousePos).nor();
 		TextureRegion circle = JsonAssetManager.getInstance().getEntry("circle", TextureRegion.class);
 		TextureRegion arrow = JsonAssetManager.getInstance().getEntry("arrow", TextureRegion.class);
 		Vector2 avPos = avatar.getPosition();
-//		Vector2 mPos = canvas.getViewport().unproject(InputController.getInstance().getMousePosition());
 		Vector2 mPos = mousePos;
 		Vector2 startPos = avPos.cpy().scl(scale);
 		mousePos = mPos.cpy().scl(scale);
-		// Vector2 alteredPos = mousePos.sub(startPos).nor();
-		// float dist = avatar.getDashRange();
 		float dist = Math.min(avatar.getDashRange(), avPos.dst(mPos));
-		// Vector2 endPos = alteredPos.scl(dist).scl(scale);
-		// endPos.add(startPos);
-		// canvas.drawLine(startPos.x, startPos.y, endPos.x, endPos.y, 0, 1, 0.6f, 1);
-		//canvas.begin();
-		// System.out.println(scale);
 		if (!avatar.isHolding()) {
 			canvas.draw(circle, Color.WHITE, circle.getRegionWidth() / 2, circle.getRegionHeight() / 2,
 					avatar.getX() * scale.x, avatar.getY() * scale.y, redirection.angle() / 57, 0.0095f * scale.x * dist* 1.5f,
@@ -1570,7 +1555,7 @@ public class LevelController extends WorldController {
 				displayFont.setColor(Color.YELLOW);
 				canvas.draw(win_room,Color.WHITE, 0f,0f, (float)sw, (float) sh);
 				canvas.end();
-				reset();
+//				reset();
 			}else{
 				stage.addAction(Actions.sequence(Actions.fadeOut(0.3f), Actions.run(new Runnable() {
 					@Override
