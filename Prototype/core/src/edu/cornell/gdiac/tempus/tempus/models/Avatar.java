@@ -291,7 +291,7 @@ public class Avatar extends CapsuleObstacle {
             System.out.println("dash angle: " + mousePos.cpy().sub(this.getPosition()).angleRad());
             System.out.println("avatar angle: " + getAngle());
             //this.setStartedDashing(2);
-            if (Math.abs(mousePos.cpy().sub(this.getPosition()).angleRad() + Math.PI / 2 - getAngle()) > Math.PI / 6) {
+            if (Math.abs(mousePos.cpy().sub(this.getPosition()).angleRad() + Math.PI / 2 - getAngle()) > Math.PI / 2.5f) {
                 this.setDimension(width / 4f, height / 4f);
                 this.setDensity(density * 16f);
             }
