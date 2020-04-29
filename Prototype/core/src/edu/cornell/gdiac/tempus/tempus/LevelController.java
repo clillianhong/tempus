@@ -503,12 +503,12 @@ public class LevelController extends WorldController {
 		float[] newPlatRounded = levelFormat.get("roundshape").asFloatArray();
 		float[] newSpikes = levelFormat.get("spikeshape").asFloatArray();*/
 
-		float[] newPlatCapsule = {0.4f, 1.1f, 0.5f, 1.1f, 2.6f, 1.1f, 2.7f, 1.1f, 2.6f, 0.6f, 2.0f, 0.3f, 1.1f, 0.3f, 0.5f, 0.6f};
+		float[] newPlatCapsule = {0.5f, 1.1f, 0.6f, 1.1f, 2.5f, 1.1f, 2.6f, 1.1f, 2.6f, 0.6f, 2.0f, 0.3f, 1.1f, 0.3f, 0.5f, 0.6f};
 		float[] newPlatDiamond = {0.4f, 1.8f, 0.5f, 1.8f, 2.1f, 1.8f, 2.2f, 1.8f, 1.4f, 0.1f};
 		float[] newPlatRounded = {0.4f, 1.4f, 0.8f, 1.7f, 2.1f, 1.7f, 2.4f, 1.4f, 2.3f, 0.8f, 1.7f, 0.3f, 1.1f, 0.3f};
 		float[] newSpikes = {0.3f, -0.6f, 0.0f, -0.2f, -0.6f, 0.0f, -0.5f, 0.4f, 0.0f, 0.6f, 0.4f, -0.2f, 0.6f, -0.3f};
-		float[] newPlatLongcapsule = {0.4f, 1.1f, 0.5f, 1.1f, 2.7f, 1.1f,
-				4.9f, 1.1f, 5.0f, 1.1f,
+		float[] newPlatLongcapsule = {0.5f, 1.1f, 0.6f, 1.1f, 2.7f, 1.1f,
+				4.8f, 1.1f, 4.9f, 1.1f,
 				4.9f, 0.6f, 4.3f, 0.3f, 3.4f, 0.3f,
 				2.7f, 0.5f, 2.0f, 0.3f, 1.1f, 0.3f, 0.5f, 0.6f};
 		float[] newPlatTall = {0.4f, 3.9f, 0.5f, 3.9f, 1.6f, 3.9f, 1.7f, 3.9f, 1.1f, 0.5f};
@@ -1087,7 +1087,7 @@ public class LevelController extends WorldController {
 				avatar.resetDashNum(-1);
 			}
 			shifted = !shifted;
-			avatar.setShifted(15);
+			avatar.setShifted(10);
 			if (shifted) {
 				JsonValue ripple = assetDirectory.get("sounds").get("ripple_to_past");
 				SoundController.getInstance().play(ripple.get("file").asString(), ripple.get("file").asString(), false, EFFECT_VOLUME * 2);
@@ -1155,6 +1155,7 @@ public class LevelController extends WorldController {
 				avatar.setDashDistance(Math.min(avatar.getDashRange(), mousePos.cpy().sub(avatar.getPosition()).len()));
 				avatar.setDashForceDirection(mousePos.cpy().sub(avatar.getPosition()));
 //				avatar.setStartedDashing(1);
+				avatar.setDashCounter(3);
 				if (Math.abs(mousePos.cpy().sub(avatar.getPosition()).angleRad() + Math.PI / 2 - avatar.getAngle()) > Math.PI / 2.5f) {
 					avatar.setDimension(avatar.width / 4f, avatar.height / 4f);
 					avatar.setDensity(avatar.getDensity() * 16f);
