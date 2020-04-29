@@ -40,6 +40,42 @@
       "file": "textures/platform/both_round.png",
       "wrap": false
     },
+    "both_longcapsule": {
+      "file": "textures/platform/platform_longcapsule_lv_2_both.png",
+      "wrap": false
+    },
+    "past_longcapsule": {
+      "file": "textures/platform/platform_longcapsule_lv_2_past.png",
+      "wrap": false
+    },
+    "present_longcapsule": {
+      "file": "textures/platform/platform_longcapsule_lv_2_present.png",
+      "wrap": false
+    },
+    "both_pillar": {
+      "file": "textures/platform/platform_pillar_lv_2_both.png",
+      "wrap": false
+    },
+    "past_pillar": {
+      "file": "textures/platform/platform_pillar_lv_2_past.png",
+      "wrap": false
+    },
+    "present_pillar": {
+      "file": "textures/platform/platform_pillar_lv_2_present.png",
+      "wrap": false
+    },
+    "both_tall": {
+      "file": "textures/platform/platform_tall_lv_2_both.png",
+      "wrap": false
+    },
+    "present_tall": {
+      "file": "textures/platform/platform_tall_lv_2_present.png",
+      "wrap": false
+    },
+    "past_tall": {
+      "file": "textures/platform/platform_tall_lv_2_past.png",
+      "wrap": false
+    },
     "spikes": {
       "file": "textures/general/spike2.png",
       "wrap": true

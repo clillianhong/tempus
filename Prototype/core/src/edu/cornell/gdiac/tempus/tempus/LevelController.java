@@ -469,6 +469,10 @@ public class LevelController extends WorldController {
 		float[] newPlatDiamond = {0.4f, 1.8f, 0.5f, 1.8f, 2.1f, 1.8f, 2.2f, 1.8f, 1.4f, 0.1f};
 		float[] newPlatRounded = {0.4f, 1.4f, 0.8f, 1.7f, 2.1f, 1.7f, 2.4f, 1.4f, 2.3f, 0.8f, 1.7f, 0.3f, 1.1f, 0.3f};
 		float[] newSpikes = {0.3f, -0.6f, 0.0f, -0.2f, -0.6f, 0.0f, -0.5f, 0.4f, 0.0f, 0.6f, 0.4f, -0.2f, 0.6f, -0.3f};
+		float[] newPlatLongcapsule = {0.4f, 1.1f, 0.5f, 1.1f, 2.6f, 1.1f, 2.7f, 1.1f, 2.6f, 0.6f, 2.0f, 0.3f, 1.1f, 0.3f, 0.5f, 0.6f};
+		float[] newPlatTall = {0.4f, 1.1f, 0.5f, 1.1f, 2.6f, 1.1f, 2.7f, 1.1f, 2.6f, 0.6f, 2.0f, 0.3f, 1.1f, 0.3f, 0.5f, 0.6f};
+		float[] newPlatPillar = {0.4f, 1.1f, 0.5f, 1.1f, 2.6f, 1.1f, 2.7f, 1.1f, 2.6f, 0.6f, 2.0f, 0.3f, 1.1f, 0.3f, 0.5f, 0.6f};
+
 
 		JsonValue capsule = levelFormat.get("capsules").child();
 		while (capsule != null) {
@@ -477,6 +481,33 @@ public class LevelController extends WorldController {
 			obj.setDrawScale(scale);
 			addObject(obj);
 			capsule = capsule.next();
+		}
+
+		JsonValue longcapsule = levelFormat.get("longcapsules").child();
+		while (longcapsule != null) {
+			Platform obj = new Platform(newPlatLongcapsule);
+			obj.initialize(longcapsule);
+			obj.setDrawScale(scale);
+			addObject(obj);
+			longcapsule = longcapsule.next();
+		}
+
+		JsonValue pillar = levelFormat.get("pillars").child();
+		while (pillar != null) {
+			Platform obj = new Platform(newPlatPillar);
+			obj.initialize(pillar);
+			obj.setDrawScale(scale);
+			addObject(obj);
+			pillar = pillar.next();
+		}
+
+		JsonValue tall = levelFormat.get("talls").child();
+		while (tall != null) {
+			Platform obj = new Platform(newPlatTall);
+			obj.initialize(tall);
+			obj.setDrawScale(scale);
+			addObject(obj);
+			tall = tall.next();
 		}
 		// TODO: Delete
 		// for (int ii = 0; ii < PRESENT_CAPSULES.length; ii++) {
