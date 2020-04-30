@@ -1,5 +1,8 @@
 package edu.cornell.gdiac.tempus.tempus.models;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.utils.JsonReader;
+import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.gdiac.tempus.GameCanvas;
 import edu.cornell.gdiac.tempus.MusicController;
 import edu.cornell.gdiac.tempus.tempus.LevelController;
@@ -26,6 +29,12 @@ public class LevelModel {
     /** list of rooms */
     protected LevelController[] rooms;
 
+    protected JsonReader jsonReader;
+
+    protected JsonValue assetDirectory;
+
+
+
     public LevelModel(int lv, boolean unlocked, boolean finished, int resume, LevelController[] rms){
         level_number = lv;
         level_unlocked = unlocked;
@@ -35,6 +44,8 @@ public class LevelModel {
         current_room = rooms[current_room_idx];
         listener = null;
         canvas = null;
+        jsonReader = new JsonReader();
+        assetDirectory = jsonReader.parse(Gdx.files.internal("jsons/assets.json"));
     }
 
     public int getRoomCount(){
@@ -122,7 +133,25 @@ public class LevelModel {
     }
 
     public void playMusic(){
-        current_room.playMusic(level_number);
+        String past = "past2";
+        String present = "present2";
+        if (level_number == 1) {
+            past = "past1";
+            present = "present1";
+        } else if (level_number == 2) {
+            past = "past2";
+            present = "present2";
+        } else if (level_number == 3) {
+            past = "past3";
+            present = "present3";
+        } else if (level_number == 4) {
+            past = "past4";
+            present = "present4";
+        }
+        JsonValue pastMus = assetDirectory.get("music").get(past);
+        MusicController.getInstance().play("past", pastMus.get("file").asString(), true, 0.0f);
+        JsonValue presentMus = assetDirectory.get("music").get(present);
+        MusicController.getInstance().play("present", presentMus.get("file").asString(), true, 1.0f);
     }
 
 }
