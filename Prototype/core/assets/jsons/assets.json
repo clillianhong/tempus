@@ -81,7 +81,7 @@
       "wrap": true
     },
     "goal": {
-      "file": "textures/general/goaldoor.png",
+      "file": "textures/general/goaldoor_open.png",
       "wrap": true
     },
     "dude": {
