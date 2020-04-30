@@ -49,7 +49,7 @@ import jdk.nashorn.internal.runtime.JSONFunctions;
  */
 public class LoadingMode implements Screen {
 	// Textures necessary to support the loading screen 
-	private static final String BACKGROUND_FILE = "textures/background/loadingbackground.png";
+	private static final String BACKGROUND_FILE = "textures/background/loadingbackground_2.png";
 	private static final String FLOWER_1_FILE = "textures/gui/loadingmode/flower1.png";
 	private static final String FLOWER_2_FILE = "textures/gui/loadingmode/flower2.png";
 	private static final String FLOWER_3_FILE = "textures/gui/loadingmode/flower3.png";
