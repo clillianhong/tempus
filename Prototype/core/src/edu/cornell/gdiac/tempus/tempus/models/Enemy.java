@@ -744,10 +744,6 @@ public class Enemy extends CapsuleObstacle {
         if(getAi() == EnemyType.FLY){
             float faceoffset = 2*getWidth() * faceDirection;
 
-            System.out.println("GET X: "+ getX());
-            System.out.println("GET ORIGIN X: " + origin.x);
-            System.out.println("GET Y: " + getY());
-            System.out.println("GET ORIGIN Y: " + origin.y);
             canvas.draw(currentStrip, Color.WHITE, origin.x, origin.y,  (getX() - faceoffset) * drawScale.x, (getY()-getHeight()) * drawScale.y,
                     getAngle(), 0.024f * minimizeScale * drawScale.x * faceDirection , 0.0225f * minimizeScale * drawScale.y);
         }else{
