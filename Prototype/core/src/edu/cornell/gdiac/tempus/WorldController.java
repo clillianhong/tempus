@@ -513,6 +513,29 @@ public abstract class WorldController implements Screen {
 	 */
 	public void postUpdate(float dt) {
 		// Add any objects created by actions
+		// Toggle debug
+		InputController input = InputController.getInstance();
+		if (input.didDebug()) {
+			debug = !debug;
+		}
+
+		// Handle resets
+		if (input.didReset()) {
+			reset();
+		}
+
+		if (input.didAdvance()) {
+			listener.exitScreen(this, ScreenExitCodes.EXIT_NEXT.ordinal());
+		} else if (input.didRetreat()) {
+			listener.exitScreen(this, ScreenExitCodes.EXIT_PREV.ordinal());
+		} else if (countdown > 0) {
+			countdown--;
+		} else if (countdown == 0) {
+			if (complete) {
+				listener.exitScreen(this, ScreenExitCodes.EXIT_NEXT.ordinal());
+			}
+		}
+
 		while (!addQueue.isEmpty()) {
 			Obstacle b = addQueue.poll();
 			addObject(b);
@@ -546,20 +569,6 @@ public abstract class WorldController implements Screen {
 			}
 		}
 
-		InputController input = InputController.getInstance();
-		if (input.didAdvance()) {
-			listener.exitScreen(this, ScreenExitCodes.EXIT_NEXT.ordinal());
-		} else if (input.didRetreat()) {
-			listener.exitScreen(this, ScreenExitCodes.EXIT_PREV.ordinal());
-		} else if (countdown > 0) {
-			countdown--;
-		} else if (countdown == 0) {
-			if (failed) {
-				reset();
-			} else if (complete) {
-				listener.exitScreen(this, ScreenExitCodes.EXIT_NEXT.ordinal());
-			}
-		}
 	}
 	
 	/**
