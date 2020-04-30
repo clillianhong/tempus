@@ -81,6 +81,10 @@ public class LevelController extends WorldController {
 	SpriteBatch batch;
 	/** background sprite for rendering w shader */
 	Sprite bgSprite;
+	/** Alpha adjustment for end level drawing sequence */
+	private boolean drawEndRoom;
+	/** Alpha adjustment for end level drawing sequence */
+	private float drawFadeAlpha;
 
 
 
@@ -345,6 +349,8 @@ public class LevelController extends WorldController {
 		delta_x = 1000;
 		delta_y = 1000;
 		fish_pos = new Vector2(0, 0);
+		drawEndRoom = false;
+		drawFadeAlpha = 0;
 
 		camera = new OrthographicCamera(sw,sh);
 		viewport = new FitViewport(sw, sh, camera);
@@ -361,7 +367,10 @@ public class LevelController extends WorldController {
 	 */
 	public void reset() {
 		// Vector2 gravity = new Vector2(world.getGravity());
-
+		drawEndRoom = false;
+		drawFadeAlpha = 0;
+		canvas.getSpriteBatch().setColor(1,1,1,1);
+		canvas.setBlendState(GameCanvas.BlendState.NO_PREMULT);
 		numEnemies = 0;
 		paused = false;
 		prepause = false;
@@ -423,7 +432,7 @@ public class LevelController extends WorldController {
 				TextureRegion.class);
 		bgSprite = new Sprite(presentBackgroundTexture);
 
-		win_room = new TextureRegion(new Texture(Gdx.files.local("textures/gui/level_complete.png")));
+//		win_room = new TextureRegion(new Texture(Gdx.files.local("textures/background/blackscreen.png")));
 		createUI();
 
 		// Initializes the world
@@ -747,7 +756,6 @@ public class LevelController extends WorldController {
 		}
 
 		if(failed){
-			System.out.println("reset here");
 			reset();
 		}
 
@@ -816,14 +824,6 @@ public class LevelController extends WorldController {
 			reset();
 		}
 
-		if (input.didAdvance()) {
-			listener.exitScreen(this, ScreenExitCodes.EXIT_NEXT.ordinal());
-		} else if (input.didRetreat()) {
-			listener.exitScreen(this, ScreenExitCodes.EXIT_PREV.ordinal());
-		} else if (complete) {
-				listener.exitScreen(this, ScreenExitCodes.EXIT_NEXT.ordinal());
-
-		}
 
 
 		MusicController.getInstance().update(shifted);
@@ -1351,70 +1351,73 @@ public class LevelController extends WorldController {
 		canvas.clear();
 		canvas.updateSpriteBatch();
 
-
+		if(drawEndRoom){
+			stage.getBatch().setColor(1f,1f,1f,Math.max(0.5f,1-drawFadeAlpha));
+			canvas.getSpriteBatch().setColor(1f,1f,1f,Math.max(0f,1-drawFadeAlpha));
+			drawFadeAlpha +=.01f;
+		}
 
 		//VIEWPORT UPDATES
-
-		canvas.getViewport().apply();
-
-		//VIEWPORT UPDATES
-		batch.setProjectionMatrix(canvas.getViewport().getCamera().combined);
+		stage.getBatch().setProjectionMatrix(stage.getViewport().getCamera().combined);
+		stage.getCamera().update();
 		// render batch with shader
-		batch.begin();
+		stage.getBatch().begin();
 		if (rippleOn) {
 			updateShader(false);
-			batch.setShader(shaderprog);
+			stage.getBatch().setShader(shaderprog);
 		}
 		if (shifted) {
 			bgSprite.setRegion(pastBackgroundTexture);
 		} else {
 			bgSprite.setRegion(presentBackgroundTexture);
 		}
-		batch.draw(bgSprite, 0, 0, sw, sh);
-		batch.end();
+		stage.getBatch().draw(bgSprite, 0, 0, sw, sh);
+		stage.getBatch().end();
 
+//		batch.setProjectionMatrix(canvas.getViewport().getCamera().combined);
+//		// render batch with shader
+//		batch.begin();
+//		if (rippleOn) {
+//			updateShader(false);
+//			batch.setShader(shaderprog);
+//		}
+//		if (shifted) {
+//			bgSprite.setRegion(pastBackgroundTexture);
+//		} else {
+//			bgSprite.setRegion(presentBackgroundTexture);
+//		}
+//		batch.draw(bgSprite, 0, 0, sw, sh);
+//		batch.end();
 
+			canvas.begin();
 
-		canvas.begin();
+			drawObjectInWorld();
+			drawIndicator(canvas);
 
-		drawObjectInWorld();
-		drawIndicator(canvas);
+			if(!isTutorial){
+				drawLives(canvas);
+			}
 
-		if(!isTutorial){
-			drawLives(canvas);
-		}
+			if (debug) {
+				canvas.beginDebug();
+				drawDebugInWorld();
+				canvas.endDebug();
+			}
 
-		if (debug) {
-			canvas.beginDebug();
-			drawDebugInWorld();
-			canvas.endDebug();
-		}
+			canvas.end();
 
-		canvas.end();
-
-
-		stage.getBatch().setProjectionMatrix(stage.getCamera().combined);
-		stage.getCamera().update();
-		stage.act(Gdx.graphics.getDeltaTime());
-		stage.draw();
 
 
 		// Final message
-		if (complete && !failed) {
-			System.out.println("CHANGE ROOMS ");
+		if (complete && !failed ) {
+			drawEndRoom = true;
+//			System.out.println("BLEND STATE" + canvas.getBlendState());
+			canvas.setBlendState(GameCanvas.BlendState.ADDITIVE);
+			stage.getBatch().setBlendFunction(GL20.GL_SRC_ALPHA,GL20.GL_ONE);
+
 			if(GameStateManager.getInstance().lastRoom()){
-				canvas.begin();
-				displayFont.setColor(Color.YELLOW);
-				canvas.draw(win_room,Color.WHITE, 0f,0f, (float)sw, (float) sh);
-				canvas.end();
-//				reset();
+				//TODO: ADD END LEVEL STATE
 			}
-			stage.addAction(Actions.sequence(Actions.fadeOut(0.3f), Actions.run(new Runnable() {
-				@Override
-				public void run() {
-					exitNextRoom();
-				}
-			})));
 
 		} else if (failed) {
 			canvas.begin();
@@ -1422,6 +1425,10 @@ public class LevelController extends WorldController {
 			canvas.drawTextCentered("FAILURE", displayFont, 0.0f);
 			canvas.end();
 		}
+
+		stage.act(Gdx.graphics.getDeltaTime());
+		stage.draw();
+
 
 
 

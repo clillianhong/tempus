@@ -162,7 +162,7 @@ public abstract class WorldController implements Screen {
 	/** Exit code for jumping back to previous level */
 	public static final int EXIT_PREV = 2;
     /** How many frames after winning/losing do we continue? */
-	public static final int EXIT_COUNT = 120;
+	public static final int EXIT_COUNT = 20;
 
 	/** The amount of time for a physics engine step. */
 	public static final float WORLD_STEP = 1/60.0f;
@@ -522,18 +522,6 @@ public abstract class WorldController implements Screen {
 		// Handle resets
 		if (input.didReset()) {
 			reset();
-		}
-
-		if (input.didAdvance()) {
-			listener.exitScreen(this, ScreenExitCodes.EXIT_NEXT.ordinal());
-		} else if (input.didRetreat()) {
-			listener.exitScreen(this, ScreenExitCodes.EXIT_PREV.ordinal());
-		} else if (countdown > 0) {
-			countdown--;
-		} else if (countdown == 0) {
-			if (complete) {
-				listener.exitScreen(this, ScreenExitCodes.EXIT_NEXT.ordinal());
-			}
 		}
 
 		while (!addQueue.isEmpty()) {

@@ -139,6 +139,11 @@ public class GameCanvas {
 
 	}
 
+	public PolygonSpriteBatch getSpriteBatch(){
+		return spriteBatch;
+	}
+
+
 
     /**
      * Eliminate any resources that should be garbage collected manually.
