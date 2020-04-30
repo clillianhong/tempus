@@ -192,7 +192,7 @@ public class GDXRoot extends Game implements ScreenListener {
 			} else { // go to a level
 				gameManager.setCurrentLevel(exitCode);
 				gameManager.getCurrentRoom().reset();
-				gameManager.printGameState();
+//				gameManager.printGameState();
 				gameManager.getCurrentLevel().playMusic();
 				setScreen(gameManager.getCurrentRoom());
 				current = exitCode;
@@ -204,7 +204,8 @@ public class GDXRoot extends Game implements ScreenListener {
 			gameManager.stepGame(false);
 			gameManager.updateGameState();
 			LevelController room = gameManager.getCurrentRoom();
-			gameManager.printGameState();
+			canvas.setBlendState(GameCanvas.BlendState.NO_PREMULT);
+//			gameManager.printGameState();
 			room.reset();
 			setScreen(room);
 		} else if (exitCode == ScreenExitCodes.EXIT_PREV.ordinal()) {

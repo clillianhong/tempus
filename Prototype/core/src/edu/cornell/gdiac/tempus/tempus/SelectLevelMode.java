@@ -275,7 +275,7 @@ public class SelectLevelMode implements Screen {
         float cw = sw * 0.9f;
         float ch = sh * 0.8f;
 
-        backgroundTexture = new TextureRegion(new Texture(Gdx.files.internal("textures/gui/selectmode/select_level_bg.png")));
+        backgroundTexture = new TextureRegion(new Texture(Gdx.files.internal("textures/gui/selectmode/select_level_bg_blur.png")));
 
         //table container to center main table
         Container<Table> edgeContainer = new Container<Table>();
