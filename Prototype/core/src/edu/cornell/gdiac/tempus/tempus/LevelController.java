@@ -806,6 +806,26 @@ public class LevelController extends WorldController {
 			pauseGame();
 		}
 
+		InputController input = InputController.getInstance();
+		if (input.didDebug()) {
+			debug = !debug;
+		}
+
+		// Handle resets
+		if (input.didReset()) {
+			reset();
+		}
+
+		if (input.didAdvance()) {
+			listener.exitScreen(this, ScreenExitCodes.EXIT_NEXT.ordinal());
+		} else if (input.didRetreat()) {
+			listener.exitScreen(this, ScreenExitCodes.EXIT_PREV.ordinal());
+		} else if (complete) {
+				listener.exitScreen(this, ScreenExitCodes.EXIT_NEXT.ordinal());
+
+		}
+
+
 		MusicController.getInstance().update(shifted);
 
 		if (avatar.getShifted() > 0) {
