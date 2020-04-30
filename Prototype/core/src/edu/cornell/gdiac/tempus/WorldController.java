@@ -205,7 +205,7 @@ public abstract class WorldController implements Screen {
 	/** Whether or not debug mode is active */
 	private boolean debug;
 	/** Countdown active for winning or losing */
-	private int countdown;
+	protected int countdown;
 
 
 	/**
