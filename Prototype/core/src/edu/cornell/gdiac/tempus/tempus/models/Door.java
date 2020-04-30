@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.utils.JsonValue;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import edu.cornell.gdiac.tempus.GameCanvas;
 import edu.cornell.gdiac.tempus.obstacle.BoxObstacle;
 import edu.cornell.gdiac.util.*;
@@ -18,6 +19,9 @@ public class Door extends BoxObstacle {
      */
     private static Vector2 GOAL_POS = new Vector2(29.5f, 15.5f);
     private boolean open;
+
+    /** Texture for locked door */
+    private TextureRegion locked_texture;
 
 
     public Door(float x, float y, float width, float height, int next_level, Vector2 scale) {
@@ -42,6 +46,7 @@ public class Door extends BoxObstacle {
 
     public void initialize(JsonValue key) {
         TextureRegion goalTile = JsonAssetManager.getInstance().getEntry(key.get("texture").asString(), TextureRegion.class);
+        locked_texture = JsonAssetManager.getInstance().getEntry("goal_locked", TextureRegion.class);
         float[] pos = key.get("pos").asFloatArray();
         float[] size = key.get("size").asFloatArray();
         setPosition(pos[0], pos[1]);
@@ -62,9 +67,10 @@ public class Door extends BoxObstacle {
      * @param canvas Drawing context
      */
     public void draw(GameCanvas canvas) {
+        TextureRegion locked_door = locked_texture != null ? locked_texture : texture;
         if (texture != null) {
             if (!open) {
-                canvas.draw(texture, Color.RED, origin.x, origin.y, getX() * drawScale.x, getY() * drawScale.y, getAngle(), 0.015f * drawScale.x, 0.015f * drawScale.y);
+                canvas.draw(locked_door, Color.GRAY, origin.x, origin.y, getX() * drawScale.x, getY() * drawScale.y, getAngle(), 0.015f * drawScale.x, 0.015f * drawScale.y);
             } else {
                 canvas.draw(texture, Color.WHITE, origin.x, origin.y, getX() * drawScale.x, getY() * drawScale.y, getAngle(), 0.015f * drawScale.x, 0.015f * drawScale.y);
 
