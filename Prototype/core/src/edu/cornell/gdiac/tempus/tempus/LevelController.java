@@ -82,7 +82,7 @@ public class LevelController extends WorldController {
 	/** background sprite for rendering w shader */
 	Sprite bgSprite;
 	/** Alpha adjustment for end level drawing sequence */
-	private boolean drawEndRoom;
+	protected boolean drawEndRoom;
 	/** Alpha adjustment for end level drawing sequence */
 	private float drawFadeAlpha;
 	/** Alpha minimum (darker for end of level) */
