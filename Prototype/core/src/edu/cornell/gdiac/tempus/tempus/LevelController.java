@@ -835,20 +835,10 @@ public class LevelController extends WorldController {
 		// test slow down time
 		if (timeFreeze) {
 			world.step(WORLD_STEP / 8, WORLD_VELOC, WORLD_POSIT);
-			// for (Obstacle o : objects) {
-			// if (o instanceof Enemy) {
-			// ((Enemy) o).slowCoolDown(true);
-			// }
-			// }
 			enemyController.slowCoolDown(true);
 
 		} else {
 			world.step(WORLD_STEP, WORLD_VELOC, WORLD_POSIT);
-			// for (Obstacle o : objects) {
-			// if (o instanceof Enemy) {
-			// ((Enemy) o).slowCoolDown(false);
-			// }
-			// }
 			enemyController.slowCoolDown(false);
 		}
 		avatar.decImmortality();
