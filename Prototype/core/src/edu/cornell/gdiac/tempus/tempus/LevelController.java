@@ -85,6 +85,8 @@ public class LevelController extends WorldController {
 	private boolean drawEndRoom;
 	/** Alpha adjustment for end level drawing sequence */
 	private float drawFadeAlpha;
+	/** Alpha minimum (darker for end of level) */
+	private float minAlpha;
 
 
 
@@ -106,6 +108,7 @@ public class LevelController extends WorldController {
 	float maxRippleDistance = 2f;
 	float m_rippleRange;
 	boolean rippleOn;
+	float ripple_intensity;
 
 	float time_incr;
 
@@ -330,6 +333,7 @@ public class LevelController extends WorldController {
 		begincount = 10;
 		enemyController = new EnemyController(enemies, objects, avatar, world, scale, this, assetDirectory);
 		isTutorial = false;
+		ripple_intensity = 0.009f;
 
 		// ripple shader
 		ticks = 0f;
@@ -351,6 +355,7 @@ public class LevelController extends WorldController {
 		fish_pos = new Vector2(0, 0);
 		drawEndRoom = false;
 		drawFadeAlpha = 0;
+		minAlpha = 0.5f;
 
 		camera = new OrthographicCamera(sw,sh);
 		viewport = new FitViewport(sw, sh, camera);
@@ -382,6 +387,8 @@ public class LevelController extends WorldController {
 		addQueue.clear();
 		world.dispose();
 		shifted = false;
+		ripple_intensity = 0.009f;
+		rippleSpeed = 0.25f;
 		begincount = 10;
 		// world = new World(gravity, false);
 		world.setContactListener(collisionController);
@@ -983,7 +990,7 @@ public class LevelController extends WorldController {
 				m_rippleRange = 0;
 			}
 			m_rippleDistance += rippleSpeed * ticks;
-			m_rippleRange = (1 - m_rippleDistance / maxRippleDistance) * 0.009f;
+			m_rippleRange = (1 - m_rippleDistance / maxRippleDistance) * ripple_intensity;
 		}
 
 		// Process actions in object model
@@ -1296,10 +1303,10 @@ public class LevelController extends WorldController {
 
 	public void updateShader(boolean failedState) {
 
-		if(!failedState){
-			prev_m_rippleDistance = m_rippleRange;
-			m_rippleRange = (1 - m_rippleDistance / maxRippleDistance) * 0.02f;
-		}
+
+		prev_m_rippleDistance = m_rippleRange;
+		m_rippleRange = (1 - m_rippleDistance / maxRippleDistance) * ripple_intensity;
+
 		// write to shader
 		shaderprog.begin();
 		shaderprog.setUniformf("time", ticks);
@@ -1352,8 +1359,8 @@ public class LevelController extends WorldController {
 		canvas.updateSpriteBatch();
 
 		if(drawEndRoom){
-			stage.getBatch().setColor(1f,1f,1f,Math.max(0.5f,1-drawFadeAlpha));
-			canvas.getSpriteBatch().setColor(1f,1f,1f,Math.max(0f,1-drawFadeAlpha));
+			stage.getBatch().setColor(1f,1f,1f,Math.max(minAlpha,1-drawFadeAlpha));
+			canvas.getSpriteBatch().setColor(1f,1f,1f,Math.max(minAlpha,1-drawFadeAlpha));
 			drawFadeAlpha +=.01f;
 		}
 
@@ -1409,15 +1416,27 @@ public class LevelController extends WorldController {
 
 
 		// Final message
-		if (complete && !failed ) {
+		if (complete && !failed && !drawEndRoom) {
 			drawEndRoom = true;
 //			System.out.println("BLEND STATE" + canvas.getBlendState());
 			canvas.setBlendState(GameCanvas.BlendState.ADDITIVE);
 			stage.getBatch().setBlendFunction(GL20.GL_SRC_ALPHA,GL20.GL_ONE);
 
+
 			if(GameStateManager.getInstance().lastRoom()){
+				rippleOn = true;
+				countdown = 200;
+				rippleSpeed = 0.1f;
+				minAlpha = 0f;
 				//TODO: ADD END LEVEL STATE
+			}else{
+				rippleOn = true;
+				countdown = 60;
+				minAlpha = 0.5f;
 			}
+			ripple_intensity = 0.2f;
+			updateShader(false);
+
 
 		} else if (failed) {
 			canvas.begin();
