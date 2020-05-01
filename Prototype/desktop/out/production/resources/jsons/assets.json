@@ -1,0 +1,372 @@
+{
+  "textures": {
+    "earth": {
+      "file": "textures/platform/platform_rectangle_lv_1.png",
+      "wrap": true
+    },
+    "present_capsule": {
+      "file": "textures/platform/platform_capsule_lv_2_present.png",
+      "wrap": false
+    },
+    "past_capsule": {
+      "file": "textures/platform/platform_capsule_lv_2_past.png",
+      "wrap": false
+    },
+    "both_capsule": {
+      "file": "textures/platform/both_capsule.png",
+      "wrap": false
+    },
+    "present_diamond": {
+      "file": "textures/platform/platform_diamond_lv_2_present.png",
+      "wrap": false
+    },
+    "past_diamond": {
+      "file": "textures/platform/platform_diamond_lv_2_past.png",
+      "wrap": false
+    },
+    "both_diamond": {
+      "file": "textures/platform/both_diamond.png",
+      "wrap": false
+    },
+    "present_round": {
+      "file": "textures/platform/platform_rounded_lv_2_present.png",
+      "wrap": false
+    },
+    "past_round": {
+      "file": "textures/platform/platform_rounded_lv_2_past.png",
+      "wrap": false
+    },
+    "both_round": {
+      "file": "textures/platform/both_round.png",
+      "wrap": false
+    },
+    "both_longcapsule": {
+      "file": "textures/platform/platform_longcapsule_lv_2_both.png",
+      "wrap": false
+    },
+    "past_longcapsule": {
+      "file": "textures/platform/platform_longcapsule_lv_2_past.png",
+      "wrap": false
+    },
+    "present_longcapsule": {
+      "file": "textures/platform/platform_longcapsule_lv_2_present.png",
+      "wrap": false
+    },
+    "both_pillar": {
+      "file": "textures/platform/platform_pillar_lv_2_both.png",
+      "wrap": false
+    },
+    "past_pillar": {
+      "file": "textures/platform/platform_pillar_lv_2_past.png",
+      "wrap": false
+    },
+    "present_pillar": {
+      "file": "textures/platform/platform_pillar_lv_2_present.png",
+      "wrap": false
+    },
+    "both_tall": {
+      "file": "textures/platform/platform_tall_lv_2_both.png",
+      "wrap": false
+    },
+    "present_tall": {
+      "file": "textures/platform/platform_tall_lv_2_present.png",
+      "wrap": false
+    },
+    "past_tall": {
+      "file": "textures/platform/platform_tall_lv_2_past.png",
+      "wrap": false
+    },
+    "spikes": {
+      "file": "textures/general/spike2.png",
+      "wrap": true
+    },
+    "goal": {
+      "file": "textures/general/goaldoor_open.png",
+      "wrap": true
+    },
+    "dude": {
+      "file": "textures/dude.png",
+      "wrap": false
+    },
+    "barrier": {
+      "file": "textures/barrier.png",
+      "wrap": false
+    },
+    "bullet": {
+      "file": "textures/enemy/projectile/projectile_stationary_lv_1.png",
+      "wrap": false
+    },
+    "bulletbig":{
+      "file": "textures/enemy/projectile/projectile_big_stationary_lv_1.png",
+      "wrap": false
+    },
+    "projpresentcaught":{
+      "file": "textures/enemy/projectile/projectile_present_caught_lv_1.png",
+      "wrap": false
+    },
+    "projpresent": {
+      "file": "textures/enemy/projectile/projectile_present_stationary_lv1.png",
+      "wrap": false
+    },
+    "projpastcaught":{
+      "file": "textures/enemy/projectile/projectile_past_caught_lv_1.png",
+      "wrap": false
+    },
+    "projpast": {
+      "file": "textures/enemy/projectile/projectile_past_stationary_lv1.png",
+      "wrap": false
+    },
+    "present_turret": {
+      "file": "textures/enemy/turret/turret_present_lv_1.png",
+      "wrap": false
+    },
+    "turret": {
+      "file": "textures/enemy/turret/turret_past_lv_1.png",
+      "wrap": false
+    },
+    "past_turret": {
+      "file": "textures/enemy/turret/turret_past_lv_1.png",
+      "wrap": false
+    },
+    "past_background1": {
+      "file": "textures/background/bg_past_lv_1.jpg",
+      "wrap": false
+    },
+    "present_background1": {
+      "file": "textures/background/bg_present_lv_1.jpg",
+      "wrap": false
+    },
+    "past_background2": {
+      "file": "textures/background/bg_past_lv_2.jpg",
+      "wrap": false
+    },
+    "present_background2": {
+      "file": "textures/background/bg_present_lv_2.jpg",
+      "wrap": false
+    },
+    "past_background3": {
+      "file": "textures/background/bg_past_lv_3.jpg",
+      "wrap": false
+    },
+    "present_background3": {
+      "file": "textures/background/bg_present_lv_3.jpg",
+      "wrap": false
+    },
+    "enemypresent_type1": {
+      "file": "textures/enemy/creature/enemy_present_alive_lv_1.png",
+      "wrap": false
+    },
+    "enemypresent_type2": {
+      "file": "textures/enemy/creature/enemy_present_alive_lv_1.png",
+      "wrap": false
+    },
+    "enemypresent_type3": {
+      "file": "textures/enemy/creature/enemy_present_alive_lv_1.png",
+      "wrap": false
+    },
+    "enemypresent_type4": {
+      "file": "textures/enemy/creature/enemy_present_alive_lv_1.png",
+      "wrap": false
+    },
+    "enemypast_type1": {
+      "file": "textures/enemy/creature/enemy_past_alive_lv_1.png",
+      "wrap": false
+    },
+    "enemypast_type2": {
+      "file": "textures/enemy/creature/enemy_past_alive_lv_1.png",
+      "wrap": false
+    },
+    "enemypast_type3": {
+      "file": "textures/enemy/creature/enemy_past_alive_lv_1.png",
+      "wrap": false
+    },
+    "enemypast_type4": {
+      "file": "textures/enemy/creature/enemy_past_alive_lv_1.png",
+      "wrap": false
+    },
+    "life": {
+      "file": "textures/indicators/bird_head.png",
+      "wrap": false
+    },
+    "streak": {
+      "file": "textures/indicators/underlinestreak.png",
+      "wrap": false
+    },
+    "circle": {
+      "file": "textures/indicators/glowingcircle_new.png",
+      "wrap": false
+    },
+    "arrow": {
+      "file": "textures/indicators/arrow_white_new.png",
+      "wrap": false
+    },
+    "projectile_circle": {
+      "file": "textures/indicators/projectile glow.png",
+      "wrap": false
+    },
+    "projectile_arrow": {
+      "file": "textures/indicators/projectilearrow.png",
+      "wrap": false
+    }
+  },
+  "fonts": {
+    "display": {
+      "file": "fonts/RetroGame.ttf",
+      "size": 64
+    }
+  },
+  "sounds": {
+    "jump": {
+      "file": "sounds/jump.mp3",
+      "volume": 0.8
+    },
+    "pew": {
+      "file": "sounds/turrent_sound_1.mp3",
+      "volume": 0.4
+    },
+    "pew_past": {
+      "file": "sounds/turrent_sound_rhodes.mp3",
+      "volume": 0.4
+    },
+    "pew_present": {
+      "file": "sounds/whip_sample_1.mp3",
+      "volume": 0.1
+    },
+    "pop": {
+      "file": "sounds/plop.mp3",
+      "volume": 0.8
+    },
+    "ripple_to_past": {
+      "file": "sounds/ripple_more_piercing.mp3",
+      "volume": 0.8
+    },
+    "ripple_to_present": {
+      "file": "sounds/ripple_less_piercing.mp3",
+      "volume": 0.8
+    }
+  },
+  "music": {
+    "past1": {
+      "file": "music/past_track_4_25.mp3"
+    },
+    "past2": {
+      "file": "music/past_track_4_25.mp3"
+    },
+    "past3": {
+      "file": "music/past_track_4_25.mp3"
+    },
+    "past4": {
+      "file": "music/past_track_4_25.mp3"
+    },
+    "present1": {
+      "file": "music/present_track_4_25.mp3"
+    },
+    "present2": {
+      "file": "music/present_track_4_25.mp3"
+    },
+    "present3": {
+      "file": "music/present_track_4_25.mp3"
+    },
+    "present4": {
+      "file": "music/present_track_4_25.mp3"
+    }
+  },
+  "filmstrips": {
+    "avatarstanding": {
+      "file": "filmstrips/avatar_standing_lv_1.png",
+      "rows": 1,
+      "cols": 1,
+      "size": 1
+    },
+    "avatarcrouching": {
+      "file": "filmstrips/avatar_beginDash_lv_1.png",
+      "rows": 1,
+      "cols": 2,
+      "size": 2
+    },
+    "avatardashing": {
+      "file": "filmstrips/avatar_dashing_lv_1.png",
+      "rows": 1,
+      "cols": 3,
+      "size": 3
+    },
+    "avatarfalling": {
+      "file": "filmstrips/avatar_falling_lv_1.png",
+      "rows": 1,
+      "cols": 3,
+      "size": 3
+    },
+    "enemywalking_present": {
+      "file": "filmstrips/enemy/enemy_shooting_present.png",
+      "rows": 4,
+      "cols": 5,
+      "size": 19
+    },
+    "enemywalking_past": {
+      "file": "filmstrips/enemy/enemy_shooting_past.png",
+      "rows": 1,
+      "cols": 1,
+      "size": 1
+    },
+    "enemyshooting_present": {
+      "file": "filmstrips/enemy/enemy_shooting_present.png",
+      "rows": 4,
+      "cols": 5,
+      "size": 19
+    },
+    "enemyshooting_past": {
+      "file": "filmstrips/enemy/enemy_shooting_past.png",
+      "rows": 1,
+      "cols": 1,
+      "size": 1
+    },
+    "enemyflying_past": {
+      "file": "filmstrips/enemy/enemy_flying.png",
+      "rows": 5,
+      "cols": 5,
+      "size": 22
+    },
+    "enemyflying_present": {
+      "file": "filmstrips/enemy/enemy_flying.png",
+      "rows": 5,
+      "cols": 5,
+      "size": 22
+    },
+    "enemyteleporting_past": {
+      "file": "filmstrips/enemy/enemy_teleporting_neutral.png",
+      "rows": 1,
+      "cols": 2,
+      "size": 2
+    },
+    "enemyteleporting_present": {
+      "file": "filmstrips/enemy/enemy_teleporting_neutral.png",
+      "rows": 1,
+      "cols": 2,
+      "size": 2
+    },
+    "enemyteleporting_activate": {
+      "file": "filmstrips/enemy/enemy_teleporting_activate.png",
+      "rows": 4,
+      "cols": 5,
+      "size": 16
+    },
+    "enemyteleporting_deactivate": {
+      "file": "filmstrips/enemy/enemy_teleporting_deactivate.png",
+      "rows": 4,
+      "cols": 5,
+      "size": 16
+    },
+    "turret_shooting_present": {
+      "file": "filmstrips/turret/turret_present_lv_1.png",
+      "rows": 1,
+      "cols": 1,
+      "size": 1
+    },
+    "turret_shooting_past": {
+      "file": "filmstrips/turret/turret_past_lv_1.png",
+      "rows": 1,
+      "cols": 1,
+      "size": 1
+    }
+  }
+}

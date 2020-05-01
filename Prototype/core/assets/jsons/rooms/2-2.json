@@ -116,19 +116,6 @@
       "restitution":0.1,
       "texture":"present_diamond",
       "space":1
-    },
-    "diamond2":{
-      "name":"past_diamond",
-      "pos":[
-        13.48,
-        10.83
-      ],
-      "bodytype":"static",
-      "density":0,
-      "friction":0.6,
-      "restitution":0.1,
-      "texture":"past_diamond",
-      "space":2
     }
   },
   "rounds":{
@@ -187,7 +174,19 @@
     }
   },
   "pillars":{
-
+    "pillar1":{
+      "name":"present_pillar",
+      "pos":[
+        27.176,
+        3.1
+      ],
+      "bodytype":"static",
+      "density":0,
+      "friction":0.6,
+      "restitution":0.1,
+      "texture":"present_pillar",
+      "space":1
+    }
   },
   "longcapsules":{
     "pastlongcapsule12":{

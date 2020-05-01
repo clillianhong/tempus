@@ -146,8 +146,8 @@
   "spikes": {
     "spike0": {
       "pos": [
-        10.9,
-        7.12
+        11.1,
+        7.82
       ],
       "bodytype": "static",
       "density": 0,
@@ -160,7 +160,7 @@
     "spike1": {
       "pos": [
         10.932,
-        8.200000000000003
+        8.700000000000003
       ],
       "bodytype": "static",
       "density": 0,
@@ -173,7 +173,7 @@
     "spike2": {
       "pos": [
         12.852,
-        7.06
+        7.56
       ],
       "bodytype": "static",
       "density": 0,
@@ -199,7 +199,7 @@
     "spike4": {
       "pos": [
         12.884,
-        8.590000000000002
+        9.090000000000002
       ],
       "bodytype": "static",
       "density": 0,
@@ -212,7 +212,7 @@
     "spike5": {
       "pos": [
         10.932,
-        8.770000000000001
+        9.270000000000001
       ],
       "bodytype": "static",
       "density": 0,
@@ -225,7 +225,7 @@
     "spike6": {
       "pos": [
         12.564,
-        6.04
+        6.54
       ],
       "bodytype": "static",
       "density": 0,
@@ -238,7 +238,7 @@
     "spike7": {
       "pos": [
         11.156,
-        6.13
+        6.63
       ],
       "bodytype": "static",
       "density": 0,
@@ -301,36 +301,22 @@
       "restitution": 0.1,
       "texture": "past_tall",
       "space": 2
-    }
-  },
-  "pillars": {
-    "bothpillar10": {
-      "name": "both_pillar",
-      "pos": [
-        3.048,
-        2.85
-      ],
-      "bodytype": "static",
-      "density": 0,
-      "friction": 0.6,
-      "restitution": 0.1,
-      "texture": "both_pillar",
-      "space": 3
     },
-    "presentpillar13": {
-      "name": "present_pillar",
+    "presenttall13": {
+      "name": "present_tall",
       "pos": [
-        10.312,
-        5.79
+        10.8,
+        6.0
       ],
       "bodytype": "static",
       "density": 0,
       "friction": 0.6,
       "restitution": 0.1,
-      "texture": "present_pillar",
+      "texture": "present_tall",
       "space": 1
     }
   },
+  "pillars": {},
   "longcapsules": {
     "bothlongcapsule14": {
       "name": "both_longcapsule",
