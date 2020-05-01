@@ -432,6 +432,7 @@ public class CollisionController implements ContactListener {
                 if (door.getOpen()) {
                     controller.setComplete(true);
                 } else {
+                    avatar.resetDashNum(1);
                     avatar.setLinearVelocity(avatar.getLinearVelocity().scl(-1));
                 }
             }
