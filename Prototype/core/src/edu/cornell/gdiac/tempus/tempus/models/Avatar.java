@@ -196,7 +196,7 @@ public class Avatar extends CapsuleObstacle {
     private FilmStrip fallingStrip;
 
     /** The frame rate for the animation */
-    private static final float FRAME_RATE = 10;
+    private static final float FRAME_RATE = 6;
     /** The frame cooldown for the animation */
     private static float frame_cooldown = FRAME_RATE;
 
@@ -970,7 +970,7 @@ public class Avatar extends CapsuleObstacle {
         //System.out.println(lives);
         wingsActive();
         if (spliced){
-            System.out.println("spliced!");
+//            System.out.println("spliced!");
             setLinearVelocity(new Vector2(0,0));
             if (currentPlat.getName().contains("capsule")) {
                 setPosition(currentPlat.getPosition().cpy().add(new Vector2(getWidth() * 3 / 2, getHeight() * 3)));
@@ -1094,6 +1094,11 @@ public class Avatar extends CapsuleObstacle {
                 break;
             default:
                 assert false : "Invalid AvatarState enumeration";
+        }
+
+        // when beginning a new state, set frame to first frame
+        if (animationState != state) {
+            currentStrip.setFrame(0);
         }
 
         // Adjust animation speed
