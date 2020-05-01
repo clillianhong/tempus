@@ -6,12 +6,6 @@
   ],
   "present_background": "present_background1",
   "past_background": "past_background1",
-  "density": 0,
-  "heavy_density": 10,
-  "friction": 0.6,
-  "restitution": 0.1,
-  "bullet_offset": 0.7,
-  "effect_volume": 0.8,
   "door": {
     "pos": [
       27.612,
@@ -32,8 +26,8 @@
   },
   "avatar": {
     "pos": [
-      18.82,
-      8.389999999999999
+      20.82,
+      8.689999999999999
     ],
     "shrink": [
       0.0216,
@@ -48,10 +42,10 @@
     "avatarfalling": "avatarfalling"
   },
   "turrets": {
-    "turret7": {
+    "turret1": {
       "pos": [
-        13.992,
-        2.04
+        7.688,
+        2.01
       ],
       "shrink": [
         0.0168,
@@ -70,11 +64,24 @@
   },
   "capsules": {},
   "diamonds": {
-    "bothdiamond12": {
+    "diamond1": {
       "name": "both_diamond",
       "pos": [
-        8.136,
-        6.05
+        1.2559999999999991,
+        5.84
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_diamond",
+      "space": 3
+    },
+    "bothdiamond10": {
+      "name": "both_diamond",
+      "pos": [
+        19.544,
+        7.18
       ],
       "bodytype": "static",
       "density": 0,
@@ -86,10 +93,10 @@
   },
   "rounds": {},
   "enemies": {
-    "enemy6": {
+    "enemy1": {
       "pos": [
-        9.512,
-        9.06
+        2.6,
+        8.82
       ],
       "shrink": [
         0.0168,
@@ -106,26 +113,26 @@
   "spikes": {},
   "talls": {},
   "pillars": {
-    "bothpillar11": {
-      "name": "both_pillar",
+    "pillar1": {
+      "name": "present_pillar",
       "pos": [
-        20.104,
-        7.13
+        14.024,
+        7.15
       ],
       "bodytype": "static",
       "density": 0,
       "friction": 0.6,
       "restitution": 0.1,
-      "texture": "both_pillar",
-      "space": 3
+      "texture": "present_pillar",
+      "space": 1
     }
   },
   "longcapsules": {
-    "bothlongcapsule10": {
+    "longcapsule1": {
       "name": "both_longcapsule",
       "pos": [
-        17.704,
-        7.03
+        11.272,
+        6.97
       ],
       "bodytype": "static",
       "density": 0,
