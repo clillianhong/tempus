@@ -101,19 +101,6 @@
       "restitution":0.1,
       "texture":"present_capsule",
       "space":1
-    },
-    "capsule4":{
-      "name":"both_capsule",
-      "pos":[
-        28.024,
-        6
-      ],
-      "bodytype":"static",
-      "density":0,
-      "friction":0.6,
-      "restitution":0.1,
-      "texture":"both_capsule",
-      "space":3
     }
   },
   "diamonds":{
@@ -172,20 +159,32 @@
   },
   "pillars":{
     "pastpillar14":{
-      "name":"past_pillar",
+      "name":"both_pillar",
       "pos":[
-        28.744,
-        6.39
+        28.644,
+        6.29
       ],
       "bodytype":"static",
       "density":0,
       "friction":0.6,
       "restitution":0.1,
-      "texture":"past_pillar",
+      "texture":"both_pillar",
       "space":3
     }
   },
   "longcapsules":{
-
+    "bothlongcapsule12":{
+      "name":"both_longcapsule",
+      "pos":[
+        26.024,
+        6
+      ],
+      "bodytype":"static",
+      "density":0,
+      "friction":0.6,
+      "restitution":0.1,
+      "texture":"both_longcapsule",
+      "space":3
+    }
   }
 }
