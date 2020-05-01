@@ -216,14 +216,25 @@ public class GDXRoot extends Game implements ScreenListener {
 				setScreen(menu);
 			}
 		} else if (exitCode == ScreenExitCodes.EXIT_NEXT.ordinal()) {
-			gameManager.getCurrentRoom().reset();
-			gameManager.stepGame(false);
-			gameManager.updateGameState();
-			LevelController room = gameManager.getCurrentRoom();
-			canvas.setBlendState(GameCanvas.BlendState.NO_PREMULT);
+			if (gameManager.endGameState()){
+				gameManager.stepGame(true);
+				gameManager.updateGameState();
+				MusicController.getInstance().stopAll();
+				levelselect.setScreenListener(this);
+				levelselect.setCanvas(canvas);
+				levelselect.createMode();
+
+				setScreen(levelselect);
+			} else {
+				gameManager.getCurrentRoom().reset();
+				gameManager.stepGame(false);
+				gameManager.updateGameState();
+				LevelController room = gameManager.getCurrentRoom();
+				canvas.setBlendState(GameCanvas.BlendState.NO_PREMULT);
 //			gameManager.printGameState();
-			room.reset();
-			setScreen(room);
+				room.reset();
+				setScreen(room);
+			}
 		} else if (exitCode == ScreenExitCodes.EXIT_PREV.ordinal()) {
 			gameManager.stepGame(true);
 			gameManager.updateGameState();
