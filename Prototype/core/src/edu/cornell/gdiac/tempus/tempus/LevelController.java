@@ -82,7 +82,7 @@ public class LevelController extends WorldController {
 	/** background sprite for rendering w shader */
 	Sprite bgSprite;
 	/** Alpha adjustment for end level drawing sequence */
-	private boolean drawEndRoom;
+	protected boolean drawEndRoom;
 	/** Alpha adjustment for end level drawing sequence */
 	private float drawFadeAlpha;
 	/** Alpha minimum (darker for end of level) */
@@ -1029,9 +1029,6 @@ public class LevelController extends WorldController {
 			avatar.setAnimationState(Avatar.AvatarState.FALLING);
 		}
 
-		// Update enemy animation state
-//		enemyController.animateEnemies();
-
 		/*
 		 * if (avatar.isJumping()) { JsonValue data =
 		 * assetDirectory.get("sounds").get("jump");
@@ -1044,7 +1041,7 @@ public class LevelController extends WorldController {
 
 		// Print location of the mouse position when 'X' key is pressed
 		// so we can know where to spawn enemies for testing purposes.
-		printCoordinates();
+//		printCoordinates();
 	}
 
 	/**

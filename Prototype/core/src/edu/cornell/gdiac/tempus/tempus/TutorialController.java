@@ -204,6 +204,9 @@ public class TutorialController extends LevelController {
 //            }
 //        }
 
+        if(drawEndRoom){
+            unshowTutorial();
+        }
         if(InputController.getInstance().didHelp()){
             isHelp = !isHelp;
         }
