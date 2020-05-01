@@ -1032,9 +1032,6 @@ public class LevelController extends WorldController {
 			avatar.setAnimationState(Avatar.AvatarState.FALLING);
 		}
 
-		// Update enemy animation state
-//		enemyController.animateEnemies();
-
 		/*
 		 * if (avatar.isJumping()) { JsonValue data =
 		 * assetDirectory.get("sounds").get("jump");
@@ -1047,7 +1044,7 @@ public class LevelController extends WorldController {
 
 		// Print location of the mouse position when 'X' key is pressed
 		// so we can know where to spawn enemies for testing purposes.
-		printCoordinates();
+//		printCoordinates();
 	}
 
 	/**
