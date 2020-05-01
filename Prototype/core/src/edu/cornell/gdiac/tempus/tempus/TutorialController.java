@@ -30,7 +30,6 @@ public class TutorialController extends LevelController {
 
     private TextureRegionDrawable tutorial_card;
     private boolean first;
-    private TextureRegionDrawable press_h_card;
     Table helpCard;
 
     @Override
@@ -53,7 +52,7 @@ public class TutorialController extends LevelController {
     public TutorialController(String json) {
         super(json);
         isHelp = false;
-        beginDisplay = 150;
+        //beginDisplay = 150;
         isTutorial = true;
 
     }
@@ -109,8 +108,8 @@ public class TutorialController extends LevelController {
                 new TextureRegion(new Texture(Gdx.files.internal("textures/gui/pause_exit_button.png"))));
 
 
-        press_h_card = new TextureRegionDrawable(
-                new TextureRegion(new Texture(Gdx.files.internal("tutorial/helpcard.png"))));
+//        press_h_card = new TextureRegionDrawable(
+//                new TextureRegion(new Texture(Gdx.files.internal("tutorial/helpcard.png"))));
 
         pauseButtonContainer = new Container<>();
         pauseButtonContainer.setBackground(pauseBG);
@@ -164,9 +163,7 @@ public class TutorialController extends LevelController {
         tutorialCard.setVisible(false);
 
         helpCard = new Table();
-        if(first){
-            helpCard.setBackground(press_h_card);
-        }
+
         tableStack.add(table);
         tableStack.add(pauseButtonContainer);
         tableStack.add(tutorialCard);
@@ -182,9 +179,7 @@ public class TutorialController extends LevelController {
         stage.getCamera().update();
         stage.getViewport().apply();
 
-        if(first){
-            showTutorial();
-        }
+        showTutorial();
 
     }
 
@@ -200,15 +195,18 @@ public class TutorialController extends LevelController {
     public boolean preUpdate(float dt) {
         failed = false;
 
-        if(first){
-            if(beginDisplay >0){
-                beginDisplay--;
-                return false;
-            }else {
-                helpCard.setVisible(false);
-            }
-        }
+//        if(first){
+//            if(beginDisplay >0){
+//                beginDisplay--;
+//                return false;
+//            }else {
+//                helpCard.setVisible(false);
+//            }
+//        }
 
+        if(drawEndRoom){
+            unshowTutorial();
+        }
         if(InputController.getInstance().didHelp()){
             isHelp = !isHelp;
         }
@@ -218,11 +216,11 @@ public class TutorialController extends LevelController {
     @Override
     public void update(float dt) {
 
-        if (isHelp) {
-            showTutorial();
-        } else {
-            unshowTutorial();
-        }
+//        if (isHelp) {
+//            showTutorial();
+//        } else {
+//            unshowTutorial();
+//        }
 
         avatar.setLives(5);
 

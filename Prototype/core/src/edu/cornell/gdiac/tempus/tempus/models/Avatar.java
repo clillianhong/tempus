@@ -13,7 +13,6 @@ import edu.cornell.gdiac.tempus.InputController;
 import edu.cornell.gdiac.tempus.obstacle.CapsuleObstacle;
 import edu.cornell.gdiac.util.FilmStrip;
 import edu.cornell.gdiac.util.JsonAssetManager;
-import sun.management.Sensor;
 
 import static edu.cornell.gdiac.tempus.tempus.models.EntityType.PAST;
 import static edu.cornell.gdiac.tempus.tempus.models.EntityType.PRESENT;

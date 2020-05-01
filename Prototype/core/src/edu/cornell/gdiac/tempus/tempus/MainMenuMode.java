@@ -120,13 +120,10 @@ public class MainMenuMode implements Screen {
         Gdx.input.setInputProcessor(stage);
         active = true;
 
-        System.out.println("SW: " + sw);
-        System.out.println("SH: " + sh);
-
         float cw = sw * 0.7f;
         float ch = sh * 0.5f;
 
-        backgroundTexture = new TextureRegion(JsonAssetManager.getInstance().get("textures/background/bg_past_lv_1.jpg", Texture.class));
+        backgroundTexture = new TextureRegion(new Texture(Gdx.files.internal("textures/background/mainmenubackground.png")));
 
         //table container to center main table
         Container<Table> tableContainer = new Container<Table>();
