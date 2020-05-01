@@ -300,7 +300,7 @@ public class SelectLevelMode implements Screen {
         levelTable.row().padBottom(ch * 0.08f);
 
         for(Level lev : levels){
-            levelTable.add(lev.button).size(cw/2*0.9f, ch/3*0.5f).expandX().fillX();
+            levelTable.add(lev.button).size(cw/2*0.9f, ch/3*0.4f).expandX().fillX();
             levelTable.row().padBottom(ch * 0.08f);
         }
 
