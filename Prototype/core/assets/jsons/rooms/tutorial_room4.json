@@ -51,19 +51,6 @@
   },
   "turrets": {},
   "capsules": {
-    "presentcapsule17": {
-      "name": "present_capsule",
-      "pos": [
-        16.8,
-        5.830000000000002
-      ],
-      "bodytype": "static",
-      "density": 0,
-      "friction": 0.6,
-      "restitution": 0.1,
-      "texture": "present_capsule",
-      "space": 1
-    },
     "presentcapsule18": {
       "name": "past_capsule",
       "pos": [
@@ -97,6 +84,20 @@
   "enemies": {},
   "spikes": {},
   "pillars": {},
-  "longcapsules": {},
+  "longcapsules": {
+    "presentcapsule17": {
+      "name": "present_longcapsule",
+      "pos": [
+        15.8,
+        5.830000000000002
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "present_longcapsule",
+      "space": 1
+    }
+  },
   "talls": {}
 }

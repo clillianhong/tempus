@@ -26,7 +26,7 @@
   },
   "avatar": {
     "pos": [
-      7.364,
+      5.364,
       6.789999999999998
     ],
     "shrink": [
@@ -46,8 +46,8 @@
     "capsule1": {
       "name": "present_capsule",
       "pos": [
-        10.08,
-        9.48
+        9.08,
+        10.48
       ],
       "bodytype": "static",
       "density": 0,
@@ -60,7 +60,7 @@
       "name": "past_capsule",
       "pos": [
         18.08,
-        9.54
+        11.54
       ],
       "bodytype": "static",
       "density": 0,
@@ -89,7 +89,7 @@
     "round1": {
       "name": "both_round",
       "pos": [
-        5.992,
+        3.992,
         4.4
       ],
       "bodytype": "static",
@@ -102,7 +102,7 @@
     "round2": {
       "name": "both_round",
       "pos": [
-        23.112,
+        24.112,
         5.31
       ],
       "bodytype": "static",

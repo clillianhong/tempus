@@ -1,0 +1,8 @@
+{
+  "level": 3,
+  "room_count": 1,
+  "rooms" : [
+    "jsons/rooms/3-1.json"
+  ]
+}
+
