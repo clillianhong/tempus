@@ -187,24 +187,24 @@ public class SelectLevelMode implements Screen {
 
 
         levels = new Level[numLevels];
-        levels[0] = new Level(0,false, "textures/gui/selectmode/level1_preview.png",
+        levels[0] = new Level(0,false, "textures/background/bg_past_lv_1.jpg",
                 "textures/gui/selectmode/lv1_lore.png",
                 "tutorial/cover_tutorial.png",
                 "tutorial/cover_tutorial_focused.png",
                 "tutorial/cover_tutorial.png",
                 "this is the tutorial level");
-        levels[1] = new Level(1,true, "textures/gui/selectmode/level1_preview.png",
+        levels[1] = new Level(1,true, "textures/background/bg_past_lv_1.jpg",
                 "textures/gui/selectmode/lv2_lore.png",
                 "textures/gui/selectmode/level1unlocked.png",
                 "textures/gui/selectmode/level1pressed.png",
                 "textures/gui/selectmode/level1unlocked.png",
                 "this is level 1");
-        levels[2] = new Level(2,true, "textures/gui/selectmode/level2_preview.png", "textures/gui/selectmode/lv3_lore.png",
+        levels[2] = new Level(2,true, "textures/background/bg_past_lv_2.jpg", "textures/gui/selectmode/lv3_lore.png",
                 "textures/gui/selectmode/level2unlocked.png",
                 "textures/gui/selectmode/level2pressed.png",
                 "textures/gui/selectmode/level2locked.png",
                 "this is level 2"); //TODO: CHANGE TO LEVEL 2 AND 3 RESOURCES
-        levels[3] = new Level(3,true, "textures/gui/selectmode/level3_preview.png", "textures/gui/selectmode/lv4_lore.png",
+        levels[3] = new Level(3,true, "textures/background/bg_past_lv_3.jpg", "textures/gui/selectmode/lv4_lore.png",
                 "textures/gui/selectmode/level3unlocked.png",
                 "textures/gui/selectmode/level3pressed.png",
                 "textures/gui/selectmode/level3locked.png",
@@ -271,6 +271,10 @@ public class SelectLevelMode implements Screen {
 
         active = true;
 
+        Table wholescreen = new Table();
+        wholescreen.setWidth(sw);
+        wholescreen.setHeight(sh);
+
 
         float cw = sw * 0.9f;
         float ch = sh * 0.8f;
@@ -300,7 +304,7 @@ public class SelectLevelMode implements Screen {
         levelTable.row().padBottom(ch * 0.08f);
 
         for(Level lev : levels){
-            levelTable.add(lev.button).size(cw/2*0.9f, ch/3*0.4f).expandX().fillX();
+            levelTable.add(lev.button).size(cw/2*0.9f, ch/3*0.45f).expandX().fillX();
             levelTable.row().padBottom(ch * 0.08f);
         }
 
@@ -339,24 +343,25 @@ public class SelectLevelMode implements Screen {
         scrollContainer.setActor(scroller);
         leftTable.add(scrollContainer);
         leftTable.row();
-        leftTable.add(overlayBackButton);
+//        leftTable.add(overlayBackButton);
 
 
         //preview panel
-        Container<Image> pbContainer = new Container<>();
-        pbContainer.size(sw/2f* 0.8f, sh/2f);
-        Image previewBackground = new Image( new TextureRegion(new Texture(Gdx.files.internal("textures/gui/selectmode/preview_bg.png"))));
-        pbContainer.setActor(previewBackground);
+//        Container<Image> pbContainer = new Container<>();
+//        pbContainer.size(sw/2f* 0.8f, sh/2f);
+//        Image previewBackground = new Image( new TextureRegion(new Texture(Gdx.files.internal("textures/gui/selectmode/preview_bg.png"))));
+//        pbContainer.setActor(previewBackground);
 
         Stack prevStack = new Stack();
 
         pIContainer = new Container<>();
-        pIContainer.size(cw/2f* 0.5f, ch/2f * 0.6f);
+        pIContainer.size(cw/2f* 0.7f, ch/2f * 0.85f);
         Texture prevTexture = new Texture(Gdx.files.internal(levels[currentLevel].getFilePreview()));
+
         Image previewImg = new Image( new TextureRegion(prevTexture));
 
         pIContainer.setActor(previewImg);
-        prevStack.add(pbContainer);
+//        prevStack.add(pbContainer);
         prevStack.add(pIContainer);
 
         //lore panel
@@ -365,7 +370,7 @@ public class SelectLevelMode implements Screen {
         Image loreImage = new Image( new TextureRegion(new Texture(Gdx.files.internal(levels[currentLevel].getFileLore()))));
         lbContainer.setActor(loreImage);
 
-        rightTable.add(prevStack);
+        rightTable.add(prevStack).padTop(ch/7).padBottom(ch/8);
         rightTable.row();
         rightTable.add(lbContainer);
 
@@ -377,7 +382,11 @@ public class SelectLevelMode implements Screen {
 
         edgeContainer.setActor(dualTable);
 
-        stage.addActor(edgeContainer);
+        wholescreen.add(edgeContainer);
+        wholescreen.row();
+        wholescreen.add(overlayBackButton).left();
+
+        stage.addActor(wholescreen);
         stage.setScrollFocus(scroller);
         stage.addListener(new InputListener() {
             @Override
