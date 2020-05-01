@@ -21,6 +21,7 @@ import com.badlogic.gdx.assets.loaders.*;
 import com.badlogic.gdx.assets.loaders.resolvers.*;
 
 import com.badlogic.gdx.utils.Select;
+import edu.cornell.gdiac.tempus.tempus.HelpMode;
 import edu.cornell.gdiac.tempus.tempus.MainMenuMode;
 import edu.cornell.gdiac.tempus.tempus.LevelController;
 import edu.cornell.gdiac.tempus.tempus.SelectLevelMode;
@@ -52,8 +53,10 @@ public class GDXRoot extends Game implements ScreenListener {
 	private WorldController[] controllers;
 	/** Main Menu mode */
 	private MainMenuMode menu;
-	/** Main Menu mode */
+	/** Select Level mode */
 	private SelectLevelMode levelselect;
+	/** Help Menu mode */
+	private HelpMode helpmenu;
 	/** Game State Manager **/
 	private GameStateManager gameManager;
 
@@ -95,6 +98,7 @@ public class GDXRoot extends Game implements ScreenListener {
 
 		menu = new MainMenuMode();
 		levelselect = new SelectLevelMode();
+		helpmenu = new HelpMode();
 
 		current = 0;
 		loading.setScreenListener(this);
@@ -174,6 +178,11 @@ public class GDXRoot extends Game implements ScreenListener {
 				// TODO menu about hookup
 			} else if (exitCode == ScreenExitCodes.MENU_HELP.ordinal()) {
 				// TODO menu help hookup
+				helpmenu.createMode();
+				helpmenu.setScreenListener(this);
+				helpmenu.setCanvas(canvas);
+
+				setScreen(helpmenu);
 			} else {
 				// We quit the main application
 				gameManager.updateGameState();
@@ -199,6 +208,13 @@ public class GDXRoot extends Game implements ScreenListener {
 			}
 
 			levelselect.dispose();
+		} else if (screen == helpmenu) {
+			if (exitCode == ScreenExitCodes.EXIT_PREV.ordinal()) {
+				menu.createMode();
+				menu.setScreenListener(this);
+				menu.setCanvas(canvas);
+				setScreen(menu);
+			}
 		} else if (exitCode == ScreenExitCodes.EXIT_NEXT.ordinal()) {
 			gameManager.getCurrentRoom().reset();
 			gameManager.stepGame(false);
