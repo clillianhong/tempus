@@ -16,6 +16,7 @@ import edu.cornell.gdiac.tempus.MusicController;
 import edu.cornell.gdiac.tempus.tempus.LevelController;
 import edu.cornell.gdiac.tempus.tempus.TutorialController;
 import edu.cornell.gdiac.tempus.tempus.models.LevelModel;
+import edu.cornell.gdiac.tempus.tempus.models.ScreenExitCodes;
 import edu.cornell.gdiac.tempus.tempus.models.TutorialModel;
 
 import java.io.File;
@@ -281,7 +282,7 @@ public class GameStateManager {
                 MusicController.getInstance().stopAll();
                 currentLevel.finishLevel();
                 if(current_level_idx == last_level_idx){
-                    endGameState(); //TODO: end game state accouncement/screen
+                    //endGameState(); //TODO: end game state accouncement/screen
                 }
                 else{
                     current_level_idx++;
@@ -337,9 +338,8 @@ public class GameStateManager {
     /**
      * Player beat the whole game!
      */
-    public void endGameState(){
-        current_level_idx = 0;
-        currentLevel = levels[current_level_idx];
+    public boolean endGameState(){
+        return current_level_idx == last_level_idx && currentLevel.getCurrentRoomNumber() == currentLevel.getRoomCount() - 1;
     }
 
 
