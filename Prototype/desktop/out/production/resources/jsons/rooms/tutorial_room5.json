@@ -26,7 +26,7 @@
   },
   "avatar": {
     "pos": [
-      7.364,
+      5.364,
       7.789999999999998
     ],
     "shrink": [
@@ -42,10 +42,9 @@
     "avatarfalling": "avatarfalling"
   },
   "turrets": {
-
-    "turret6": {
+    "turret1": {
       "pos": [
-        15.928,
+        13.928,
         2.3699999999999997
       ],
       "shrink": [
@@ -63,7 +62,7 @@
       ],
       "turretshooting": "turret_shooting"
     },
-    "turret7": {
+    "turret2": {
       "pos": [
         23.016,
         2.28
@@ -85,10 +84,10 @@
     }
   },
   "capsules": {
-    "presentcapsule21": {
+    "capsule1": {
       "name": "present_capsule",
       "pos": [
-        9.896,
+        7.896,
         10.62
       ],
       "bodytype": "static",
@@ -97,6 +96,19 @@
       "restitution": 0.1,
       "texture": "present_capsule",
       "space": 1
+    },
+    "capsule2": {
+      "name": "both_capsule",
+      "pos": [
+        16.896,
+        10.62
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_capsule",
+      "space": 3
     }
   },
   "diamonds": {},
@@ -104,21 +116,8 @@
     "round1": {
       "name": "both_round",
       "pos": [
-        5.992,
+        3.992,
         5.4
-      ],
-      "bodytype": "static",
-      "density": 0,
-      "friction": 0.6,
-      "restitution": 0.1,
-      "texture": "both_round",
-      "space": 3
-    },
-    "bothround20": {
-      "name": "both_round",
-      "pos": [
-        17.256,
-        12.17
       ],
       "bodytype": "static",
       "density": 0,
@@ -130,7 +129,7 @@
   },
   "enemies": {},
   "spikes": {},
+  "talls": {},
   "pillars": {},
-  "longcapsules": {},
-  "talls": {}
+  "longcapsules": {}
 }

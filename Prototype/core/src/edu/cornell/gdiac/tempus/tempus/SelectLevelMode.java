@@ -328,7 +328,7 @@ public class SelectLevelMode implements Screen {
                 })));
             }
         });
-        overlayBackButton.add(backButton).width(cw/14f).height(cw/15f).expand().bottom().left();
+        overlayBackButton.add(backButton).width(cw/13f).height(cw/15f).expand().bottom().left();
 
         Table overlayPageHeader = new Table();
         //back button

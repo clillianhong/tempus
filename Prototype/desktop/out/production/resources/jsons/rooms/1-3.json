@@ -87,21 +87,7 @@
       ]
     }
   },
-  "capsules": {
-    "presentcapsule27": {
-      "name": "present_capsule",
-      "pos": [
-        17.928,
-        0.39
-      ],
-      "bodytype": "static",
-      "density": 0,
-      "friction": 0.6,
-      "restitution": 0.1,
-      "texture": "present_capsule",
-      "space": 1
-    }
-  },
+  "capsules": {},
   "diamonds": {
     "bothdiamond19": {
       "name": "both_diamond",
@@ -166,5 +152,19 @@
   "spikes": {},
   "talls": {},
   "pillars": {},
-  "longcapsules": {}
+  "longcapsules": {
+    "presentlongcapsule27": {
+      "name": "present_longcapsule",
+      "pos": [
+        17.928,
+        0.39
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "present_longcapsule",
+      "space": 1
+    }
+  }
 }
