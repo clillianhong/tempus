@@ -16,8 +16,6 @@ import edu.cornell.gdiac.tempus.tempus.models.Platform;
 import edu.cornell.gdiac.tempus.tempus.models.Projectile;
 import edu.cornell.gdiac.util.JsonAssetManager;
 import edu.cornell.gdiac.util.PooledList;
-import edu.cornell.gdiac.util.SoundController;
-
 import java.util.Random;
 
 import static edu.cornell.gdiac.tempus.tempus.models.EntityType.PRESENT;
@@ -309,14 +307,6 @@ public class EnemyController {
             bullet.setTexture(presentBullet);
         } else {
             bullet.setTexture(pastbullet);
-        }
-
-        if (shifted && enemy.getSpace() == 2) { // past world
-            JsonValue data = assetDirectory.get("sounds").get("pew_past");
-            SoundController.getInstance().play("pew", data.get("file").asString(), false, data.get("volume").asFloat());
-        } else if (!shifted && enemy.getSpace() == 1) { // present world
-            JsonValue data = assetDirectory.get("sounds").get("pew_present");
-            SoundController.getInstance().play("pew", data.get("file").asString(), false, data.get("volume").asFloat());
         }
 
         // Reset the firing cooldown.

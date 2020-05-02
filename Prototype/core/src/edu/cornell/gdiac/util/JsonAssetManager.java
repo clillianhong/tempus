@@ -24,7 +24,6 @@ import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.g2d.freetype.*;
 import com.badlogic.gdx.assets.loaders.*;
 import com.badlogic.gdx.assets.loaders.resolvers.*;
-import edu.cornell.gdiac.tempus.MusicController;
 
 /**
  * An asset manager that uses a JSON file to define its assets.
@@ -49,12 +48,8 @@ public class JsonAssetManager extends AssetManager {
     ObjectMap<String,Texture> textures;
     /** The allocated fonts (for easy clean-up) */
     ObjectMap<String,BitmapFont> fonts;
-    /** The allocated sounds (for easy clean-up) */
-    ObjectMap<String,Sound> sounds;
     /** The allocated filmstrips (for easy clean-up) */
     ObjectMap<String,FilmStrip> filmstrips;
-    /** The allocated musics (for easy clean-up) */
-    ObjectMap<String,Music> music;
 
 
     /** The singleton asset manager (for easy access) */
@@ -109,9 +104,7 @@ public class JsonAssetManager extends AssetManager {
         regions = new ObjectMap<String,TextureRegion>();
         textures = new ObjectMap<String,Texture>();
         fonts = new ObjectMap<String,BitmapFont>();
-        sounds = new ObjectMap<String,Sound>();
         filmstrips = new ObjectMap<String,FilmStrip>();
-        music = new ObjectMap<String, Music>();
     }
 
     /**
@@ -127,9 +120,7 @@ public class JsonAssetManager extends AssetManager {
         directory = json;
         loadTextures();
         loadFilmstrips();
-        loadSounds();
         loadFonts();
-        loadMusic();
     }
 
     /**
@@ -144,12 +135,8 @@ public class JsonAssetManager extends AssetManager {
             return "textures";
         } else if (type.equals(BitmapFont.class)) {
             return "fonts";
-        } else if (type.equals(Sound.class)) {
-            return "sounds";
         } else if (type.equals(FilmStrip.class)){
             return "filmstrips";
-        } else if (type.equals(Music.class)) {
-            return "music";
         }
         // Should never reach here
         assert false : "JSON directory does not support this assets class";
@@ -195,32 +182,6 @@ public class JsonAssetManager extends AssetManager {
     }
 
     /**
-     * Loads all sounds in the asset directory
-     */
-    private void loadSounds() {
-        JsonValue json = directory.getChild(getClassIdentifier(Sound.class));
-        while (json != null) {
-            String file= json.getString("file");
-            System.out.println("Loading "+json.name()+" at "+file);
-            load(file,Sound.class);
-            json = json.next;
-        }
-    }
-
-    /**
-     * Loads all music in the asset directory
-     */
-    private void loadMusic() {
-        JsonValue json = directory.getChild(getClassIdentifier(Music.class));
-        while (json != null) {
-            String file= json.getString("file");
-            //System.out.println("Loading "+json.name()+" at "+file);
-            load(file,Music.class);
-            json = json.next;
-        }
-    }
-
-    /**
      * Unloads assets defined in the current directory
      *
      * The asset loader is now free to load another directory.
@@ -228,9 +189,7 @@ public class JsonAssetManager extends AssetManager {
     public void unloadDirectory() {
         unloadTextures();
         unloadFilmstrips();
-        unloadSounds();
         unloadFonts();
-        unloadMusic();
         directory = null;
     }
 
@@ -293,46 +252,6 @@ public class JsonAssetManager extends AssetManager {
     }
 
     /**
-     * Unloads all sounds in the asset directory
-     */
-    private void unloadSounds() {
-        if (directory != null) {
-            JsonValue json = directory.getChild(getClassIdentifier(Sound.class));
-            while (json != null) {
-                String file = json.getString("file");
-                if (isLoaded(file)) {
-                    SoundController controller = SoundController.getInstance();
-                    controller.deallocate(this, file);
-                    if (sounds.containsKey(file)) {
-                        sounds.remove(file);
-                    }
-                }
-                json = json.next;
-            }
-        }
-    }
-
-    /**
-     * Unloads all music in the asset directory
-     */
-    private void unloadMusic() {
-        if (directory != null) {
-            JsonValue json = directory.getChild(getClassIdentifier(Music.class));
-            while (json != null) {
-                String file = json.getString("file");
-                if (isLoaded(file)) {
-                    MusicController controller = MusicController.getInstance();
-                    controller.deallocate(this, file);
-                    if (fonts.containsKey(file)) {
-                        fonts.remove(file);
-                    }
-                }
-                json = json.next;
-            }
-        }
-    }
-
-    /**
      * Allocates assets defined in the current directory
      *
      * Assets are allocate after loading.  This binds the asset to
@@ -347,16 +266,6 @@ public class JsonAssetManager extends AssetManager {
         json = directory.getChild(getClassIdentifier(BitmapFont.class));
         while (json != null) {
             allocateFont(json);
-            json = json.next;
-        }
-        json = directory.getChild(getClassIdentifier(Sound.class));
-        while (json != null) {
-            allocateSound(json);
-            json = json.next;
-        }
-        json = directory.getChild(getClassIdentifier(Music.class));
-        while (json != null) {
-            allocateMusic(json);
             json = json.next;
         }
         json = directory.getChild(getClassIdentifier(FilmStrip.class));
@@ -419,29 +328,6 @@ public class JsonAssetManager extends AssetManager {
     }
 
     /**
-     * Allocates a sound and binds it to the directory key
-     *
-     * @param json 	the directory entry for the asset
-     */
-    private Sound allocateSound(JsonValue json) {
-        String filename = json.getString("file");
-        Sound sound = get(filename, Sound.class);
-        SoundController controller = SoundController.getInstance();
-        controller.allocate(this, filename);
-        sounds.put(json.name(), sound);
-        return sound;
-    }
-
-    private Music allocateMusic(JsonValue json){
-        String filename = json.getString("file");
-        Music music = get(filename, Music.class);
-        MusicController controller = MusicController.getInstance();
-        controller.allocate(this, filename);
-        this.music.put(json.name(),music);
-        return music;
-    }
-
-    /**
      * Returns the asset associate with the given directory key
      *
      * The assets must be allocated for this method to return a value.
@@ -457,12 +343,8 @@ public class JsonAssetManager extends AssetManager {
                 return (T)textures.get(key);
             } else if (type.equals(BitmapFont.class)) {
                 return (T)fonts.get(key);
-            } else if (type.equals(Sound.class)) {
-                return (T)sounds.get(key);
             } else if (type.equals(FilmStrip.class)){
                 return (T)filmstrips.get(key);
-            } else if (type.equals(Music.class)){
-                return (T)music.get(key);
             }
         } catch (Exception e) {
             return null;

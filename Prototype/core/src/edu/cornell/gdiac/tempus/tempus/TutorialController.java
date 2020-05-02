@@ -21,7 +21,6 @@ import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.gdiac.tempus.InputController;
 import edu.cornell.gdiac.tempus.tempus.models.Avatar;
 import edu.cornell.gdiac.util.JsonAssetManager;
-import edu.cornell.gdiac.util.SoundController;
 
 //import javax.xml.soap.Text;
 

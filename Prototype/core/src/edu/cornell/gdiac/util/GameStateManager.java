@@ -1,7 +1,6 @@
 package edu.cornell.gdiac.util;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
@@ -12,14 +11,10 @@ import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.JsonWriter;
 import edu.cornell.gdiac.tempus.GameCanvas;
-import edu.cornell.gdiac.tempus.MusicController;
 import edu.cornell.gdiac.tempus.tempus.LevelController;
 import edu.cornell.gdiac.tempus.tempus.TutorialController;
 import edu.cornell.gdiac.tempus.tempus.models.LevelModel;
-import edu.cornell.gdiac.tempus.tempus.models.ScreenExitCodes;
 import edu.cornell.gdiac.tempus.tempus.models.TutorialModel;
-
-import java.io.File;
 
 /**
  * Responsible for managing the loading of an entire level from JSON
@@ -279,7 +274,6 @@ public class GameStateManager {
             boolean level_finished = currentLevel.stepLevel();
             if(level_finished){ // LEVEL HAS FINISHED
                 //TODO: Finish level announcement/screen
-                MusicController.getInstance().stopAll();
                 currentLevel.finishLevel();
                 if(current_level_idx == last_level_idx){
                     //endGameState(); //TODO: end game state accouncement/screen
@@ -287,7 +281,6 @@ public class GameStateManager {
                 else{
                     current_level_idx++;
                     currentLevel = levels[current_level_idx];
-                    currentLevel.playMusic();
                     if(!currentLevel.isUnlocked()){
                         highestUnlockedLevel = currentLevel;
                         currentLevel.unlockLevel();

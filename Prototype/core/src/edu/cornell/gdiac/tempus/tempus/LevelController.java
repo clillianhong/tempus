@@ -11,34 +11,26 @@
 package edu.cornell.gdiac.tempus.tempus;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.*;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import edu.cornell.gdiac.audio.MusicBuffer;
 import edu.cornell.gdiac.tempus.InputController;
-import edu.cornell.gdiac.tempus.MusicController;
 import edu.cornell.gdiac.tempus.WorldController;
 import edu.cornell.gdiac.util.*;
 import edu.cornell.gdiac.tempus.GameCanvas;
@@ -831,10 +823,6 @@ public class LevelController extends WorldController {
 			reset();
 		}
 
-
-
-		MusicController.getInstance().update(shifted);
-
 		if (avatar.getShifted() > 0) {
 			avatar.setShifted(avatar.getShifted() - 1);
 		}
@@ -905,12 +893,9 @@ public class LevelController extends WorldController {
 			avatar.setShifted(10);
 			if (shifted) {
 				JsonValue ripple = assetDirectory.get("sounds").get("ripple_to_past");
-				SoundController.getInstance().play(ripple.get("file").asString(), ripple.get("file").asString(), false, EFFECT_VOLUME * 2);
 			} else {
 				JsonValue ripple = assetDirectory.get("sounds").get("ripple_to_present");
-				SoundController.getInstance().play(ripple.get("file").asString(), ripple.get("file").asString(), false, EFFECT_VOLUME * 2);
 			}
-			// MusicController.getInstance().shift(shifted);
 			// avatar.resetDashNum();
 			/*
 			 * if (!avatar.isHolding()) { avatar.setPosition(avatar.getPosition().x,
@@ -1036,9 +1021,6 @@ public class LevelController extends WorldController {
 		 * false, data.get("volume").asFloat()); }
 		 */
 
-		// If we use sound, we must remember this.
-		SoundController.getInstance().update();
-
 		// Print location of the mouse position when 'X' key is pressed
 		// so we can know where to spawn enemies for testing purposes.
 //		printCoordinates();
@@ -1078,68 +1060,6 @@ public class LevelController extends WorldController {
 		}
 	}
 
-	// /**
-	// * Add a new bullet to the world and send it in the right direction.
-	// *
-	// * @param enemy enemy
-	// */
-	// private void createBullet(Enemy enemy) {
-	// float offset = BULLET_OFFSET;
-	//
-	//// //TODO: quick fix for enemy projectile offsets
-	//// if (!enemy.isTurret() && enemy.getType() == PAST) {
-	//// offset = 2.5f;
-	//// }
-	//// if (!enemy.isTurret() && enemy.getType() == PRESENT) {
-	//// offset = 1.5f;
-	//// }
-	//
-	// bulletBigTexture = JsonAssetManager.getInstance().getEntry("bulletbig",
-	// TextureRegion.class);
-	// presentBullet = JsonAssetManager.getInstance().getEntry("projpresent",
-	// TextureRegion.class);
-	// pastBullet = JsonAssetManager.getInstance().getEntry("projpast",
-	// TextureRegion.class);
-	// float radius = bulletBigTexture.getRegionWidth() / (30.0f);
-	// Projectile bullet = new Projectile(enemy.getType(), enemy.getX(),
-	// enemy.getY() + offset, radius,
-	// enemy.getBody().getUserData());
-	//
-	// Filter f = new Filter();
-	// f.groupIndex = -1;
-	// enemy.setFilterData(f);
-	// bullet.setFilterData(f);
-	//
-	// bullet.setName("bullet");
-	// bullet.setDensity(HEAVY_DENSITY);
-	// bullet.setDrawScale(scale);
-	// //bullet.setTexture(bulletBigTexture);
-	// bullet.setBullet(true);
-	// bullet.setGravityScale(0);
-	// bullet.setLinearVelocity(enemy.getProjVelocity());
-	// bullet.setSpace(enemy.getSpace());
-	// addQueuedObject(bullet);
-	// if (bullet.getType().equals(PRESENT)){
-	// bullet.setTexture(presentBullet);
-	// } else {
-	// bullet.setTexture(pastBullet);
-	// }
-	//
-	// if (shifted && enemy.getSpace() == 2) { // past world
-	// JsonValue data = assetDirectory.get("sounds").get("pew");
-	//// System.out.println("sound volume: " + data.get("volume").asFloat());
-	// SoundController.getInstance().play("pew", data.get("file").asString(), false,
-	// data.get("volume").asFloat());
-	// } else if (!shifted && enemy.getSpace() == 1) { // present world
-	// JsonValue data = assetDirectory.get("sounds").get("pew");
-	//// System.out.println("sound volume: " + data.get("volume").asFloat());
-	// SoundController.getInstance().play("pew", data.get("file").asString(), false,
-	// data.get("volume").asFloat());
-	// }
-	//
-	// // Reset the firing cooldown.
-	// enemy.coolDown(false);
-	// }
 
 	/**
 	 * Add a new bullet to the world and send it in the right direction.
@@ -1180,8 +1100,6 @@ public class LevelController extends WorldController {
 		else
 			bullet.setSpace(1); // present world
 		addQueuedObject(bullet);
-		JsonValue pew = assetDirectory.get("sounds").get("pew");
-		SoundController.getInstance().play(pew.get("file").asString(), pew.get("file").asString(), false, pew.get("volume").asFloat());
 	}
 
 	/**
@@ -1525,9 +1443,7 @@ public class LevelController extends WorldController {
 			present = "present4";
 		}
 		JsonValue pastMus = assetDirectory.get("music").get(past);
-		MusicController.getInstance().play("past", pastMus.get("file").asString(), true, 0.0f);
 		JsonValue presentMus = assetDirectory.get("music").get(present);
-		MusicController.getInstance().play("present", presentMus.get("file").asString(), true, 1.0f);
 	}
 
 }

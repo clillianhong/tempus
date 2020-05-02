@@ -4,11 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.gdiac.tempus.GameCanvas;
-import edu.cornell.gdiac.tempus.MusicController;
 import edu.cornell.gdiac.tempus.tempus.LevelController;
 import edu.cornell.gdiac.util.ScreenListener;
-
-import java.util.logging.Level;
 
 public class LevelModel {
 
@@ -149,9 +146,7 @@ public class LevelModel {
             present = "present4";
         }
         JsonValue pastMus = assetDirectory.get("music").get(past);
-        MusicController.getInstance().play("past", pastMus.get("file").asString(), true, 0.0f);
         JsonValue presentMus = assetDirectory.get("music").get(present);
-        MusicController.getInstance().play("present", presentMus.get("file").asString(), true, 1.0f);
     }
 
 }
