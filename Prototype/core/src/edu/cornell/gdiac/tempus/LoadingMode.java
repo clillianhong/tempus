@@ -174,7 +174,12 @@ public class LoadingMode implements Screen {
 	 * Called when this screen should release all resources.
 	 */
 	public void dispose() {
-
+		flower1 = null;
+		flower2 = null;
+		flower3 = null;
+		flower4 = null;
+		stage.dispose();
+		background = null;
 	}
 	
 	/**

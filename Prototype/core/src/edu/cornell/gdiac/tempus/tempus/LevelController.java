@@ -1268,7 +1268,6 @@ public class LevelController extends WorldController {
 					(180 + redirection.angle()) / 57, 0.0075f * scale.x * avatar.getDashRange()* 1.5f,
 					0.0075f * scale.y * avatar.getDashRange()* 1.5f);
 		}
-		//canvas.end();
 		// If player is holding a projectile, draw projectile indicator
 		// TODO: need to fix - line is a bit off
 		Vector2 projDir = startPos.cpy().sub(mousePos).scl(scale);
@@ -1276,7 +1275,6 @@ public class LevelController extends WorldController {
 		TextureRegion projCircle = JsonAssetManager.getInstance().getEntry("projectile_circle", TextureRegion.class);
 		TextureRegion projArrow = JsonAssetManager.getInstance().getEntry("projectile_arrow", TextureRegion.class);
 
-		//canvas.begin();
 		if (avatar.isHolding()) {
 			canvas.draw(projCircle, Color.GOLD, projCircle.getRegionWidth() / 2, projCircle.getRegionHeight() / 2,
 					avatar.getX() * scale.x, avatar.getY() * scale.y, redirection.angle() / 57, 0.0073f * scale.x* 1.5f,
@@ -1378,44 +1376,25 @@ public class LevelController extends WorldController {
 		stage.getBatch().draw(bgSprite, 0, 0, sw, sh);
 		stage.getBatch().end();
 
-//		batch.setProjectionMatrix(canvas.getViewport().getCamera().combined);
-//		// render batch with shader
-//		batch.begin();
-//		if (rippleOn) {
-//			updateShader(false);
-//			batch.setShader(shaderprog);
-//		}
-//		if (shifted) {
-//			bgSprite.setRegion(pastBackgroundTexture);
-//		} else {
-//			bgSprite.setRegion(presentBackgroundTexture);
-//		}
-//		batch.draw(bgSprite, 0, 0, sw, sh);
-//		batch.end();
+		canvas.begin();
 
-			canvas.begin();
+		drawObjectInWorld();
+		drawIndicator(canvas);
 
-			drawObjectInWorld();
-			drawIndicator(canvas);
+		if(!isTutorial){
+			drawLives(canvas);
+		}
 
-			if(!isTutorial){
-				drawLives(canvas);
-			}
-
-			if (debug) {
-				canvas.beginDebug();
-				drawDebugInWorld();
-				canvas.endDebug();
-			}
-
-			canvas.end();
-
+		if (debug) {
+			canvas.beginDebug();
+			drawDebugInWorld();
+			canvas.endDebug();
+		}
 
 
 		// Final message
 		if (complete && !failed && !drawEndRoom) {
 			drawEndRoom = true;
-//			System.out.println("BLEND STATE" + canvas.getBlendState());
 			canvas.setBlendState(GameCanvas.BlendState.ADDITIVE);
 			stage.getBatch().setBlendFunction(GL20.GL_SRC_ALPHA,GL20.GL_ONE);
 
@@ -1436,17 +1415,14 @@ public class LevelController extends WorldController {
 
 
 		} else if (failed) {
-			canvas.begin();
 			displayFont.setColor(Color.WHITE);
 			canvas.drawTextCentered("FAILURE", displayFont, 0.0f);
-			canvas.end();
 		}
+
+		canvas.end();
 
 		stage.act(Gdx.graphics.getDeltaTime());
 		stage.draw();
-
-
-
 
 	}
 
