@@ -221,58 +221,58 @@
   },
   "sounds": {
     "jump": {
-      "file": "sounds/jump.mp3",
+      "file": "sounds/ogg/jump.ogg",
       "volume": 0.8
     },
     "pew": {
-      "file": "sounds/turrent_sound_1.mp3",
+      "file": "sounds/ogg/turrent_sound_1.ogg",
       "volume": 0.4
     },
     "pew_past": {
-      "file": "sounds/turrent_sound_rhodes.mp3",
+      "file": "sounds/ogg/turrent_sound_rhodes.ogg",
       "volume": 0.4
     },
     "pew_present": {
-      "file": "sounds/whip_sample_1.mp3",
+      "file": "sounds/ogg/whip_sample_1.ogg",
       "volume": 0.1
     },
     "pop": {
-      "file": "sounds/plop.mp3",
+      "file": "sounds/ogg/plop.ogg",
       "volume": 0.8
     },
     "ripple_to_past": {
-      "file": "sounds/ripple_more_piercing.mp3",
+      "file": "sounds/ogg/ripple_more_piercing.ogg",
       "volume": 0.8
     },
     "ripple_to_present": {
-      "file": "sounds/ripple_less_piercing.mp3",
+      "file": "sounds/ogg/ripple_less_piercing.ogg",
       "volume": 0.8
     }
   },
   "music": {
     "past1": {
-      "file": "music/past_track_4_25.mp3"
+      "file": "music/ogg/past_track_4_25.ogg"
     },
     "past2": {
-      "file": "music/past_track_4_25.mp3"
+      "file": "music/ogg/past_track_4_25.ogg"
     },
     "past3": {
-      "file": "music/past_track_4_25.mp3"
+      "file": "music/ogg/past_track_4_25.ogg"
     },
     "past4": {
-      "file": "music/past_track_4_25.mp3"
+      "file": "music/ogg/past_track_4_25.ogg"
     },
     "present1": {
-      "file": "music/present_track_4_25.mp3"
+      "file": "music/ogg/present_track_4_25.ogg"
     },
     "present2": {
-      "file": "music/present_track_4_25.mp3"
+      "file": "music/ogg/present_track_4_25.ogg"
     },
     "present3": {
-      "file": "music/present_track_4_25.mp3"
+      "file": "music/ogg/present_track_4_25.ogg"
     },
     "present4": {
-      "file": "music/present_track_4_25.mp3"
+      "file": "music/ogg/present_track_4_25.ogg"
     }
   },
   "filmstrips": {
