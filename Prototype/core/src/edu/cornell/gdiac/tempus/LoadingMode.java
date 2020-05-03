@@ -30,9 +30,14 @@ import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.controllers.*;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import edu.cornell.gdiac.tempus.tempus.models.ScreenExitCodes;
 import edu.cornell.gdiac.util.*;
 import jdk.nashorn.internal.runtime.JSONFunctions;
+
 
 /**
  * Class that provides a loading screen for the state of the game.
@@ -88,6 +93,9 @@ public class LoadingMode implements Screen {
 
 	/** Current progress (0 to 1) of the asset manager */
 	private float progress;
+	/** message labels */
+	Label loadingLabel;
+	Label percentLabel;
 
 	/** The amount of time to devote to loading assets (as opposed to on screen hints, etc.) */
 	private int   budget;
@@ -162,12 +170,50 @@ public class LoadingMode implements Screen {
 
 		stage = new Stage(canvas.getViewport());
 		Gdx.input.setInputProcessor(stage);
+		stage.getCamera().viewportWidth = sw;
+		stage.getCamera().viewportHeight = sh;
+
+		Table bg = new Table();
+		bg.setBackground(new TextureRegionDrawable(background));
+		bg.setFillParent(true);
+		stage.addActor(bg);
+
 
 		font = new BitmapFont(Gdx.files.internal("fonts/carterone.fnt"));
 		glyphLayout  = new GlyphLayout();
 		Gdx.gl.glClearColor(0,0,0,1);
 
+		loadingMessage = "Loading . . .";
+		font.getData().setScale(1.5f);
+		glyphLayout.setText(font, loadingMessage);
+		Label.LabelStyle carterStyle = new Label.LabelStyle(font, Color.WHITE);
+		float loadingHeight = glyphLayout.height;
+		float loadingWidth = glyphLayout.width;
+		loadingLabel = new Label("Loading . . .", carterStyle);
+		loadingLabel.setHeight(loadingHeight);
+		loadingLabel.setWidth(loadingWidth);
+//		loadingLabel.setFontScale(0.3f);
+		loadingLabel.setPosition(canvas.getWidth()- 1.3f*loadingWidth, canvas.getHeight()/2);
 
+		loadingLabel = new Label("Loading . . .", carterStyle);
+		loadingLabel.setHeight(loadingHeight);
+		loadingLabel.setWidth(loadingWidth);
+		loadingLabel.setPosition(canvas.getWidth()- 1.3f*loadingWidth, canvas.getHeight()/2);
+
+		BitmapFont font2 = new BitmapFont(Gdx.files.internal("fonts/carterone.fnt"));
+
+		font2.getData().setScale(0.75f);
+		String percentMessage = (this.progress*100) + "%";
+		Label.LabelStyle carterStyle2 = new Label.LabelStyle(font2, Color.WHITE);
+		percentLabel = new Label(percentMessage, carterStyle2);
+		glyphLayout.setText(font2, percentMessage);
+		percentLabel.setHeight(glyphLayout.height);
+		percentLabel.setWidth(glyphLayout.width);
+//		percentLabel.setFontScale(0.75f);
+		percentLabel.setPosition(canvas.getWidth()- 1.3f*loadingWidth, canvas.getHeight()/2 - loadingHeight*1.1f);
+
+		stage.addActor(percentLabel);
+		stage.addActor(loadingLabel);
 	}
 	
 	/**
@@ -178,8 +224,8 @@ public class LoadingMode implements Screen {
 		flower2 = null;
 		flower3 = null;
 		flower4 = null;
-		stage.dispose();
 		background = null;
+		stage.dispose();
 	}
 	
 	/**
@@ -197,7 +243,11 @@ public class LoadingMode implements Screen {
 		if (progress >= 1.0f) {
 			this.progress = 1.0f;
 		}
+		String percentMessage = (this.progress*100) + "%";
+		percentLabel.setText(percentMessage);
 	}
+
+	String loadingMessage;
 
 	/**
 	 * Draw the status of this player mode.
@@ -207,26 +257,9 @@ public class LoadingMode implements Screen {
 	 * prefer this in lecture.
 	 */
 	private void draw() {
-		Gdx.gl.glClearColor(0,0,0,1);
-
 		canvas.clear();
-
-		canvas.begin();
-		canvas.draw(background, Color.WHITE, 0, 0, sw, sh);
-
-		String loadingMessage = "Loading . . .";
-		font.getData().setScale(1.5f);
-		glyphLayout.setText(font, loadingMessage);
-		float loadingHeight = glyphLayout.height;
-		float loadingWidth = glyphLayout.width;
-		canvas.drawText(loadingMessage, font, canvas.getWidth()- 1.3f*loadingWidth, canvas.getHeight()/2);
-
-		String percentMessage = (this.progress*100) + "%";
-		font.getData().setScale(0.75f);
-		glyphLayout.setText(font, percentMessage);
-		canvas.drawText(percentMessage, font, canvas.getWidth()- 1.3f*loadingWidth, canvas.getHeight()/2 - loadingHeight*1.3f );
-
-		canvas.end();
+		stage.draw();
+		stage.act();
 	}
 	
 	/**
@@ -264,20 +297,23 @@ public class LoadingMode implements Screen {
 			canvas.updateSpriteBatch();
 			stage.getBatch().setProjectionMatrix(stage.getCamera().combined);
 			stage.getCamera().update();
-
 			update(delta);
-
 			draw();
-
-
-
-
 			// We are are ready, notify our listener
 			if(progress >= 1.0f){
-				listener.exitScreen(this, 0);
-				}
-
+				stage.addAction(Actions.sequence(Actions.fadeOut(0.5f), Actions.run(new Runnable() {
+					@Override
+					public void run() {
+						exitToMainMenu();
+					}
+				})));
+			}
 		}
+	}
+
+	public void exitToMainMenu(){
+		active = false;
+		listener.exitScreen(this, ScreenExitCodes.EXIT_LOAD.ordinal());
 	}
 
 	/**
@@ -292,11 +328,8 @@ public class LoadingMode implements Screen {
 	public void resize(int width, int height) {
 		canvas.resize(width, height);
 		stage.getViewport().update(width, height);
-		stage.getCamera().viewportWidth = sw;
-		stage.getCamera().viewportHeight = sh;
 		stage.getCamera().position.set(stage.getCamera().viewportWidth / 2, stage.getCamera().viewportHeight / 2, 0);
 		stage.getCamera().update();
-
 	}
 
 	/**
