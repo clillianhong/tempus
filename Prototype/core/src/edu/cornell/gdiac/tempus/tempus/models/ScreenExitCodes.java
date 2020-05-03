@@ -10,5 +10,6 @@ public enum ScreenExitCodes {
     EXIT_PREV,
     MENU_START,
     MENU_HELP,
-    MENU_ABOUT
+    MENU_ABOUT,
+    EXIT_LOAD
 }

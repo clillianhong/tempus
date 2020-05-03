@@ -154,13 +154,32 @@ public class GDXRoot extends Game implements ScreenListener {
 	 * @param exitCode The state of the screen upon exit
 	 */
 	public void exitScreen(Screen screen, int exitCode) {
-		if (screen == loading) {
+		if (exitCode == ScreenExitCodes.EXIT_NEXT.ordinal()) {
+			if (gameManager.endGameState()) {
+				gameManager.stepGame(true);
+				gameManager.updateGameState();
+				MusicController.getInstance().stopAll();
+				levelselect.setScreenListener(this);
+				levelselect.setCanvas(canvas);
+				levelselect.createMode();
+
+				setScreen(levelselect);
+			} else {
+				gameManager.getCurrentRoom().reset();
+				gameManager.stepGame(false);
+				gameManager.updateGameState();
+				LevelController room = gameManager.getCurrentRoom();
+				canvas.setBlendState(GameCanvas.BlendState.NO_PREMULT);
+				room.reset();
+				setScreen(room);
+			}
+		}
+		else if (screen == loading || exitCode == ScreenExitCodes.EXIT_LOAD.ordinal()) {
 
 			menu.createMode();
 			menu.setScreenListener(this);
 			menu.setCanvas(canvas);
 			setScreen(menu);
-
 			loading.dispose();
 			loading = null;
 		} else if (screen == menu) {
@@ -189,9 +208,7 @@ public class GDXRoot extends Game implements ScreenListener {
 				gameManager.saveGameState();
 				Gdx.app.exit();
 			}
-
 			menu.dispose();
-
 		} else if (screen == levelselect) {
 			if (exitCode == ScreenExitCodes.EXIT_PREV.ordinal()) {
 				menu.createMode();
@@ -206,7 +223,6 @@ public class GDXRoot extends Game implements ScreenListener {
 				setScreen(gameManager.getCurrentRoom());
 				current = exitCode;
 			}
-
 			levelselect.dispose();
 		} else if (screen == helpmenu) {
 			if (exitCode == ScreenExitCodes.EXIT_PREV.ordinal()) {
@@ -215,27 +231,8 @@ public class GDXRoot extends Game implements ScreenListener {
 				menu.setCanvas(canvas);
 				setScreen(menu);
 			}
-		} else if (exitCode == ScreenExitCodes.EXIT_NEXT.ordinal()) {
-			if (gameManager.endGameState()){
-				gameManager.stepGame(true);
-				gameManager.updateGameState();
-				MusicController.getInstance().stopAll();
-				levelselect.setScreenListener(this);
-				levelselect.setCanvas(canvas);
-				levelselect.createMode();
-
-				setScreen(levelselect);
-			} else {
-				gameManager.getCurrentRoom().reset();
-				gameManager.stepGame(false);
-				gameManager.updateGameState();
-				LevelController room = gameManager.getCurrentRoom();
-				canvas.setBlendState(GameCanvas.BlendState.NO_PREMULT);
-//			gameManager.printGameState();
-				room.reset();
-				setScreen(room);
-			}
-		} else if (exitCode == ScreenExitCodes.EXIT_PREV.ordinal()) {
+		}
+		 else if (exitCode == ScreenExitCodes.EXIT_PREV.ordinal()) {
 			gameManager.stepGame(true);
 			gameManager.updateGameState();
 			MusicController.getInstance().stopAll();
