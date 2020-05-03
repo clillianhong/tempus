@@ -155,6 +155,8 @@ public class SelectLevelMode implements Screen {
     private boolean active;
     /** background texture region */
     private TextureRegion backgroundTexture;
+    /** preview textures */
+    private Image [] previewTextures;
 
     /** The index of the current level in focus*/
     private int currentLevel;
@@ -210,6 +212,8 @@ public class SelectLevelMode implements Screen {
                 "textures/gui/selectmode/level3locked.png",
                 "this is level 3");
 
+        previewTextures = new Image[levels.length];
+
         batch = new SpriteBatch();
         camera = new OrthographicCamera(sw,sh);
         viewport = new FitViewport(sw, sh, camera);
@@ -219,6 +223,9 @@ public class SelectLevelMode implements Screen {
         camera.update();
 
         stage = new Stage(viewport);
+
+        previewImg = new Image();
+        loreImage = new Image();
 
     }
 
@@ -240,22 +247,19 @@ public class SelectLevelMode implements Screen {
 
 
     public void createMode(){
-//        atlas = new TextureAtlas("skin.atlas");
         camera.update();
         stage = new Stage(viewport);
-
     }
 
 
+    Image previewImg;
+    Image loreImage;
     /**
      * updates the preview panes based on the level button currently in focus.
      */
     public void updatePreview(){
-        Texture prevTexture = new Texture(Gdx.files.internal(levels[currentLevel].getFilePreview()));
-        Image previewImg = new Image( new TextureRegion(prevTexture));
 
-        pIContainer.setActor(previewImg);
-
+        pIContainer.setActor(previewTextures[levels[currentLevel].getLevel()]);
         Image loreImage = new Image( new TextureRegion(new Texture(Gdx.files.internal(levels[currentLevel].getFileLore()))));
         lbContainer.setActor(loreImage);
     }
@@ -274,6 +278,7 @@ public class SelectLevelMode implements Screen {
         Table wholescreen = new Table();
         wholescreen.setWidth(sw);
         wholescreen.setHeight(sh);
+//        wholescreen.setPosition(10,10);
 
 
         float cw = sw * 0.9f;
@@ -284,7 +289,7 @@ public class SelectLevelMode implements Screen {
         //table container to center main table
         Container<Table> edgeContainer = new Container<Table>();
         edgeContainer.setSize(cw, ch);
-        edgeContainer.setPosition((sw - cw) / 2.0f, (sh - ch) / 2.0f);
+        edgeContainer.setPosition((sw - cw) / 2.0f + 200, (sh - ch) / 2.0f + 30);
         edgeContainer.fillX();
         edgeContainer.fillY();
 
@@ -306,6 +311,7 @@ public class SelectLevelMode implements Screen {
         for(Level lev : levels){
             levelTable.add(lev.button).size(cw/2*0.9f, ch/3*0.45f).expandX().fillX();
             levelTable.row().padBottom(ch * 0.08f);
+            previewTextures[lev.getLevel()] = new Image(new TextureRegion(new Texture(Gdx.files.internal(lev.getFilePreview()))));
         }
 
         Container<Table> levelTableContainer = new Container<>();
@@ -334,16 +340,16 @@ public class SelectLevelMode implements Screen {
         //back button
         TextureRegionDrawable headerimg = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/selectmode/level_selector_label.png"))));
         Image header = new Image(headerimg);
-        overlayPageHeader.add(header).width(cw/8f).height(cw/16f).expand().top().left();
+        overlayPageHeader.add(header).width(cw/6f).height(cw/16f).expand().top().left();
 
         Table leftTable = new Table();
         leftTable.setWidth(cw/2 - 10);
-        leftTable.add(overlayPageHeader).expand().fill();
+        leftTable.add(overlayPageHeader).expand().fill().padBottom(20);
         leftTable.row();
         scrollContainer.setActor(scroller);
         leftTable.add(scrollContainer);
         leftTable.row();
-//        leftTable.add(overlayBackButton);
+        leftTable.add(overlayBackButton);
 
 
         //preview panel
