@@ -12,10 +12,7 @@ package edu.cornell.gdiac.backend.audio;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.GdxRuntimeException;
-import edu.cornell.gdiac.audio.AudioSource;
-
-import edu.cornell.gdiac.audio.AudioStream;
-import edu.cornell.gdiac.backend.audio.*;
+import edu.cornell.gdiac.audio.*;
 import javazoom.jl.decoder.*;
 
 import java.io.ByteArrayOutputStream;
@@ -195,7 +192,6 @@ public class Mp3Source implements AudioSource {
 
         try {
             OutputBuffer outputBuffer = null;
-            System.out.println("Minimum buffer "+(OutputBuffer.BUFFERSIZE * 2));
             int channels = -1;
             while (true) {
                 Header header = bitstream.readFrame();
