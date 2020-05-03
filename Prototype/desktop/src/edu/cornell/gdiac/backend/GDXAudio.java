@@ -22,8 +22,12 @@ import com.badlogic.gdx.utils.*;
 import edu.cornell.gdiac.audio.*;
 import edu.cornell.gdiac.backend.audio.*;
 import org.lwjgl.BufferUtils;
+import org.lwjgl.LWJGLException;
+import org.lwjgl.LWJGLUtil;
+import org.lwjgl.Sys;
 import org.lwjgl.openal.*;
 
+import java.lang.reflect.Method;
 import java.nio.*;
 
 /**
@@ -46,7 +50,7 @@ import java.nio.*;
  * package restrictions that we do not want to have to deal with.  Despite the increase
  * in this file size, we find the design of this class to be a lot more manageable.
  */
-public class GDXAudio extends OpenALAudio implements AudioEngine {
+public class GDXAudio implements AudioEngine {
     /** The buffer size of an audio device */
     private final int deviceBufferSize;
     /** The number of buffers in an audio device */
@@ -108,8 +112,6 @@ public class GDXAudio extends OpenALAudio implements AudioEngine {
      * @param deviceBufferSize        The buffer size to allocate for an {@link AudioDevice}.
      */
     public GDXAudio (int simultaneousSources, int deviceBufferCount, int deviceBufferSize) {
-        // This command boots up OpenAL but does not do much else
-        super(0, deviceBufferCount, deviceBufferSize);
         this.deviceBufferSize = deviceBufferSize;
         this.deviceBufferCount = deviceBufferCount;
 
@@ -117,32 +119,37 @@ public class GDXAudio extends OpenALAudio implements AudioEngine {
         registerFormat("wav", WavSource.class);
         registerFormat("mp3", Mp3Source.class);
 
-        allSources = new IntArray(false, simultaneousSources);
-        for (int ii = 0; ii < simultaneousSources; ii++) {
-            int sourceId = AL10.alGenSources();
-            int errorCode = AL10.alGetError();
-            if (errorCode != AL10.AL_NO_ERROR) {
-                Gdx.app.error("OpenAL","Unable to allocated source: "+AL10.alGetString(errorCode));
-                ii = simultaneousSources;
-            } else {
-                sourceToIndex.put(sourceId,allSources.size);
-                indexToSource.put(allSources.size,sourceId);
-                allSources.add(sourceId);
+        try {
+            allSources = new IntArray( false, simultaneousSources );
+            for (int ii = 0; ii < simultaneousSources; ii++) {
+                int sourceId = AL10.alGenSources();
+                int errorCode = AL10.alGetError();
+                if (errorCode != AL10.AL_NO_ERROR) {
+                    Gdx.app.error( "OpenAL", "Unable to allocated source: " + AL10.alGetString( errorCode ) );
+                    ii = simultaneousSources;
+                } else {
+                    sourceToIndex.put( sourceId, allSources.size );
+                    indexToSource.put( allSources.size, sourceId );
+                    allSources.add( sourceId );
+                }
             }
+
+            buffers = new OpenALBuffer[simultaneousSources];
+            recentIndex = simultaneousSources - 1;
+
+            paused = new boolean[simultaneousSources];
+            globalPause = false;
+            floatdata = BufferUtils.createFloatBuffer( 4 );
+        } catch (Exception e) {
+            Gdx.app.log("OpenAL", "Unable to initialize secondary engine");
+            noDevice = true;
+            return;
         }
-
-        buffers = new OpenALBuffer[simultaneousSources];
-        recentIndex = simultaneousSources-1;
-
-        paused = new boolean[simultaneousSources];
-        globalPause = false;
-        floatdata = BufferUtils.createFloatBuffer(4);
     }
 
     /**
      * Disposes this audio engine, releasing all resources.
      */
-    @Override
     public void dispose () {
         if (noDevice) {
             return;
@@ -167,14 +174,8 @@ public class GDXAudio extends OpenALAudio implements AudioEngine {
         allSources.clear();
         sourceToIndex.clear();
         indexToSource.clear();
-        
-        AL.destroy();
-        while (AL.isCreated()) {
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException e) {
-            }
-        }
+
+        // OpenAL clean-up is responsibility of primary engine
     }
 
     /**
@@ -251,6 +252,10 @@ public class GDXAudio extends OpenALAudio implements AudioEngine {
      */
     @Override
     public SoundHandle newSound (FileHandle file) {
+        if (noDevice) {
+            return null;
+        }
+
         if (file == null) {
             throw new IllegalArgumentException( "File cannot be null." );
         } else if (!file.exists()) {
@@ -284,6 +289,10 @@ public class GDXAudio extends OpenALAudio implements AudioEngine {
      * @return a new {#link SoundBuffer} from the given audio source.
      */
     public SoundBuffer newSoundBuffer(AudioSource source) {
+        if (noDevice) {
+            return null;
+        }
+
         return new SoundHandle(source);
     }
     
@@ -311,6 +320,10 @@ public class GDXAudio extends OpenALAudio implements AudioEngine {
      */
     @Override
     public MusicHandle newMusic(FileHandle file) {
+        if (noDevice) {
+            return null;
+        }
+
         if (file == null) {
             throw new IllegalArgumentException( "File cannot be null." );
         } else if (!file.exists()) {
@@ -351,6 +364,10 @@ public class GDXAudio extends OpenALAudio implements AudioEngine {
      */
     @Override
     public MusicBuffer newMusicBuffer(boolean isMono, int sampleRate) {
+        if (noDevice) {
+            return null;
+        }
+
         return new MusicHandle( isMono, sampleRate );
     }
 
@@ -766,7 +783,6 @@ public class GDXAudio extends OpenALAudio implements AudioEngine {
      * any necessary callback functions.  It must be executed in the main
      * thread.
      */
-    @Override
     public void update () {
         if (noDevice) {
             return;

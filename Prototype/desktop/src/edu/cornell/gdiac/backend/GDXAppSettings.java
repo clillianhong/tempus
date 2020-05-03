@@ -13,6 +13,7 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.LifecycleListener;
 import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.graphics.Color;
+import org.lwjgl.LWJGLUtil;
 
 /**
  * This class configures the launch settings for an instance of {@link GDXApp}.
@@ -114,7 +115,7 @@ public class GDXAppSettings {
         config.backgroundFPS = backgroundFPS;
         config.pauseWhenBackground = pauseWhenBackground;
         config.pauseWhenMinimized = pauseWhenMinimized;
-        config.disableAudio = true; // Why did you force me to do this?
+        config.disableAudio = false;
         return config;
     }
 }
