@@ -61,6 +61,11 @@ public class MusicController {
 
     private boolean shifted;
 
+    /** The reader to process JSON files */
+    protected JsonReader jsonReader;
+    /** The JSON asset directory */
+    protected JsonValue assetDirectory;
+
 
     /**
      * Creates a new MusicController with the default settings.
@@ -215,6 +220,10 @@ public class MusicController {
     }
 
     public void playMenuMusic(){
+        jsonReader = new JsonReader();
+        assetDirectory = jsonReader.parse(Gdx.files.internal("jsons/assets.json"));
+        JsonAssetManager.getInstance().loadDirectory(assetDirectory);
+        JsonAssetManager.getInstance().allocateDirectory();
         play("menu", "music/present_track_4_25.mp3", true, 1.0f);
     }
 
