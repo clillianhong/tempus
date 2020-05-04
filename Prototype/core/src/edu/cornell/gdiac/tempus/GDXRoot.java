@@ -20,7 +20,10 @@ import com.badlogic.gdx.graphics.g2d.freetype.*;
 import com.badlogic.gdx.assets.loaders.*;
 import com.badlogic.gdx.assets.loaders.resolvers.*;
 
+import com.badlogic.gdx.utils.JsonReader;
+import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.Select;
+import edu.cornell.gdiac.audio.MusicBuffer;
 import edu.cornell.gdiac.tempus.tempus.HelpMode;
 import edu.cornell.gdiac.tempus.tempus.MainMenuMode;
 import edu.cornell.gdiac.tempus.tempus.LevelController;
@@ -68,6 +71,7 @@ public class GDXRoot extends Game implements ScreenListener {
 	 */
 	public GDXRoot() {
 		gameManager = new GameStateManager();
+
 
 		// Start loading with the asset manager
 		// manager = new AssetManager();
@@ -158,7 +162,7 @@ public class GDXRoot extends Game implements ScreenListener {
 			if (gameManager.endGameState()) {
 				gameManager.stepGame(true);
 				gameManager.updateGameState();
-				MusicController.getInstance().stopAll();
+				//MusicController.getInstance().stopAll();
 				levelselect.setScreenListener(this);
 				levelselect.setCanvas(canvas);
 				levelselect.createMode();
@@ -174,7 +178,6 @@ public class GDXRoot extends Game implements ScreenListener {
 			}
 		}
 		else if (screen == loading || exitCode == ScreenExitCodes.EXIT_LOAD.ordinal()) {
-
 			menu.createMode();
 			menu.setScreenListener(this);
 			menu.setCanvas(canvas);
@@ -190,7 +193,7 @@ public class GDXRoot extends Game implements ScreenListener {
 				levelselect.createMode();
 				levelselect.setScreenListener(this);
 				levelselect.setCanvas(canvas);
-
+				MusicController.getInstance().stopAll();
 				setScreen(levelselect);
 			} else if (exitCode == ScreenExitCodes.MENU_ABOUT.ordinal()) {
 				// TODO menu about hookup
@@ -199,7 +202,7 @@ public class GDXRoot extends Game implements ScreenListener {
 				helpmenu.createMode();
 				helpmenu.setScreenListener(this);
 				helpmenu.setCanvas(canvas);
-
+				MusicController.getInstance().stopAll();
 				setScreen(helpmenu);
 			} else {
 				// We quit the main application
@@ -215,6 +218,7 @@ public class GDXRoot extends Game implements ScreenListener {
 				menu.setCanvas(canvas);
 				setScreen(menu);
 			} else { // go to a level
+				MusicController.getInstance().stopAll();
 				gameManager.setCurrentLevel(exitCode);
 				gameManager.getCurrentRoom().reset();
 //				gameManager.printGameState();
