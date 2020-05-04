@@ -165,7 +165,6 @@ public class GDXRoot extends Game implements ScreenListener {
 
 				setScreen(levelselect);
 			} else {
-				gameManager.getCurrentRoom().reset();
 				gameManager.stepGame(false);
 				gameManager.updateGameState();
 				LevelController room = gameManager.getCurrentRoom();

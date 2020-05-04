@@ -410,6 +410,7 @@ public class LevelController extends WorldController {
 
 	}
 
+
 	protected void exitGame() {
 		listener.exitScreen(this, ScreenExitCodes.EXIT_QUIT.ordinal());
 	}
