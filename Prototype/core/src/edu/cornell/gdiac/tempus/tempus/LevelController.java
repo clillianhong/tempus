@@ -37,11 +37,8 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import edu.cornell.gdiac.audio.MusicBuffer;
-import edu.cornell.gdiac.tempus.InputController;
-import edu.cornell.gdiac.tempus.MusicController;
-import edu.cornell.gdiac.tempus.WorldController;
+import edu.cornell.gdiac.tempus.*;
 import edu.cornell.gdiac.util.*;
-import edu.cornell.gdiac.tempus.GameCanvas;
 import edu.cornell.gdiac.tempus.obstacle.*;
 import edu.cornell.gdiac.tempus.tempus.models.*;
 
