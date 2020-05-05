@@ -3,6 +3,7 @@ package edu.cornell.gdiac.tempus.tempus;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.JsonReader;
@@ -358,22 +359,22 @@ public class EnemyController {
     public void sleepIfNotInWorld() {
         for (Enemy e: enemies) {
             if (!e.isTurret()) {
-                e.setActive(true);
+                e.setBodyType(BodyDef.BodyType.DynamicBody);
                 if (e.getSpace() == 3) {
                     e.setIsFiring(true);
-                    e.setActive(true);
+                    e.setBodyType(BodyDef.BodyType.DynamicBody);
                 } else if (!shifted && (e.getSpace()==2)) {
                     e.setIsFiring(false);
-                    e.setActive(false);
+                    e.setBodyType(BodyDef.BodyType.StaticBody);
                 } else if (shifted && (e.getSpace()==2)) {
                     e.setIsFiring(e.getShiftedFiring());
                 } else if (shifted && (e.getSpace()==1)) {
                     e.setIsFiring(false);
-                    e.setActive(false);
+                    e.setBodyType(BodyDef.BodyType.StaticBody);
                 } else if (!shifted && (e.getSpace()==1)) {
                     e.setIsFiring(e.getShiftedFiring());
                 }
-            } else {
+            }
                 e.setSensor(false);
                 if (e.getSpace() == 3) {
                     e.setSensor(false);
@@ -382,7 +383,6 @@ public class EnemyController {
                 } else if (shifted && (e.getSpace() == 1)) {
                     e.setSensor(true);
                 }
-            }
         }
     }
 
