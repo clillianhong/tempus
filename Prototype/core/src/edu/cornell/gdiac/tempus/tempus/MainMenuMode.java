@@ -25,6 +25,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import edu.cornell.gdiac.tempus.GameCanvas;
+import edu.cornell.gdiac.tempus.MusicController;
 import edu.cornell.gdiac.tempus.WorldController;
 import edu.cornell.gdiac.tempus.tempus.models.ScreenExitCodes;
 import edu.cornell.gdiac.util.GifDecoder;
@@ -94,7 +95,6 @@ public class MainMenuMode implements Screen {
     public void createMode(){
 //        atlas = new TextureAtlas("skin.atlas");
         skin = new Skin(Gdx.files.internal("skins/flat_earth_skin/flat-earth-ui.json"));
-
         camera = new OrthographicCamera(sw, sh);
         stage = new Stage(new FitViewport(sw, sh, camera));
         stage.getViewport().apply();
@@ -126,7 +126,6 @@ public class MainMenuMode implements Screen {
         float ch = sh * 0.5f;
 
         backgroundTexture = new TextureRegion(new Texture(Gdx.files.internal("textures/background/mainmenubackground.png")));
-
         //table container to center main table
         Container<Table> tableContainer = new Container<Table>();
         tableContainer.setSize(cw, ch);
@@ -189,12 +188,13 @@ public class MainMenuMode implements Screen {
         mainTable.add(exitButton).width(cw/5f).height(ch/4f).pad(cw/15f).expand().fillX();
 //        mainTable.add(aboutButton).width(cw/5f).height(ch/5f).pad(cw/15f).expand().fillX();
 
-
         tableContainer.setActor(mainTable);
         //Add table to stage
         //
         stage.addActor(tableContainer);
         stage.getViewport().apply();
+
+        MusicController.getInstance().playMenuMusic();
 
     }
 
@@ -224,7 +224,6 @@ public class MainMenuMode implements Screen {
 
             stage.act();
             stage.draw();
-
         }
 
     }

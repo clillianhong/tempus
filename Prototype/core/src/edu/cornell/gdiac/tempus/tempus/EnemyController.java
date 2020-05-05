@@ -61,7 +61,7 @@ public class EnemyController {
     public int getEnemies() {
         int result = enemies.size();
         for (Enemy e: enemies) {
-            if (e.isTurret()){
+            if (e.isTurret() || e.isDead()){
                 result --;
             }
         }
@@ -164,8 +164,8 @@ public class EnemyController {
     public void setFlyingVelocity (Enemy enemy) {
         Vector2 vel = target.getPosition().sub(enemy.getPosition());
         if (vel != enemy.getFlyingVelocity()) {
-            enemy.setLinearVelocity(new Vector2(0,0));
-            enemy.setFlyingVelocity(vel);
+            enemy.setLinearVelocity(enemy.getLinearVelocity().scl(.5f));
+            enemy.setFlyingVelocity(vel.cpy());
         }
     }
 
@@ -177,11 +177,13 @@ public class EnemyController {
             if (e.isTurret()) {
                 fire(e);
             } else if ((!shifted && e.getSpace() == 1) || (shifted && e.getSpace() == 2)) {
-                if (e.getAi() == Enemy.EnemyType.WALK && e.getPlatformFixture() != null) {
-                    createLineOfSight(world, BULLET_OFFSET, e);
-                    applyForce(e);
-                    setBulletVelocity(BULLET_OFFSET, e);
-                    fire(e);
+                if (e.getAi() == Enemy.EnemyType.WALK) {
+                    if (e.getPlatformFixture() != null){
+                        createLineOfSight(world, BULLET_OFFSET, e);
+                        applyForce(e);
+                        setBulletVelocity(BULLET_OFFSET, e);
+                        fire(e);
+                    }
                 } else if (e.getAi() == Enemy.EnemyType.TELEPORT) {
                     e.coolDown(true);
                     if (framesAfterMove == 59 && waitToFire) {
@@ -218,7 +220,7 @@ public class EnemyController {
         if (Math.abs(e.getVY()) >= e.getMaxSpeed()) {
             e.setVY(Math.signum(e.getVY()) * e.getMaxSpeed());
         }
-        forceCache.set(e.getFlyingVelocity());
+        forceCache.set(e.getFlyingVelocity());;
         e.getBody().applyForce(forceCache, e.getPosition(), true);
     }
 

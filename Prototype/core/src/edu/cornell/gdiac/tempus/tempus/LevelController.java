@@ -37,11 +37,8 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import edu.cornell.gdiac.audio.MusicBuffer;
-import edu.cornell.gdiac.tempus.InputController;
-import edu.cornell.gdiac.tempus.MusicController;
-import edu.cornell.gdiac.tempus.WorldController;
+import edu.cornell.gdiac.tempus.*;
 import edu.cornell.gdiac.util.*;
-import edu.cornell.gdiac.tempus.GameCanvas;
 import edu.cornell.gdiac.tempus.obstacle.*;
 import edu.cornell.gdiac.tempus.tempus.models.*;
 
@@ -495,9 +492,7 @@ public class LevelController extends WorldController {
 		float[] newPlatDiamond = {0.4f, 1.8f, 0.5f, 1.8f, 2.1f, 1.8f, 2.2f, 1.8f, 1.4f, 0.1f};
 		float[] newPlatRounded = {0.4f, 1.4f, 0.8f, 1.7f, 2.1f, 1.7f, 2.4f, 1.4f, 2.3f, 0.8f, 1.7f, 0.3f, 1.1f, 0.3f};
 		float[] newSpikes = {0.3f, -0.6f, 0.0f, -0.2f, -0.6f, 0.0f, -0.5f, 0.4f, 0.0f, 0.6f, 0.4f, -0.2f, 0.6f, -0.3f};
-		float[] newPlatLongcapsule = {0.5f, 1.1f, 0.6f, 1.1f, 2.7f, 1.1f,
-				4.8f, 1.1f, 4.9f, 1.1f,
-				4.9f, 0.6f, 4.3f, 0.3f, 3.4f, 0.3f,
+		float[] newPlatLongcapsule = {0.5f, 1.1f, 0.6f, 1.1f, 4.8f, 1.1f, 4.9f, 1.1f, 4.9f, 0.6f, 4.3f, 0.3f, 3.4f, 0.3f,
 				2.7f, 0.5f, 2.0f, 0.3f, 1.1f, 0.3f, 0.5f, 0.6f};
 		float[] newPlatTall = {0.4f, 3.9f, 0.5f, 3.9f, 1.6f, 3.9f, 1.7f, 3.9f, 1.1f, 0.5f};
 		float[] newPlatPillar = {1.2f, 4.0f, 1.3f, 4.0f, 2.0f, 4.0f, 2.1f, 4.0f, 2.1f, 1.0f, 1.2f, 1.0f};
@@ -945,9 +940,9 @@ public class LevelController extends WorldController {
 		// Check if the platform is in this world or other world. If in the other world,
 		// make the platform sleep.
 		sleepIfNotInWorld();
-		if (InputController.getInstance().didDebug()) {
-			debug = !debug;
-		}
+//		if (InputController.getInstance().didDebug()) {
+//			debug = !debug;
+//		}
 
 		// prototype: Dash
 		boolean dashAttempt = InputController.getInstance().releasedLeftMouseButton();
