@@ -197,7 +197,7 @@ public abstract class WorldController implements Screen {
 	protected Vector2 scale;
 	
 	/** Whether or not this is an active controller */
-	private boolean active;
+	protected boolean active;
 	/** Whether we have completed this level */
 	protected boolean complete;
 	/** Whether we have failed at this world (and need a reset) */
@@ -473,20 +473,7 @@ public abstract class WorldController implements Screen {
 			reset();
 		}
 
-		if (input.didAdvance()) {
-			listener.exitScreen(this, ScreenExitCodes.EXIT_NEXT.ordinal());
-			return false;
-		} else if (input.didRetreat()) {
-			listener.exitScreen(this, ScreenExitCodes.EXIT_PREV.ordinal());
-			return false;
-		} else if (countdown > 0) {
-			countdown--;
-		} else if (countdown == 0) {
-			if (complete) {
-				listener.exitScreen(this, ScreenExitCodes.EXIT_NEXT.ordinal());
-				return false;
-			}
-		}
+
 		return true;
 	}
 	
