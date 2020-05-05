@@ -1314,6 +1314,7 @@ public class LevelController extends WorldController {
 		shaderprog.setUniformf("deltax", Math.abs(delta_x / 100));
 		shaderprog.setUniformf("deltay", Math.abs(delta_y / 100));
 		// update ripple params
+//		System.out.println("Shader log: " +  shaderprog.getLog());
 		shaderprog.setUniformf("u_rippleDistance", m_rippleDistance);
 		shaderprog.setUniformf("u_rippleRange", m_rippleRange);
 		shaderprog.end();
