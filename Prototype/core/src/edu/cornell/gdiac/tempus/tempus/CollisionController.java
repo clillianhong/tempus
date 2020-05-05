@@ -291,7 +291,7 @@ public class CollisionController implements ContactListener {
                     }
                 }
             }
-            if (!correctWorld) {
+            if (!correctWorld && !(objA instanceof Projectile) && !(objB instanceof Projectile)) {
                 return;
             }
         }
@@ -301,7 +301,7 @@ public class CollisionController implements ContactListener {
 
             // Test bullet collision with world
             if (bd1.getSpace() != 3 && bd2.getSpace() != 3 && bd1.getSpace() != bd2.getSpace()) {
-                return;
+                    return;
             }
             if (bd1.getName().equals("bullet") && bd2 != avatar) {
                 if (bd2.getBody().getUserData() instanceof Enemy) {
