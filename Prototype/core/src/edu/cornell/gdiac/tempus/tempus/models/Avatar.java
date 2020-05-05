@@ -1180,11 +1180,11 @@ public class Avatar extends CapsuleObstacle {
             switch (projType) {
                 case PRESENT:
                     canvas.draw(projPresentCaughtTexture, Color.WHITE,origin.x + 10,origin.y,
-                            getX()*drawScale.x + 10,getY()*drawScale.y, angle,0.024f * drawScale.x,0.0225f * drawScale.y);
+                            getX()*drawScale.x + 10,getY()*drawScale.y, angle,0.005f * drawScale.x,0.005f * drawScale.y);
                     break;
                 case PAST:
                     canvas.draw(projPastCaughtTexture, Color.WHITE,origin.x,origin.y,
-                            getX()*drawScale.x,getY()*drawScale.y, angle,0.024f * drawScale.x,0.0225f * drawScale.y);
+                            getX()*drawScale.x,getY()*drawScale.y, angle,0.005f * drawScale.x,0.005f * drawScale.y);
                     break;
                 default:
                     assert false : "Invalid projectile type";
