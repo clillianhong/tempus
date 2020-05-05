@@ -697,13 +697,19 @@ public class LevelController extends WorldController {
 		endlevelContainer.setActor(endlevelTable);
 		endlevelContainer.setVisible(false);
 
+		Table overlayPageHeader = new Table();
+		//back button
+		String winpath = "textures/gui/roommode/level_" + GameStateManager.getInstance().getCurrentLevel().getLevelNumber() + "_win.png";
+		TextureRegionDrawable headerimg = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal(winpath))));
+		Image header = new Image(headerimg);
+		overlayPageHeader.add(header).expand().center();
+
 		TextureRegionDrawable levelsResource = new TextureRegionDrawable(
 				new TextureRegion(new Texture(Gdx.files.internal("textures/gui/win_levelsbutton.png"))));
 		TextureRegionDrawable nextResource = new TextureRegionDrawable(
 				new TextureRegion(new Texture(Gdx.files.internal("textures/gui/win_nextbutton.png"))));
 		TextureRegionDrawable replayResource = new TextureRegionDrawable(
 				new TextureRegion(new Texture(Gdx.files.internal("textures/gui/win_replaybutton.png"))));
-
 
 		Button levelButton = new Button(levelsResource);
 		levelButton.addListener(new ClickListener() {
@@ -733,16 +739,18 @@ public class LevelController extends WorldController {
 			}
 		});
 
-		endlevelTable.add(levelButton).width(sw / 4 / 1.5f).height(sh / 4).center().expandX().padBottom(sh / 30);
+		float width_mult = 0.4f;
+		float height_mult = 0.8f;
+		endlevelTable.add(overlayPageHeader).width(sw/4).height(sh/4).center().expandX().padBottom(sh/30);
 		endlevelTable.row();
-		endlevelTable.add(replayButton).width(sw / 4 / 1.5f).height(sh / 4).center().expandX().padBottom(sh / 30);
-
+		endlevelTable.add(levelButton).width(sw / 2.66f * width_mult).height(sh / 6.2f * height_mult).center().expandX();
 		endlevelTable.row();
-		endlevelTable.add(nextButton).width(sw / 4 / 1.5f).height(sh / 4).expandX();
+		endlevelTable.add(replayButton).width(sw / 2.66f * width_mult).height(sh / 6 * height_mult).center().expandX();
+		endlevelTable.row();
+		endlevelTable.add(nextButton).width(sw / 2.66f * width_mult).height(sh / 6 * height_mult).expandX();
 
 		endlevelTable.setVisible(false);
 		endlevelContainer.setVisible(false);
-
 		tableStack.add(endlevelContainer);
 	}
 
@@ -1159,7 +1167,7 @@ public class LevelController extends WorldController {
 			avatar.setStartedDashing(0);
 		}
 		if (rippleOn) {
-			updateShader(false);
+			updateShader();
 		}
 
 		if (avatar.isSticking() && !avatar.getWasSticking()) {
@@ -1390,8 +1398,10 @@ public class LevelController extends WorldController {
 		}
 	}
 
-	public void updateShader(boolean failedState) {
-
+	/**
+	 * Writes to shader uniforms for the ripple effect.
+	 */
+	public void updateShader() {
 
 		prev_m_rippleDistance = m_rippleRange;
 		m_rippleRange = (1 - m_rippleDistance / maxRippleDistance) * ripple_intensity;
@@ -1462,7 +1472,7 @@ public class LevelController extends WorldController {
 			// render batch with shader
 			stage.getBatch().begin();
 			if (rippleOn) {
-				updateShader(false);
+				updateShader();
 				stage.getBatch().setShader(shaderprog);
 			}
 			if (shifted) {
@@ -1508,7 +1518,7 @@ public class LevelController extends WorldController {
 				minAlpha = 0.5f;
 
 				ripple_intensity = 0.2f;
-				updateShader(false);
+				updateShader();
 
 
 			} else if (failed) {

@@ -174,6 +174,9 @@ public class GameStateManager {
     public void loadGameState(String game_state_json){
 
         jsonReader = new JsonReader();
+        //TODO: CHANGE THIS TO LOCAL (UNCOMMENT AND REPLACE LINE) FOR FINISHED VERSION
+//        gameDirectory = jsonReader.parse(Gdx.files.local(game_state_json));
+
         gameDirectory = jsonReader.parse(Gdx.files.internal(game_state_json));
 
         //parsing game_state json
@@ -284,8 +287,8 @@ public class GameStateManager {
      * 3. Finishing the game
      */
     public void stepGame(boolean is_exit){
-        if(!is_exit){
             boolean level_finished = currentLevel.stepLevel();
+
             if(level_finished){ // LEVEL HAS FINISHED
                 //TODO: Finish level announcement/screen
                 MusicController.getInstance().stopAll();
@@ -303,7 +306,6 @@ public class GameStateManager {
                     }
                     //TODO: LEVEL FINISH SCREEN
                 }
-            }
         }
     }
 
@@ -369,7 +371,6 @@ public class GameStateManager {
         Json json=new Json(JsonWriter.OutputType.json);
         json.setWriter(gamefile.writer(false));
         json.setOutputType(JsonWriter.OutputType.json);
-
         gamefile.writeString(json.prettyPrint(gameState), false);
     }
 
