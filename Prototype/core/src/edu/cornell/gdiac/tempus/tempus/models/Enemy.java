@@ -48,6 +48,8 @@ public class Enemy extends CapsuleObstacle {
     private static final float ENEMY_MASS = 1.0f;
     /** The factor to multiply by the input */
     private static final float FORCE = 125.0f;
+    /** The factor for flying force */
+    private static final float FLY_FORCE = 30.0f;
     /** The amount to slow the enemy down */
     private static final float ENEMY_DAMPING = 10.0f;
     /** The maximum enemy speed */
@@ -277,6 +279,7 @@ public class Enemy extends CapsuleObstacle {
             setName("fly enemy");
             isFiring = false;
             setGravityScale(0);
+            flyingVelocity = new Vector2(0,0);
         }
     }
 
@@ -314,6 +317,7 @@ public class Enemy extends CapsuleObstacle {
     public void setDead() {
         setMovement(0);
         setNextDirection(0);
+        setLinearVelocity(new Vector2(0,0));
         dead = true;
     }
 
@@ -350,7 +354,7 @@ public class Enemy extends CapsuleObstacle {
      * @param vel vector the the flying enemy velocity
      */
     public void setFlyingVelocity(Vector2 vel) {
-        this.flyingVelocity = vel.scl(FORCE);
+        this.flyingVelocity = vel.scl(FLY_FORCE);
     }
 
     /**
@@ -742,9 +746,9 @@ public class Enemy extends CapsuleObstacle {
     public void draw(GameCanvas canvas) {
 
         if(getAi() == EnemyType.FLY){
-            float faceoffset = 2*getWidth() * faceDirection;
+            float faceOffset = 2 * getWidth() * faceDirection;
 
-            canvas.draw(currentStrip, Color.WHITE, origin.x, origin.y,  (getX() - faceoffset) * drawScale.x, (getY()-getHeight()) * drawScale.y,
+            canvas.draw(currentStrip, Color.WHITE, origin.x, origin.y,  (getX() - faceOffset) * drawScale.x, (getY()-getHeight()) * drawScale.y,
                     getAngle(), 0.024f * minimizeScale * drawScale.x * faceDirection , 0.0225f * minimizeScale * drawScale.y);
         }else{
             // Draw enemy filmstrip

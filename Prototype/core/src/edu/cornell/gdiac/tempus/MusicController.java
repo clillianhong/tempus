@@ -1,12 +1,11 @@
 package edu.cornell.gdiac.tempus;
 
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.IdentityMap;
-import com.badlogic.gdx.utils.ObjectMap;
+import com.badlogic.gdx.utils.*;
 import edu.cornell.gdiac.assets.*;
 import edu.cornell.gdiac.audio.*;
 import edu.cornell.gdiac.util.*;
@@ -58,7 +57,14 @@ public class MusicController {
     /** Support class for garbage collection */
     private Array<String> collection;
 
+    private boolean menu;
+
     private boolean shifted;
+
+    /** The reader to process JSON files */
+    protected JsonReader jsonReader;
+    /** The JSON asset directory */
+    protected JsonValue assetDirectory;
 
 
     /**
@@ -213,10 +219,18 @@ public class MusicController {
         actives.remove(key);
     }
 
+    public void playMenuMusic(){
+        jsonReader = new JsonReader();
+        assetDirectory = jsonReader.parse(Gdx.files.internal("jsons/assets.json"));
+        JsonAssetManager.getInstance().loadDirectory(assetDirectory);
+        JsonAssetManager.getInstance().allocateDirectory();
+        play("menu", "music/present_track_4_25.mp3", true, 1.0f);
+    }
+
     public void stopAll() {
         for (String m : actives.keys()){
             MusicBuffer music = actives.get(m).music;
-
+            menu = false;
             music.stop();
             music.setLooping(false);
             music.setVolume(0.0f);
