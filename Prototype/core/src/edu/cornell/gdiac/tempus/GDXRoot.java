@@ -114,6 +114,8 @@ public class GDXRoot extends Game implements ScreenListener {
 	 * This is preceded by a call to pause().
 	 */
 	public void dispose() {
+		gameManager.updateGameState();
+		gameManager.saveGameState();
 		// Call dispose on our children
 		setScreen(null);
 		if (controllers != null) {
@@ -185,9 +187,7 @@ public class GDXRoot extends Game implements ScreenListener {
 		} else if (screen == menu) {
 			gameManager.printGameState();
 			if (exitCode == ScreenExitCodes.MENU_START.ordinal()) {
-
 				gameManager.readyLevels();
-
 				levelselect.createMode();
 				levelselect.setScreenListener(this);
 				levelselect.setCanvas(canvas);
