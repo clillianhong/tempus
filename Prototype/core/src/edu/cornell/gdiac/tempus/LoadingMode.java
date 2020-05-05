@@ -178,7 +178,6 @@ public class LoadingMode implements Screen {
 		bg.setFillParent(true);
 		stage.addActor(bg);
 
-
 		font = new BitmapFont(Gdx.files.internal("fonts/carterone.fnt"));
 		glyphLayout  = new GlyphLayout();
 		Gdx.gl.glClearColor(0,0,0,1);
@@ -214,6 +213,12 @@ public class LoadingMode implements Screen {
 
 		stage.addActor(percentLabel);
 		stage.addActor(loadingLabel);
+
+		// Custom cursor texture
+		Pixmap pm = new Pixmap(Gdx.files.internal("textures/gui/cursor.png"));
+		Cursor cursor = Gdx.graphics.newCursor(pm, 0, 0);
+		Gdx.graphics.setCursor(cursor);
+		pm.dispose();
 	}
 	
 	/**
