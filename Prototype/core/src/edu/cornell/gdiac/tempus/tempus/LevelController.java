@@ -58,11 +58,14 @@ public class LevelController extends WorldController {
 
 	/** Stage for adding UI components **/
 	protected Skin skin;
-	protected Stage stage;
 
 	protected Table table;
 	protected Table pauseTable;
 	protected Container pauseButtonContainer;
+	private TextureRegionDrawable overlayBG;
+
+	protected Table endlevelTable;
+	protected Container endlevelContainer;
 
 	/**
 	 * RIPPLE SHADER ** /
@@ -84,7 +87,8 @@ public class LevelController extends WorldController {
 	private float drawFadeAlpha;
 	/** Alpha minimum (darker for end of level) */
 	private float minAlpha;
-
+	/** Stage for drawing */
+	protected Stage stage;
 
 
 	/*SHADER IMPLEMENTATION*/
@@ -413,6 +417,7 @@ public class LevelController extends WorldController {
 	}
 
 	protected void exitLevelSelect() {
+		active = false;
 		listener.exitScreen(this, ScreenExitCodes.EXIT_PREV.ordinal());
 	}
 
@@ -610,7 +615,7 @@ public class LevelController extends WorldController {
 		 */
 		TextureRegionDrawable pauseButtonResource = new TextureRegionDrawable(
 				new TextureRegion(new Texture(Gdx.files.internal("textures/gui/pausebutton.png"))));
-		TextureRegionDrawable pauseBG = new TextureRegionDrawable(
+		overlayBG = new TextureRegionDrawable(
 				new TextureRegion(new Texture(Gdx.files.internal("textures/gui/pause_filter_50_black.png"))));
 		TextureRegionDrawable pauseBox = new TextureRegionDrawable(
 				new TextureRegion(new Texture(Gdx.files.internal("textures/gui/frame_pause.png"))));
@@ -622,7 +627,7 @@ public class LevelController extends WorldController {
 				new TextureRegion(new Texture(Gdx.files.internal("textures/gui/pause_exit_button.png"))));
 
 		pauseButtonContainer = new Container<>();
-		pauseButtonContainer.setBackground(pauseBG);
+		pauseButtonContainer.setBackground(overlayBG);
 		pauseButtonContainer.setPosition(0, 0);
 		pauseButtonContainer.fillX();
 		pauseButtonContainer.fillY();
@@ -667,13 +672,80 @@ public class LevelController extends WorldController {
 
 		tableStack.add(table);
 		tableStack.add(pauseButtonContainer);
-		edgeContainer.setActor(tableStack);
 		/*
 		 * END PAUSE SCREEN SETUP---------------------
 		 */
 
+		/* START END-GAME SCREEN CREATION */
+
+		if(GameStateManager.getInstance().lastRoom()){
+			createEndlevelUI(tableStack);
+		}
+
+		edgeContainer.setActor(tableStack);
+
 		stage.addActor(edgeContainer);
 
+	}
+
+	public void createEndlevelUI(Stack tableStack){
+		endlevelContainer = new Container<>();
+		endlevelContainer.setBackground(overlayBG);
+		endlevelContainer.setPosition(0, 0);
+		endlevelContainer.fillX();
+		endlevelContainer.fillY();
+
+		endlevelTable = new Table();
+		endlevelContainer.setActor(endlevelTable);
+		endlevelContainer.setVisible(false);
+
+		TextureRegionDrawable levelsResource = new TextureRegionDrawable(
+				new TextureRegion(new Texture(Gdx.files.internal("textures/gui/win_levelsbutton.png"))));
+		TextureRegionDrawable nextResource = new TextureRegionDrawable(
+				new TextureRegion(new Texture(Gdx.files.internal("textures/gui/win_nextbutton.png"))));
+		TextureRegionDrawable replayResource = new TextureRegionDrawable(
+				new TextureRegion(new Texture(Gdx.files.internal("textures/gui/win_replaybutton.png"))));
+
+
+		Button levelButton = new Button(levelsResource);
+		levelButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				super.clicked(event, x, y);
+				exitLevelSelect();
+			}
+		});
+
+		Button nextButton = new Button(nextResource);
+		nextButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				super.clicked(event, x, y);
+				exitNextRoom();
+			}
+		});
+
+		Button replayButton = new Button(replayResource);
+		replayButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				super.clicked(event, x, y);
+				reset();
+				unpauseGame();
+			}
+		});
+
+		endlevelTable.add(levelButton).width(sw / 4 / 1.5f).height(sh / 4).center().expandX().padBottom(sh / 30);
+		endlevelTable.row();
+		endlevelTable.add(replayButton).width(sw / 4 / 1.5f).height(sh / 4).center().expandX().padBottom(sh / 30);
+
+		endlevelTable.row();
+		endlevelTable.add(nextButton).width(sw / 4 / 1.5f).height(sh / 4).expandX();
+
+		endlevelTable.setVisible(false);
+		endlevelContainer.setVisible(false);
+
+		tableStack.add(endlevelContainer);
 	}
 
 	public void pauseGame() {
@@ -683,15 +755,22 @@ public class LevelController extends WorldController {
 		pauseTable.setVisible(true);
 	}
 
+	public void showWinLevel() {
+		stage.getBatch().setColor(1f,1f,1f,1f);
+		canvas.getSpriteBatch().setColor(1f,1f,1f,1f);
+		endlevelContainer.setVisible(true);
+		endlevelTable.setVisible(true);
+	}
+	public void closeWinLevel() {
+		endlevelContainer.setVisible(false);
+		endlevelTable.setVisible(false);
+	}
+
 	public void unpauseGame() {
 		paused = false;
 		begincount = 30;
 		pauseButtonContainer.setVisible(false);
 		pauseTable.setVisible(false);
-
-	}
-
-	public void wonLevel() {
 
 	}
 
@@ -714,6 +793,7 @@ public class LevelController extends WorldController {
 	 * @return whether to process the update loop
 	 */
 	public boolean preUpdate(float dt) {
+		InputController input = InputController.getInstance();
 
 		if (paused || prepause) {
 			return false;
@@ -760,6 +840,26 @@ public class LevelController extends WorldController {
 
 		if(failed){
 			reset();
+		}
+		if (input.didAdvance()) {
+			active = false;
+			listener.exitScreen(this, ScreenExitCodes.EXIT_NEXT.ordinal());
+			return false;
+		} else if (input.didRetreat()) {
+			active = false;
+			listener.exitScreen(this, ScreenExitCodes.EXIT_PREV.ordinal());
+			return false;
+		} else if (countdown > 0) {
+			countdown--;
+		} else if (countdown == 0) {
+			if (complete) {
+				if(GameStateManager.getInstance().lastRoom()){
+					showWinLevel();
+				}else{
+					listener.exitScreen(this, ScreenExitCodes.EXIT_NEXT.ordinal());
+				}
+				return false;
+			}
 		}
 
 		// enemy.createLineOfSight(world);
@@ -1309,7 +1409,7 @@ public class LevelController extends WorldController {
 		shaderprog.setUniformf("deltax", Math.abs(delta_x / 100));
 		shaderprog.setUniformf("deltay", Math.abs(delta_y / 100));
 		// update ripple params
-//		System.out.println("Shader log: " +  shaderprog.getLog());
+		System.out.println("Shader log: " +  shaderprog.getLog());
 		shaderprog.setUniformf("u_rippleDistance", m_rippleDistance);
 		shaderprog.setUniformf("u_rippleRange", m_rippleRange);
 		shaderprog.end();
@@ -1347,79 +1447,84 @@ public class LevelController extends WorldController {
 	 */
 	public void draw(float delta) {
 
-		canvas.clear();
-		canvas.updateSpriteBatch();
+		if(active){
 
-		if(drawEndRoom){
-			stage.getBatch().setColor(1f,1f,1f,Math.max(minAlpha,1-drawFadeAlpha));
-			canvas.getSpriteBatch().setColor(1f,1f,1f,Math.max(minAlpha,1-drawFadeAlpha));
-			drawFadeAlpha +=.01f;
-		}
+			canvas.clear();
+			canvas.updateSpriteBatch();
 
-		//VIEWPORT UPDATES
-		stage.getBatch().setProjectionMatrix(stage.getViewport().getCamera().combined);
-		stage.getCamera().update();
-		// render batch with shader
-		stage.getBatch().begin();
-		if (rippleOn) {
-			updateShader(false);
-			stage.getBatch().setShader(shaderprog);
-		}
-		if (shifted) {
-			bgSprite.setRegion(pastBackgroundTexture);
-		} else {
-			bgSprite.setRegion(presentBackgroundTexture);
-		}
-		stage.getBatch().draw(bgSprite, 0, 0, sw, sh);
-		stage.getBatch().end();
-
-		canvas.begin();
-
-		drawObjectInWorld();
-		drawIndicator(canvas);
-
-		if(!isTutorial){
-			drawLives(canvas);
-		}
-
-		if (debug) {
-			canvas.beginDebug();
-			drawDebugInWorld();
-			canvas.endDebug();
-		}
-
-
-		// Final message
-		if (complete && !failed && !drawEndRoom) {
-			drawEndRoom = true;
-			canvas.setBlendState(GameCanvas.BlendState.ADDITIVE);
-			stage.getBatch().setBlendFunction(GL20.GL_SRC_ALPHA,GL20.GL_ONE);
-
-
-			if(GameStateManager.getInstance().lastRoom()){
-				rippleOn = true;
-				countdown = 200;
-				rippleSpeed = 0.1f;
-				minAlpha = 0f;
-				//TODO: ADD END LEVEL STATE
-			}else{
-				rippleOn = true;
-				countdown = 60;
-				minAlpha = 0.5f;
+			if(drawEndRoom){
+				stage.getBatch().setColor(1f,1f,1f,Math.max(minAlpha,1-drawFadeAlpha));
+				canvas.getSpriteBatch().setColor(1f,1f,1f,Math.max(minAlpha,1-drawFadeAlpha));
+				drawFadeAlpha +=.01f;
 			}
-			ripple_intensity = 0.2f;
-			updateShader(false);
+
+			//VIEWPORT UPDATES
+			stage.getBatch().setProjectionMatrix(stage.getViewport().getCamera().combined);
+			stage.getCamera().update();
+			// render batch with shader
+			stage.getBatch().begin();
+			if (rippleOn) {
+				updateShader(false);
+				stage.getBatch().setShader(shaderprog);
+			}
+			if (shifted) {
+				bgSprite.setRegion(pastBackgroundTexture);
+			} else {
+				bgSprite.setRegion(presentBackgroundTexture);
+			}
+			stage.getBatch().draw(bgSprite, 0, 0, sw, sh);
+			stage.getBatch().end();
+
+			canvas.begin();
+
+			drawObjectInWorld();
+			drawIndicator(canvas);
+
+			if(!isTutorial){
+				drawLives(canvas);
+			}
+
+			if (debug) {
+				canvas.beginDebug();
+				drawDebugInWorld();
+				canvas.endDebug();
+			}
 
 
-		} else if (failed) {
-			displayFont.setColor(Color.WHITE);
-			canvas.drawTextCentered("FAILURE", displayFont, 0.0f);
+			// Final message
+			if (complete && !failed && !drawEndRoom) {
+				drawEndRoom = true;
+				canvas.setBlendState(GameCanvas.BlendState.ADDITIVE);
+				stage.getBatch().setBlendFunction(GL20.GL_SRC_ALPHA,GL20.GL_ONE);
+
+
+				if(GameStateManager.getInstance().lastRoom()){
+					rippleOn = true;
+					countdown = 200;
+					rippleSpeed = 0.1f;
+					//TODO: ADD END LEVEL STATE
+				}else{
+					rippleOn = true;
+					countdown = 60;
+				}
+				minAlpha = 0.5f;
+
+				ripple_intensity = 0.2f;
+				updateShader(false);
+
+
+			} else if (failed) {
+				displayFont.setColor(Color.WHITE);
+				canvas.drawTextCentered("FAILURE", displayFont, 0.0f);
+			}
+
+			canvas.end();
+
+
 		}
-
-		canvas.end();
-
-		stage.act(Gdx.graphics.getDeltaTime());
 		stage.draw();
+		stage.act(Gdx.graphics.getDeltaTime());
+
 
 	}
 

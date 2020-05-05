@@ -197,7 +197,7 @@ public class Enemy extends CapsuleObstacle {
         super(0, 0, 0.5f, 1.0f);
         float[] pos = json.get("pos").asFloatArray();
         float[] shrink = json.get("shrink").asFloatArray();
-        System.out.println("TEXTURE: " + json.get("texture").asString() + "_type" + (json.get("aitype").asInt()));
+//        System.out.println("TEXTURE: " + json.get("texture").asString() + "_type" + (json.get("aitype").asInt()));
         TextureRegion texture = JsonAssetManager.getInstance()
                 .getEntry(json.get("texture").asString() + "_type" + (json.get("aitype").asInt()), TextureRegion.class);
 
