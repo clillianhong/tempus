@@ -95,19 +95,17 @@ public class GDXRoot extends Game implements ScreenListener {
 		canvas = new GameCanvas();
 //		canvas.setFullscreen(true,true);
 		loading = new LoadingMode(canvas, 1);
-
 		gameManager.loadGameState("jsons/game.json");
 		gameManager.setCanvas(canvas);
 		gameManager.setListener(this);
-
 		menu = new MainMenuMode();
 		levelselect = new SelectLevelMode();
 		helpmenu = new HelpMode();
-
 		current = 0;
 		loading.setScreenListener(this);
 
 		setScreen(loading);
+
 	}
 
 	/**

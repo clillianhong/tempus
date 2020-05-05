@@ -187,10 +187,17 @@ public class GameStateManager {
         last_level_idx = levels.length-1;
 
         levelDirectories[0] = jsonReader.parse(Gdx.files.internal(level_paths[0]));
+//        System.out.println("GDX ERROR 0:" + Gdx.gl.glGetError());
+
         levels[0] = loadTutorial(levelDirectories[0]);
+//        System.out.println("GDX ERROR 1 preload:" + Gdx.gl.glGetError());
+
         levels[0].preloadLevel();
 
+
         for(int i = 1; i<num_levels; i++){
+//            System.out.println("GDX ERROR "+ (i+1) +": " + Gdx.gl.glGetError());
+
             levelDirectories[i] = jsonReader.parse(Gdx.files.internal(level_paths[i]));
             levels[i] = loadLevel(levelDirectories[i], unfinishedLevel, unfinishedRoom);
             if(levels[i].getLevelNumber() == unfinishedLevel){
@@ -199,6 +206,8 @@ public class GameStateManager {
             levels[i].preloadLevel();
         }
         currentLevel = levels[1];
+//        System.out.println("GDX ERROR end:" + Gdx.gl.glGetError());
+
     }
 
     /**

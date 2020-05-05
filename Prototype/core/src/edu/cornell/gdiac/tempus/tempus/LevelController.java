@@ -348,7 +348,6 @@ public class LevelController extends WorldController {
 		ticks = 0;
 		time_incr = (float) 0.002;
 		ripple_reset = sw * 0.00025f;
-		shaderprog.setUniformf("time", ticks);
 		batch = new SpriteBatch();
 		mouse_pos = new Vector2(0.5f, 0.5f);
 		delta_x = 1000;
@@ -403,7 +402,6 @@ public class LevelController extends WorldController {
 		timeFreeze = false;
 
 		canvas.updateSpriteBatch();
-//		canvas.resize();
 		viewport.getCamera().update();
 		viewport.apply();
 		stage.getCamera().update();
@@ -1409,7 +1407,7 @@ public class LevelController extends WorldController {
 		shaderprog.setUniformf("deltax", Math.abs(delta_x / 100));
 		shaderprog.setUniformf("deltay", Math.abs(delta_y / 100));
 		// update ripple params
-		System.out.println("Shader log: " +  shaderprog.getLog());
+//		System.out.println("Shader log: " +  shaderprog.getLog());
 		shaderprog.setUniformf("u_rippleDistance", m_rippleDistance);
 		shaderprog.setUniformf("u_rippleRange", m_rippleRange);
 		shaderprog.end();
