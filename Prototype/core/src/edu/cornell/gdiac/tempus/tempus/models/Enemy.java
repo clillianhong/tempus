@@ -81,7 +81,8 @@ public class Enemy extends CapsuleObstacle {
     /** Minimize the size of the texture by the factor */
     private float minimizeScale = 1;
 
-    /** The frame rate for the animation */
+    /** The frame rate for the animation. How many seconds should elapse
+     * to move to the next frame. Lower values give a faster playback. */
     private static float FRAME_RATE = 10;
     /** The frame cooldown for the animation */
     private static float frame_cooldown = FRAME_RATE;
@@ -169,8 +170,14 @@ public class Enemy extends CapsuleObstacle {
         neutralTexture = JsonAssetManager.getInstance().getEntry("turret_shooting" + "_" + entitytype, FilmStrip.class);
         setFilmStrip(EnemyState.NEUTRAL, neutralTexture);
 
+        // Minimize present turret texture
+        if (entitytype.equals("present")) {
+            minimizeScale = 0.4f;
+            FRAME_RATE = 8;
+        }
+
         setPosition(pos[0], pos[1]);
-        setDimension(texture.getRegionWidth() * shrink[0], texture.getRegionHeight() * shrink[1]);
+        setDimension(texture.getRegionWidth() * shrink[0] * minimizeScale, texture.getRegionHeight() * shrink[1] * minimizeScale);
         setType(entitytype.equals("present") ? EntityType.PRESENT : PAST);
         setSpace(getType() == PRESENT ? 1 : 2);
         setBodyType(json.get("bodytype").asString().equals("static") ? BodyDef.BodyType.StaticBody
