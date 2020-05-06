@@ -34,7 +34,9 @@ public class Enemy extends CapsuleObstacle {
         /** Still and shoots quickly */
         GUN,
         /** Flies toward target */
-        FLY
+        FLY,
+        /** Shoots in a spiral pattern */
+//        SPIRAL, //TODO: implement correctly, this is currently unused
     }
 
     // This is to fit the image to a tighter hitbox
@@ -425,6 +427,17 @@ public class Enemy extends CapsuleObstacle {
      */
     public void setProjVel(Vector2 projVel) {
         this.projVel = projVel;
+    }
+
+    /**
+     * Changes the angle of the projectile
+     *
+     * @param angle angle to move in radians
+     */
+    public void changeProjAngle(float angle) {
+        double x = projVel.x * Math.cos(angle) - projVel.y * Math.sin(angle);
+        double y = projVel.x * Math.sin(angle) + projVel.y * Math.cos(angle);
+        this.projVel = new Vector2((float)x, (float)y);
     }
 
     /**

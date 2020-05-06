@@ -304,6 +304,15 @@ public class EnemyController {
         //bullet.setTexture(bulletBigTexture);
         bullet.setBullet(true);
         bullet.setGravityScale(0);
+
+        //TODO: Either use later or remove
+        //Differentiate between how enemy types shoot
+//        if (enemy.getAi() == SPIRAL) {
+//            bullet.setLinearVelocity(enemy.getProjVel());
+//        } else {
+//            bullet.setLinearVelocity(enemy.getProjVel());
+//        }
+
         bullet.setLinearVelocity(enemy.getProjVel());
         bullet.setSpace(enemy.getSpace());
         worldController.addQueuedObject(bullet);
@@ -320,6 +329,14 @@ public class EnemyController {
             JsonValue data = assetDirectory.get("sounds").get("pew_present");
             SoundController.getInstance().play("pew", data.get("file").asString(), false, data.get("volume").asFloat());
         }
+
+
+        //Note: uncomment to see spiral effect
+        // Change proj angle
+//        if (enemy.isTurret()) { //TODO: Change condition
+//            float thetaRad = (float)Math.toRadians(30);
+//            enemy.changeProjAngle(thetaRad);
+//        }
 
         // Reset the firing cooldown.
         enemy.coolDown(false);
