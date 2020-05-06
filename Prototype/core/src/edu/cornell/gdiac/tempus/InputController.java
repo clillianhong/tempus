@@ -333,7 +333,7 @@ public class InputController {
 	 * @return true if the 'X' key was pressed.
 	 */
 	public boolean pressedXKey() {
-		return xKeyPressed && !xKeyPrevious;
+		return xKeyPressed;
 	}
 
 	/**
@@ -416,7 +416,7 @@ public class InputController {
 	private void readMouse(Rectangle bounds, Vector2 scale){
 		//mouse for dash
 		leftMousePressed = Gdx.input.isButtonPressed(Input.Buttons.LEFT);
-		rightMousePressed = Gdx.input.isButtonPressed(Input.Buttons.RIGHT);
+		rightMousePressed = Gdx.input.isButtonPressed(Input.Buttons.RIGHT) || Gdx.input.isButtonPressed(Input.Buttons.LEFT);
 		leftMouseReleased = !leftMousePressed;
 		rightMouseReleased = !rightMousePressed;
 		mousePosition.set(Gdx.input.getX(), Gdx.input.getY());
