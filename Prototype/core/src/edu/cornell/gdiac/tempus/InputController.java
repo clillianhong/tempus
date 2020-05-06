@@ -416,6 +416,7 @@ public class InputController {
 	private void readMouse(Rectangle bounds, Vector2 scale){
 		//mouse for dash
 		leftMousePressed = Gdx.input.isButtonPressed(Input.Buttons.LEFT);
+		//trackpads suck
 		rightMousePressed = Gdx.input.isButtonPressed(Input.Buttons.RIGHT) || Gdx.input.isButtonPressed(Input.Buttons.LEFT);
 		leftMouseReleased = !leftMousePressed;
 		rightMouseReleased = !rightMousePressed;
