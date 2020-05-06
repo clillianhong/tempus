@@ -1261,10 +1261,10 @@ public class LevelController extends WorldController {
 //		Vector2 mousePos = canvas.getViewport().u
 //		nproject(InputController.getInstance().getMousePosition());
 		Vector2 redirection = avatar.getPosition().cpy().sub(mousePos).nor();
-		float x0 = avatar.getX() + (redirection.x * avatar.getWidth() * 1.5f);
-		float y0 = avatar.getY() + (redirection.y * avatar.getHeight() * 1.5f);
+		float x0 = avatar.getX() + (redirection.x * avatar.getWidth() * 2f);
+		float y0 = avatar.getY() + (redirection.y * avatar.getHeight() * 2f);
 		bulletBigTexture = JsonAssetManager.getInstance().getEntry("bulletbig", TextureRegion.class);
-		float radius = bulletBigTexture.getRegionWidth() / (30.0f);
+		float radius = bulletBigTexture.getRegionWidth() / (20.0f);
 		Vector2 projVel = redirection.cpy().scl(12);
 		EntityType projType = avatar.getHeldBullet().getType();
 
