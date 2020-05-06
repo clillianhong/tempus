@@ -687,6 +687,7 @@ public class LevelController extends WorldController {
 	}
 
 	public void createEndlevelUI(Stack tableStack){
+		System.out.println("does this get created");
 		endlevelContainer = new Container<>();
 		endlevelContainer.setBackground(overlayBG);
 		endlevelContainer.setPosition(0, 0);
