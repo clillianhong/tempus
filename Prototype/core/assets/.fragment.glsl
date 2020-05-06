@@ -36,7 +36,6 @@ float waveHeight(vec2 p) {
 
 void main()
 {
-    //vec2 p = v_texCoords - vec2(0.5, 0.5);
     vec2 p = v_texCoords - mousePos;
     vec2 normal = normalize(p);
 

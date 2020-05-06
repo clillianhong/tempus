@@ -174,6 +174,9 @@ public class GameStateManager {
     public void loadGameState(String game_state_json){
 
         jsonReader = new JsonReader();
+        //TODO: CHANGE THIS TO LOCAL (UNCOMMENT AND REPLACE LINE) FOR FINISHED VERSION
+//        gameDirectory = jsonReader.parse(Gdx.files.local(game_state_json));
+
         gameDirectory = jsonReader.parse(Gdx.files.internal(game_state_json));
 
         //parsing game_state json
@@ -187,10 +190,17 @@ public class GameStateManager {
         last_level_idx = levels.length-1;
 
         levelDirectories[0] = jsonReader.parse(Gdx.files.internal(level_paths[0]));
+//        System.out.println("GDX ERROR 0:" + Gdx.gl.glGetError());
+
         levels[0] = loadTutorial(levelDirectories[0]);
+//        System.out.println("GDX ERROR 1 preload:" + Gdx.gl.glGetError());
+
         levels[0].preloadLevel();
 
+
         for(int i = 1; i<num_levels; i++){
+//            System.out.println("GDX ERROR "+ (i+1) +": " + Gdx.gl.glGetError());
+
             levelDirectories[i] = jsonReader.parse(Gdx.files.internal(level_paths[i]));
             levels[i] = loadLevel(levelDirectories[i], unfinishedLevel, unfinishedRoom);
             if(levels[i].getLevelNumber() == unfinishedLevel){
@@ -199,6 +209,8 @@ public class GameStateManager {
             levels[i].preloadLevel();
         }
         currentLevel = levels[1];
+//        System.out.println("GDX ERROR end:" + Gdx.gl.glGetError());
+
     }
 
     /**
@@ -275,8 +287,8 @@ public class GameStateManager {
      * 3. Finishing the game
      */
     public void stepGame(boolean is_exit){
-        if(!is_exit){
             boolean level_finished = currentLevel.stepLevel();
+
             if(level_finished){ // LEVEL HAS FINISHED
                 //TODO: Finish level announcement/screen
                 MusicController.getInstance().stopAll();
@@ -294,7 +306,6 @@ public class GameStateManager {
                     }
                     //TODO: LEVEL FINISH SCREEN
                 }
-            }
         }
     }
 
@@ -360,7 +371,6 @@ public class GameStateManager {
         Json json=new Json(JsonWriter.OutputType.json);
         json.setWriter(gamefile.writer(false));
         json.setOutputType(JsonWriter.OutputType.json);
-
         gamefile.writeString(json.prettyPrint(gameState), false);
     }
 
