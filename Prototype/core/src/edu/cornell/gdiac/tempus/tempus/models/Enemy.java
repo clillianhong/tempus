@@ -663,7 +663,7 @@ public class Enemy extends CapsuleObstacle {
             sensorDef.density = DENSITY;
             sensorDef.isSensor = true;
             sensorShapeCenter = new CircleShape();
-            sensorShapeCenter.setRadius(getWidth());
+            sensorShapeCenter.setRadius(1.25f * getWidth());
             sensorShapeCenter.setPosition(sensorSky);
             sensorDef.shape = sensorShapeCenter;
 
@@ -766,10 +766,10 @@ public class Enemy extends CapsuleObstacle {
     public void draw(GameCanvas canvas) {
 
         if(getAi() == EnemyType.FLY){
-            float faceOffset = 2 * getWidth() * faceDirection;
+            float faceOffset = 1.5f* getWidth() * faceDirection;
 
-            canvas.draw(currentStrip, Color.WHITE, origin.x, origin.y,  (getX() - faceOffset) * drawScale.x, (getY()-getHeight()) * drawScale.y,
-                    getAngle(), 0.024f * minimizeScale * drawScale.x * faceDirection , 0.0225f * minimizeScale * drawScale.y);
+            canvas.draw(currentStrip, Color.WHITE, origin.x, origin.y,  (getX() - faceOffset) * drawScale.x, (getY()- 0.6f * getHeight()) * drawScale.y,
+                    getAngle(), 0.018f * minimizeScale * drawScale.x * faceDirection , 0.0169f * minimizeScale * drawScale.y);
         }else{
             // Draw enemy filmstrip
             if (currentStrip != null) {
@@ -789,9 +789,11 @@ public class Enemy extends CapsuleObstacle {
      */
     public void drawFade(GameCanvas canvas, float frames, float mul) {
         if(getAi() == EnemyType.FLY){
+            float faceOffset = 1.5f* getWidth() * faceDirection;
+
             canvas.draw(currentStrip, new Color(1,1,1, mul * frames), origin.x, origin.y,
-                    getX() * drawScale.x, getY() * drawScale.y, getAngle(),
-                    0.024f * minimizeScale * drawScale.x * faceDirection, 0.0225f * minimizeScale * drawScale.y);
+                    (getX() - faceOffset) * drawScale.x, (getY()- 0.6f * getHeight()) * drawScale.y, getAngle(),
+                    0.018f * minimizeScale * drawScale.x * faceDirection, 0.0169f * minimizeScale * drawScale.y);
         }else{
             if (currentStrip != null) {
                 canvas.draw(currentStrip, new Color(1,1,1, mul * frames), origin.x, origin.y,
