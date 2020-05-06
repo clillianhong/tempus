@@ -147,7 +147,7 @@ public class CollisionController implements ContactListener {
     }
 
     private void processAvatarProjectileContact(Fixture av, Fixture projectile) {
-        if (!avatar.isHolding() && InputController.getInstance().pressedRightMouseButton()) {
+        if (!avatar.isHolding() && !avatar.isSticking() && InputController.getInstance().pressedRightMouseButton()) {
             Obstacle bullet = (Obstacle) projectile.getBody().getUserData();
             if (bullet.getSpace() == 2 && controller.isShifted()) {
                 avatar.setHolding(true);
