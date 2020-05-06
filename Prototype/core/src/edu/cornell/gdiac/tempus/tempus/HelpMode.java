@@ -109,23 +109,22 @@ public class HelpMode implements Screen {
         Gdx.input.setInputProcessor(stage);
         active = true;
 
-        float cw = sw * 0.5f;
-        float ch = sh * 0.5f;
-
         backgroundTexture = new TextureRegion(new Texture(Gdx.files.internal("textures/gui/helpmode/help_background.png")));
 
         //table container to center main table
         Container<Table> tableContainer = new Container<Table>();
-        tableContainer.setSize(cw, ch);
-        tableContainer.setPosition((sw-cw), (sh-ch));
+        tableContainer.setSize(sw, sh);
+        tableContainer.setPosition(0, 0);
         tableContainer.fillX().fillY();
 
         Table mainTable = new Table(skin);
 
-        mainTable.setWidth(stage.getViewport().getScreenWidth());
-//        mainTable.setHeight(stage.getViewport().getScreenHeight());
+        mainTable.setWidth(canvas.getWidth());
+        mainTable.setHeight(canvas.getHeight());
 
         //Back button
+        Table overlayBackButton = new Table();
+        //back button
         TextureRegionDrawable bup = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/selectmode/backbutton.png"))));
         Button backButton = new Button(bup);
         backButton.addListener(new ClickListener(){
@@ -139,21 +138,17 @@ public class HelpMode implements Screen {
                 })));
             }
         });
+        overlayBackButton.add(backButton).width(sw/10f).height(sw/13f).expand().bottom().left().pad(10);
 
 //        Table overlayBackButton = new Table();
 //        overlayBackButton.add(backButton).width(cw/14f).height(cw/15f).expand().bottom().left();
 
-        //add header
-        mainTable.row();
-        mainTable.row();
-        mainTable.row().expandX().fillX();
-        mainTable.row().expandY().fillY();
-
         //add buttons
-        mainTable.add(backButton).width(cw/7f).height(cw/7f).expand().top().right();
+        mainTable.add(overlayBackButton).expand().bottom().left();
 
         tableContainer.setActor(mainTable);
         //Add table to stage
+        stage.setDebugAll(true);
         stage.addActor(tableContainer);
         stage.getViewport().apply();
 
