@@ -191,15 +191,15 @@ public class SelectLevelMode implements Screen {
         levels = new Level[numLevels];
         levels[0] = new Level(0,false, "textures/background/bg_past_lv_1.jpg",
                 "textures/gui/selectmode/lv1_lore.png",
-                "tutorial/cover_tutorial.png",
-                "tutorial/cover_tutorial_focused.png",
-                "tutorial/cover_tutorial.png",
+                "textures/gui/selectmode/tutorialunlocked.png",
+                "textures/gui/selectmode/tutorialpressed.png",
+                "textures/gui/selectmode/tutoriallocked.png",
                 "this is the tutorial level");
         levels[1] = new Level(1,true, "textures/background/bg_past_lv_1.jpg",
                 "textures/gui/selectmode/lv2_lore.png",
                 "textures/gui/selectmode/level1unlocked.png",
                 "textures/gui/selectmode/level1pressed.png",
-                "textures/gui/selectmode/level1unlocked.png",
+                "textures/gui/selectmode/level1locked.png",
                 "this is level 1");
         levels[2] = new Level(2,true, "textures/background/bg_past_lv_2.jpg", "textures/gui/selectmode/lv3_lore.png",
                 "textures/gui/selectmode/level2unlocked.png",
