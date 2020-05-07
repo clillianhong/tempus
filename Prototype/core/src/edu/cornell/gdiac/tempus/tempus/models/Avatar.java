@@ -1031,7 +1031,7 @@ public class Avatar extends CapsuleObstacle {
         //check if dash must end
         if(isDashing) {
             //setCurrentPlatform(null);
-            float dist = getPosition().dst(getDashStartPos());
+            float dist = getPosition().dst(getDashStartPos()) * 0.9f;
             if (dist > getDashDistance()) {
 //                System.out.println("DASHED TOO FAR");
                 setDashing(false);
