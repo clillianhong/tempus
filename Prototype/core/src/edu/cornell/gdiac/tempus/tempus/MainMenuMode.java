@@ -255,6 +255,8 @@ public class MainMenuMode implements Screen {
     @Override
     public void dispose() {
         active = false;
-        stage.clear();
+        if (stage != null) {
+            stage.clear();
+        }
     }
 }
