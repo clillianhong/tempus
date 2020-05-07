@@ -843,6 +843,7 @@ public class LevelController extends WorldController {
 				avatar.setHeldBullet(null);
 				avatar.setBodyType(BodyDef.BodyType.DynamicBody);
 				timeFreeze = false;
+				enemyController.setPlayerVisible(false);
 				return true;
 			} else{
 				avatar.setPosition(avatarStart);
@@ -1017,6 +1018,7 @@ public class LevelController extends WorldController {
 		} else {
 			boolean dashAttempt = InputController.getInstance().releasedLeftMouseButton();
 			if (dashAttempt) {
+				enemyController.setPlayerVisible(true);
 				if(avatar.isSticking()){
 					avatar.setDashing(false);
 					avatar.resetDashes();
@@ -1048,7 +1050,7 @@ public class LevelController extends WorldController {
 		}
 		if (InputController.getInstance().pressedShiftKey()) {
 			// update ripple shader params
-
+			enemyController.setPlayerVisible(true);
 			rippleOn = true;
 			ticks = 0;
 			m_rippleDistance = 0;
