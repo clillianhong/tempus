@@ -178,6 +178,7 @@ public class EnemyController {
      */
     public void processAction() {
         for (Enemy e: enemies) {
+            e.setCheckSight(true);
             if (e.isTurret()) {
                 fire(e);
             } else if ((!shifted && e.getSpace() == 1) || (shifted && e.getSpace() == 2)) {
@@ -353,10 +354,26 @@ public class EnemyController {
      */
     public void createLineOfSight(World world, float offset, Enemy e) {
         Vector2 shootPos = e.getPosition().add(0f, offset);
-//        TextureRegion bulletBigTexture = JsonAssetManager.getInstance().getEntry("bulletbig", TextureRegion.class);
-//        float radius = bulletBigTexture.getRegionWidth() / (30.0f);
-//        shootPos.y -= radius * 2;
-        world.rayCast(e.getSight(), shootPos, target.getPosition());
+        TextureRegion bulletBigTexture = JsonAssetManager.getInstance().getEntry("bulletbig", TextureRegion.class);
+        float radius = bulletBigTexture.getRegionWidth() / 30.0f;
+        world.rayCast(e.getSight(), shootPos.cpy().add(0f, -radius), target.getPosition().add(0f, -radius));
+        world.rayCast(e.getSight(), shootPos.cpy().add(0f, radius), target.getPosition().add(0f, radius));
+        world.rayCast(e.getSight(), shootPos.cpy().add(radius, 0f), target.getPosition().add(radius, 0f));
+        world.rayCast(e.getSight(), shootPos.cpy().add(-radius, 0f), target.getPosition().add(-radius, 0f));
+
+        if (e.getCheckSight()) {
+            e.setIsFiring(true);
+            e.setShiftedFiring(true);
+            if (e.getAi() == Enemy.EnemyType.WALK) {
+                e.setMovement(0);
+            }
+        } else {
+            e.setIsFiring(false);
+            e.setShiftedFiring(false);
+            if (e.getAi() == Enemy.EnemyType.WALK && e.getMovement() == 0) {
+                e.setMovement(e.getNextDirection());
+            }
+        }
     }
 
     /**
