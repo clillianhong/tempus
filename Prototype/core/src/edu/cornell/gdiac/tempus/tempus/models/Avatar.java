@@ -139,7 +139,7 @@ public class Avatar extends CapsuleObstacle {
     private PolygonShape sensorShapeRight;
 //    /** Top sensor to determine sticking on the top */
     private Fixture sensorFixtureTop;
-    private PolygonShape sensorShapeTop;
+    private CircleShape sensorShapeTop;
 //    /** Core sensor for line of sight */
 //    private Fixture sensorFixtureCore;
 //    private PolygonShape sensorShapeCore;
@@ -840,9 +840,10 @@ public class Avatar extends CapsuleObstacle {
         FixtureDef sensorDef = new FixtureDef();
         sensorDef.density = 0;
 
-        Vector2 sensorCenterTop = new Vector2(0, getHeight()/ 2);
-        sensorShapeTop = new PolygonShape();
-        sensorShapeTop.setAsBox(3 * getWidth()/ 4, getHeight() / 2, sensorCenterTop, 0.0f);
+        Vector2 sensorCenterTop = new Vector2(0, 0);
+        sensorShapeTop = new CircleShape();
+        sensorShapeTop.setRadius(3 * getWidth()/ 4);
+        sensorShapeTop.setPosition(sensorCenterTop);
         sensorDef.shape = sensorShapeTop;
         sensorDef.isSensor = true;
         sensorDef.filter.groupIndex = -1;
@@ -1208,7 +1209,7 @@ public class Avatar extends CapsuleObstacle {
         if (sensorFixtureLeft != null) {
             canvas.drawPhysics((PolygonShape) sensorFixtureLeft.getShape(), Color.RED, getX(), getY(), getAngle(), drawScale.x, drawScale.y);
         }*/
-        canvas.drawPhysics(sensorShapeTop,Color.RED,getX(),getY(),getAngle(),drawScale.x,drawScale.y);
+        canvas.drawPhysics((CircleShape) sensorFixtureTop.getShape(),Color.RED, getX(),getY(),drawScale.x,drawScale.y);
     }
 
     public boolean wingsActive() {

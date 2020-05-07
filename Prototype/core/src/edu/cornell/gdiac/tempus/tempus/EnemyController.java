@@ -62,6 +62,9 @@ public class EnemyController {
     public int getEnemies() {
         int result = enemies.size();
         for (Enemy e: enemies) {
+            if (e.getY() < -6){
+                e.setDead();
+            }
             if (e.isTurret() || e.isDead()){
                 result --;
             }
@@ -133,7 +136,7 @@ public class EnemyController {
 
         // Don't want to be moving. Damp out player motion
         if (e.getMovement() == 0f) {
-            forceCache.set(-e.getDamping()*e.getVX(),0);
+            forceCache.set(-e.getDamping() * e.getVX(), 0);
             e.getBody().applyForce(forceCache,e.getPosition(),true);
         }
 
