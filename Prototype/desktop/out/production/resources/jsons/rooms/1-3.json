@@ -14,8 +14,8 @@
   "effect_volume": 0.8,
   "door": {
     "pos": [
-      28.796,
-      16.370000000000005
+      16.412,
+      13.19
     ],
     "size": [
       1.92,
@@ -32,8 +32,8 @@
   },
   "avatar": {
     "pos": [
-      6.084,
-      5.869999999999997
+      27.78,
+      4.999999999999997
     ],
     "shrink": [
       0.0216,
@@ -48,29 +48,10 @@
     "avatarfalling": "avatarfalling"
   },
   "turrets": {
-    "turret16": {
+    "turret10": {
       "pos": [
-        27.944,
-        9.149999999999999
-      ],
-      "shrink": [
-        0.0168,
-        0.021375
-      ],
-      "texture": "past_turret",
-      "density": 1,
-      "bodytype": "static",
-      "entitytype": "past",
-      "cooldown": 360,
-      "direction": [
-        -3,
-        0
-      ]
-    },
-    "turret17": {
-      "pos": [
-        10.376,
-        1.14
+        6.76,
+        1.95
       ],
       "shrink": [
         0.0168,
@@ -83,30 +64,31 @@
       "cooldown": 360,
       "direction": [
         0,
-        2
+        3
       ]
     }
   },
-  "capsules": {},
-  "diamonds": {
-    "bothdiamond19": {
-      "name": "both_diamond",
+  "capsules": {
+    "presentcapsule34": {
+      "name": "present_capsule",
       "pos": [
-        4.68,
-        3.75
+        1.096,
+        3.33
       ],
       "bodytype": "static",
       "density": 0,
       "friction": 0.6,
       "restitution": 0.1,
-      "texture": "both_diamond",
-      "space": 3
-    },
-    "bothdiamond28": {
+      "texture": "present_capsule",
+      "space": 1
+    }
+  },
+  "diamonds": {
+    "bothdiamond33": {
       "name": "both_diamond",
       "pos": [
-        18.28,
-        15.27
+        2.048,
+        9.61
       ],
       "bodytype": "static",
       "density": 0,
@@ -117,11 +99,11 @@
     }
   },
   "rounds": {
-    "bothround24": {
+    "bothround32": {
       "name": "both_round",
       "pos": [
-        13.736,
-        7.62
+        26.312,
+        2.94
       ],
       "bodytype": "static",
       "density": 0,
@@ -132,10 +114,10 @@
     }
   },
   "enemies": {
-    "enemy15": {
+    "enemy8": {
       "pos": [
-        19.336,
-        3.03
+        2.472,
+        5.91
       ],
       "shrink": [
         0.0168,
@@ -145,7 +127,7 @@
       "density": 1,
       "bodytype": "dynamic",
       "entitytype": "present",
-      "cooldown": 300,
+      "cooldown": 360,
       "aitype": 1
     }
   },
@@ -153,11 +135,76 @@
   "talls": {},
   "pillars": {},
   "longcapsules": {
-    "presentlongcapsule27": {
+    "presentlongcapsule25": {
       "name": "present_longcapsule",
       "pos": [
-        17.928,
-        0.39
+        9.096,
+        3.63
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "present_longcapsule",
+      "space": 1
+    },
+    "presentlongcapsule26": {
+      "name": "present_longcapsule",
+      "pos": [
+        13.96,
+        3.69
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "present_longcapsule",
+      "space": 1
+    },
+    "presentlongcapsule28": {
+      "name": "present_longcapsule",
+      "pos": [
+        18.888,
+        3.69
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "present_longcapsule",
+      "space": 1
+    },
+    "presentlongcapsule29": {
+      "name": "present_longcapsule",
+      "pos": [
+        13.896,
+        9.39
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "present_longcapsule",
+      "space": 1
+    },
+    "presentlongcapsule30": {
+      "name": "present_longcapsule",
+      "pos": [
+        18.728,
+        9.45
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "present_longcapsule",
+      "space": 1
+    },
+    "presentlongcapsule31": {
+      "name": "present_longcapsule",
+      "pos": [
+        9.064,
+        9.33
       ],
       "bodytype": "static",
       "density": 0,
