@@ -262,7 +262,6 @@ public class SelectLevelMode implements Screen {
      * updates the preview panes based on the level button currently in focus.
      */
     public void updatePreview(){
-
         pIContainer.setActor(previewTextures[levels[currentLevel].getLevel()]);
         Image loreImage = new Image( new TextureRegion(new Texture(Gdx.files.internal(levels[currentLevel].getFileLore()))));
         lbContainer.setActor(loreImage);
@@ -338,7 +337,7 @@ public class SelectLevelMode implements Screen {
                 })));
             }
         });
-        overlayBackButton.add(backButton).width(cw/13f).height(cw/15f).expand().bottom().left();
+        overlayBackButton.add(backButton).width(cw/12f).height(cw/15f).expand().bottom().left();
 
         Table overlayPageHeader = new Table();
         //back button
