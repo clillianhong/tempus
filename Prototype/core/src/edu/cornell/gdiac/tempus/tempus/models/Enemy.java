@@ -177,7 +177,7 @@ public class Enemy extends CapsuleObstacle {
         // Minimize present turret texture
         if (entitytype.equals("present")) {
             minimizeScale = 0.4f;
-            FRAME_RATE = 8;
+            FRAME_RATE = 10;
         }
 
         setPosition(pos[0], pos[1]);
