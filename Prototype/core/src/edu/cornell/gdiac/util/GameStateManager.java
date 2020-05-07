@@ -92,8 +92,8 @@ public class GameStateManager {
     private JsonValue[] levelDirectories;
     /** List of all Levels in game */
     private LevelModel[] levels;
-    /** Current level **/
-    private LevelModel currentLevel;
+//    /** Current level **/
+//    private LevelModel currentLevel;
     /** Highest level unlocked this session **/
     private LevelModel highestUnlockedLevel;
 
@@ -105,7 +105,7 @@ public class GameStateManager {
     public GameStateManager(){
         listener = null;
         canvas = null;
-        currentLevel = null;
+//        currentLevel = null;
         gameState = null;
         highestUnlockedLevel = null;
         current_level_idx = 0;
@@ -162,7 +162,7 @@ public class GameStateManager {
      * true if the current room is the last room in the level
      */
     public boolean lastRoom(){
-        return currentLevel.getCurrentRoomNumber() == (currentLevel.getRoomCount() - 1);
+        return levels[current_level_idx].getCurrentRoomNumber() == (levels[current_level_idx].getRoomCount() - 1);
     }
 
 
@@ -194,9 +194,7 @@ public class GameStateManager {
 
         levels[0] = loadTutorial(levelDirectories[0]);
 //        System.out.println("GDX ERROR 1 preload:" + Gdx.gl.glGetError());
-
         levels[0].preloadLevel();
-
 
         for(int i = 1; i<num_levels; i++){
 //            System.out.println("GDX ERROR "+ (i+1) +": " + Gdx.gl.glGetError());
@@ -208,7 +206,6 @@ public class GameStateManager {
             }
             levels[i].preloadLevel();
         }
-        currentLevel = levels[1];
 //        System.out.println("GDX ERROR end:" + Gdx.gl.glGetError());
 
     }
@@ -251,6 +248,10 @@ public class GameStateManager {
 
     }
 
+    public JsonValue getJson(int level){
+        return levelDirectories[level];
+    }
+
     /**
      * Loads a level model from JSON.
      *
@@ -265,6 +266,7 @@ public class GameStateManager {
         LevelController [] rooms = new LevelController[room_count];
 
         for(int i=0; i<room_count; i++){
+            System.out.println("TUTORIAL JSON: " + room_paths[i]);
             rooms[i] = new TutorialController(room_paths[i]);
         }
 
@@ -277,7 +279,7 @@ public class GameStateManager {
      * @return the Screen to the current room being played
      */
     public LevelController getCurrentRoom(){
-        return currentLevel.getCurrentRoom();
+        return levels[current_level_idx].getCurrentRoom();
     }
 
     /**
@@ -287,22 +289,22 @@ public class GameStateManager {
      * 3. Finishing the game
      */
     public void stepGame(boolean is_exit){
-            boolean level_finished = currentLevel.stepLevel();
+            boolean level_finished = levels[current_level_idx].stepLevel();
 
             if(level_finished){ // LEVEL HAS FINISHED
                 //TODO: Finish level announcement/screen
                 MusicController.getInstance().stopAll();
-                currentLevel.finishLevel();
+                levels[current_level_idx].finishLevel();
                 if(current_level_idx == last_level_idx){
                     //endGameState(); //TODO: end game state accouncement/screen
                 }
                 else{
                     current_level_idx++;
-                    currentLevel = levels[current_level_idx];
-                    currentLevel.playMusic();
-                    if(!currentLevel.isUnlocked()){
-                        highestUnlockedLevel = currentLevel;
-                        currentLevel.unlockLevel();
+                    levels[current_level_idx].setCurrentRoom(0);
+                    levels[current_level_idx].playMusic();
+                    if(!levels[current_level_idx].isUnlocked()){
+                        highestUnlockedLevel = levels[current_level_idx];
+                        levels[current_level_idx].unlockLevel();
                     }
                     //TODO: LEVEL FINISH SCREEN
                 }
@@ -310,8 +312,9 @@ public class GameStateManager {
     }
 
     public void printGameState(){
-        System.out.println("Current Level: " + currentLevel.getLevelNumber());
-        System.out.println("Current Room: " + currentLevel.getCurrentRoomNumber());
+        System.out.println("current level index" + current_level_idx);
+        System.out.println("Current Level: " + levels[current_level_idx].getLevelNumber());
+        System.out.println("Current Room: " + levels[current_level_idx].getCurrentRoomNumber());
         System.out.println("--------- LEVELS--------");
         for(LevelModel l : levels){
             System.out.println("Level: " + l.getLevelNumber() + "| Unlocked: " + l.isUnlocked());
@@ -324,16 +327,18 @@ public class GameStateManager {
      * @return current LevelModel
      */
     public LevelModel getCurrentLevel(){
-        return currentLevel;
+        return levels[current_level_idx];
     }
 
     /**
      * Sets the current Level
      * @return current LevelModel
      */
-    public void setCurrentLevel(int idx){
+    public void setCurrentLevel(int idx, int roomidx){
         current_level_idx = idx;
-        currentLevel = levels[current_level_idx];
+        levels[current_level_idx].setCurrentRoom(roomidx);
+        System.out.println("idx " + idx);
+        System.out.println("roomidx " + roomidx);
     }
 
     /**
@@ -342,7 +347,6 @@ public class GameStateManager {
      * @return the level at index idx
      */
     public LevelModel getLevel(int idx){
-
         return levels[idx];
     }
 
@@ -350,7 +354,7 @@ public class GameStateManager {
      * Player beat the whole game!
      */
     public boolean endGameState(){
-        return current_level_idx == last_level_idx && currentLevel.getCurrentRoomNumber() == currentLevel.getRoomCount() - 1;
+        return current_level_idx == last_level_idx && levels[current_level_idx].getCurrentRoomNumber() == levels[current_level_idx].getRoomCount() - 1;
     }
 
 

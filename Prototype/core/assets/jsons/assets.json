@@ -276,6 +276,30 @@
     }
   },
   "filmstrips": {
+    "level0_bg": {
+      "file": "textures/background/bg_present_lv_1.jpg",
+      "rows": 5,
+      "cols": 4,
+      "size": 20
+    },
+    "level1_bg": {
+      "file": "textures/background/bg_past_lv_1.jpg",
+      "rows": 5,
+      "cols": 4,
+      "size": 20
+    },
+    "level2_bg": {
+      "file": "textures/background/bg_past_lv_2.jpg",
+      "rows": 5,
+      "cols": 4,
+      "size": 20
+    },
+    "level3_bg": {
+      "file": "textures/background/bg_past_lv_3.jpg",
+      "rows": 5,
+      "cols": 4,
+      "size": 20
+    },
     "avatarstanding": {
       "file": "filmstrips/avatar_standing_lv_1.png",
       "rows": 1,

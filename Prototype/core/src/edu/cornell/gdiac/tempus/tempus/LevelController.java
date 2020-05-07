@@ -717,6 +717,11 @@ public class LevelController extends WorldController {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
+				System.out.println("PREV STATE ");
+				GameStateManager.getInstance().printGameState();
+				GameStateManager.getInstance().stepGame(false);
+				System.out.println("AFTER STATE ");
+				GameStateManager.getInstance().printGameState();
 				exitLevelSelect();
 			}
 		});
@@ -726,6 +731,9 @@ public class LevelController extends WorldController {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
+
+				GameStateManager.getInstance().stepGame(false);
+
 				exitNextRoom();
 			}
 		});
@@ -735,6 +743,7 @@ public class LevelController extends WorldController {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
+				GameStateManager.getInstance().stepGame(false);
 				reset();
 				unpauseGame();
 			}
@@ -848,21 +857,25 @@ public class LevelController extends WorldController {
 		if(failed){
 			reset();
 		}
-		if (input.didAdvance()) {
-			active = false;
-			listener.exitScreen(this, ScreenExitCodes.EXIT_NEXT.ordinal());
-			return false;
-		} else if (input.didRetreat()) {
-			active = false;
-			listener.exitScreen(this, ScreenExitCodes.EXIT_PREV.ordinal());
-			return false;
-		} else if (countdown > 0) {
+
+//		if (input.didAdvance()) {
+//			active = false;
+//			listener.exitScreen(this, ScreenExitCodes.EXIT_NEXT.ordinal());
+//			return false;
+//		} else if (input.didRetreat()) {
+//			active = false;
+//			listener.exitScreen(this, ScreenExitCodes.EXIT_PREV.ordinal());
+//			return false;
+//		} else
+
+		if (countdown > 0) {
 			countdown--;
 		} else if (countdown == 0) {
 			if (complete) {
 				if(GameStateManager.getInstance().lastRoom()){
 					showWinLevel();
 				}else{
+					GameStateManager.getInstance().stepGame(false);
 					listener.exitScreen(this, ScreenExitCodes.EXIT_NEXT.ordinal());
 				}
 				return false;
