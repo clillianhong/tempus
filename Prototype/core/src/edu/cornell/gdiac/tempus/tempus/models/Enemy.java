@@ -789,8 +789,9 @@ public class Enemy extends CapsuleObstacle {
      */
     public void drawFade(GameCanvas canvas, float frames, float mul) {
         if(getAi() == EnemyType.FLY){
+            float faceOffset = 2 * getWidth() * faceDirection;
             canvas.draw(currentStrip, new Color(1,1,1, mul * frames), origin.x, origin.y,
-                    getX() * drawScale.x, getY() * drawScale.y, getAngle(),
+                    (getX() - faceOffset) * drawScale.x, (getY() - getHeight()) * drawScale.y, getAngle(),
                     0.024f * minimizeScale * drawScale.x * faceDirection, 0.0225f * minimizeScale * drawScale.y);
         }else{
             if (currentStrip != null) {
@@ -817,13 +818,19 @@ class LineOfSight implements RayCastCallback {
         this.point = point;
         this.normal = normal;
 
-        if (fixture.getBody().getUserData() instanceof Avatar) {
+        System.out.println(fixture.getBody().getUserData());
+
+        if (fixture.getBody().getUserData() instanceof Avatar && !fixture.isSensor()) {
             enemy.setIsFiring(true);
             enemy.setShiftedFiring(true);
             if (enemy.getAi() == Enemy.EnemyType.WALK) {
                 enemy.setMovement(0);
             }
-        } else if (fixture.getBody().getUserData() instanceof Projectile || fixture.getBody().getUserData() == enemy) {
+        } else if (fixture.getBody().getUserData() instanceof Projectile || fixture.getBody().getUserData() == enemy ||
+                (fixture.getBody().getUserData() instanceof Platform &&
+                ((Platform) fixture.getBody().getUserData()).getSpace() != enemy.getSpace()) ||
+                (fixture.getBody().getUserData() instanceof Spikes &&
+                (((Spikes) fixture.getBody().getUserData()).getSpace() != enemy.getSpace()))) {
             return 1;
         } else {
             enemy.setIsFiring(false);
@@ -855,7 +862,11 @@ class TeleportLineOfSight implements RayCastCallback {
         if (fixture.getBody().getUserData() instanceof Avatar) {
             enemy.setIsFiring(true);
             enemy.setShiftedFiring(true);
-        } else if (fixture.getBody().getUserData() instanceof Projectile || fixture.getBody().getUserData() == enemy) {
+        } else if (fixture.getBody().getUserData() instanceof Projectile || fixture.getBody().getUserData() == enemy ||
+                (fixture.getBody().getUserData() instanceof Platform &&
+                        ((Platform) fixture.getBody().getUserData()).getSpace() != enemy.getSpace()) ||
+                (fixture.getBody().getUserData() instanceof Spikes &&
+                        (((Spikes) fixture.getBody().getUserData()).getSpace() != enemy.getSpace()))) {
             return 1;
         } else {
             enemy.setTeleportTo(null);
