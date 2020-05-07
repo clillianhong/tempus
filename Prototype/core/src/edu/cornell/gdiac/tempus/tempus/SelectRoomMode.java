@@ -69,6 +69,10 @@ public class SelectRoomMode implements Screen {
     private Button backButton;
     private Button prevRoomButton;
     private Button nextRoomButton;
+    TextureRegionDrawable prevTexOff;
+    TextureRegionDrawable prevTexOn;
+    TextureRegionDrawable nextTexOff;
+    TextureRegionDrawable nextTexOn;
 
     //level info
     int levelNum;
@@ -149,20 +153,23 @@ public class SelectRoomMode implements Screen {
         font.getData().setScale(0.75f);
         Label.LabelStyle style = new Label.LabelStyle(font, Color.WHITE);
         FilmStrip bg = JsonAssetManager.getInstance().getEntry("level"+levelNum+"_bg", FilmStrip.class);
-        backgroundTexture = new TextureRegion(bg.getTexture());
+//        backgroundTexture = new TextureRegion(bg.getTexture());
+        backgroundTexture = new TextureRegion(new Texture(Gdx.files.internal("textures/gui/roomselect/room_select.png")));
         TextureRegionDrawable overlayBG = new TextureRegionDrawable(
                 new TextureRegion(new Texture(Gdx.files.internal("textures/gui/pause_filter_50_black.png"))));
 
         TextureRegionDrawable lockedRoom = new TextureRegionDrawable(
                 new TextureRegion(new Texture(Gdx.files.internal("textures/gui/roomselect/locked_room.png"))));
 
-        wholescreenTable.setBackground(overlayBG);
+//        wholescreenTable.setBackground(overlayBG);
         int wid = bg.getTexture().getWidth();
         int ht = bg.getTexture().getHeight();
         final int highestRoom = gameManager.getCurrentLevel().getHighestUnlockedRoom();
 
         //load all room buttons
         int row = 0;
+        System.out.println("width: " + wid);
+        System.out.println("height: " + ht);
         boolean finishPage = false;
         for(int page = 0; page < numPages; page++){
             //create four buttons and four labels
@@ -175,8 +182,9 @@ public class SelectRoomMode implements Screen {
                 }
                 TextureRegionDrawable roomPreview;
                 TextureRegionDrawable roomPreviewDown;
+                System.out.println("x,y: ("+ ((wid/5)*f) + ", "+((ht/4)*f+row));
                 if(roomNum <= highestRoom){
-                    roomPreview = new TextureRegionDrawable(new TextureRegion(bg, (wid/5)*f, (ht/4)*f+row, wid/5, ht/4));
+                    roomPreview = new TextureRegionDrawable(new TextureRegion(bg, (wid/5)*f, (ht/4)*row, wid/5, ht/4));
                     roomPreviewDown = roomPreview;
                     roomPreviewDown.tint(Color.BLACK);
                 }else{
@@ -203,11 +211,13 @@ public class SelectRoomMode implements Screen {
                     }
                 });
                 butCon.setActor(tempButton);
+
                 int pad = 20;
                 roomTables[page].add(tempButton).width(cw/4-pad*2).height(ch*0.8f-pad*2).padLeft(pad).padRight(pad).padTop(pad).expand().center();
             }
             roomTables[page].row();
-            row++;
+
+            row+=1;
 
             for(int f = 0; f<4; f++){
                 final int roomNum = page*4 + f;
@@ -230,8 +240,16 @@ public class SelectRoomMode implements Screen {
         roomContainer = new Container();
         roomContainer.setActor(roomTables[curPage]);
 
+        prevTexOn = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/roomselect/prev_arrow.png"))));
+        prevTexOff = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/roomselect/prev_arrow_off.png"))));
+
+        nextTexOn = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/roomselect/next_arrow.png"))));
+        nextTexOff = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/roomselect/next_arrow_off.png"))));
+
+        Table overlayBackButton = new Table();
+        //back button
         TextureRegionDrawable bup = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/selectmode/backbutton.png"))));
-        backButton = new Button(bup);
+        Button backButton = new Button(bup);
         backButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -243,36 +261,39 @@ public class SelectRoomMode implements Screen {
                 })));
             }
         });
+        overlayBackButton.add(backButton).width(cw/12f).height(cw/15f).expand().bottom().left();
 
-        TextureRegionDrawable nextTex = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/roomselect/next_arrow.png"))));
-        nextRoomButton = new Button(nextTex);
+        nextRoomButton = new Button(nextTexOn,nextTexOn,nextTexOff);
         nextRoomButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
 
                 roomTables[curPage].act(Gdx.graphics.getDeltaTime());
-                curPage = (curPage + 1) % numPages;
+                curPage = Math.min(curPage+1, numPages-1);
                 roomContainer.setActor(roomTables[curPage]);
+                updateArrows();
             }
         });
 
-        TextureRegionDrawable prevTex = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/roomselect/prev_arrow.png"))));
-        prevRoomButton = new Button(prevTex);
+
+        prevRoomButton = new Button(prevTexOn,prevTexOn,prevTexOff);
         prevRoomButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
               //go previous
                 curPage = Math.max(0,(curPage - 1));
                 roomContainer.setActor(roomTables[curPage]);
-
+                updateArrows();
             }
         });
+        prevRoomButton.setChecked(true);
 
-//        Table backCont = new Table();
-        Container backCont = new Container();
-        backCont.setActor(backButton);
-        backCont.setWidth(cw/15);
-        backCont.align(Align.left);
+////        Table backCont = new Table();
+//        Container backCont = new Container();
+//        backCont.setActor(backButton);
+//        backCont.setWidth(cw/20);
+        overlayBackButton.align(Align.left);
+//        backCont.align(Align.left);
         Container prevCont = new Container();
         prevCont.setActor(prevRoomButton);
         prevCont.setWidth(cw/15);
@@ -286,7 +307,7 @@ public class SelectRoomMode implements Screen {
         wholescreenTable.setPosition(0,0);
         wholescreenTable.add(roomContainer).padLeft((sw-cw)/2).padRight((sw-cw)/2).padTop((sh-ch)/2).padBottom((sh-ch)/4).center().colspan(3);
         wholescreenTable.row().height((sh-ch)/4);
-        wholescreenTable.add(backCont).width(sw/4).padLeft(30);
+        wholescreenTable.add(overlayBackButton).width(sw/4);
         wholescreenTable.add(prevCont).width(sw/4).right();
         wholescreenTable.add(nextCont).width(sw/2).left();
 
@@ -294,7 +315,17 @@ public class SelectRoomMode implements Screen {
 //        stage.addActor();
     }
 
-    public void update(){
+    public void updateArrows(){
+        if(curPage==numPages-1){
+            nextRoomButton.setChecked(true);
+        }else{
+            nextRoomButton.setChecked(false);
+        }
+        if(curPage==0){
+            prevRoomButton.setChecked(true);
+        }else{
+            prevRoomButton.setChecked(false);
+        }
 
     }
 
