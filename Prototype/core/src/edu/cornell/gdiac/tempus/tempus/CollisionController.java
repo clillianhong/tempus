@@ -105,15 +105,15 @@ public class CollisionController implements ContactListener {
         }
         //avatar-spikes
         else if ((objA instanceof Avatar) && (objB instanceof Spikes)) {
-            processAvatarSpikesContact(fixA, fixB);
+            processAvatarSpikesContact(fixA, fixB, contact);
         } else if ((objB instanceof Avatar) && (objA instanceof Spikes)) {
-            processAvatarSpikesContact(fixB, fixA);
+            processAvatarSpikesContact(fixB, fixA, contact);
         }
         //avatar-turret
         else if ((objA instanceof Avatar) && (objB instanceof Enemy)) {
-            processAvatarEnemyContact(fixA, fixB);
+            processAvatarEnemyContact(fixA, fixB, contact);
         } else if ((objB instanceof Avatar) && (objA instanceof Enemy)) {
-            processAvatarEnemyContact(fixB, fixA);
+            processAvatarEnemyContact(fixB, fixA, contact);
         }
         //avatar-door
         else if ((objA instanceof Avatar) && (objB instanceof Door)) {
@@ -135,16 +135,60 @@ public class CollisionController implements ContactListener {
         //TODO: avatar platform contact
     }
 
-    private void processAvatarSpikesContact(Fixture proj1, Fixture proj2) {
+    private void processAvatarSpikesContact(Fixture av, Fixture spike, Contact contact) {
+        Float norm_angle = contact.getWorldManifold().getNormal().angle();
+
+        if (!norm_angle.isNaN()) {
+                        /*if ((norm_angle.intValue()) == 0){
+                            System.out.println("Fekwbfiewq");
+                            cur_normal = (float) Math.toRadians(90);
+                        } else {*/
+            cur_normal = (float) Math.toRadians(norm_angle + 180);
+            //}
+        }
+        Vector2 bounceDir = new Vector2(5, 5).setAngleRad(cur_normal);
+        if (spike.getBody().getPosition().x > avatar.getX()){
+            if (bounceDir.x > 0){
+                bounceDir.x = -1 * bounceDir.x;
+            }
+        } else {
+            if (bounceDir.x < 0){
+                bounceDir.x = -1 * bounceDir.x;
+            }
+        }
+        avatar.resetDashNum(1);
         avatar.setEnemyContact(true);
+        avatar.setLinearVelocity(bounceDir);
     }
 
-    private void processAvatarEnemyContact(Fixture av, Fixture turret) {
-        avatar.setEnemyContact(true);
-        turret.getBody().setLinearVelocity(new Vector2(0, 0));
-        //avatar.getBody().applyForce(new Vector2(-20, 40), avatar.getPosition(), true);
-        //TODO: avatar turret contact (die)
-    }
+    private void processAvatarEnemyContact(Fixture av, Fixture turret, Contact contact) {
+            Float norm_angle = contact.getWorldManifold().getNormal().angle();
+
+            if (!norm_angle.isNaN()) {
+                        /*if ((norm_angle.intValue()) == 0){
+                            System.out.println("Fekwbfiewq");
+                            cur_normal = (float) Math.toRadians(90);
+                        } else {*/
+                cur_normal = (float) Math.toRadians(norm_angle + 180);
+                //}
+            }
+            Vector2 bounceDir = new Vector2(5, 5).setAngleRad(cur_normal);
+            if (turret.getBody().getPosition().x > avatar.getX()){
+                if (bounceDir.x > 0){
+                    bounceDir.x = -1 * bounceDir.x;
+                }
+            } else {
+                if (bounceDir.x < 0){
+                    bounceDir.x = -1 * bounceDir.x;
+                }
+            }
+            avatar.resetDashNum(1);
+            avatar.setEnemyContact(true);
+            avatar.setLinearVelocity(bounceDir);
+            turret.getBody().setLinearVelocity(new Vector2(0, 0));
+            //avatar.getBody().applyForce(new Vector2(-20, 40), avatar.getPosition(), true);
+            //TODO: avatar turret contact (die)
+        }
 
     private void processAvatarProjectileContact(Fixture av, Fixture projectile) {
         if (!avatar.isHolding() && !avatar.isSticking() && InputController.getInstance().pressedRightMouseButton()) {
@@ -431,10 +475,13 @@ public class CollisionController implements ContactListener {
                 Door door = (Door) controller.getGoalDoor();
                 if (door.getOpen()) {
                     controller.setComplete(true);
-                } else {
+                } /*else {
                     avatar.resetDashNum(1);
                     avatar.setLinearVelocity(avatar.getLinearVelocity().scl(-1));
-                }
+                    if (avatar.getLinearVelocity().len() < 1.0f){
+                        avatar.setLinearVelocity(avatar.getLinearVelocity().nor());
+                    }
+                }*/
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -452,6 +499,7 @@ public class CollisionController implements ContactListener {
      */
     @Override
     public void endContact(Contact contact) {
+
         Fixture fix1 = contact.getFixtureA();
         Fixture fix2 = contact.getFixtureB();
 

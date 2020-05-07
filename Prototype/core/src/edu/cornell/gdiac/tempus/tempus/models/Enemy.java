@@ -239,6 +239,7 @@ public class Enemy extends CapsuleObstacle {
             ai = EnemyType.WALK;
             neutralTexture = JsonAssetManager.getInstance().getEntry(("enemywalking" + "_" + entitytype), FilmStrip.class);
             attackingTexture = neutralTexture;
+            setDensity(20);
             break;
 
         case 2:
@@ -831,7 +832,7 @@ class LineOfSight implements RayCastCallback {
             enemy.setIsFiring(false);
             enemy.setShiftedFiring(false);
             if (enemy.getAi() == Enemy.EnemyType.WALK && enemy.getMovement() == 0) {
-                enemy.setMovement(enemy.getNextDirection());
+                enemy.setMovement(enemy.getNextDirection() * 20);
             }
         }
 

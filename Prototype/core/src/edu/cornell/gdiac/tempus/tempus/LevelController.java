@@ -812,8 +812,15 @@ public class LevelController extends WorldController {
 		if (!super.preUpdate(dt)) {
 			return false;
 		}
+		if (avatar.getEnemyContact()){
+			avatar.removeLife();
+			//Vector2 vel = avatar.getLinearVelocity().cpy().scl(-1);
+			//avatar.setPosition(avatar.getPosition().add(vel.cpy()));
+			//avatar.setLinearVelocity(vel);
+			avatar.setEnemyContact(false);
+		}
 
-		if (!isFailure() && avatar.getY() < -6 || avatar.getEnemyContact()) {
+		if (!isFailure() && avatar.getY() < -6 ) {
 			avatar.removeLife();
 			if (avatar.getLives() > 0 ) {
 				if (shifted) {
@@ -901,6 +908,9 @@ public class LevelController extends WorldController {
 				} else if (shifted && (obj.getSpace() == 1)) {
 					obj.setSensor(true);
 				}
+			}
+			if (obj instanceof Door){
+				obj.setSensor(true);
 			}
 		}
 	}
