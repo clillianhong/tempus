@@ -957,6 +957,16 @@ public class LevelController extends WorldController {
 			reset();
 		}
 
+		//check if avatar is in "catch mode"
+		if (!avatar.isCatchReady() && !avatar.isHolding() && !avatar.isSticking()
+				&& (InputController.getInstance().pressedRightMouseButton()
+					|| InputController.getInstance().pressedLeftMouseButton())){
+			avatar.setCatchReady(true);
+		}else if(avatar.isHolding() || avatar.isSticking() ||
+				!(InputController.getInstance().pressedRightMouseButton()
+				|| InputController.getInstance().pressedLeftMouseButton())){
+			avatar.setCatchReady(false);
+		}
 
 
 		MusicController.getInstance().update(shifted);
