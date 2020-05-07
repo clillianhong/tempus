@@ -123,7 +123,6 @@ public class SelectLevelMode implements Screen {
             });
         }
 
-
         public int getLevel(){
             return level;
         }
@@ -131,7 +130,12 @@ public class SelectLevelMode implements Screen {
 
     /** LISTENERS EVENTS TO CHANGE SCREEN **/
     private void exitToLevel(int level){
-        listener.exitScreen(this, level);
+//        listener.exitScreen(this, level);
+        int curroom = GameStateManager.getInstance().getLevel(level).getCurrentRoomNumber();
+        System.out.println("level: "+ level);
+        System.out.println("curroom " + curroom);
+        GameStateManager.getInstance().setCurrentLevel(level, curroom);
+        listener.exitScreen(this, ScreenExitCodes.ROOM_SELECT.ordinal());
     }
     private void exitBack(){
         listener.exitScreen(this, ScreenExitCodes.EXIT_PREV.ordinal());
