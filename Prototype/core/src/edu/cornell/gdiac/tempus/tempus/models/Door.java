@@ -77,7 +77,7 @@ public class Door extends BoxObstacle {
 
     public void setOpen(boolean o) {
         open = o;
-    }
+        }
 
     public boolean getOpen() {
         return open;
@@ -156,6 +156,7 @@ public class Door extends BoxObstacle {
         // when beginning a new state, set frame to first frame
         if (animationState != state) {
             currentStrip.setFrame(0);
+            animationState = state;
         }
 
         // Adjust animation speed

@@ -399,6 +399,7 @@ public class LevelController extends WorldController {
 
 		populateLevel();
 		goalDoor.setOpen(false);
+		goalDoor.setAnimationState(Door.DoorState.LOCKED);
 		timeFreeze = false;
 
 		canvas.updateSpriteBatch();
@@ -1153,10 +1154,8 @@ public class LevelController extends WorldController {
 
 		//Animate door
 		if (enemyController.getEnemies() == 0) {
-			goalDoor.setAnimationState(Door.DoorState.UNLOCKING);
 			goalDoor.animate(Door.DoorState.UNLOCKING, false);
 		} else {
-			goalDoor.setAnimationState(Door.DoorState.LOCKED);
 			goalDoor.animate(Door.DoorState.LOCKED, false);
 		}
 

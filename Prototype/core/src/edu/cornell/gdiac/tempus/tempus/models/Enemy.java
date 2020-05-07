@@ -830,7 +830,7 @@ class LineOfSight implements RayCastCallback {
         this.point = point;
         this.normal = normal;
 
-        System.out.println(fixture.getBody().getUserData());
+        //System.out.println(fixture.getBody().getUserData());
 
         if (fixture.getBody().getUserData() instanceof Avatar && !fixture.isSensor()) {
 //            enemy.setIsFiring(true);
