@@ -58,6 +58,7 @@ public class Door extends BoxObstacle {
         setTexture(goalTile);
         setSpace(key.get("space").asInt());
         setName("goal");
+        setSensor(true);
         NEXT_LEVEL = key.get("nextlevel").asInt();
     }
 

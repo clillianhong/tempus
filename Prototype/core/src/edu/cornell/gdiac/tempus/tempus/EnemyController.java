@@ -62,6 +62,9 @@ public class EnemyController {
     public int getEnemies() {
         int result = enemies.size();
         for (Enemy e: enemies) {
+            if (e.getY() < -6){
+                e.setDead();
+            }
             if (e.isTurret() || e.isDead()){
                 result --;
             }
@@ -133,7 +136,7 @@ public class EnemyController {
 
         // Don't want to be moving. Damp out player motion
         if (e.getMovement() == 0f) {
-            forceCache.set(-e.getDamping()*e.getVX(),0);
+            forceCache.set(-e.getDamping() * e.getVX(), 0);
             e.getBody().applyForce(forceCache,e.getPosition(),true);
         }
 
@@ -175,6 +178,7 @@ public class EnemyController {
      */
     public void processAction() {
         for (Enemy e: enemies) {
+            e.setCheckSight(true);
             if (e.isTurret()) {
                 fire(e);
             } else if ((!shifted && e.getSpace() == 1) || (shifted && e.getSpace() == 2)) {
@@ -351,9 +355,25 @@ public class EnemyController {
     public void createLineOfSight(World world, float offset, Enemy e) {
         Vector2 shootPos = e.getPosition().add(0f, offset);
         TextureRegion bulletBigTexture = JsonAssetManager.getInstance().getEntry("bulletbig", TextureRegion.class);
-        float radius = bulletBigTexture.getRegionWidth() / (30.0f);
-        shootPos.y -= radius * 2;
-        world.rayCast(e.getSight(), shootPos, target.getPosition());
+        float radius = bulletBigTexture.getRegionWidth() / 30.0f;
+        world.rayCast(e.getSight(), shootPos.cpy().add(0f, -radius), target.getPosition().add(0f, -radius));
+        world.rayCast(e.getSight(), shootPos.cpy().add(0f, radius), target.getPosition().add(0f, radius));
+        world.rayCast(e.getSight(), shootPos.cpy().add(radius, 0f), target.getPosition().add(radius, 0f));
+        world.rayCast(e.getSight(), shootPos.cpy().add(-radius, 0f), target.getPosition().add(-radius, 0f));
+
+        if (e.getCheckSight()) {
+            e.setIsFiring(true);
+            e.setShiftedFiring(true);
+            if (e.getAi() == Enemy.EnemyType.WALK) {
+                e.setMovement(0);
+            }
+        } else {
+            e.setIsFiring(false);
+            e.setShiftedFiring(false);
+            if (e.getAi() == Enemy.EnemyType.WALK && e.getMovement() == 0) {
+                e.setMovement(e.getNextDirection());
+            }
+        }
     }
 
     /**
