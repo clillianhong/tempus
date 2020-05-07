@@ -43,6 +43,8 @@ public class EnemyController {
     /** Present or past */
     private boolean shifted;
 
+    private boolean playerVisible;
+
     /** Frames after enemy teleports */
     private float framesAfterMove;
     /** Waiting to teleport to fire */
@@ -58,6 +60,10 @@ public class EnemyController {
 
     private WorldController worldController;
     private GameCanvas canvas;
+
+    public void setPlayerVisible(boolean b){
+        playerVisible = b;
+    }
 
     public int getEnemies() {
         int result = enemies.size();
@@ -86,6 +92,7 @@ public class EnemyController {
         canvas = worldController.getCanvas();
         framesAfterMove = 0;
         waitToFire = true;
+        playerVisible = false;
     }
 
     /**
@@ -94,6 +101,7 @@ public class EnemyController {
      * This method disposes of the world and creates a new one.
      */
     public void reset() {
+        playerVisible = false;
         for (Enemy e: enemies) {
             e.deactivatePhysics(world);
         }
@@ -186,27 +194,35 @@ public class EnemyController {
                     if (e.getPlatformFixture() != null){
                         createLineOfSight(world, BULLET_OFFSET, e);
                         applyForce(e);
-                        setBulletVelocity(BULLET_OFFSET, e);
-                        fire(e);
+                        if (playerVisible) {
+                            setBulletVelocity(BULLET_OFFSET, e);
+                            fire(e);
+                        }
                     }
                 } else if (e.getAi() == Enemy.EnemyType.TELEPORT) {
                     e.coolDown(true);
                     if (framesAfterMove == 59 && waitToFire) {
-                        setBulletVelocity(BULLET_OFFSET, e);
-                        createBullet(e);
-                        waitToFire = false;
+                        if (playerVisible) {
+                            setBulletVelocity(BULLET_OFFSET, e);
+                            createBullet(e);
+                            waitToFire = false;
+                        }
                     }
                     findPlatform(e);
                 } else if (e.getAi() == Enemy.EnemyType.GUN) {
-                    createLineOfSight(world, BULLET_OFFSET, e);
-                    setBulletVelocity(BULLET_OFFSET, e);
-                    fire(e);
+                    if(playerVisible) {
+                        createLineOfSight(world, BULLET_OFFSET, e);
+                        setBulletVelocity(BULLET_OFFSET, e);
+                        fire(e);
+                    }
                 } else {
-                    createLineOfSight(world, BULLET_OFFSET, e);
-                    setFlyingVelocity(e);
-                    setBulletVelocity(BULLET_OFFSET, e);
-                    fly(e);
-                    fire(e);
+                    if (playerVisible) {
+                        createLineOfSight(world, BULLET_OFFSET, e);
+                        setFlyingVelocity(e);
+                        setBulletVelocity(BULLET_OFFSET, e);
+                        fly(e);
+                        fire(e);
+                    }
                 }
             }
         }
@@ -361,7 +377,7 @@ public class EnemyController {
         world.rayCast(e.getSight(), shootPos.cpy().add(radius, 0f), target.getPosition().add(radius, 0f));
         world.rayCast(e.getSight(), shootPos.cpy().add(-radius, 0f), target.getPosition().add(-radius, 0f));
 
-        if (e.getCheckSight()) {
+        if (e.getCheckSight() && playerVisible) {
             e.setIsFiring(true);
             e.setShiftedFiring(true);
             if (e.getAi() == Enemy.EnemyType.WALK) {
