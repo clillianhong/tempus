@@ -812,8 +812,15 @@ public class LevelController extends WorldController {
 		if (!super.preUpdate(dt)) {
 			return false;
 		}
+		if (avatar.getEnemyContact()){
+			avatar.removeLife();
+			//Vector2 vel = avatar.getLinearVelocity().cpy().scl(-1);
+			//avatar.setPosition(avatar.getPosition().add(vel.cpy()));
+			//avatar.setLinearVelocity(vel);
+			avatar.setEnemyContact(false);
+		}
 
-		if (!isFailure() && avatar.getY() < -6 || avatar.getEnemyContact()) {
+		if (!isFailure() && avatar.getY() < -6 ) {
 			avatar.removeLife();
 			if (avatar.getLives() > 0 ) {
 				if (shifted) {
@@ -901,6 +908,9 @@ public class LevelController extends WorldController {
 				} else if (shifted && (obj.getSpace() == 1)) {
 					obj.setSensor(true);
 				}
+			}
+			if (obj instanceof Door){
+				obj.setSensor(true);
 			}
 		}
 	}
@@ -991,6 +1001,37 @@ public class LevelController extends WorldController {
 				avatar.setHeldBullet(null); // NOTE: gives error if called before createRedirectedProj()
 
 			}
+		} else {
+			boolean dashAttempt = InputController.getInstance().releasedLeftMouseButton();
+			if (dashAttempt) {
+				if(avatar.isSticking()){
+					avatar.setDashing(false);
+					avatar.resetDashes();
+				}
+				boolean candash = avatar.canDash();
+				if(candash){
+					cursor = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+					cursor = camera.unproject(cursor);
+					cursor.scl(1/scale.x, 1/scale.y,0);
+					Vector2 mousePos = new Vector2(cursor.x , cursor.y );
+
+					avatar.setBodyType(BodyDef.BodyType.DynamicBody);
+					avatar.setSticking(false);
+					avatar.setWasSticking(false);
+					avatar.setDashing(true);
+					avatar.setDashStartPos(avatar.getPosition().cpy());
+					avatar.setDashDistance(Math.min(avatar.getDashRange(), mousePos.cpy().sub(avatar.getPosition()).len()));
+					avatar.setDashForceDirection(mousePos.cpy().sub(avatar.getPosition()));
+//				avatar.setStartedDashing(1);
+					avatar.setDashCounter(4);
+					if (Math.abs(mousePos.cpy().sub(avatar.getPosition()).angleRad() + Math.PI / 2 - avatar.getAngle()) > Math.PI / 2.5f) {
+						avatar.setDimension(avatar.width / 4f, avatar.height / 4f);
+						avatar.setDensity(avatar.getDensity() * 16f);
+					}
+
+					avatar.decDash();
+				}
+			}
 		}
 		if (InputController.getInstance().pressedShiftKey()) {
 			// update ripple shader params
@@ -1052,36 +1093,7 @@ public class LevelController extends WorldController {
 //		}
 
 		// prototype: Dash
-		boolean dashAttempt = InputController.getInstance().releasedLeftMouseButton();
-		if (dashAttempt) {
-			if(avatar.isSticking()){
-				avatar.setDashing(false);
-				avatar.resetDashes();
-			}
-			boolean candash = avatar.canDash();
-			if(candash){
-				cursor = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
-				cursor = camera.unproject(cursor);
-				cursor.scl(1/scale.x, 1/scale.y,0);
-				Vector2 mousePos = new Vector2(cursor.x , cursor.y );
 
-				avatar.setBodyType(BodyDef.BodyType.DynamicBody);
-				avatar.setSticking(false);
-				avatar.setWasSticking(false);
-				avatar.setDashing(true);
-				avatar.setDashStartPos(avatar.getPosition().cpy());
-				avatar.setDashDistance(Math.min(avatar.getDashRange(), mousePos.cpy().sub(avatar.getPosition()).len()));
-				avatar.setDashForceDirection(mousePos.cpy().sub(avatar.getPosition()));
-//				avatar.setStartedDashing(1);
-				avatar.setDashCounter(4);
-				if (Math.abs(mousePos.cpy().sub(avatar.getPosition()).angleRad() + Math.PI / 2 - avatar.getAngle()) > Math.PI / 2.5f) {
-					avatar.setDimension(avatar.width / 4f, avatar.height / 4f);
-					avatar.setDensity(avatar.getDensity() * 16f);
-				}
-
-				avatar.decDash();
-			}
-		}
 
 		if (rippleOn) {
 
@@ -1116,7 +1128,7 @@ public class LevelController extends WorldController {
 
 		// Update avatar animation state
 		if (InputController.getInstance().pressedLeftMouseButton()
-				|| InputController.getInstance().pressedRightMouseButton()) {
+				|| (InputController.getInstance().pressedRightMouseButton() && !avatar.isSticking())) {
 			// If either mouse button is held, set animation to be crouching
 			avatar.animate(Avatar.AvatarState.CROUCHING, false);
 			avatar.setAnimationState(Avatar.AvatarState.CROUCHING);
@@ -1145,6 +1157,10 @@ public class LevelController extends WorldController {
 		// Print location of the mouse position when 'X' key is pressed
 		// so we can know where to spawn enemies for testing purposes.
 //		printCoordinates();
+
+		if (!avatar.isHolding() && !avatar.isDashing() && !avatar.isSticking() && InputController.getInstance().pressedXKey()){
+			avatar.setVX(avatar.getVX() * 0.9f);
+		}
 	}
 
 	/**
@@ -1255,10 +1271,10 @@ public class LevelController extends WorldController {
 //		Vector2 mousePos = canvas.getViewport().u
 //		nproject(InputController.getInstance().getMousePosition());
 		Vector2 redirection = avatar.getPosition().cpy().sub(mousePos).nor();
-		float x0 = avatar.getX() + (redirection.x * avatar.getWidth() * 1.5f);
-		float y0 = avatar.getY() + (redirection.y * avatar.getHeight() * 1.5f);
+		float x0 = avatar.getX() + (redirection.x * avatar.getWidth() * 2f);
+		float y0 = avatar.getY() + (redirection.y * avatar.getHeight() * 2f);
 		bulletBigTexture = JsonAssetManager.getInstance().getEntry("bulletbig", TextureRegion.class);
-		float radius = bulletBigTexture.getRegionWidth() / (2.0f * scale.x);
+		float radius = bulletBigTexture.getRegionWidth() / (20.0f);
 		Vector2 projVel = redirection.cpy().scl(12);
 		EntityType projType = avatar.getHeldBullet().getType();
 
@@ -1341,9 +1357,9 @@ public class LevelController extends WorldController {
 		if (!InputController.getInstance().pressedLeftMouseButton()
 				&& !InputController.getInstance().pressedRightMouseButton())
 			return;
-		if (InputController.getInstance().pressedRightMouseButton() && !avatar.isHolding()) {
+		/*if (InputController.getInstance().pressedRightMouseButton() && !avatar.isHolding()) {
 			return;
-		}
+		}*/
 
 		if (!avatar.canDash() && !avatar.isSticking() && !avatar.isHolding())
 			return;
@@ -1361,11 +1377,13 @@ public class LevelController extends WorldController {
 		mousePos = mPos.cpy().scl(scale);
 		float dist = Math.min(avatar.getDashRange(), avPos.dst(mPos));
 		if (!avatar.isHolding()) {
-			canvas.draw(circle, Color.WHITE, circle.getRegionWidth() / 2, circle.getRegionHeight() / 2,
-					avatar.getX() * scale.x, avatar.getY() * scale.y, redirection.angle() / 57, 0.0095f * scale.x * dist* 1.5f,
-					0.0095f * scale.y * dist* 1.5f);
-			canvas.draw(arrow, Color.WHITE, 0, arrow.getRegionHeight() / 2, avatar.getX() * scale.x, avatar.getY() * scale.y,
-					(180 + redirection.angle()) / 57, 0.0075f * scale.x * dist* 1.5f, 0.0075f * scale.y * dist* 1.5f);
+			if (InputController.getInstance().pressedLeftMouseButton()) {
+				canvas.draw(circle, Color.WHITE, circle.getRegionWidth() / 2, circle.getRegionHeight() / 2,
+						avatar.getX() * scale.x, avatar.getY() * scale.y, redirection.angle() / 57, 0.0095f * scale.x * dist * 1.5f,
+						0.0095f * scale.y * dist * 1.5f);
+				canvas.draw(arrow, Color.WHITE, 0, arrow.getRegionHeight() / 2, avatar.getX() * scale.x, avatar.getY() * scale.y,
+						(180 + redirection.angle()) / 57, 0.0075f * scale.x * dist * 1.5f, 0.0075f * scale.y * dist * 1.5f);
+			}
 		} else {
 			canvas.draw(arrow, Color.WHITE, 0, arrow.getRegionHeight() / 2, avatar.getX() * scale.x, avatar.getY() * scale.y,
 					(180 + redirection.angle()) / 57, 0.0075f * scale.x * avatar.getDashRange()* 1.5f,
