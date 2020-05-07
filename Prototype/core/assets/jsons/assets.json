@@ -1,5 +1,9 @@
 {
   "textures": {
+    "catch_indicator": {
+      "file": "textures/catch_indicator.png",
+      "wrap": true
+    },
     "earth": {
       "file": "textures/platform/platform_rectangle_lv_1.png",
       "wrap": true
@@ -100,11 +104,11 @@
       "file": "textures/enemy/projectile/projectile_stationary_lv_1.png",
       "wrap": false
     },
-    "bulletbig":{
+    "bulletbig": {
       "file": "textures/enemy/projectile/projectile_big_stationary_lv_1.png",
       "wrap": false
     },
-    "projpresentcaught":{
+    "projpresentcaught": {
       "file": "textures/enemy/projectile/projectile_present_caught_lv_1.png",
       "wrap": false
     },
@@ -112,7 +116,7 @@
       "file": "textures/enemy/projectile/projectile_present_stationary_lv1.png",
       "wrap": false
     },
-    "projpastcaught":{
+    "projpastcaught": {
       "file": "textures/enemy/projectile/projectile_past_caught_lv_1.png",
       "wrap": false
     },

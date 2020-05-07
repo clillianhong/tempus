@@ -3,6 +3,7 @@ package edu.cornell.gdiac.tempus.tempus.models;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -169,6 +170,8 @@ public class Avatar extends CapsuleObstacle {
     private Projectile heldBullet;
     /** the platform the character was most recently on */
     private Platform currentPlat;
+    /** the avatar is currently in catch mode */
+    private boolean catchReady;
 
     /** Cache for internal force calculations */
     private Vector2 forceCache = new Vector2();
@@ -719,6 +722,7 @@ public class Avatar extends CapsuleObstacle {
         isJumping = false;
         faceRight = true;
         isDashing = false;
+        catchReady = false;
         newAngle = 0;
         isSticking = false;
         dashDistance = DASH_RANGE;
@@ -764,6 +768,7 @@ public class Avatar extends CapsuleObstacle {
         faceRight = true;
         isDashing = false;
         newAngle = 0;
+        catchReady = false;
         isSticking = false;
         dashDistance = DASH_RANGE;
         dashStartPos = new Vector2(x,y);
@@ -960,6 +965,23 @@ public class Avatar extends CapsuleObstacle {
 
 
     /**
+     *Sets whether avatar is in "catch mode"
+     *
+     * @param c
+     */
+    public void setCatchReady(boolean c){
+        catchReady = c;
+    }
+
+    /**
+     *
+     * @return whether player is in catch mode
+     */
+    public boolean isCatchReady(){
+        return catchReady;
+    }
+
+    /**
      * Updates the object's physics state (NOT GAME LOGIC).
      *
      * We use this method to reset cooldowns.
@@ -1004,6 +1026,8 @@ public class Avatar extends CapsuleObstacle {
         if(!isSticking){
             setAngle(0);
         }*/
+
+
         //check if dash must end
         if(isDashing) {
             //setCurrentPlatform(null);
@@ -1144,6 +1168,14 @@ public class Avatar extends CapsuleObstacle {
         // Note: Restrict angle to the top horizontal because
         // flipping the avatar when they are sticking
         // below a platform looks off
+
+        if(catchReady){
+            canvas.draw(JsonAssetManager.getInstance().getEntry("catch_indicator", TextureRegion.class),
+                    Color.WHITE, origin.x + 84/4f, origin.y + 60/4f,
+                    getX() * drawScale.x, getY() * drawScale.y, 0,
+                    0.02f * drawScale.x *2, 0.01875f * drawScale.y*2);
+        }
+
         float faceDirection = 1.0f;
         if (getAngle() > -0.3 && getAngle() < 0.3) {
             faceDirection = faceRight ? 1.0f : -1.0f;
