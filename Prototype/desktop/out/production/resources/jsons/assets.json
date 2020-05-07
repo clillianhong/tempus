@@ -254,7 +254,7 @@
       "file": "music/past_track_4_25.mp3"
     },
     "past2": {
-      "file": "music/past_track_4_25.mp3"
+      "file": "music/sample_4_past.mp3"
     },
     "past3": {
       "file": "music/past_track_4_25.mp3"
@@ -266,7 +266,7 @@
       "file": "music/present_track_4_25.mp3"
     },
     "present2": {
-      "file": "music/present_track_4_25.mp3"
+      "file": "music/sample_4_present.mp3"
     },
     "present3": {
       "file": "music/present_track_4_25.mp3"
@@ -276,6 +276,30 @@
     }
   },
   "filmstrips": {
+    "level0_bg": {
+      "file": "textures/background/bg_present_lv_1.jpg",
+      "rows": 5,
+      "cols": 4,
+      "size": 20
+    },
+    "level1_bg": {
+      "file": "textures/background/bg_past_lv_1.jpg",
+      "rows": 5,
+      "cols": 4,
+      "size": 20
+    },
+    "level2_bg": {
+      "file": "textures/background/bg_past_lv_2.jpg",
+      "rows": 5,
+      "cols": 4,
+      "size": 20
+    },
+    "level3_bg": {
+      "file": "textures/background/bg_past_lv_3.jpg",
+      "rows": 5,
+      "cols": 4,
+      "size": 20
+    },
     "avatarstanding": {
       "file": "filmstrips/avatar_standing_lv_1.png",
       "rows": 1,
@@ -362,12 +386,30 @@
     },
     "turret_shooting_present": {
       "file": "filmstrips/turret/turret_present_lv_1.png",
+      "rows": 4,
+      "cols": 4,
+      "size": 13
+    },
+    "turret_shooting_past": {
+      "file": "filmstrips/turret/turret_past_lv_1.png",
       "rows": 1,
       "cols": 1,
       "size": 1
     },
-    "turret_shooting_past": {
-      "file": "filmstrips/turret/turret_past_lv_1.png",
+    "door_locked": {
+      "file": "filmstrips/door/door_locked.png",
+      "rows": 1,
+      "cols": 1,
+      "size": 1
+    },
+    "door_unlocking": {
+      "file": "filmstrips/door/door_unlocking.png",
+      "rows": 3,
+      "cols": 3,
+      "size": 7
+    },
+    "door_open": {
+      "file": "filmstrips/door/door_open.png",
       "rows": 1,
       "cols": 1,
       "size": 1
