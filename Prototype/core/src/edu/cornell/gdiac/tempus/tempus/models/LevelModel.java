@@ -33,12 +33,19 @@ public class LevelModel {
 
     protected JsonValue assetDirectory;
 
+    protected int highest_room_unlocked;
+
 
 
     public LevelModel(int lv, boolean unlocked, boolean finished, int resume, LevelController[] rms){
         level_number = lv;
         level_unlocked = unlocked;
         level_finished = finished;
+        if(finished){
+            highest_room_unlocked = rms.length-1;
+        }else{
+            highest_room_unlocked = resume;
+        }
         current_room_idx = resume;
         rooms = rms;
         current_room = rooms[current_room_idx];
@@ -46,6 +53,10 @@ public class LevelModel {
         canvas = null;
         jsonReader = new JsonReader();
         assetDirectory = jsonReader.parse(Gdx.files.internal("jsons/assets.json"));
+    }
+
+    public int getHighestUnlockedRoom(){
+        return highest_room_unlocked;
     }
 
     public int getRoomCount(){
@@ -78,6 +89,7 @@ public class LevelModel {
      * @returns whether or not the level has ended */
     public boolean stepLevel(){
         current_room_idx = current_room_idx + 1;
+        highest_room_unlocked = Math.max(highest_room_unlocked, current_room_idx);
         if(current_room_idx == rooms.length){
             //TODO: ROOM END SCREEN
             //current_room.stopMusic();
@@ -112,6 +124,11 @@ public class LevelModel {
         current_room = rooms[current_room_idx];
     }
 
+    public void setCurrentRoom(int idx){
+        System.out.println("SETTING CURRENT ROOM PREMATURELY " + idx);
+        current_room_idx = idx;
+        current_room = rooms[current_room_idx];
+    }
     public LevelController getCurrentRoom(){
         return current_room;
     }

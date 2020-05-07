@@ -24,10 +24,7 @@ import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.Select;
 import edu.cornell.gdiac.audio.MusicBuffer;
-import edu.cornell.gdiac.tempus.tempus.HelpMode;
-import edu.cornell.gdiac.tempus.tempus.MainMenuMode;
-import edu.cornell.gdiac.tempus.tempus.LevelController;
-import edu.cornell.gdiac.tempus.tempus.SelectLevelMode;
+import edu.cornell.gdiac.tempus.tempus.*;
 import edu.cornell.gdiac.tempus.tempus.models.ScreenExitCodes;
 import edu.cornell.gdiac.util.*;
 
@@ -62,6 +59,8 @@ public class GDXRoot extends Game implements ScreenListener {
 	private HelpMode helpmenu;
 	/** Game State Manager **/
 	private GameStateManager gameManager;
+	/** Room Select Mode tester */
+	private SelectRoomMode roomSelectMode;
 
 	/**
 	 * Creates a new game from the configuration settings.
@@ -103,6 +102,7 @@ public class GDXRoot extends Game implements ScreenListener {
 		helpmenu = new HelpMode();
 		current = 0;
 		loading.setScreenListener(this);
+		roomSelectMode = new SelectRoomMode(0);
 
 		setScreen(loading);
 
@@ -158,26 +158,49 @@ public class GDXRoot extends Game implements ScreenListener {
 	 * @param exitCode The state of the screen upon exit
 	 */
 	public void exitScreen(Screen screen, int exitCode) {
-		if (exitCode == ScreenExitCodes.EXIT_NEXT.ordinal()) {
-			if (gameManager.endGameState()) {
-				gameManager.stepGame(true);
-				gameManager.updateGameState();
-				//MusicController.getInstance().stopAll();
+		gameManager.printGameState();
+
+		if ((screen.getClass() == TutorialController.class ||
+				screen.getClass() == LevelController.class )) {
+			if(exitCode == ScreenExitCodes.EXIT_NEXT.ordinal()){
+				if (gameManager.endGameState()) {
+					gameManager.updateGameState();
+					//MusicController.getInstance().stopAll();
+					levelselect.setScreenListener(this);
+					levelselect.setCanvas(canvas);
+					levelselect.createMode();
+
+					setScreen(levelselect);
+				} else {
+					gameManager.updateGameState();
+					LevelController room = gameManager.getCurrentRoom();
+					canvas.setBlendState(GameCanvas.BlendState.NO_PREMULT);
+					room.reset();
+					setScreen(room);
+				}
+			}else if (exitCode == ScreenExitCodes.EXIT_PREV.ordinal()) {
+				MusicController.getInstance().stopAll();
 				levelselect.setScreenListener(this);
 				levelselect.setCanvas(canvas);
 				levelselect.createMode();
-
 				setScreen(levelselect);
-			} else {
-				gameManager.stepGame(false);
-				gameManager.updateGameState();
-				LevelController room = gameManager.getCurrentRoom();
-				canvas.setBlendState(GameCanvas.BlendState.NO_PREMULT);
-				room.reset();
-				setScreen(room);
 			}
+		}else if(screen == roomSelectMode){
+			if(exitCode == ScreenExitCodes.EXIT_PREV.ordinal()){
+				levelselect.setScreenListener(this);
+				levelselect.setCanvas(canvas);
+				levelselect.createMode();
+				setScreen(levelselect);
+			}else{
+				gameManager.getCurrentRoom().reset();
+				gameManager.getCurrentLevel().playMusic();
+				setScreen(gameManager.getCurrentRoom());
+			}
+			roomSelectMode.dispose();
+			roomSelectMode = null;
 		}
 		else if (screen == loading || exitCode == ScreenExitCodes.EXIT_LOAD.ordinal()) {
+			gameManager.readyLevels();
 			menu.createMode();
 			menu.setScreenListener(this);
 			menu.setCanvas(canvas);
@@ -185,9 +208,7 @@ public class GDXRoot extends Game implements ScreenListener {
 			loading.dispose();
 			loading = null;
 		} else if (screen == menu) {
-			gameManager.printGameState();
 			if (exitCode == ScreenExitCodes.MENU_START.ordinal()) {
-				gameManager.readyLevels();
 				levelselect.createMode();
 				levelselect.setScreenListener(this);
 				levelselect.setCanvas(canvas);
@@ -215,16 +236,21 @@ public class GDXRoot extends Game implements ScreenListener {
 				menu.setScreenListener(this);
 				menu.setCanvas(canvas);
 				setScreen(menu);
-			} else { // go to a level
-				MusicController.getInstance().stopAll();
-				gameManager.setCurrentLevel(exitCode);
-				gameManager.getCurrentRoom().reset();
+			} else if (exitCode == ScreenExitCodes.ROOM_SELECT.ordinal()) {
+				roomSelectMode = new SelectRoomMode(GameStateManager.getInstance().getCurrentLevel().getLevelNumber());
+				roomSelectMode.createMode();
+				roomSelectMode.setScreenListener(this);
+				roomSelectMode.setCanvas(canvas);
+				setScreen(roomSelectMode);
+			}else { // go to a level
+					MusicController.getInstance().stopAll();
+					gameManager.setCurrentLevel(exitCode, gameManager.getCurrentLevel().getCurrentRoomNumber());
+					gameManager.getCurrentRoom().reset();
 //				gameManager.printGameState();
-				gameManager.getCurrentLevel().playMusic();
-				setScreen(gameManager.getCurrentRoom());
-				current = exitCode;
+					gameManager.getCurrentLevel().playMusic();
+					setScreen(gameManager.getCurrentRoom());
+
 			}
-			levelselect.dispose();
 		} else if (screen == helpmenu) {
 			if (exitCode == ScreenExitCodes.EXIT_PREV.ordinal()) {
 				menu.createMode();
@@ -234,13 +260,11 @@ public class GDXRoot extends Game implements ScreenListener {
 			}
 		}
 		 else if (exitCode == ScreenExitCodes.EXIT_PREV.ordinal()) {
-			gameManager.stepGame(true);
 			gameManager.updateGameState();
 			MusicController.getInstance().stopAll();
 			levelselect.setScreenListener(this);
 			levelselect.setCanvas(canvas);
 			levelselect.createMode();
-
 			setScreen(levelselect);
 		} else if (exitCode == ScreenExitCodes.EXIT_QUIT.ordinal()) {
 			// We quit the main application
