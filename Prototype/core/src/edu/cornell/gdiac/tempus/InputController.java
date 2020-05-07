@@ -418,7 +418,6 @@ public class InputController {
 		leftMousePressed = Gdx.input.isButtonPressed(Input.Buttons.LEFT);
 		//trackpads suck
 		rightMousePressed = Gdx.input.isButtonPressed(Input.Buttons.RIGHT) ||
-				Gdx.input.isButtonPressed(Input.Buttons.LEFT) ||
 				Gdx.input.isKeyPressed(Input.Keys.C);
 		leftMouseReleased = !leftMousePressed;
 		rightMouseReleased = !rightMousePressed;
