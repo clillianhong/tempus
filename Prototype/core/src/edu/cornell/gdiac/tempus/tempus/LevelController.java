@@ -1126,6 +1126,15 @@ public class LevelController extends WorldController {
 
 		avatar.applyForce();
 
+		//Animate door
+		if (enemyController.getEnemies() == 0) {
+			goalDoor.setAnimationState(Door.DoorState.UNLOCKING);
+			goalDoor.animate(Door.DoorState.UNLOCKING, false);
+		} else {
+			goalDoor.setAnimationState(Door.DoorState.LOCKED);
+			goalDoor.animate(Door.DoorState.LOCKED, false);
+		}
+
 		// Update avatar animation state
 		if (InputController.getInstance().pressedLeftMouseButton()
 				|| (InputController.getInstance().pressedRightMouseButton() && !avatar.isSticking())) {
