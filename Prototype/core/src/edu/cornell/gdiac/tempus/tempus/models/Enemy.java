@@ -49,7 +49,7 @@ public class Enemy extends CapsuleObstacle {
     /** The density of the enemy */
     private static final float ENEMY_MASS = 1.0f;
     /** The factor to multiply by the input */
-    private static final float FORCE = 125.0f;
+    private static final float FORCE = 2500.0f;
     /** The factor for flying force */
     private static final float FLY_FORCE = 30.0f;
     /** The amount to slow the enemy down */
@@ -102,6 +102,8 @@ public class Enemy extends CapsuleObstacle {
     private RayCastCallback sight;
     /** To calculate line of sight */
     private Avatar target;
+    /** Whether this update has checked line of sight */
+    private boolean checkSight;
 
     /** Cache for internal force calculations */
     private Vector2 forceCache = new Vector2();
@@ -239,6 +241,7 @@ public class Enemy extends CapsuleObstacle {
             ai = EnemyType.WALK;
             neutralTexture = JsonAssetManager.getInstance().getEntry(("enemywalking" + "_" + entitytype), FilmStrip.class);
             attackingTexture = neutralTexture;
+            setDensity(20);
             break;
 
         case 2:
@@ -302,6 +305,14 @@ public class Enemy extends CapsuleObstacle {
 
     public Fixture getSensorFixtureCenter() {
         return sensorFixtureCenter;
+    }
+
+    public void setCheckSight(boolean checkSight) {
+        this.checkSight = checkSight;
+    }
+
+    public boolean getCheckSight() {
+        return checkSight;
     }
 
     /**
@@ -819,20 +830,29 @@ class LineOfSight implements RayCastCallback {
         this.point = point;
         this.normal = normal;
 
-        if (fixture.getBody().getUserData() instanceof Avatar) {
-            enemy.setIsFiring(true);
-            enemy.setShiftedFiring(true);
-            if (enemy.getAi() == Enemy.EnemyType.WALK) {
-                enemy.setMovement(0);
-            }
-        } else if (fixture.getBody().getUserData() instanceof Projectile || fixture.getBody().getUserData() == enemy) {
+        System.out.println(fixture.getBody().getUserData());
+
+        if (fixture.getBody().getUserData() instanceof Avatar && !fixture.isSensor()) {
+//            enemy.setIsFiring(true);
+//            enemy.setShiftedFiring(true);
+//            if (enemy.getAi() == Enemy.EnemyType.WALK) {
+//                enemy.setMovement(0);
+//            }
+        } else if (fixture.getBody().getUserData() instanceof Projectile || fixture.getBody().getUserData() == enemy ||
+                (fixture.getBody().getUserData() instanceof Platform &&
+                        ((Platform) fixture.getBody().getUserData()).getSpace() != enemy.getSpace() &&
+                        ((Platform) fixture.getBody().getUserData()).getSpace() != 3) ||
+                (fixture.getBody().getUserData() instanceof Spikes &&
+                        (((Spikes) fixture.getBody().getUserData()).getSpace() != enemy.getSpace() &&
+                                ((Spikes) fixture.getBody().getUserData()).getSpace() != 3))) {
             return 1;
         } else {
-            enemy.setIsFiring(false);
-            enemy.setShiftedFiring(false);
-            if (enemy.getAi() == Enemy.EnemyType.WALK && enemy.getMovement() == 0) {
-                enemy.setMovement(enemy.getNextDirection());
-            }
+//            enemy.setIsFiring(false);
+//            enemy.setShiftedFiring(false);
+//            if (enemy.getAi() == Enemy.EnemyType.WALK && enemy.getMovement() == 0) {
+//                enemy.setMovement(enemy.getNextDirection() * 20);
+//            }
+            enemy.setCheckSight(false);
         }
 
         return fraction;
@@ -857,7 +877,11 @@ class TeleportLineOfSight implements RayCastCallback {
         if (fixture.getBody().getUserData() instanceof Avatar) {
             enemy.setIsFiring(true);
             enemy.setShiftedFiring(true);
-        } else if (fixture.getBody().getUserData() instanceof Projectile || fixture.getBody().getUserData() == enemy) {
+        } else if (fixture.getBody().getUserData() instanceof Projectile || fixture.getBody().getUserData() == enemy ||
+                (fixture.getBody().getUserData() instanceof Platform &&
+                        ((Platform) fixture.getBody().getUserData()).getSpace() != enemy.getSpace()) ||
+                (fixture.getBody().getUserData() instanceof Spikes &&
+                        (((Spikes) fixture.getBody().getUserData()).getSpace() != enemy.getSpace()))) {
             return 1;
         } else {
             enemy.setTeleportTo(null);

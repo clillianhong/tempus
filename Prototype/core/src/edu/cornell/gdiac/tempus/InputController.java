@@ -90,6 +90,7 @@ public class InputController {
 	private boolean rightMousePressed;
 	private boolean rightMouseReleased;
 	private boolean rightMousePrevious;
+	private boolean leftMousePreviousPrevious;
 	/** Whether the left mouse button was released. */
 	private boolean leftMouseReleased;
 	private boolean leftMousePrevious;
@@ -268,7 +269,7 @@ public class InputController {
 	 * @return true if the left mouse button was pressed.
 	 */
 	public boolean releasedLeftMouseButton() {
-		return leftMouseReleased && !leftMousePrevious;
+		return leftMouseReleased && leftMousePrevious && !leftMousePreviousPrevious;
 	}
 
 	public boolean releasedRightMouseButton() {
@@ -350,9 +351,10 @@ public class InputController {
 		crosscache = new Vector2();
 		mousePosition = new Vector2();
 		mouseCache = new Vector2();
-		leftMousePrevious = false;
+		leftMousePrevious = true;
 		leftMouseReleased = true;
 		leftMousePressed = false;
+		leftMousePreviousPrevious = true;
 	}
 
 	/**
@@ -375,6 +377,7 @@ public class InputController {
 		exitPrevious = exitPressed;
 		nextPrevious = nextPressed;
 		prevPrevious = prevPressed;
+		leftMousePreviousPrevious = leftMousePrevious;
 		leftMousePrevious = leftMouseReleased;
 		rightMousePrevious = rightMousePressed;
 		shiftKeyPrevious = shiftKeyPressed;
