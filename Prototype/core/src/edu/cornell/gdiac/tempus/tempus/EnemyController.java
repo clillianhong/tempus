@@ -350,9 +350,9 @@ public class EnemyController {
      */
     public void createLineOfSight(World world, float offset, Enemy e) {
         Vector2 shootPos = e.getPosition().add(0f, offset);
-        TextureRegion bulletBigTexture = JsonAssetManager.getInstance().getEntry("bulletbig", TextureRegion.class);
-        float radius = bulletBigTexture.getRegionWidth() / (30.0f);
-        shootPos.y -= radius * 2;
+//        TextureRegion bulletBigTexture = JsonAssetManager.getInstance().getEntry("bulletbig", TextureRegion.class);
+//        float radius = bulletBigTexture.getRegionWidth() / (30.0f);
+//        shootPos.y -= radius * 2;
         world.rayCast(e.getSight(), shootPos, target.getPosition());
     }
 
