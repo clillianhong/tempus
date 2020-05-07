@@ -966,8 +966,8 @@ public class LevelController extends WorldController {
 		if (!avatar.isCatchReady() && !avatar.isHolding() && !avatar.isSticking()
 				&& (InputController.getInstance().pressedRightMouseButton())){
 			avatar.setCatchReady(true);
-		}else if(avatar.isHolding() || avatar.isSticking() &&
-				!(InputController.getInstance().pressedRightMouseButton())){
+		}
+		if((InputController.getInstance().releasedRightMouseButton())){
 			avatar.setCatchReady(false);
 		}
 
@@ -1161,8 +1161,7 @@ public class LevelController extends WorldController {
 		}
 
 		// Update avatar animation state
-		if (InputController.getInstance().pressedLeftMouseButton()
-				|| (InputController.getInstance().pressedRightMouseButton() && !avatar.isSticking())) {
+		if (InputController.getInstance().pressedLeftMouseButton()) {
 			// If either mouse button is held, set animation to be crouching
 			avatar.animate(Avatar.AvatarState.CROUCHING, false);
 			avatar.setAnimationState(Avatar.AvatarState.CROUCHING);
