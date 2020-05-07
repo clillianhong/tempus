@@ -379,6 +379,7 @@ public class LevelController extends WorldController {
 		numEnemies = 0;
 		paused = false;
 		prepause = false;
+
 		enemyController.reset();
 		for (Obstacle obj : objects) {
 			obj.deactivatePhysics(world);
@@ -837,6 +838,7 @@ public class LevelController extends WorldController {
 					enemyController.shift();
 				}
 				avatar.setEnemyContact(false);
+				avatar.setCatchReady(false);
 				avatar.setPosition(avatarStart);
 				avatar.getBody().setLinearVelocity(0, 0);
 				avatar.setHolding(false);
@@ -846,6 +848,7 @@ public class LevelController extends WorldController {
 				enemyController.setPlayerVisible(false);
 				return true;
 			} else{
+				avatar.setCatchReady(false);
 				avatar.setPosition(avatarStart);
 				avatar.setEnemyContact(false);
 				setFailure(true);
@@ -960,12 +963,10 @@ public class LevelController extends WorldController {
 
 		//check if avatar is in "catch mode"
 		if (!avatar.isCatchReady() && !avatar.isHolding() && !avatar.isSticking()
-				&& (InputController.getInstance().pressedRightMouseButton()
-					|| InputController.getInstance().pressedLeftMouseButton())){
+				&& (InputController.getInstance().pressedRightMouseButton())){
 			avatar.setCatchReady(true);
-		}else if(avatar.isHolding() || avatar.isSticking() ||
-				!(InputController.getInstance().pressedRightMouseButton()
-				|| InputController.getInstance().pressedLeftMouseButton())){
+		}else if(avatar.isHolding() || avatar.isSticking() &&
+				!(InputController.getInstance().pressedRightMouseButton())){
 			avatar.setCatchReady(false);
 		}
 
