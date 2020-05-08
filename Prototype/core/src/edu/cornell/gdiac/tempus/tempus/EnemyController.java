@@ -1,10 +1,10 @@
 package edu.cornell.gdiac.tempus.tempus;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Filter;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
@@ -20,7 +20,6 @@ import edu.cornell.gdiac.util.PooledList;
 import edu.cornell.gdiac.util.SoundController;
 
 import java.util.Random;
-import java.util.Vector;
 
 import static edu.cornell.gdiac.tempus.tempus.models.EntityType.PRESENT;
 
@@ -181,18 +180,18 @@ public class EnemyController {
     public void setFlyingVelocity (Enemy enemy) {
         Vector2 vel = target.getPosition().sub(enemy.getPosition());
         if (vel != enemy.getFlyingVelocity()) {
-            if (!enemy.isFiring()) {
-                if (enemy.isNearPlatform()) {
-                    Vector2 normal = enemy.getAdjPlatform().getWorldManifold().getNormal();
-                    if (Math.abs(normal.cpy().rotate90(1).angle(vel)) < Math.abs(normal.cpy().rotate(-1).angle(vel))) {
-                        vel.rotate90(1);
-                    } else {
-                        vel.rotate90(-1);
-                    }
-//                } else {
-//                    vel.rotate(45);
-                }
-            }
+//            if (!enemy.isFiring()) {
+//                if (enemy.isNearPlatform()) {
+//                    Vector2 normal = enemy.getAdjPlatform().getWorldManifold().getNormal();
+//                    if (Math.abs(normal.cpy().rotate90(1).angle(vel)) < Math.abs(normal.cpy().rotate(-1).angle(vel))) {
+//                        vel.rotate90(1);
+//                    } else {
+//                        vel.rotate90(-1);
+//                    }
+////                } else {
+////                    vel.rotate(45);
+//                }
+//            }
             enemy.setLinearVelocity(enemy.getLinearVelocity().scl(.7f));
             enemy.setFlyingVelocity(vel.cpy());
         }
@@ -333,7 +332,12 @@ public class EnemyController {
         Filter f = new Filter();
         Random random = new Random();
         f.groupIndex = (short) -random.nextInt(Short.MAX_VALUE + 1);
-        enemy.setFilterData(f);
+        for (Fixture fix: enemy.getFixtures()) {
+            if (fix.getUserData() == null || !fix.getUserData().equals(enemy.getEnemyCenterSensorName())) {
+                fix.setFilterData(f);
+            }
+        }
+//        enemy.setFilterData(f);
         bullet.setFilterData(f);
 
         bullet.setName("bullet");
@@ -435,26 +439,26 @@ public class EnemyController {
                 if (e.getSpace() == 3) {
                     e.setIsFiring(true);
                     e.setBodyType(BodyDef.BodyType.DynamicBody);
-                } else if (!shifted && (e.getSpace()==2)) {
+                } else if (!shifted && (e.getSpace() == 2)) {
                     e.setIsFiring(false);
                     e.setBodyType(BodyDef.BodyType.StaticBody);
-                } else if (shifted && (e.getSpace()==2)) {
+                } else if (shifted && (e.getSpace() == 2)) {
                     e.setIsFiring(e.getShiftedFiring());
-                } else if (shifted && (e.getSpace()==1)) {
+                } else if (shifted && (e.getSpace() == 1)) {
                     e.setIsFiring(false);
                     e.setBodyType(BodyDef.BodyType.StaticBody);
-                } else if (!shifted && (e.getSpace()==1)) {
+                } else if (!shifted && (e.getSpace() == 1)) {
                     e.setIsFiring(e.getShiftedFiring());
                 }
             }
+            e.setSensor(false);
+            if (e.getSpace() == 3) {
                 e.setSensor(false);
-                if (e.getSpace() == 3) {
-                    e.setSensor(false);
-                } else if (!shifted && (e.getSpace() == 2)) {
-                    e.setSensor(true);
-                } else if (shifted && (e.getSpace() == 1)) {
-                    e.setSensor(true);
-                }
+            } else if (!shifted && (e.getSpace() == 2)) {
+                e.setSensor(true);
+            } else if (shifted && (e.getSpace() == 1)) {
+                e.setSensor(true);
+            }
         }
     }
 
