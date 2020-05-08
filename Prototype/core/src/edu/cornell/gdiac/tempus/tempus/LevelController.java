@@ -1307,6 +1307,15 @@ public class LevelController extends WorldController {
 				}
 				boolean candash = avatar.canDash();
 				if(candash){
+					if (avatar.isSticking()) {
+						JsonValue dash = assetDirectory.get("sounds").get("dash");
+						SoundController.getInstance().play(dash.get("file").asString(), dash.get("file").asString(),
+								false, dash.get("volume").asFloat());
+					} else {
+						JsonValue dash = assetDirectory.get("sounds").get("dash2");
+						SoundController.getInstance().play(dash.get("file").asString(), dash.get("file").asString(),
+								false, dash.get("volume").asFloat());
+					}
 					cursor = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
 					cursor = camera.unproject(cursor);
 					cursor.scl(1/scale.x, 1/scale.y,0);
@@ -1343,7 +1352,7 @@ public class LevelController extends WorldController {
 				avatar.resetDashNum(-1);
 			}
 			shifted = !shifted;
-			avatar.setShifted(10);
+			avatar.setShifted(7);
 			if (shifted) {
 				JsonValue ripple = assetDirectory.get("sounds").get("ripple_to_past");
 				SoundController.getInstance().play(ripple.get("file").asString(), ripple.get("file").asString(), false, EFFECT_VOLUME * 2);
@@ -1858,7 +1867,9 @@ public class LevelController extends WorldController {
 			}
 
 			if(!enemyController.getPlayerVisible()){
-				canvas.draw(overlayDark,Color.WHITE, 0, 0, sw, sh);
+				if (overlayDark != null) {
+					canvas.draw(overlayDark, Color.WHITE, 0, 0, sw, sh);
+				}
 			}
 
 			canvas.end();

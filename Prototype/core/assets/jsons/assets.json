@@ -259,6 +259,14 @@
     "door_entry": {
       "file": "sounds/door_entry_metal_swirl.mp3",
       "volume": 0.2
+    },
+    "dash": {
+      "file": "sounds/dash.mp3",
+      "volume": 0.5
+    },
+    "dash2": {
+      "file": "sounds/double_dash_pitched_more.mp3",
+      "volume": 0.5
     }
   },
   "music": {
