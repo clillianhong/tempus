@@ -1848,7 +1848,9 @@ public class LevelController extends WorldController {
 			}
 
 			if(!enemyController.getPlayerVisible()){
-				canvas.draw(overlayDark,Color.WHITE, 0, 0, sw, sh);
+				if (overlayDark != null) {
+					canvas.draw(overlayDark, Color.WHITE, 0, 0, sw, sh);
+				}
 			}
 
 			canvas.end();
