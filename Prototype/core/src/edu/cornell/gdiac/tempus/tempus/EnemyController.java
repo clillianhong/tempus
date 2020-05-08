@@ -66,6 +66,10 @@ public class EnemyController {
         playerVisible = b;
     }
 
+    public boolean getPlayerVisible(){
+        return playerVisible;
+    }
+
     public int getEnemies() {
         int result = enemies.size();
         for (Enemy e: enemies) {

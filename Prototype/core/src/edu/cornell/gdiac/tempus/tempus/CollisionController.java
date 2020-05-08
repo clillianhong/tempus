@@ -478,6 +478,7 @@ public class CollisionController implements ContactListener {
                     (bd1 == controller.getGoalDoor() && bd2 == avatar)) {
                 Door door = (Door) controller.getGoalDoor();
                 if (door.getOpen()) {
+                    controller.playDoorEntry();
                     controller.setComplete(true);
                 } /*else {
                     avatar.resetDashNum(1);

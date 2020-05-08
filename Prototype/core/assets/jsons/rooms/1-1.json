@@ -50,19 +50,6 @@
   "turrets": {},
   "capsules": {},
   "diamonds": {
-    "bothdiamond10": {
-      "name": "both_diamond",
-      "pos": [
-        11.304,
-        5.01
-      ],
-      "bodytype": "static",
-      "density": 0,
-      "friction": 0.6,
-      "restitution": 0.1,
-      "texture": "both_diamond",
-      "space": 3
-    },
     "bothdiamond13": {
       "name": "both_diamond",
       "pos": [
@@ -110,5 +97,19 @@
     }
   },
   "pillars": {},
-  "longcapsules": {}
+  "longcapsules": {
+    "bothlongcapsule18": {
+      "name": "both_longcapsule",
+      "pos": [
+        9.304,
+        5.01
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_longcapsule",
+      "space": 3
+    }
+  }
 }

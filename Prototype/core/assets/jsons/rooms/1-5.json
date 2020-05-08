@@ -51,7 +51,7 @@
     "turret8": {
       "pos": [
         9.624,
-        8.700000000000002
+        2.700000000000002
     ],
       "shrink": [
         0.0168,
@@ -63,25 +63,12 @@
       "entitytype": "past",
       "cooldown": 360,
       "direction": [
-        -3,
-        0
+        0,
+        3
       ]
     }
   },
   "capsules": {
-    "pastcapsule15": {
-      "name": "past_capsule",
-      "pos": [
-        17.48,
-        2.4900000000000007
-      ],
-      "bodytype": "static",
-      "density": 0,
-      "friction": 0.6,
-      "restitution": 0.1,
-      "texture": "past_capsule",
-      "space": 2
-    },
     "presentcapsule19": {
       "name": "present_capsule",
       "pos": [
@@ -96,7 +83,21 @@
       "space": 1
     }
   },
-  "diamonds": {},
+  "diamonds": {
+    "diamond1":{
+      "name":"present_diamond",
+      "pos":[
+        2.064,
+        2.4900000000000007
+      ],
+      "bodytype":"static",
+      "density":0,
+      "friction":0.6,
+      "restitution":0.1,
+      "texture":"present_diamond",
+      "space":1
+    }
+  },
   "rounds": {
     "bothround10": {
       "name": "both_round",
@@ -173,5 +174,17 @@
     }
   },
   "pillars": {},
-  "longcapsules": {}
+  "longcapsules": {"pastlongcapsule12":{
+    "name":"past_longcapsule",
+    "pos":[
+      16,
+      2.4900000000000007
+    ],
+    "bodytype":"static",
+    "density":0,
+    "friction":0.6,
+    "restitution":0.1,
+    "texture":"past_longcapsule",
+    "space":2
+  }}
 }
