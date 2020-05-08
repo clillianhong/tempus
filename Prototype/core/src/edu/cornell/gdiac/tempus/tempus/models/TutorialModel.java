@@ -2,27 +2,27 @@ package edu.cornell.gdiac.tempus.tempus.models;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import edu.cornell.gdiac.tempus.tempus.LevelController;
 import edu.cornell.gdiac.tempus.tempus.TutorialController;
+import edu.cornell.gdiac.util.JsonAssetManager;
+
+import java.util.HashMap;
 
 public class TutorialModel extends LevelModel {
 
-    private TextureRegionDrawable [] tutorials;
+    private HashMap<Integer, String[]> tutorialCards;
 
 
-    public TutorialModel(int lv, boolean unlocked, boolean finished, int resume, LevelController[] rms) {
+    public TutorialModel(int lv, boolean unlocked, boolean finished, int resume, LevelController[] rms, HashMap<Integer, String[]> cards) {
         super(lv, unlocked, finished, resume, rms);
 
         int num_rooms = rms.length;
-        tutorials = new TextureRegionDrawable[num_rooms];
+        tutorialCards = cards;
 
-        for(int i = 0; i<num_rooms; i++){
-            String filename = "tutorial" + (i+1) + ".png";
-            tutorials[i] = new TextureRegionDrawable(
-                    new TextureRegion(new Texture(Gdx.files.internal("tutorial/" + filename))));
-        }
     }
 
     @Override
@@ -31,7 +31,7 @@ public class TutorialModel extends LevelModel {
             TutorialController rc = (TutorialController) rooms[i];
             rc.loadContent();
             rc.setFirst(i==0);
-            rc.setCard(tutorials[i]);
+            rc.setCard(tutorialCards.get(i));
             rc.setScreenListener(listener);
             rc.setCanvas(canvas);
         }
