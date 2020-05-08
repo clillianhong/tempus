@@ -483,7 +483,7 @@ public class LevelController extends WorldController {
 		ripple_intensity = 0.009f;
 		rippleSpeed = 0.25f;
 		rippleOn = false;
-		begincount = 0;
+		begincount = 10;
 		updateShader();
 		// world = new World(gravity, false);
 		world.setContactListener(collisionController);
