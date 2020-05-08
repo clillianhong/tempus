@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -20,6 +21,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import edu.cornell.gdiac.tempus.GameCanvas;
 import edu.cornell.gdiac.tempus.tempus.models.LevelModel;
 import edu.cornell.gdiac.tempus.tempus.models.ScreenExitCodes;
@@ -38,7 +40,7 @@ public class SelectLevelMode implements Screen {
         private int level;
         private boolean unlocked;
         private String filePreview;
-        private String fileLore;
+        private Label loreLabel;
         private String filePressUp;
         private String filePressDown;
         private String filePressLocked;
@@ -50,14 +52,17 @@ public class SelectLevelMode implements Screen {
         private TextureRegionDrawable block;
         private  TextureRegionDrawable bdown;
 
-        public Level(int lev, boolean l, String preview, String lore, String buttonUp, String buttonDown, String buttonLocked, String textlore){
+        public Level(int lev, boolean l, String preview, String buttonUp, String buttonDown, String buttonLocked, String textlore){
             level = lev;
             unlocked = l;
             filePreview = preview;
-            fileLore = lore;
             filePressUp = buttonUp;
             filePressDown = buttonDown;
             filePressLocked = buttonLocked;
+            this.loreLabel = new Label(textlore, style);
+            this.loreLabel.setAlignment(Align.left);
+            this.loreLabel.setWrap(true);
+            this.loreLabel.setWidth(100);
             bup = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal(buttonUp))));
             block = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal(buttonLocked))));
             bdown = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal(buttonDown))));
@@ -73,8 +78,8 @@ public class SelectLevelMode implements Screen {
             return filePreview;
         }
 
-        public String getFileLore() {
-            return fileLore;
+        public Label getFileLore() {
+            return loreLabel;
         }
 
         public void setUnlocked(boolean b){
@@ -132,8 +137,6 @@ public class SelectLevelMode implements Screen {
     private void exitToLevel(int level){
 //        listener.exitScreen(this, level);
         int curroom = GameStateManager.getInstance().getLevel(level).getCurrentRoomNumber();
-        System.out.println("level: "+ level);
-        System.out.println("curroom " + curroom);
         GameStateManager.getInstance().setCurrentLevel(level, curroom);
         listener.exitScreen(this, ScreenExitCodes.ROOM_SELECT.ordinal());
     }
@@ -168,6 +171,11 @@ public class SelectLevelMode implements Screen {
     private Level [] levels;
     /** tutorial level */
     private Level tutorial;
+    /** font */
+    private BitmapFont font;
+    /** label style */
+    private Label.LabelStyle style;
+
 
 
     int sw = 1920/2;
@@ -191,26 +199,33 @@ public class SelectLevelMode implements Screen {
         skin = new Skin(Gdx.files.internal("skins/flat_earth_skin/flat-earth-ui.json"));
 
 
+        font = new BitmapFont(Gdx.files.internal("fonts/carterone.fnt"));
+        font.getData().setScale(0.4f);
+//        font.getData().setLineHeight(font.getLineHeight()*0.9f);
+        style = new Label.LabelStyle(font, Color.WHITE);
 
         levels = new Level[numLevels];
         levels[0] = new Level(0,false, "textures/background/bg_past_lv_1.jpg",
-                "textures/gui/selectmode/lv1_lore.png",
                 "textures/gui/selectmode/tutorialunlocked.png",
                 "textures/gui/selectmode/tutorialpressed.png",
                 "textures/gui/selectmode/tutoriallocked.png",
-                "this is the tutorial level");
+                "There was once balance between the terra " +
+                        "and the sky. Long ago, a deal was struck, " +
+                        "a hundred year curse. Beasts of each kind must " +
+                        "stay in their domain. Every living soul " +
+                        "respected this promise. That is, until the " +
+                        "Timewalkers were born.");
         levels[1] = new Level(1,true, "textures/background/bg_past_lv_1.jpg",
-                "textures/gui/selectmode/lv2_lore.png",
                 "textures/gui/selectmode/level1unlocked.png",
                 "textures/gui/selectmode/level1pressed.png",
                 "textures/gui/selectmode/level1locked.png",
                 "this is level 1");
-        levels[2] = new Level(2,true, "textures/background/bg_past_lv_2.jpg", "textures/gui/selectmode/lv3_lore.png",
+        levels[2] = new Level(2,true, "textures/background/bg_past_lv_2.jpg",
                 "textures/gui/selectmode/level2unlocked.png",
                 "textures/gui/selectmode/level2pressed.png",
                 "textures/gui/selectmode/level2locked.png",
                 "this is level 2"); //TODO: CHANGE TO LEVEL 2 AND 3 RESOURCES
-        levels[3] = new Level(3,true, "textures/background/bg_past_lv_3.jpg", "textures/gui/selectmode/lv4_lore.png",
+        levels[3] = new Level(3,true, "textures/background/bg_past_lv_3.jpg",
                 "textures/gui/selectmode/level3unlocked.png",
                 "textures/gui/selectmode/level3pressed.png",
                 "textures/gui/selectmode/level3locked.png",
@@ -230,6 +245,7 @@ public class SelectLevelMode implements Screen {
 
         previewImg = new Image();
         loreImage = new Image();
+
 
     }
 
@@ -263,8 +279,8 @@ public class SelectLevelMode implements Screen {
      */
     public void updatePreview(){
         pIContainer.setActor(previewTextures[levels[currentLevel].getLevel()]);
-        Image loreImage = new Image( new TextureRegion(new Texture(Gdx.files.internal(levels[currentLevel].getFileLore()))));
-        lbContainer.setActor(loreImage);
+//        Image loreImage = new Image( new TextureRegion(new Texture(Gdx.files.internal(levels[currentLevel].getFileLore()))));
+        lbContainer.setActor(levels[currentLevel].getFileLore());
     }
 
     @Override
@@ -276,13 +292,14 @@ public class SelectLevelMode implements Screen {
             l.setUnlocked(mod.isUnlocked());
         }
 
+
+
         active = true;
 
         Table wholescreen = new Table();
         wholescreen.setWidth(sw);
         wholescreen.setHeight(sh);
-//        wholescreen.setPosition(10,10);
-
+        wholescreen.setPosition(0,-20);
 
         float cw = sw * 0.9f;
         float ch = sh * 0.8f;
@@ -303,16 +320,12 @@ public class SelectLevelMode implements Screen {
         Table dualTable = new Table();
 //        dualTable.setWidth(edgeContainer.getWidth());
         dualTable.setFillParent(true);
-
-        Table rightTable = new Table();
-        rightTable.setWidth(cw/2 - 10);
-
         Table levelTable = new Table();
 
         levelTable.row().padBottom(ch * 0.08f);
 
         for(Level lev : levels){
-            levelTable.add(lev.button).size(cw/2*0.9f, ch/3*0.45f).expandX().fillX();
+            levelTable.add(lev.button).size(cw/2*0.85f, ch/3*0.45f).expandX().fillX();
             levelTable.row().padBottom(ch * 0.08f);
             previewTextures[lev.getLevel()] = new Image(new TextureRegion(new Texture(Gdx.files.internal(lev.getFilePreview()))));
         }
@@ -347,39 +360,29 @@ public class SelectLevelMode implements Screen {
 
         Table leftTable = new Table();
         leftTable.setWidth(cw/2 - 10);
-        leftTable.add(overlayPageHeader).expand().fill().padBottom(20);
-        leftTable.row();
+//        leftTable.add(overlayPageHeader).expand().fill().padBottom(20);
+        leftTable.row().padTop(cw/16f);
         scrollContainer.setActor(scroller);
         leftTable.add(scrollContainer);
         leftTable.row();
         leftTable.add(overlayBackButton);
 
-
-        //preview panel
-//        Container<Image> pbContainer = new Container<>();
-//        pbContainer.size(sw/2f* 0.8f, sh/2f);
-//        Image previewBackground = new Image( new TextureRegion(new Texture(Gdx.files.internal("textures/gui/selectmode/preview_bg.png"))));
-//        pbContainer.setActor(previewBackground);
-
-        Stack prevStack = new Stack();
-
         pIContainer = new Container<>();
-        pIContainer.size(cw/2f* 0.7f, ch/2f * 0.85f);
+        pIContainer.size(cw/2f* 0.9f, ch/2f);
         Texture prevTexture = new Texture(Gdx.files.internal(levels[currentLevel].getFilePreview()));
-
         Image previewImg = new Image( new TextureRegion(prevTexture));
 
         pIContainer.setActor(previewImg);
 //        prevStack.add(pbContainer);
-        prevStack.add(pIContainer);
 
         //lore panel
         lbContainer = new Container<>();
-        lbContainer.size(sw/2f*0.7f, sh/2f*0.6f);
-        Image loreImage = new Image( new TextureRegion(new Texture(Gdx.files.internal(levels[currentLevel].getFileLore()))));
-        lbContainer.setActor(loreImage);
+        lbContainer.size(cw/2f*0.8f, ch/2f - (cw/16f));
+        lbContainer.setActor(levels[currentLevel].getFileLore());
 
-        rightTable.add(prevStack).padTop(ch/7).padBottom(ch/8);
+        Table rightTable = new Table();
+        rightTable.setWidth(cw/2 - 10);
+        rightTable.add(pIContainer).padTop(cw/16f);
         rightTable.row();
         rightTable.add(lbContainer);
 
@@ -407,7 +410,7 @@ public class SelectLevelMode implements Screen {
             }
 
         });
-
+        stage.setDebugAll(true);
 //        stage.addAction(Actions.alpha(0f));
 //        stage.addAction(Actions.fadeIn(1f));
 

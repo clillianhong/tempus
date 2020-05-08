@@ -63,7 +63,9 @@ public class LevelController extends WorldController {
 	protected Table pauseTable;
 	protected Container pauseButtonContainer;
 	private TextureRegionDrawable overlayBG;
-	private TextureRegion overlayDark;
+	protected TextureRegion overlayDark;
+	protected Container<Stack> edgeContainer;
+	protected Stack tableStack;
 
 	protected Table endlevelTable;
 	protected Container endlevelContainer;
@@ -133,6 +135,9 @@ public class LevelController extends WorldController {
 	protected TextureRegion goalTile;
 	/** The font for giving messages to the player */
 	protected BitmapFont displayFont;
+	/** The style for giving messages to the player */
+	protected Label.LabelStyle style;
+
 
 	/** Texture asset for the big bullet */
 	protected TextureRegion bulletBigTexture;
@@ -194,7 +199,11 @@ public class LevelController extends WorldController {
 			return;
 		}
 		JsonAssetManager.getInstance().allocateDirectory();
-		displayFont = JsonAssetManager.getInstance().getEntry("display", BitmapFont.class);
+//		displayFont = JsonAssetManager.getInstance().getEntry("display", BitmapFont.class);
+		displayFont = new BitmapFont(Gdx.files.internal("fonts/carterone.fnt"));
+		displayFont.getData().setScale(0.5f);
+		style = new Label.LabelStyle(displayFont, Color.WHITE);
+
 		platformAssetState = AssetState.COMPLETE;
 
 	}
@@ -417,6 +426,7 @@ public class LevelController extends WorldController {
 	}
 
 	public void resetGame() {
+
 		// Vector2 gravity = new Vector2(world.getGravity());
 		setComplete(false);
 		setFailure(false);
@@ -427,10 +437,23 @@ public class LevelController extends WorldController {
 		stage.getBatch().setBlendFunction(GL20.GL_SRC_ALPHA,GL20.GL_ONE_MINUS_SRC_ALPHA);
 		canvas.getSpriteBatch().setColor(1,1,1,1);
 		canvas.setBlendState(GameCanvas.BlendState.NO_PREMULT);
-
 		numEnemies = 0;
 		paused = false;
 		prepause = false;
+
+		for (Obstacle obj : objects) {
+//			System.out.println("body type: " + obj.getBody().getUserData());
+			if(obj.getBody().getUserData() instanceof Projectile){
+				System.out.println("DELETING PROJECTILE");
+				obj.deactivatePhysics(world);
+				objects.remove(obj);
+			}
+		}
+
+		enemyController.reset();
+
+//		System.out.println("enemies size: " + enemies.size());
+
 
 		createUI();
 		if(isEndRoom){
@@ -448,7 +471,6 @@ public class LevelController extends WorldController {
 		avatar.setBodyType(BodyDef.BodyType.DynamicBody);
 		avatar.setAnimationState(Avatar.AvatarState.FALLING);
 
-		enemyController.reset();
 
 //		for (Obstacle obj : objects) {
 //			obj.deactivatePhysics(world);
@@ -851,21 +873,21 @@ public class LevelController extends WorldController {
 	public void createUI() {
 
 		// table container to center main table
-		Container<Stack> edgeContainer = new Container<Stack>();
+		edgeContainer = new Container<Stack>();
 		edgeContainer.setSize(sw, sh);
 		edgeContainer.setPosition(0, 0);
 		edgeContainer.fillX();
 		edgeContainer.fillY();
 
-		Stack tableStack = new Stack();
+		tableStack = new Stack();
 
 		/*
 		 * START PAUSE SCREEN SETUP ---------------------
 		 */
 		TextureRegionDrawable pauseButtonResource = new TextureRegionDrawable(
 				new TextureRegion(new Texture(Gdx.files.internal("textures/gui/pausebutton.png"))));
-		overlayDark = new TextureRegion(new Texture(Gdx.files.internal("textures/gui/pause_filter_50_black.png")));
-		overlayBG = new TextureRegionDrawable(overlayDark);
+		overlayDark = new TextureRegion(new Texture(Gdx.files.internal("textures/gui/pause_filter_25_black.png")));
+		overlayBG = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/pause_filter_50_black.png"))));
 		TextureRegionDrawable pauseBox = new TextureRegionDrawable(
 				new TextureRegion(new Texture(Gdx.files.internal("textures/gui/frame_pause.png"))));
 		TextureRegionDrawable resumeResource = new TextureRegionDrawable(
@@ -899,7 +921,8 @@ public class LevelController extends WorldController {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
-				resetGame();
+//				resetGame();
+				reset();
 				unpauseGame();
 			}
 		});
@@ -993,8 +1016,8 @@ public class LevelController extends WorldController {
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
 				GameStateManager.getInstance().stepGame(false);
-//				reset();
-				resetGame();
+				reset();
+//				resetGame();
 				unpauseGame();
 			}
 		});
@@ -1115,8 +1138,10 @@ public class LevelController extends WorldController {
 		}
 
 		if(failed && countdown==0){
-			resetGame();
+//			resetGame();
+			reset();
 		}
+
 
 //		if (input.didAdvance()) {
 //			active = false;
@@ -1205,7 +1230,8 @@ public class LevelController extends WorldController {
 
 		// Handle resets
 		if (input.didReset()) {
-			resetGame();
+//			resetGame();
+			reset();
 		}
 
 		//check if avatar is in "catch mode"
@@ -1848,7 +1874,9 @@ public class LevelController extends WorldController {
 			}
 
 			if(!enemyController.getPlayerVisible()){
-				canvas.draw(overlayDark,Color.WHITE, 0, 0, sw, sh);
+				if (overlayDark != null) {
+					canvas.draw(overlayDark, Color.WHITE, 0, 0, sw, sh);
+				}
 			}
 
 			canvas.end();
