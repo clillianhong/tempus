@@ -25,7 +25,6 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import edu.cornell.gdiac.tempus.GameCanvas;
-import edu.cornell.gdiac.tempus.MusicController;
 import edu.cornell.gdiac.tempus.WorldController;
 import edu.cornell.gdiac.tempus.tempus.models.ScreenExitCodes;
 import edu.cornell.gdiac.util.GifDecoder;
@@ -35,7 +34,7 @@ import edu.cornell.gdiac.util.ScreenListener;
 import static edu.cornell.gdiac.tempus.WorldController.EXIT_NEXT;
 import static edu.cornell.gdiac.tempus.WorldController.EXIT_QUIT;
 
-public class MainMenuMode implements Screen {
+public class AboutMode implements Screen {
     private SpriteBatch batch;
     protected Stage stage;
     private Viewport viewport;
@@ -48,9 +47,6 @@ public class MainMenuMode implements Screen {
     private boolean active;
     /** background texture region */
     TextureRegion backgroundTexture;
-    TextureRegion glow;
-    Animation anim;
-    float frameCounter;
 
 
 
@@ -65,12 +61,11 @@ public class MainMenuMode implements Screen {
     int sw = 1920/2;
     int sh = 1080/2;
 
-    public MainMenuMode(){
+    public AboutMode(){
         bounds = new Rectangle(0,0,DEFAULT_WIDTH,DEFAULT_HEIGHT);
         canvas = null;
         scale = new Vector2();
         active = false;
-        frameCounter = 0;
     }
 
     /* set the canvas for this mode */
@@ -95,6 +90,7 @@ public class MainMenuMode implements Screen {
     public void createMode(){
 //        atlas = new TextureAtlas("skin.atlas");
         skin = new Skin(Gdx.files.internal("skins/flat_earth_skin/flat-earth-ui.json"));
+
         camera = new OrthographicCamera(sw, sh);
         stage = new Stage(new FitViewport(sw, sh, camera));
         stage.getViewport().apply();
@@ -102,20 +98,9 @@ public class MainMenuMode implements Screen {
 
     }
 
-
-
-    private void exitGame(){
-        listener.exitScreen(this, ScreenExitCodes.EXIT_QUIT.ordinal());
+    private void exitBack(){
+        listener.exitScreen(this, ScreenExitCodes.EXIT_PREV.ordinal());
     }
-
-    private void exitLevelSelector(){
-        listener.exitScreen(this, ScreenExitCodes.MENU_START.ordinal());
-    }
-
-    private void exitToHelpMenu(){ listener.exitScreen(this, ScreenExitCodes.MENU_HELP.ordinal()); }
-
-    private void exitToAboutMenu(){ listener.exitScreen(this, ScreenExitCodes.MENU_ABOUT.ordinal()); }
-
 
     @Override
     public void show() {
@@ -124,91 +109,47 @@ public class MainMenuMode implements Screen {
         Gdx.input.setInputProcessor(stage);
         active = true;
 
-        float cw = sw * 0.7f;
-        float ch = sh * 0.5f;
+        backgroundTexture = new TextureRegion(new Texture(Gdx.files.internal("textures/gui/aboutmode/about_background.png")));
 
-        backgroundTexture = new TextureRegion(new Texture(Gdx.files.internal("textures/background/mainmenubackground.png")));
         //table container to center main table
         Container<Table> tableContainer = new Container<Table>();
-        tableContainer.setSize(cw, ch);
-        tableContainer.setPosition((sw - cw) / 2.0f, (sh - ch)/4.0f);
-        tableContainer.fillX();
+        tableContainer.setSize(sw, sh);
+        tableContainer.setPosition(0, 0);
+        tableContainer.fillX().fillY();
 
         Table mainTable = new Table(skin);
 
-        mainTable.setWidth(stage.getViewport().getScreenWidth());
+        mainTable.setWidth(canvas.getWidth());
+        mainTable.setHeight(canvas.getHeight());
 
-        anim = GifDecoder.loadGIFAnimation(Animation.PlayMode.LOOP, Gdx.files.internal("textures/gui/tempus_logo_stationary.gif").read());
-        glow = new TextureRegion(new Texture(Gdx.files.internal("textures/gui/glow_logo.png")));
-        //Create header
-
-        //Create buttons
-        final Button startButton = new Button(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/start_button_v3.png")))));
-        Button helpButton = new Button(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/help_button_v3.png")))));
-        Button exitButton = new Button(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/quit_button_v3.png")))));
-        Button aboutButton = new Button(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/about_button_v3.png")))));
-
-        //Add listeners to buttons
-        startButton.addListener(new ClickListener(){
+        //Back button
+        Table overlayBackButton = new Table();
+        //back button
+        TextureRegionDrawable bup = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/aboutmode/back_button.png"))));
+        Button backButton = new Button(bup);
+        backButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                stage.addAction(Actions.sequence(Actions.fadeOut(1f), Actions.run(new Runnable() {
+                stage.addAction(Actions.sequence(Actions.fadeOut(0.5f), Actions.run(new Runnable() {
                     @Override
                     public void run() {
-                        exitLevelSelector();
+                        exitBack();
                     }
                 })));
             }
         });
-        helpButton.addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                stage.addAction(Actions.sequence(Actions.fadeOut(1f), Actions.run(new Runnable() {
-                    @Override
-                    public void run() {
-                        exitToHelpMenu();
-                    }
-                })));
-            }
-        });
-        aboutButton.addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                stage.addAction(Actions.sequence(Actions.fadeOut(1f), Actions.run(new Runnable() {
-                    @Override
-                    public void run() {
-                        exitToAboutMenu();
-                    }
-                })));
-            }
-        });
-        exitButton.addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                exitGame();
-            }
-        });
+        overlayBackButton.add(backButton).width(sw/10f).height(sw/13f).expand().bottom().left().pad(10);
 
-
-        //add header
-        mainTable.row();
-        mainTable.row();
-        mainTable.row().expandX().fillX();
+//        Table overlayBackButton = new Table();
+//        overlayBackButton.add(backButton).width(cw/14f).height(cw/15f).expand().bottom().left();
 
         //add buttons
-        mainTable.add(startButton).width(cw/5f).height(ch/4f).pad(cw/25f).expand().fillX();
-        mainTable.add(helpButton).width(cw/5f).height(ch/4f).pad(cw/15f).expand().fillX();
-        mainTable.add(exitButton).width(cw/5f).height(ch/4f).pad(cw/15f).expand().fillX();
-        mainTable.add(aboutButton).width(cw/5f).height(ch/4f).pad(cw/15f).expand().fillX();
-//        mainTable.add(aboutButton).width(cw/5f).height(ch/5f).pad(cw/15f).expand().fillX();
+        mainTable.add(overlayBackButton).expand().bottom().left();
 
         tableContainer.setActor(mainTable);
         //Add table to stage
-        //
         stage.addActor(tableContainer);
         stage.getViewport().apply();
-
-        MusicController.getInstance().playMenuMusic();
 
     }
 
@@ -220,24 +161,19 @@ public class MainMenuMode implements Screen {
             Gdx.gl.glClearColor(0, 0, 0, 1);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-            frameCounter += 6 * Gdx.graphics.getDeltaTime();
             float mult = 1.1f;
             float anti_mult = 0.9f;
-
-            TextureRegion an = (TextureRegion) anim.getKeyFrame(frameCounter, true);
 
             stage.getBatch().setProjectionMatrix(stage.getCamera().combined);
             stage.getCamera().update();
 
             stage.getBatch().begin();
             stage.getBatch().draw(backgroundTexture, 0, 0, sw, sh);
-            stage.getBatch().draw(glow, sw/4*0.94f*anti_mult, sh/2*0.98f*anti_mult, sw/2*1.08f*mult, sh/3*1.04f*mult);
-            stage.getBatch().draw(an,sw/4*anti_mult, sh/2*anti_mult, sw/2*mult, sh/3*mult);
-
             stage.getBatch().end();
 
             stage.act();
             stage.draw();
+
         }
 
     }
@@ -269,8 +205,6 @@ public class MainMenuMode implements Screen {
     @Override
     public void dispose() {
         active = false;
-        if (stage != null) {
-            stage.clear();
-        }
+        stage.clear();
     }
 }
