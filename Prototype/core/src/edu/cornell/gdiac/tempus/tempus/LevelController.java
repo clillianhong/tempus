@@ -1239,7 +1239,7 @@ public class LevelController extends WorldController {
 				&& (InputController.getInstance().pressedRightMouseButton())){
 			avatar.setCatchReady(true);
 		}
-		if((InputController.getInstance().releasedRightMouseButton())){
+		if((InputController.getInstance().releasedRightMouseButton()) || avatar.isSticking()){
 			avatar.setCatchReady(false);
 		}
 
