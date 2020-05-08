@@ -2,9 +2,9 @@ package edu.cornell.gdiac.tempus.tempus.models;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Vector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.gdiac.tempus.GameCanvas;
 import edu.cornell.gdiac.tempus.obstacle.CapsuleObstacle;
@@ -61,8 +61,8 @@ public class Enemy extends CapsuleObstacle {
     /** Height of the sensor attached to the player's feet */
     private static final float SENSOR_HEIGHT = 0.05f;
     private static final float DENSITY = 1.0F;
-    private static final String GROUND_SENSOR_NAME = "EnemyGroundSensor";
-    private static final String CENTER_SENSOR_NAME = "EnemyCenterSensor";
+    private static final String ENEMY_CENTER_SENSOR = "EnemyCenterSensor";
+    private static final String ENEMY_GROUND_SENSOR = "EnemyGroundSensor";
 
     // ANIMATION FIELDS
     /** Texture filmstrip for enemy chilling */
@@ -298,6 +298,10 @@ public class Enemy extends CapsuleObstacle {
             setGravityScale(0);
             flyingVelocity = new Vector2(0,0);
         }
+    }
+
+    public Array<Fixture> getFixtures() {
+        return getBody().getFixtureList();
     }
 
     public Fixture getSensorFixtureCenter() {
@@ -677,8 +681,8 @@ public class Enemy extends CapsuleObstacle {
         return ENEMY_MAXSPEED;
     }
 
-    public String getGroundSensorName() {
-        return GROUND_SENSOR_NAME;
+    public String getEnemyCenterSensorName() {
+        return ENEMY_CENTER_SENSOR;
     }
 
     public boolean activatePhysics(World world) {
@@ -696,7 +700,7 @@ public class Enemy extends CapsuleObstacle {
             sensorDef.shape = sensorShapeGround;
 
             sensorFixtureGround = body.createFixture(sensorDef);
-            sensorFixtureGround.setUserData(CENTER_SENSOR_NAME);
+            sensorFixtureGround.setUserData(ENEMY_GROUND_SENSOR);
         }
         if(getAi() == EnemyType.FLY){
 
@@ -714,7 +718,7 @@ public class Enemy extends CapsuleObstacle {
             sensorDef.filter.groupIndex = -1;
 
             sensorFixtureCenter = body.createFixture(sensorDef);
-            sensorFixtureCenter.setUserData(GROUND_SENSOR_NAME);
+            sensorFixtureCenter.setUserData(ENEMY_CENTER_SENSOR);
         }
 
         return true;
