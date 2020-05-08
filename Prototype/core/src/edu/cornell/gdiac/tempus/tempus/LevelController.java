@@ -21,6 +21,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -55,7 +56,6 @@ import static edu.cornell.gdiac.tempus.tempus.models.EntityType.PRESENT;
  * multiple instances place nicely with the static assets.
  */
 public class LevelController extends WorldController {
-
 	/** Stage for adding UI components **/
 	protected Skin skin;
 
@@ -1688,7 +1688,8 @@ public class LevelController extends WorldController {
 					avatar.getX() * scale.x, avatar.getY() * scale.y, redirection.angle() / 57, 0.0073f * scale.x* 1.5f,
 					0.0073f * scale.y* 1.5f);
 			canvas.draw(projArrow, Color.GOLD, 0, projArrow.getRegionHeight() / 2, avatar.getX() * scale.x,
-					avatar.getY() * scale.y, (redirection.angle()) / 57, longscale[0], longscale[1]);
+					avatar.getY() * scale.y, (redirection.angle()) / 57, longscale[0], originalscale[1]);
+
 		}
 	}
 
