@@ -1559,7 +1559,7 @@ public class LevelController extends WorldController {
 		float y0 = avatar.getY() + (redirection.y * avatar.getHeight() * 2f);
 		bulletBigTexture = JsonAssetManager.getInstance().getEntry("bulletbig", TextureRegion.class);
 		float radius = bulletBigTexture.getRegionWidth() / (20.0f);
-		Vector2 projVel = redirection.cpy().scl(12);
+		Vector2 projVel = redirection.cpy().scl(20);
 		EntityType projType = avatar.getHeldBullet().getType();
 
 		Projectile bullet = new Projectile(projType, x0, y0, radius, avatar.getBody().getUserData());
@@ -1679,13 +1679,16 @@ public class LevelController extends WorldController {
 		// System.out.println("HOLDING: " + avatar.isHolding());*/
 		TextureRegion projCircle = JsonAssetManager.getInstance().getEntry("projectile_circle", TextureRegion.class);
 		TextureRegion projArrow = JsonAssetManager.getInstance().getEntry("projectile_arrow", TextureRegion.class);
-
+		//The OG scale of the arrow
+		float [] originalscale = {0.0061f * scale.x * 1.5f,0.0061f * scale.y* 1.5f};
+		//The extended scale
+		float [] longscale = {originalscale[0]*2,originalscale[1]*2};
 		if (avatar.isHolding()) {
 			canvas.draw(projCircle, Color.GOLD, projCircle.getRegionWidth() / 2, projCircle.getRegionHeight() / 2,
 					avatar.getX() * scale.x, avatar.getY() * scale.y, redirection.angle() / 57, 0.0073f * scale.x* 1.5f,
 					0.0073f * scale.y* 1.5f);
 			canvas.draw(projArrow, Color.GOLD, 0, projArrow.getRegionHeight() / 2, avatar.getX() * scale.x,
-					avatar.getY() * scale.y, (redirection.angle()) / 57, 0.0061f * scale.x * 1.5f, 0.0061f * scale.y* 1.5f);
+					avatar.getY() * scale.y, (redirection.angle()) / 57, longscale[0], longscale[1]);
 		}
 	}
 
