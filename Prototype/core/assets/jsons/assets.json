@@ -251,6 +251,14 @@
     "ripple_to_present": {
       "file": "sounds/ripple_less_piercing.mp3",
       "volume": 0.8
+    },
+    "door_unlock": {
+      "file": "sounds/correct_door_unlock_sound.mp3",
+      "volume": 0.2
+    },
+    "door_entry": {
+      "file": "sounds/door_entry_metal_swirl.mp3",
+      "volume": 0.2
     }
   },
   "music": {

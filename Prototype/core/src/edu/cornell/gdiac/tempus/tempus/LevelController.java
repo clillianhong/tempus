@@ -995,6 +995,11 @@ public class LevelController extends WorldController {
 		}
 		// System.out.println(numEnemies);
 		if (enemyController.getEnemies() == 0) {
+			if (!goalDoor.getOpen()){
+				JsonValue chains = assetDirectory.get("sounds").get("door_unlock");
+				SoundController.getInstance().play(chains.get("file").asString(), chains.get("file").asString(),
+						false, chains.get("volume").asFloat());
+			}
 			goalDoor.setOpen(true);
 		} else {
 			goalDoor.setOpen(false);
@@ -1668,4 +1673,9 @@ public class LevelController extends WorldController {
 		MusicController.getInstance().play("present", presentMus.get("file").asString(), true, 1.0f);
 	}
 
+	public void playDoorEntry(){
+		JsonValue portal = assetDirectory.get("sounds").get("door_entry");
+		SoundController.getInstance().play(portal.get("file").asString(), portal.get("file").asString(),
+				false, portal.get("volume").asFloat());
+	}
 }

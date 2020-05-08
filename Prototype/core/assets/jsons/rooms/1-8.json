@@ -26,7 +26,7 @@
   },
   "avatar": {
     "pos": [
-      3.94,
+      4.54,
       3.8599999999999968
     ],
     "shrink": [
@@ -134,7 +134,21 @@
   },
   "spikes": {},
   "talls": {},
-  "pillars": {},
+  "pillars": {
+    "bothpillar14":{
+      "name":"both_pillar",
+      "pos":[
+        0.404,
+        2.1
+      ],
+      "bodytype":"static",
+      "density":0,
+      "friction":0.6,
+      "restitution":0.1,
+      "texture":"both_pillar",
+      "space":3
+    }
+  },
   "longcapsules": {
     "longcapsule6": {
     "name": "both_longcapsule",
