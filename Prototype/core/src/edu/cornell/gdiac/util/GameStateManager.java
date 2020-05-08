@@ -264,6 +264,8 @@ public class GameStateManager {
         LevelController [] rooms = new LevelController[room_count];
         HashMap<Integer, String[]> cards = new HashMap<>();
 
+        System.out.println("ROOM COUNT: " + room_count);
+        System.out.println("ROOM_ PATH SIZE: " + room_paths.length);
         for(int i=0; i<room_count; i++){
             cards.put(i, jsonCards.get("c"+(i+1)).asStringArray());
             rooms[i] = new TutorialController(room_paths[i]);
