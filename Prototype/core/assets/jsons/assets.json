@@ -313,28 +313,28 @@
       "size": 20
     },
     "avatarstanding": {
-      "file": "filmstrips/avatar_standing_lv_1.png",
-      "rows": 1,
-      "cols": 1,
-      "size": 1
+      "file": "filmstrips/avatar_standing.png",
+      "rows": 3,
+      "cols": 4,
+      "size": 10
     },
     "avatarcrouching": {
-      "file": "filmstrips/avatar_beginDash_lv_1.png",
-      "rows": 1,
+      "file": "filmstrips/avatar_beginDash.png",
+      "rows": 2,
       "cols": 2,
-      "size": 2
+      "size": 4
     },
     "avatardashing": {
-      "file": "filmstrips/avatar_dashing_lv_1.png",
-      "rows": 1,
-      "cols": 3,
-      "size": 3
+      "file": "filmstrips/avatar_dashing.png",
+      "rows": 2,
+      "cols": 2,
+      "size": 4
     },
     "avatarfalling": {
-      "file": "filmstrips/avatar_falling_lv_1.png",
-      "rows": 1,
+      "file": "filmstrips/avatar_falling.png",
+      "rows": 2,
       "cols": 3,
-      "size": 3
+      "size": 5
     },
     "enemywalking_present": {
       "file": "filmstrips/enemy/enemy_shooting_present.png",
