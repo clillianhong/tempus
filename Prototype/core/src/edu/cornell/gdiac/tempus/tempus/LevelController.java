@@ -921,9 +921,9 @@ public class LevelController extends WorldController {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
-//				resetGame();
-				reset();
 				unpauseGame();
+				resetGame();
+//				reset();
 			}
 		});
 
@@ -1016,9 +1016,9 @@ public class LevelController extends WorldController {
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
 				GameStateManager.getInstance().stepGame(false);
-				reset();
-//				resetGame();
+//				reset();
 				unpauseGame();
+				resetGame();
 			}
 		});
 
@@ -1138,8 +1138,8 @@ public class LevelController extends WorldController {
 		}
 
 		if(failed && countdown==0){
-//			resetGame();
-			reset();
+			resetGame();
+//			reset();
 		}
 
 
@@ -1230,8 +1230,8 @@ public class LevelController extends WorldController {
 
 		// Handle resets
 		if (input.didReset()) {
-//			resetGame();
-			reset();
+			resetGame();
+//			reset();
 		}
 
 		//check if avatar is in "catch mode"

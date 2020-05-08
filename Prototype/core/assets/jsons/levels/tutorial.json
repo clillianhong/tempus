@@ -1,6 +1,6 @@
 {
   "level": 0,
-  "room_count": 8,
+  "room_count": 21,
   "unlocked": true,
   "finished": true,
   "resume_room_index": 0,
@@ -12,7 +12,20 @@
     "jsons/rooms/0-5.json",
     "jsons/rooms/0-6.json",
     "jsons/rooms/0-7.json",
-    "jsons/rooms/0-8.json"
+    "jsons/rooms/0-8.json",
+    "jsons/rooms/0-9.json",
+    "jsons/rooms/0-10.json",
+    "jsons/rooms/0-11.json",
+    "jsons/rooms/0-12.json",
+    "jsons/rooms/0-13.json",
+    "jsons/rooms/0-14.json",
+    "jsons/rooms/0-15.json",
+    "jsons/rooms/0-16.json",
+    "jsons/rooms/0-17.json",
+    "jsons/rooms/0-18.json",
+    "jsons/rooms/0-19.json",
+    "jsons/rooms/0-20.json",
+    "jsons/rooms/0-21.json"
   ],
   "cards" : {
     "c1" : [
@@ -69,23 +82,21 @@
       "Once caught, release [right mouse button] (or C) to dash forward and shoot orb in the opposite direction. "
     ],
     "c17" : [
-      "You can only catch in mid-air."
-    ],
-    "c18" : [
       "You can chain together catches to cover large distances."
     ],
-    "c19" : [
+    "c18" : [
       "You can chain together catches to cover large distances.",
       "You can timeshift while holding an orb to bring it with you."
     ],
-    "c20" : [
+    "c19" : [
       "This is a guardian; unlike emitters, guardians must be defeated to unlock the gate.",
       "Defeat it by hitting it with a projectile from another time; it is immune to its own projectiles."
     ],
-    "c21" : [
-      "The guardian doesn’t notice you until your first move."
+    "c20" : [
+      "The guardian doesn’t notice you until your first move.",
+      "You can only catch in mid-air. "
     ],
-    "c22" : [
+    "c21" : [
       "There are guardians in the past and the present."
     ]
   }
