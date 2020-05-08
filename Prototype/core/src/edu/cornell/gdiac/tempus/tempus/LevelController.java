@@ -419,6 +419,7 @@ public class LevelController extends WorldController {
 	}
 
 	public void resetGame() {
+
 		// Vector2 gravity = new Vector2(world.getGravity());
 		setComplete(false);
 		setFailure(false);
@@ -429,17 +430,23 @@ public class LevelController extends WorldController {
 		stage.getBatch().setBlendFunction(GL20.GL_SRC_ALPHA,GL20.GL_ONE_MINUS_SRC_ALPHA);
 		canvas.getSpriteBatch().setColor(1,1,1,1);
 		canvas.setBlendState(GameCanvas.BlendState.NO_PREMULT);
-		enemies.clear();
 		numEnemies = 0;
 		paused = false;
 		prepause = false;
 
 		for (Obstacle obj : objects) {
-			if(obj instanceof Enemy){
+//			System.out.println("body type: " + obj.getBody().getUserData());
+			if(obj.getBody().getUserData() instanceof Projectile){
+				System.out.println("DELETING PROJECTILE");
 				obj.deactivatePhysics(world);
 				objects.remove(obj);
 			}
 		}
+
+		enemyController.reset();
+
+//		System.out.println("enemies size: " + enemies.size());
+
 
 		createUI();
 		if(isEndRoom){
@@ -457,7 +464,6 @@ public class LevelController extends WorldController {
 		avatar.setBodyType(BodyDef.BodyType.DynamicBody);
 		avatar.setAnimationState(Avatar.AvatarState.FALLING);
 
-		enemyController.reset();
 
 //		for (Obstacle obj : objects) {
 //			obj.deactivatePhysics(world);
@@ -1003,8 +1009,8 @@ public class LevelController extends WorldController {
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
 				GameStateManager.getInstance().stepGame(false);
-//				reset();
-				resetGame();
+				reset();
+//				resetGame();
 				unpauseGame();
 			}
 		});
@@ -1125,8 +1131,10 @@ public class LevelController extends WorldController {
 		}
 
 		if(failed && countdown==0){
-			resetGame();
+//			resetGame();
+			reset();
 		}
+
 
 //		if (input.didAdvance()) {
 //			active = false;
@@ -1215,7 +1223,8 @@ public class LevelController extends WorldController {
 
 		// Handle resets
 		if (input.didReset()) {
-			resetGame();
+//			resetGame();
+			reset();
 		}
 
 		//check if avatar is in "catch mode"
