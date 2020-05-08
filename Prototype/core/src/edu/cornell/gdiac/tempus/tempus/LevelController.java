@@ -1418,7 +1418,7 @@ public class LevelController extends WorldController {
 			avatar.setAnimationState(Avatar.AvatarState.CROUCHING);
 		} else if (avatar.isSticking()) {
 			// Default animation if player is stationary
-			avatar.animate(Avatar.AvatarState.STANDING, false);
+			avatar.animate(Avatar.AvatarState.STANDING, true);
 			avatar.setAnimationState(Avatar.AvatarState.STANDING);
 		} else if (avatar.getLinearVelocity().y > 0) {
 			avatar.animate(Avatar.AvatarState.DASHING, false);
