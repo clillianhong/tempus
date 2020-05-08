@@ -83,21 +83,7 @@
       "space": 1
     }
   },
-  "diamonds": {
-    "bothdiamond33": {
-      "name": "both_diamond",
-      "pos": [
-        2.048,
-        9.61
-      ],
-      "bodytype": "static",
-      "density": 0,
-      "friction": 0.6,
-      "restitution": 0.1,
-      "texture": "both_diamond",
-      "space": 3
-    }
-  },
+  "diamonds": {},
   "rounds": {
     "bothround32": {
       "name": "both_round",
@@ -132,7 +118,21 @@
     }
   },
   "spikes": {},
-  "talls": {},
+  "talls": {
+    "presenttall21": {
+      "name": "both_tall",
+      "pos": [
+        1.548,
+        8.61
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_tall",
+      "space": 3
+    }
+  },
   "pillars": {},
   "longcapsules": {
     "presentlongcapsule25": {

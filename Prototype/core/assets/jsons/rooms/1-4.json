@@ -8,8 +8,8 @@
   "past_background": "past_background1",
   "door":{
     "pos":[
-      29.5,
-      15.5
+      29,
+      9.5
     ],
     "size":[
       1.92,
@@ -27,7 +27,7 @@
   "avatar":{
     "pos":[
       5.412,
-      5.149999999999999
+      6.649999999999999
     ],
     "shrink":[
       0.0216,
@@ -67,20 +67,7 @@
       "name":"both_capsule",
       "pos":[
         4.072,
-        3.21
-      ],
-      "bodytype":"static",
-      "density":0,
-      "friction":0.6,
-      "restitution":0.1,
-      "texture":"both_capsule",
-      "space":3
-    },
-    "capsule3":{
-      "name":"both_capsule",
-      "pos":[
-        19.496,
-        5.19
+        4.71
       ],
       "bodytype":"static",
       "density":0,
@@ -105,17 +92,17 @@
   },
   "diamonds":{
     "diamond1":{
-      "name":"present_diamond",
+      "name":"both_diamond",
       "pos":[
-        8.456,
-        6.99
+        19.496,
+        4.19
       ],
       "bodytype":"static",
       "density":0,
       "friction":0.6,
       "restitution":0.1,
-      "texture":"present_diamond",
-      "space":1
+      "texture":"both_diamond",
+      "space":3
     }
   },
   "rounds":{
@@ -135,7 +122,7 @@
       "density":1,
       "bodytype":"dynamic",
       "entitytype":"present",
-      "cooldown":250,
+      "cooldown":360,
       "aitype":1
     },
     "enemy2":{
@@ -151,7 +138,7 @@
       "density":1,
       "bodytype":"dynamic",
       "entitytype":"present",
-      "cooldown":250,
+      "cooldown":360,
       "aitype":1
     }
   },
@@ -162,7 +149,7 @@
     "pasttall14":{
       "name":"past_tall",
       "pos":[
-        13.768,
+        15.768,
         11.1
       ],
       "bodytype":"static",
@@ -207,6 +194,19 @@
       "pos":[
         24.776,
         2.85
+      ],
+      "bodytype":"static",
+      "density":0,
+      "friction":0.6,
+      "restitution":0.1,
+      "texture":"present_longcapsule",
+      "space":1
+    },
+    "presentlongcapsule13":{
+      "name":"present_longcapsule",
+      "pos":[
+        9.456,
+        6.99
       ],
       "bodytype":"static",
       "density":0,
