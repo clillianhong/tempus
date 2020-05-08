@@ -31,6 +31,7 @@ import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.controllers.*;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -59,6 +60,8 @@ public class LoadingMode implements Screen {
 	private static final String FLOWER_2_FILE = "textures/gui/loadingmode/flower2.png";
 	private static final String FLOWER_3_FILE = "textures/gui/loadingmode/flower3.png";
 	private static final String FLOWER_4_FILE = "textures/gui/loadingmode/flower4.png";
+	private static final String FLUZ_FILE = "textures/gui/loadingmode/fluz_loading_filmstrip.png";
+	private static final String CIRCLE_FILE = "textures/gui/loadingmode/glowingcircle_new.png";
 
 	private boolean shouldBeRendered;
 	/** Background texture for start-up */
@@ -71,11 +74,17 @@ public class LoadingMode implements Screen {
 	private Texture flower3;
 	/** Flower texture 4 */
 	private Texture flower4;
+	/** Fluz Filmstrip */
+	private FilmStrip fluz;
+	/** Glowing Circle */
+	private Texture glowCircle;
 
 
 
 	int sw = 1920/2;
 	int sh = 1080/2;
+	float animeframe = 0.0f;
+	float circleAngle = 0.0f;
 	/** Default budget for asset loader (do nothing but load 60 fps) */
 	private static int DEFAULT_BUDGET = 15;
 
@@ -172,7 +181,6 @@ public class LoadingMode implements Screen {
 		Gdx.input.setInputProcessor(stage);
 		stage.getCamera().viewportWidth = sw;
 		stage.getCamera().viewportHeight = sh;
-
 		Table bg = new Table();
 		bg.setBackground(new TextureRegionDrawable(background));
 		bg.setFillParent(true);
@@ -197,21 +205,12 @@ public class LoadingMode implements Screen {
 		loadingLabel = new Label("Loading . . .", carterStyle);
 		loadingLabel.setHeight(loadingHeight);
 		loadingLabel.setWidth(loadingWidth);
-		loadingLabel.setPosition(canvas.getWidth()- 1.3f*loadingWidth, canvas.getHeight()/2);
+		loadingLabel.setPosition(canvas.getWidth()/2 - loadingWidth/2, canvas.getHeight()/10);
 
-		BitmapFont font2 = new BitmapFont(Gdx.files.internal("fonts/carterone.fnt"));
+		Texture fluzTexture = new Texture(FLUZ_FILE);
+		fluz = new FilmStrip(fluzTexture, 4, 4, 14);
 
-		font2.getData().setScale(0.75f);
-		String percentMessage = (this.progress*100) + "%";
-		Label.LabelStyle carterStyle2 = new Label.LabelStyle(font2, Color.WHITE);
-		percentLabel = new Label(percentMessage, carterStyle2);
-		glyphLayout.setText(font2, percentMessage);
-		percentLabel.setHeight(glyphLayout.height);
-		percentLabel.setWidth(glyphLayout.width);
-//		percentLabel.setFontScale(0.75f);
-		percentLabel.setPosition(canvas.getWidth()- 1.3f*loadingWidth, canvas.getHeight()/2 - loadingHeight*1.1f);
-
-		stage.addActor(percentLabel);
+		glowCircle = new Texture(CIRCLE_FILE);
 		stage.addActor(loadingLabel);
 
 		// Custom cursor texture
@@ -248,8 +247,11 @@ public class LoadingMode implements Screen {
 		if (progress >= 1.0f) {
 			this.progress = 1.0f;
 		}
-		String percentMessage = (this.progress*100) + "%";
-		percentLabel.setText(percentMessage);
+		animeframe += 0.12f;
+		if (animeframe >= 14) {
+			animeframe -= 14;
+		}
+		circleAngle += 0.1f;
 	}
 
 	String loadingMessage;
@@ -263,8 +265,19 @@ public class LoadingMode implements Screen {
 	 */
 	private void draw() {
 		canvas.clear();
+
 		stage.draw();
 		stage.act();
+
+		// draw fluz and circle
+		fluz.setFrame((int)animeframe);
+		canvas.begin();
+		canvas.draw(fluz, Color.WHITE, fluz.getRegionWidth()/2.0f, fluz.getRegionHeight()/2.0f,
+				canvas.getWidth()/2, 3 * canvas.getHeight()/5.0f, 0.0f, 0.3f, 0.3f);
+		canvas.draw(glowCircle, Color.WHITE, glowCircle.getWidth()/2.0f, glowCircle.getHeight()/2.0f,
+				canvas.getWidth()/2, 3 * canvas.getHeight()/5.0f, circleAngle, 1.2f, 1.2f);
+
+		canvas.end();
 	}
 	
 	/**
