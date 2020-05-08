@@ -44,9 +44,6 @@ public class TutorialController extends LevelController {
     private Table cutsceneTable;
     private Container cutCont;
 
-    private Container<Stack> edgeContainer;
-    private Stack tableStack;
-
 
     /**
      * Creates and initialize a new instance of the tutorial level
@@ -90,90 +87,90 @@ public class TutorialController extends LevelController {
         float sw = canvas.getWidth();
         float sh = canvas.getHeight();
 
-        // table container to center main table
-        edgeContainer = new Container<Stack>();
-        edgeContainer.setSize(sw, sh);
-        edgeContainer.setPosition(0, 0);
-        edgeContainer.fillX();
-        edgeContainer.fillY();
-
-        tableStack = new Stack();
-
-        /*
-         * START PAUSE SCREEN SETUP ---------------------
-         */
-        TextureRegionDrawable pauseButtonResource = new TextureRegionDrawable(
-                new TextureRegion(new Texture(Gdx.files.internal("textures/gui/pausebutton.png"))));
-        TextureRegionDrawable pauseBG = new TextureRegionDrawable(
-                new TextureRegion(new Texture(Gdx.files.internal("textures/gui/pause_filter_50_black.png"))));
-        TextureRegionDrawable pauseBox = new TextureRegionDrawable(
-                new TextureRegion(new Texture(Gdx.files.internal("textures/gui/frame_pause.png"))));
-        TextureRegionDrawable resumeResource = new TextureRegionDrawable(
-                new TextureRegion(new Texture(Gdx.files.internal("textures/gui/pause_resume_button.png"))));
-        TextureRegionDrawable restartResource = new TextureRegionDrawable(
-                new TextureRegion(new Texture(Gdx.files.internal("textures/gui/pause_restart_button.png"))));
-        TextureRegionDrawable exitResource = new TextureRegionDrawable(
-                new TextureRegion(new Texture(Gdx.files.internal("textures/gui/pause_exit_button.png"))));
-
-
-//        press_h_card = new TextureRegionDrawable(
-//                new TextureRegion(new Texture(Gdx.files.internal("tutorial/helpcard.png"))));
-
-        pauseButtonContainer = new Container<>();
-        pauseButtonContainer.setBackground(pauseBG);
-        pauseButtonContainer.setPosition(0, 0);
-        pauseButtonContainer.fillX();
-        pauseButtonContainer.fillY();
-
-        pauseTable = new Table();
-        //pauseTable.background(pauseBox);
-        pauseButtonContainer.setActor(pauseTable);
-        pauseButtonContainer.setVisible(false);
-
-        Button resumeButton = new Button(resumeResource);
-        resumeButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                super.clicked(event, x, y);
-                unpauseGame();
-            }
-        });
-
-        Button restartButton = new Button(restartResource);
-        restartButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                super.clicked(event, x, y);
-                reset();
-                unpauseGame();
-            }
-        });
-
-        Button exitButton = new Button(exitResource);
-        exitButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                super.clicked(event, x, y);
-                exitLevelSelect();
-            }
-        });
-        pauseTable.add(resumeButton).width(sw / 4 / 1.5f).height(sh / 5.1f / 1.5f).center().expandX().padBottom(sh / 20);
-        pauseTable.row();
-        pauseTable.add(restartButton).width(sw / 4 / 1.5f).height(sh / 5.1f / 1.5f).center().expandX().padBottom(sh / 20);
-        ;
-        pauseTable.row();
-        pauseTable.add(exitButton).width(sw / 4 / 1.5f).height(sh / 5.1f / 1.5f).expandX();
+        super.createUI();
+//        // table container to center main table
+//        edgeContainer = new Container<Stack>();
+//        edgeContainer.setSize(sw, sh);
+//        edgeContainer.setPosition(0, 0);
+//        edgeContainer.fillX();
+//        edgeContainer.fillY();
+//
+//
+//        /*
+//         * START PAUSE SCREEN SETUP ---------------------
+//         */
+//        TextureRegionDrawable pauseButtonResource = new TextureRegionDrawable(
+//                new TextureRegion(new Texture(Gdx.files.internal("textures/gui/pausebutton.png"))));
+//        TextureRegionDrawable pauseBG = new TextureRegionDrawable(
+//                new TextureRegion(new Texture(Gdx.files.internal("textures/gui/pause_filter_50_black.png"))));
+//        TextureRegionDrawable pauseBox = new TextureRegionDrawable(
+//                new TextureRegion(new Texture(Gdx.files.internal("textures/gui/frame_pause.png"))));
+//        TextureRegionDrawable resumeResource = new TextureRegionDrawable(
+//                new TextureRegion(new Texture(Gdx.files.internal("textures/gui/pause_resume_button.png"))));
+//        TextureRegionDrawable restartResource = new TextureRegionDrawable(
+//                new TextureRegion(new Texture(Gdx.files.internal("textures/gui/pause_restart_button.png"))));
+//        TextureRegionDrawable exitResource = new TextureRegionDrawable(
+//                new TextureRegion(new Texture(Gdx.files.internal("textures/gui/pause_exit_button.png"))));
+//
+//
+////        press_h_card = new TextureRegionDrawable(
+////                new TextureRegion(new Texture(Gdx.files.internal("tutorial/helpcard.png"))));
+//
+//        pauseButtonContainer = new Container<>();
+//        pauseButtonContainer.setBackground(pauseBG);
+//        pauseButtonContainer.setPosition(0, 0);
+//        pauseButtonContainer.fillX();
+//        pauseButtonContainer.fillY();
+//
+//        pauseTable = new Table();
+//        //pauseTable.background(pauseBox);
+//        pauseButtonContainer.setActor(pauseTable);
+//        pauseButtonContainer.setVisible(false);
+//
+//        Button resumeButton = new Button(resumeResource);
+//        resumeButton.addListener(new ClickListener() {
+//            @Override
+//            public void clicked(InputEvent event, float x, float y) {
+//                super.clicked(event, x, y);
+//                unpauseGame();
+//            }
+//        });
+//
+//        Button restartButton = new Button(restartResource);
+//        restartButton.addListener(new ClickListener() {
+//            @Override
+//            public void clicked(InputEvent event, float x, float y) {
+//                super.clicked(event, x, y);
+//                reset();
+//                unpauseGame();
+//            }
+//        });
+//
+//        Button exitButton = new Button(exitResource);
+//        exitButton.addListener(new ClickListener() {
+//            @Override
+//            public void clicked(InputEvent event, float x, float y) {
+//                super.clicked(event, x, y);
+//                exitLevelSelect();
+//            }
+//        });
+//        pauseTable.add(resumeButton).width(sw / 4 / 1.5f).height(sh / 5.1f / 1.5f).center().expandX().padBottom(sh / 20);
+//        pauseTable.row();
+//        pauseTable.add(restartButton).width(sw / 4 / 1.5f).height(sh / 5.1f / 1.5f).center().expandX().padBottom(sh / 20);
+//        ;
+//        pauseTable.row();
+//        pauseTable.add(exitButton).width(sw / 4 / 1.5f).height(sh / 5.1f / 1.5f).expandX();
 
         tutorialCard = new Table();
-        tutorialCard.setBackground(pauseBG);
         tutorialCard.setPosition(0, 0);
         tutorialCard.setBackground(tutorial_card);
         tutorialCard.setVisible(false);
 
         helpCard = new Table();
 
-        tableStack.add(table);
-        tableStack.add(pauseButtonContainer);
+        System.out.println("tablestack " + tableStack);
+//        tableStack.add(table);
+//        tableStack.add(pauseButtonContainer);
         tableStack.add(tutorialCard);
         helpCard.setVisible(true);
         tableStack.add(helpCard);
@@ -186,17 +183,19 @@ public class TutorialController extends LevelController {
 
         if(first){
             createCutScene(edgeContainer);
-        }else{
-            if(GameStateManager.getInstance().lastRoom()){
-                createEndlevelUI(tableStack);
-            }
-            edgeContainer.setActor(tableStack);
         }
 
+//        else{
+//            if(GameStateManager.getInstance().lastRoom()){
+//                createEndlevelUI(tableStack);
+//            }
+//            edgeContainer.setActor(tableStack);
+//        }
+
         stage.addActor(edgeContainer);
-        Gdx.input.setInputProcessor(stage);
-        stage.getCamera().update();
-        stage.getViewport().apply();
+//        Gdx.input.setInputProcessor(stage);
+//        stage.getCamera().update();
+//        stage.getViewport().apply();
 
         showTutorial();
 

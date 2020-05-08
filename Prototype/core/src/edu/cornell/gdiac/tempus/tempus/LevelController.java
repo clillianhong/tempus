@@ -64,6 +64,8 @@ public class LevelController extends WorldController {
 	protected Container pauseButtonContainer;
 	private TextureRegionDrawable overlayBG;
 	private TextureRegion overlayDark;
+	protected Container<Stack> edgeContainer;
+	protected Stack tableStack;
 
 	protected Table endlevelTable;
 	protected Container endlevelContainer;
@@ -858,13 +860,13 @@ public class LevelController extends WorldController {
 	public void createUI() {
 
 		// table container to center main table
-		Container<Stack> edgeContainer = new Container<Stack>();
+		edgeContainer = new Container<Stack>();
 		edgeContainer.setSize(sw, sh);
 		edgeContainer.setPosition(0, 0);
 		edgeContainer.fillX();
 		edgeContainer.fillY();
 
-		Stack tableStack = new Stack();
+		tableStack = new Stack();
 
 		/*
 		 * START PAUSE SCREEN SETUP ---------------------
