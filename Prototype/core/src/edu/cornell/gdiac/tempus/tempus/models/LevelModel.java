@@ -91,8 +91,7 @@ public class LevelModel {
         current_room_idx = current_room_idx + 1;
         highest_room_unlocked = Math.max(highest_room_unlocked, current_room_idx);
         if(current_room_idx == rooms.length){
-            //TODO: ROOM END SCREEN
-            //current_room.stopMusic();
+            current_room_idx = 0;
             return true;
         }
         current_room = rooms[current_room_idx];
@@ -112,6 +111,8 @@ public class LevelModel {
 
     public void unlockLevel(){
         level_unlocked = true;
+        current_room_idx = 0;
+        current_room = rooms[0];
     }
 
     public void lockLevel(){

@@ -63,6 +63,7 @@ public class LevelController extends WorldController {
 	protected Table pauseTable;
 	protected Container pauseButtonContainer;
 	private TextureRegionDrawable overlayBG;
+	private TextureRegion overlayDark;
 
 	protected Table endlevelTable;
 	protected Container endlevelContainer;
@@ -271,6 +272,8 @@ public class LevelController extends WorldController {
 	protected Door goalDoor;
 	/** is tutorial mode */
 	protected boolean isTutorial;
+	/** is end of level room */
+	protected boolean isEndRoom;
 
 	/** The information of all the enemies */
 	protected int NUMBER_ENEMIES = 2;
@@ -390,6 +393,8 @@ public class LevelController extends WorldController {
 		shifted = false;
 		ripple_intensity = 0.009f;
 		rippleSpeed = 0.25f;
+		rippleOn = false;
+
 		begincount = 10;
 		// world = new World(gravity, false);
 		world.setContactListener(collisionController);
@@ -399,6 +404,75 @@ public class LevelController extends WorldController {
 		levelFormat = jsonReader.parse(Gdx.files.internal(json_filepath));
 
 		populateLevel();
+		goalDoor.setOpen(false);
+		goalDoor.setAnimationState(Door.DoorState.LOCKED);
+		timeFreeze = false;
+
+		canvas.updateSpriteBatch();
+		viewport.getCamera().update();
+		viewport.apply();
+		stage.getCamera().update();
+		stage.getViewport().apply();
+
+	}
+
+	public void resetGame() {
+		// Vector2 gravity = new Vector2(world.getGravity());
+		setComplete(false);
+		setFailure(false);
+		drawEndRoom = false;
+		drawFadeAlpha = 0;
+		stage.clear();
+		stage.getBatch().setColor(1,1,1,1);
+		stage.getBatch().setBlendFunction(GL20.GL_SRC_ALPHA,GL20.GL_ONE_MINUS_SRC_ALPHA);
+		canvas.getSpriteBatch().setColor(1,1,1,1);
+		canvas.setBlendState(GameCanvas.BlendState.NO_PREMULT);
+
+		numEnemies = 0;
+		paused = false;
+		prepause = false;
+
+		createUI();
+		if(isEndRoom){
+			closeWinLevel();
+		}
+
+		avatar.setEnemyContact(false);
+		avatar.setCatchReady(false);
+		avatar.setPosition(avatarStart);
+		avatar.setLives(5);
+		avatar.getBody().setLinearVelocity(0, 0);
+		avatar.setHolding(false);
+		avatar.setHeldBullet(null);
+		avatar.setAngle(0);
+		avatar.setBodyType(BodyDef.BodyType.DynamicBody);
+		avatar.setAnimationState(Avatar.AvatarState.FALLING);
+
+		enemyController.reset();
+
+//		for (Obstacle obj : objects) {
+//			obj.deactivatePhysics(world);
+//		}
+//		objects.clear();
+//		addQueue.clear();
+//		world.dispose();
+
+		shifted = false;
+		ripple_intensity = 0.009f;
+		rippleSpeed = 0.25f;
+		rippleOn = false;
+		begincount = 0;
+		updateShader();
+		// world = new World(gravity, false);
+		world.setContactListener(collisionController);
+		// world.setContactListener(this);
+
+//		levelFormat = jsonReader.parse(Gdx.files.internal(json_filepath));
+
+		rePopulateLevel();
+		timeFreeze = false;
+		enemyController.setPlayerVisible(false);
+//		populateLevel();
 		goalDoor.setOpen(false);
 		goalDoor.setAnimationState(Door.DoorState.LOCKED);
 		timeFreeze = false;
@@ -596,6 +670,181 @@ public class LevelController extends WorldController {
 	}
 
 	/**
+	 * Lays out the game geography.
+	 */
+	private void rePopulateLevel() {
+
+		// tester stage!
+//		skin = new Skin(Gdx.files.internal("jsons/uiskin.json"));
+//		stage = new Stage(viewport);
+//		Gdx.input.setInputProcessor(stage);//BUGGY CHANGE?
+//		table = new Table();
+//		table.setWidth(stage.getWidth());
+//		table.align(Align.center | Align.top);
+//		table.setPosition(0, sh);
+
+		//initialize backgrounds
+//		pastBackgroundTexture = JsonAssetManager.getInstance().getEntry(levelFormat.get("past_background").asString(),
+//				TextureRegion.class);
+//		presentBackgroundTexture = JsonAssetManager.getInstance().getEntry(levelFormat.get("present_background").asString(),
+//				TextureRegion.class);
+//		bgSprite = new Sprite(presentBackgroundTexture);
+
+//		win_room = new TextureRegion(new Texture(Gdx.files.local("textures/background/blackscreen.png")));
+//		createUI();
+
+		// Initializes the world
+//		float gravity = levelFormat.getFloat("gravity");
+//		float[] pSize = levelFormat.get("bounds").asFloatArray();
+//		world = new World(new Vector2(0, gravity), false);
+//		bounds = new Rectangle(0, 0, pSize[0], pSize[1]);
+//		scale.x = canvas.getWidth() / pSize[0];
+//		scale.y = canvas.getHeight() / pSize[1];
+		// Add level goal
+//		goalDoor = new Door();
+//		goalDoor.initialize(levelFormat.get("door"));
+
+//		goalDoor.setDrawScale(scale);
+//		addObject(goalDoor);
+
+//		earthTile = JsonAssetManager.getInstance().getEntry("earth", TextureRegion.class);
+//		String nameWall = "wall";
+//		for (int ii = 0; ii < WALLS.length; ii++) {
+//			PolygonObstacle obj;
+//			obj = new Platform(WALLS[ii], 0, 0);
+//			obj.setBodyType(BodyDef.BodyType.StaticBody);
+//			obj.setDensity(BASIC_DENSITY);
+//			obj.setFriction(BASIC_FRICTION);
+//			obj.setRestitution(BASIC_RESTITUTION);
+//			obj.setDrawScale(scale);
+//			obj.setTexture(earthTile);
+//			obj.setName(nameWall);
+//			// addObject(obj);
+//		}
+
+//		String namePlatform = "platform";
+//		for (int ii = 0; ii < PLATFORMS.length; ii++) {
+//			PolygonObstacle obj;
+//			obj = new Platform(PLATFORMS[ii], 0, 0);
+//			obj.setBodyType(BodyDef.BodyType.StaticBody);
+//			obj.setDensity(BASIC_DENSITY);
+//			obj.setFriction(BASIC_FRICTION);
+//			obj.setRestitution(BASIC_RESTITUTION);
+//			obj.setDrawScale(scale);
+//			obj.setTexture(earthTile);
+//			obj.setName(namePlatform);
+//			if (ii <= PLATFORMS.length / 2) {
+//				obj.setSpace(1);
+//			}
+//			if (ii > PLATFORMS.length / 2) {
+//				obj.setSpace(2);
+//			}
+//			// addObject(obj);
+//		}
+//		float[] newPlatCapsule = {0.5f, 1.1f, 0.6f, 1.1f, 2.5f, 1.1f, 2.6f, 1.1f, 2.6f, 0.6f, 2.0f, 0.3f, 1.1f, 0.3f, 0.5f, 0.6f};
+//		float[] newPlatDiamond = {0.4f, 1.8f, 0.5f, 1.8f, 2.1f, 1.8f, 2.2f, 1.8f, 1.4f, 0.1f};
+//		float[] newPlatRounded = {0.4f, 1.4f, 0.8f, 1.7f, 2.1f, 1.7f, 2.4f, 1.4f, 2.3f, 0.8f, 1.7f, 0.3f, 1.1f, 0.3f};
+//		float[] newSpikes = {0.3f, -0.6f, 0.0f, -0.2f, -0.6f, 0.0f, -0.5f, 0.4f, 0.0f, 0.6f, 0.4f, -0.2f, 0.6f, -0.3f};
+//		float[] newPlatLongcapsule = {0.5f, 1.1f, 0.6f, 1.1f, 4.8f, 1.1f, 4.9f, 1.1f, 4.9f, 0.6f, 4.3f, 0.3f, 3.4f, 0.3f,
+//				2.7f, 0.5f, 2.0f, 0.3f, 1.1f, 0.3f, 0.5f, 0.6f};
+//		float[] newPlatTall = {0.4f, 3.9f, 0.5f, 3.9f, 1.6f, 3.9f, 1.7f, 3.9f, 1.1f, 0.5f};
+//		float[] newPlatPillar = {1.2f, 4.0f, 1.3f, 4.0f, 2.0f, 4.0f, 2.1f, 4.0f, 2.1f, 1.0f, 1.2f, 1.0f};
+
+
+//		JsonValue capsule = levelFormat.get("capsules").child();
+//		while (capsule != null) {
+//			Platform obj = new Platform(newPlatCapsule);
+//			obj.initialize(capsule);
+//			obj.setDrawScale(scale);
+//			addObject(obj);
+//			capsule = capsule.next();
+//		}
+
+//		JsonValue longcapsule = levelFormat.get("longcapsules").child();
+//		while (longcapsule != null) {
+//			Platform obj = new Platform(newPlatLongcapsule);
+//			obj.initialize(longcapsule);
+//			obj.setDrawScale(scale);
+//			addObject(obj);
+//			longcapsule = longcapsule.next();
+//		}
+
+//		JsonValue pillar = levelFormat.get("pillars").child();
+//		while (pillar != null) {
+//			Platform obj = new Platform(newPlatPillar);
+//			obj.initialize(pillar);
+//			obj.setDrawScale(scale);
+//			addObject(obj);
+//			pillar = pillar.next();
+//		}
+
+//		JsonValue tall = levelFormat.get("talls").child();
+//		while (tall != null) {
+//			Platform obj = new Platform(newPlatTall);
+//			obj.initialize(tall);
+//			obj.setDrawScale(scale);
+//			addObject(obj);
+//			tall = tall.next();
+//		}
+//		JsonValue diamond = levelFormat.get("diamonds").child();
+//		while (diamond != null) {
+//			Platform obj = new Platform(newPlatDiamond);
+//			obj.initialize(diamond);
+//			obj.setDrawScale(scale);
+//			addObject(obj);
+//			diamond = diamond.next();
+//		}
+//		JsonValue round = levelFormat.get("rounds").child();
+//		while (round != null) {
+//			Platform obj = new Platform(newPlatRounded);
+//			obj.initialize(round);
+//			obj.setDrawScale(scale);
+//			addObject(obj);
+//			round = round.next();
+//		}
+//		JsonValue spikes = levelFormat.get("spikes").child();
+//		while (spikes != null) {
+//			Spikes obj = new Spikes(newSpikes);
+//			obj.initialize(spikes);
+//			obj.setDrawScale(scale);
+//			addObject(obj);
+//			spikes = spikes.next();
+//		}
+		// Create avatar
+//		JsonValue json = levelFormat.get("avatar");
+//		avatar = new Avatar();
+//		avatar.setCanvas(camera);
+//		avatar.setDrawScale(scale);
+//		avatar.initialize(json);
+//		addObject(avatar);
+//		float[] pos = json.get("pos").asFloatArray();
+//		avatarStart = new Vector2(pos[0], pos[1]);
+
+		bgSprite = new Sprite(presentBackgroundTexture);
+		JsonValue enemy = levelFormat.get("enemies").child();
+		while (enemy != null) {
+			Enemy obj = new Enemy(avatar, enemy);
+			obj.setDrawScale(scale);
+			addEnemy(obj);
+			numEnemies++;
+			enemy = enemy.next();
+		}
+
+
+		JsonValue turret = levelFormat.get("turrets").child();
+		while (turret != null) {
+			Enemy obj = new Enemy(turret);
+			obj.setDrawScale(scale);
+			addEnemy(obj);
+			turret = turret.next();
+		}
+
+		collisionController = new CollisionController(this);
+		enemyController = new EnemyController(enemies, objects, avatar, world, scale, this, assetDirectory);
+		world.setContactListener(collisionController);
+	}
+
+	/**
 	 * Creates all UI features for a room mode.
 	 *
 	 */
@@ -615,8 +864,8 @@ public class LevelController extends WorldController {
 		 */
 		TextureRegionDrawable pauseButtonResource = new TextureRegionDrawable(
 				new TextureRegion(new Texture(Gdx.files.internal("textures/gui/pausebutton.png"))));
-		overlayBG = new TextureRegionDrawable(
-				new TextureRegion(new Texture(Gdx.files.internal("textures/gui/pause_filter_50_black.png"))));
+		overlayDark = new TextureRegion(new Texture(Gdx.files.internal("textures/gui/pause_filter_50_black.png")));
+		overlayBG = new TextureRegionDrawable(overlayDark);
 		TextureRegionDrawable pauseBox = new TextureRegionDrawable(
 				new TextureRegion(new Texture(Gdx.files.internal("textures/gui/frame_pause.png"))));
 		TextureRegionDrawable resumeResource = new TextureRegionDrawable(
@@ -650,7 +899,7 @@ public class LevelController extends WorldController {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
-				reset();
+				resetGame();
 				unpauseGame();
 			}
 		});
@@ -677,8 +926,9 @@ public class LevelController extends WorldController {
 		 */
 
 		/* START END-GAME SCREEN CREATION */
-
+		isEndRoom = false;
 		if(GameStateManager.getInstance().lastRoom()){
+			isEndRoom = true;
 			createEndlevelUI(tableStack);
 		}
 
@@ -689,7 +939,6 @@ public class LevelController extends WorldController {
 	}
 
 	public void createEndlevelUI(Stack tableStack){
-		System.out.println("does this get created");
 		endlevelContainer = new Container<>();
 		endlevelContainer.setBackground(overlayBG);
 		endlevelContainer.setPosition(0, 0);
@@ -733,9 +982,7 @@ public class LevelController extends WorldController {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
-
-				GameStateManager.getInstance().stepGame(false);
-
+				GameStateManager.getInstance().stepGame(true);
 				exitNextRoom();
 			}
 		});
@@ -746,7 +993,8 @@ public class LevelController extends WorldController {
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
 				GameStateManager.getInstance().stepGame(false);
-				reset();
+//				reset();
+				resetGame();
 				unpauseGame();
 			}
 		});
@@ -866,8 +1114,8 @@ public class LevelController extends WorldController {
 			return false;
 		}
 
-		if(failed){
-			reset();
+		if(failed && countdown==0){
+			resetGame();
 		}
 
 //		if (input.didAdvance()) {
@@ -882,16 +1130,14 @@ public class LevelController extends WorldController {
 
 		if (countdown > 0) {
 			countdown--;
-		} else if (countdown == 0) {
-			if (complete) {
+		} else if (countdown == 0 && complete) {
 				if(GameStateManager.getInstance().lastRoom()){
 					showWinLevel();
 				}else{
-					GameStateManager.getInstance().stepGame(false);
+					GameStateManager.getInstance().stepGame(true);
 					listener.exitScreen(this, ScreenExitCodes.EXIT_NEXT.ordinal());
 				}
 				return false;
-			}
 		}
 
 		// enemy.createLineOfSight(world);
@@ -959,7 +1205,7 @@ public class LevelController extends WorldController {
 
 		// Handle resets
 		if (input.didReset()) {
-			reset();
+			resetGame();
 		}
 
 		//check if avatar is in "catch mode"
@@ -1574,8 +1820,17 @@ public class LevelController extends WorldController {
 
 
 			} else if (failed) {
-				displayFont.setColor(Color.WHITE);
-				canvas.drawTextCentered("FAILURE", displayFont, 0.0f);
+//				rippleOn = true;
+//				rippleSpeed = 0.1f;
+//				ripple_intensity = 0.2f;
+//				updateShader();
+//				displayFont.setColor(Color.WHITE);
+				canvas.draw(overlayDark,Color.WHITE, 0, 0, sw, sh);
+//				canvas.drawTextCentered("FAILURE", displayFont, 0.0f);
+			}
+
+			if(!enemyController.getPlayerVisible()){
+				canvas.draw(overlayDark,Color.WHITE, 0, 0, sw, sh);
 			}
 
 			canvas.end();
