@@ -333,7 +333,7 @@ public class EnemyController {
         Random random = new Random();
         f.groupIndex = (short) -random.nextInt(Short.MAX_VALUE + 1);
         for (Fixture fix: enemy.getFixtures()) {
-            if (fix.getUserData() == null || !fix.getUserData().equals(enemy.getEnemyCenterSensorName())) {
+            if (fix.getUserData() == null) {
                 fix.setFilterData(f);
             }
         }
