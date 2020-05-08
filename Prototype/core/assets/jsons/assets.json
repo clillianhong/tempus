@@ -251,6 +251,22 @@
     "ripple_to_present": {
       "file": "sounds/ripple_less_piercing.mp3",
       "volume": 0.8
+    },
+    "door_unlock": {
+      "file": "sounds/correct_door_unlock_sound.mp3",
+      "volume": 0.2
+    },
+    "door_entry": {
+      "file": "sounds/door_entry_metal_swirl.mp3",
+      "volume": 0.2
+    },
+    "dash": {
+      "file": "sounds/dash.mp3",
+      "volume": 0.5
+    },
+    "dash2": {
+      "file": "sounds/double_dash_pitched_more.mp3",
+      "volume": 0.5
     }
   },
   "music": {
@@ -305,28 +321,28 @@
       "size": 20
     },
     "avatarstanding": {
-      "file": "filmstrips/avatar_standing_lv_1.png",
-      "rows": 1,
-      "cols": 1,
-      "size": 1
+      "file": "filmstrips/avatar_standing.png",
+      "rows": 3,
+      "cols": 4,
+      "size": 10
     },
     "avatarcrouching": {
-      "file": "filmstrips/avatar_beginDash_lv_1.png",
-      "rows": 1,
+      "file": "filmstrips/avatar_beginDash.png",
+      "rows": 2,
       "cols": 2,
-      "size": 2
+      "size": 4
     },
     "avatardashing": {
-      "file": "filmstrips/avatar_dashing_lv_1.png",
-      "rows": 1,
-      "cols": 3,
-      "size": 3
+      "file": "filmstrips/avatar_dashing.png",
+      "rows": 2,
+      "cols": 2,
+      "size": 4
     },
     "avatarfalling": {
-      "file": "filmstrips/avatar_falling_lv_1.png",
-      "rows": 1,
+      "file": "filmstrips/avatar_falling.png",
+      "rows": 2,
       "cols": 3,
-      "size": 3
+      "size": 5
     },
     "enemywalking_present": {
       "file": "filmstrips/enemy/enemy_shooting_present.png",

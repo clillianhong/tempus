@@ -364,6 +364,8 @@ public class Enemy extends CapsuleObstacle {
         dead = true;
     }
 
+
+
     /**
      * Returns whether the enemy is dead or not
      *

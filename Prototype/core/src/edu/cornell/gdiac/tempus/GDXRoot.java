@@ -57,10 +57,13 @@ public class GDXRoot extends Game implements ScreenListener {
 	private SelectLevelMode levelselect;
 	/** Help Menu mode */
 	private HelpMode helpmenu;
+	/** About Menu mode */
+	private AboutMode aboutmenu;
 	/** Game State Manager **/
 	private GameStateManager gameManager;
 	/** Room Select Mode tester */
 	private SelectRoomMode roomSelectMode;
+
 
 	/**
 	 * Creates a new game from the configuration settings.
@@ -100,6 +103,7 @@ public class GDXRoot extends Game implements ScreenListener {
 		menu = new MainMenuMode();
 		levelselect = new SelectLevelMode();
 		helpmenu = new HelpMode();
+		aboutmenu = new AboutMode();
 		current = 0;
 		loading.setScreenListener(this);
 		roomSelectMode = new SelectRoomMode(0);
@@ -216,6 +220,11 @@ public class GDXRoot extends Game implements ScreenListener {
 				setScreen(levelselect);
 			} else if (exitCode == ScreenExitCodes.MENU_ABOUT.ordinal()) {
 				// TODO menu about hookup
+				aboutmenu.createMode();
+				aboutmenu.setScreenListener(this);
+				aboutmenu.setCanvas(canvas);
+				MusicController.getInstance().stopAll();
+				setScreen(aboutmenu);
 			} else if (exitCode == ScreenExitCodes.MENU_HELP.ordinal()) {
 				// TODO menu help hookup
 				helpmenu.createMode();
@@ -252,6 +261,14 @@ public class GDXRoot extends Game implements ScreenListener {
 
 			}
 		} else if (screen == helpmenu) {
+			if (exitCode == ScreenExitCodes.EXIT_PREV.ordinal()) {
+				menu.createMode();
+				menu.setScreenListener(this);
+				menu.setCanvas(canvas);
+				setScreen(menu);
+			}
+		}
+		else if (screen == aboutmenu) {
 			if (exitCode == ScreenExitCodes.EXIT_PREV.ordinal()) {
 				menu.createMode();
 				menu.setScreenListener(this);
