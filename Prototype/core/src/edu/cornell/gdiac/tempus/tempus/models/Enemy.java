@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.gdiac.tempus.GameCanvas;
 import edu.cornell.gdiac.tempus.obstacle.CapsuleObstacle;
@@ -51,7 +52,7 @@ public class Enemy extends CapsuleObstacle {
     /** The factor to multiply by the input */
     private static final float FORCE = 2500.0f;
     /** The factor for flying force */
-    private static final float FLY_FORCE = 30.0f;
+    private static final float FLY_FORCE = 50.0f;
     /** The amount to slow the enemy down */
     private static final float ENEMY_DAMPING = 10.0f;
     /** The maximum enemy speed */
@@ -60,8 +61,8 @@ public class Enemy extends CapsuleObstacle {
     /** Height of the sensor attached to the player's feet */
     private static final float SENSOR_HEIGHT = 0.05f;
     private static final float DENSITY = 1.0F;
-    private static final String GROUND_SENSOR_NAME = "EnemyGroundSensor";
-    private static final String CENTER_SENSOR_NAME = "EnemyCenterSensor";
+    private static final String ENEMY_CENTER_SENSOR = "EnemyCenterSensor";
+    private static final String ENEMY_GROUND_SENSOR = "EnemyGroundSensor";
 
     // ANIMATION FIELDS
     /** Texture filmstrip for enemy chilling */
@@ -136,7 +137,11 @@ public class Enemy extends CapsuleObstacle {
     /** Velocity of flying */
     private Vector2 flyingVelocity;
     /** Flying angle */
-    private Float flyAngle;
+    private Vector2 flyNormal;
+    /** Whether the enemy is close to a platform */
+    private boolean nearPlatform;
+    /** Platform the enemy is near */
+    private Contact adjPlatform;
 
     /** Whether the enemy is a turret or not */
     private boolean isTurret;
@@ -295,22 +300,44 @@ public class Enemy extends CapsuleObstacle {
         }
     }
 
-    public void setFlyAngle(Float angle) {
-        flyAngle = angle;
-    }
-
-    public Float getFlyAngle() {
-        return flyAngle;
+    public Array<Fixture> getFixtures() {
+        return getBody().getFixtureList();
     }
 
     public Fixture getSensorFixtureCenter() {
         return sensorFixtureCenter;
     }
 
+    public void setAdjPlatform(Contact adjPlatform) {
+        this.adjPlatform = adjPlatform;
+    }
+
+    public Contact getAdjPlatform() {
+        return adjPlatform;
+    }
+
+    public void setNearPlatform(boolean nearPlatform) {
+        this.nearPlatform = nearPlatform;
+    }
+
+    public boolean isNearPlatform() {
+        return nearPlatform;
+    }
+
+    /**
+     * Set whether the enemy controller has checked the line of sight
+     *
+     * @param checkSight whether line of sight has been checked
+     */
     public void setCheckSight(boolean checkSight) {
         this.checkSight = checkSight;
     }
 
+    /**
+     * Return whether the enemy controller has checked the line of sight
+     *
+     * @return whether line of sight has been checked
+     */
     public boolean getCheckSight() {
         return checkSight;
     }
@@ -531,6 +558,15 @@ public class Enemy extends CapsuleObstacle {
     }
 
     /**
+     * Returns whether the enemy is active to fire projectiles
+     *
+     * @return whether enemy is active to fire projectiles
+     */
+    public boolean isFiring() {
+        return isFiring;
+    }
+
+    /**
      * Remembers through shift whether an enemy is firing
      *
      * @return boolean whether the enemy is meant to be firing
@@ -645,8 +681,8 @@ public class Enemy extends CapsuleObstacle {
         return ENEMY_MAXSPEED;
     }
 
-    public String getGroundSensorName() {
-        return GROUND_SENSOR_NAME;
+    public String getEnemyCenterSensorName() {
+        return ENEMY_CENTER_SENSOR;
     }
 
     public boolean activatePhysics(World world) {
@@ -664,7 +700,7 @@ public class Enemy extends CapsuleObstacle {
             sensorDef.shape = sensorShapeGround;
 
             sensorFixtureGround = body.createFixture(sensorDef);
-            sensorFixtureGround.setUserData(CENTER_SENSOR_NAME);
+            sensorFixtureGround.setUserData(ENEMY_GROUND_SENSOR);
         }
         if(getAi() == EnemyType.FLY){
 
@@ -674,14 +710,15 @@ public class Enemy extends CapsuleObstacle {
 
             FixtureDef sensorDef = new FixtureDef();
             sensorDef.density = DENSITY;
-            sensorDef.isSensor = true;
             sensorShapeCenter = new CircleShape();
             sensorShapeCenter.setRadius(1.25f * getWidth());
             sensorShapeCenter.setPosition(sensorSky);
             sensorDef.shape = sensorShapeCenter;
+            sensorDef.isSensor = true;
+            sensorDef.filter.groupIndex = -1;
 
-            sensorFixtureGround = body.createFixture(sensorDef);
-            sensorFixtureGround.setUserData(GROUND_SENSOR_NAME);
+            sensorFixtureCenter = body.createFixture(sensorDef);
+            sensorFixtureCenter.setUserData(ENEMY_CENTER_SENSOR);
         }
 
         return true;
@@ -832,13 +869,7 @@ class LineOfSight implements RayCastCallback {
         this.point = point;
         this.normal = normal;
 
-        if (fixture.getBody().getUserData() instanceof Avatar && !fixture.isSensor()) {
-//            enemy.setIsFiring(true);
-//            enemy.setShiftedFiring(true);
-//            if (enemy.getAi() == Enemy.EnemyType.WALK) {
-//                enemy.setMovement(0);
-//            }
-        } else if (fixture.getBody().getUserData() instanceof Projectile || fixture.getBody().getUserData() == enemy ||
+        if (fixture.getBody().getUserData() instanceof Projectile || fixture.getBody().getUserData() == enemy ||
                 (fixture.getBody().getUserData() instanceof Platform &&
                         ((Platform) fixture.getBody().getUserData()).getSpace() != enemy.getSpace() &&
                         ((Platform) fixture.getBody().getUserData()).getSpace() != 3) ||
@@ -846,12 +877,7 @@ class LineOfSight implements RayCastCallback {
                         (((Spikes) fixture.getBody().getUserData()).getSpace() != enemy.getSpace() &&
                                 ((Spikes) fixture.getBody().getUserData()).getSpace() != 3))) {
             return 1;
-        } else {
-//            enemy.setIsFiring(false);
-//            enemy.setShiftedFiring(false);
-//            if (enemy.getAi() == Enemy.EnemyType.WALK && enemy.getMovement() == 0) {
-//                enemy.setMovement(enemy.getNextDirection() * 20);
-//            }
+        } else if (!(fixture.getBody().getUserData() instanceof Avatar)){
             enemy.setCheckSight(false);
         }
 

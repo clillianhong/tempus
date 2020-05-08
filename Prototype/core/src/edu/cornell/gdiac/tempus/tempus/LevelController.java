@@ -63,7 +63,7 @@ public class LevelController extends WorldController {
 	protected Table pauseTable;
 	protected Container pauseButtonContainer;
 	private TextureRegionDrawable overlayBG;
-	private TextureRegion overlayDark;
+	protected TextureRegion overlayDark;
 	protected Container<Stack> edgeContainer;
 	protected Stack tableStack;
 
@@ -135,6 +135,9 @@ public class LevelController extends WorldController {
 	protected TextureRegion goalTile;
 	/** The font for giving messages to the player */
 	protected BitmapFont displayFont;
+	/** The style for giving messages to the player */
+	protected Label.LabelStyle style;
+
 
 	/** Texture asset for the big bullet */
 	protected TextureRegion bulletBigTexture;
@@ -196,7 +199,11 @@ public class LevelController extends WorldController {
 			return;
 		}
 		JsonAssetManager.getInstance().allocateDirectory();
-		displayFont = JsonAssetManager.getInstance().getEntry("display", BitmapFont.class);
+//		displayFont = JsonAssetManager.getInstance().getEntry("display", BitmapFont.class);
+		displayFont = new BitmapFont(Gdx.files.internal("fonts/carterone.fnt"));
+		displayFont.getData().setScale(0.5f);
+		style = new Label.LabelStyle(displayFont, Color.WHITE);
+
 		platformAssetState = AssetState.COMPLETE;
 
 	}
@@ -914,9 +921,9 @@ public class LevelController extends WorldController {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
-//				resetGame();
-				reset();
 				unpauseGame();
+				resetGame();
+//				reset();
 			}
 		});
 
@@ -1009,9 +1016,9 @@ public class LevelController extends WorldController {
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
 				GameStateManager.getInstance().stepGame(false);
-				reset();
-//				resetGame();
+//				reset();
 				unpauseGame();
+				resetGame();
 			}
 		});
 
@@ -1131,8 +1138,8 @@ public class LevelController extends WorldController {
 		}
 
 		if(failed && countdown==0){
-//			resetGame();
-			reset();
+			resetGame();
+//			reset();
 		}
 
 
@@ -1223,8 +1230,8 @@ public class LevelController extends WorldController {
 
 		// Handle resets
 		if (input.didReset()) {
-//			resetGame();
-			reset();
+			resetGame();
+//			reset();
 		}
 
 		//check if avatar is in "catch mode"
