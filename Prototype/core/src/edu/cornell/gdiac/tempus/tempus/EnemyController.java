@@ -20,6 +20,7 @@ import edu.cornell.gdiac.util.PooledList;
 import edu.cornell.gdiac.util.SoundController;
 
 import java.util.Random;
+import java.util.Vector;
 
 import static edu.cornell.gdiac.tempus.tempus.models.EntityType.PRESENT;
 
@@ -176,7 +177,19 @@ public class EnemyController {
     public void setFlyingVelocity (Enemy enemy) {
         Vector2 vel = target.getPosition().sub(enemy.getPosition());
         if (vel != enemy.getFlyingVelocity()) {
-            enemy.setLinearVelocity(enemy.getLinearVelocity().scl(.5f));
+            if (!enemy.isFiring()) {
+                if (enemy.isNearPlatform()) {
+                    Vector2 normal = enemy.getAdjPlatform().getWorldManifold().getNormal();
+                    if (Math.abs(normal.cpy().rotate90(1).angle(vel)) < Math.abs(normal.cpy().rotate(-1).angle(vel))) {
+                        vel.rotate90(1);
+                    } else {
+                        vel.rotate90(-1);
+                    }
+//                } else {
+//                    vel.rotate(45);
+                }
+            }
+            enemy.setLinearVelocity(enemy.getLinearVelocity().scl(.7f));
             enemy.setFlyingVelocity(vel.cpy());
         }
     }
@@ -241,7 +254,7 @@ public class EnemyController {
         if (Math.abs(e.getVY()) >= e.getMaxSpeed()) {
             e.setVY(Math.signum(e.getVY()) * e.getMaxSpeed());
         }
-        forceCache.set(e.getFlyingVelocity());;
+        forceCache.set(e.getFlyingVelocity());
         e.getBody().applyForce(forceCache, e.getPosition(), true);
     }
 
@@ -371,7 +384,9 @@ public class EnemyController {
     public void createLineOfSight(World world, float offset, Enemy e) {
         Vector2 shootPos = e.getPosition().add(0f, offset);
         TextureRegion bulletBigTexture = JsonAssetManager.getInstance().getEntry("bulletbig", TextureRegion.class);
-        float radius = bulletBigTexture.getRegionWidth() / 30.0f;
+        float radius = bulletBigTexture.getRegionWidth() / scale.x;
+        Vector2 reference = shootPos.cpy().add(0, radius);
+        Vector2 targetReference = target.getPosition().add(0, radius);
         world.rayCast(e.getSight(), shootPos.cpy().add(0f, -radius), target.getPosition().add(0f, -radius));
         world.rayCast(e.getSight(), shootPos.cpy().add(0f, radius), target.getPosition().add(0f, radius));
         world.rayCast(e.getSight(), shootPos.cpy().add(radius, 0f), target.getPosition().add(radius, 0f));
