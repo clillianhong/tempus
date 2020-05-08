@@ -427,10 +427,17 @@ public class LevelController extends WorldController {
 		stage.getBatch().setBlendFunction(GL20.GL_SRC_ALPHA,GL20.GL_ONE_MINUS_SRC_ALPHA);
 		canvas.getSpriteBatch().setColor(1,1,1,1);
 		canvas.setBlendState(GameCanvas.BlendState.NO_PREMULT);
-
+		enemies.clear();
 		numEnemies = 0;
 		paused = false;
 		prepause = false;
+
+		for (Obstacle obj : objects) {
+			if(obj instanceof Enemy){
+				obj.deactivatePhysics(world);
+				objects.remove(obj);
+			}
+		}
 
 		createUI();
 		if(isEndRoom){
@@ -864,8 +871,8 @@ public class LevelController extends WorldController {
 		 */
 		TextureRegionDrawable pauseButtonResource = new TextureRegionDrawable(
 				new TextureRegion(new Texture(Gdx.files.internal("textures/gui/pausebutton.png"))));
-		overlayDark = new TextureRegion(new Texture(Gdx.files.internal("textures/gui/pause_filter_50_black.png")));
-		overlayBG = new TextureRegionDrawable(overlayDark);
+		overlayDark = new TextureRegion(new Texture(Gdx.files.internal("textures/gui/pause_filter_25_black.png")));
+		overlayBG = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/pause_filter_50_black.png"))));
 		TextureRegionDrawable pauseBox = new TextureRegionDrawable(
 				new TextureRegion(new Texture(Gdx.files.internal("textures/gui/frame_pause.png"))));
 		TextureRegionDrawable resumeResource = new TextureRegionDrawable(
@@ -899,7 +906,8 @@ public class LevelController extends WorldController {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
-				resetGame();
+//				resetGame();
+				reset();
 				unpauseGame();
 			}
 		});
