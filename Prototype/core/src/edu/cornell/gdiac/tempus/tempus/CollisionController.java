@@ -183,7 +183,9 @@ public class CollisionController implements ContactListener {
                 }
             }
             avatar.resetDashNum(1);
-            avatar.setEnemyContact(true);
+            if (!(((Enemy) turret.getBody().getUserData()).isDead())) {
+                avatar.setEnemyContact(true);
+            }
             avatar.setLinearVelocity(bounceDir);
             turret.getBody().setLinearVelocity(new Vector2(0, 0));
             //avatar.getBody().applyForce(new Vector2(-20, 40), avatar.getPosition(), true);

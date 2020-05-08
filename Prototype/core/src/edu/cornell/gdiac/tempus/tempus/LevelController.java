@@ -379,6 +379,7 @@ public class LevelController extends WorldController {
 		numEnemies = 0;
 		paused = false;
 		prepause = false;
+
 		enemyController.reset();
 		for (Obstacle obj : objects) {
 			obj.deactivatePhysics(world);
@@ -399,6 +400,7 @@ public class LevelController extends WorldController {
 
 		populateLevel();
 		goalDoor.setOpen(false);
+		goalDoor.setAnimationState(Door.DoorState.LOCKED);
 		timeFreeze = false;
 
 		canvas.updateSpriteBatch();
@@ -717,6 +719,11 @@ public class LevelController extends WorldController {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
+				System.out.println("PREV STATE ");
+				GameStateManager.getInstance().printGameState();
+				GameStateManager.getInstance().stepGame(false);
+				System.out.println("AFTER STATE ");
+				GameStateManager.getInstance().printGameState();
 				exitLevelSelect();
 			}
 		});
@@ -726,6 +733,9 @@ public class LevelController extends WorldController {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
+
+				GameStateManager.getInstance().stepGame(false);
+
 				exitNextRoom();
 			}
 		});
@@ -735,6 +745,7 @@ public class LevelController extends WorldController {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
+				GameStateManager.getInstance().stepGame(false);
 				reset();
 				unpauseGame();
 			}
@@ -828,14 +839,17 @@ public class LevelController extends WorldController {
 					enemyController.shift();
 				}
 				avatar.setEnemyContact(false);
+				avatar.setCatchReady(false);
 				avatar.setPosition(avatarStart);
 				avatar.getBody().setLinearVelocity(0, 0);
 				avatar.setHolding(false);
 				avatar.setHeldBullet(null);
 				avatar.setBodyType(BodyDef.BodyType.DynamicBody);
 				timeFreeze = false;
+				enemyController.setPlayerVisible(false);
 				return true;
 			} else{
+				avatar.setCatchReady(false);
 				avatar.setPosition(avatarStart);
 				avatar.setEnemyContact(false);
 				setFailure(true);
@@ -855,21 +869,25 @@ public class LevelController extends WorldController {
 		if(failed){
 			reset();
 		}
-		if (input.didAdvance()) {
-			active = false;
-			listener.exitScreen(this, ScreenExitCodes.EXIT_NEXT.ordinal());
-			return false;
-		} else if (input.didRetreat()) {
-			active = false;
-			listener.exitScreen(this, ScreenExitCodes.EXIT_PREV.ordinal());
-			return false;
-		} else if (countdown > 0) {
+
+//		if (input.didAdvance()) {
+//			active = false;
+//			listener.exitScreen(this, ScreenExitCodes.EXIT_NEXT.ordinal());
+//			return false;
+//		} else if (input.didRetreat()) {
+//			active = false;
+//			listener.exitScreen(this, ScreenExitCodes.EXIT_PREV.ordinal());
+//			return false;
+//		} else
+
+		if (countdown > 0) {
 			countdown--;
 		} else if (countdown == 0) {
 			if (complete) {
 				if(GameStateManager.getInstance().lastRoom()){
 					showWinLevel();
 				}else{
+					GameStateManager.getInstance().stepGame(false);
 					listener.exitScreen(this, ScreenExitCodes.EXIT_NEXT.ordinal());
 				}
 				return false;
@@ -944,6 +962,14 @@ public class LevelController extends WorldController {
 			reset();
 		}
 
+		//check if avatar is in "catch mode"
+		if (!avatar.isCatchReady() && !avatar.isHolding() && !avatar.isSticking()
+				&& (InputController.getInstance().pressedRightMouseButton())){
+			avatar.setCatchReady(true);
+		}
+		if((InputController.getInstance().releasedRightMouseButton())){
+			avatar.setCatchReady(false);
+		}
 
 
 		MusicController.getInstance().update(shifted);
@@ -1004,6 +1030,7 @@ public class LevelController extends WorldController {
 		} else {
 			boolean dashAttempt = InputController.getInstance().releasedLeftMouseButton();
 			if (dashAttempt) {
+				enemyController.setPlayerVisible(true);
 				if(avatar.isSticking()){
 					avatar.setDashing(false);
 					avatar.resetDashes();
@@ -1035,7 +1062,7 @@ public class LevelController extends WorldController {
 		}
 		if (InputController.getInstance().pressedShiftKey()) {
 			// update ripple shader params
-
+			enemyController.setPlayerVisible(true);
 			rippleOn = true;
 			ticks = 0;
 			m_rippleDistance = 0;
@@ -1126,9 +1153,15 @@ public class LevelController extends WorldController {
 
 		avatar.applyForce();
 
+		//Animate door
+		if (enemyController.getEnemies() == 0) {
+			goalDoor.animate(Door.DoorState.UNLOCKING, false);
+		} else {
+			goalDoor.animate(Door.DoorState.LOCKED, false);
+		}
+
 		// Update avatar animation state
-		if (InputController.getInstance().pressedLeftMouseButton()
-				|| (InputController.getInstance().pressedRightMouseButton() && !avatar.isSticking())) {
+		if (InputController.getInstance().pressedLeftMouseButton()) {
 			// If either mouse button is held, set animation to be crouching
 			avatar.animate(Avatar.AvatarState.CROUCHING, false);
 			avatar.setAnimationState(Avatar.AvatarState.CROUCHING);

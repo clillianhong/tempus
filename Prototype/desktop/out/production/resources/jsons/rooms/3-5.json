@@ -6,52 +6,6 @@
   ],
   "present_background": "present_background1",
   "past_background": "past_background1",
-  "diamondshape": [
-    0.4,
-    1.8,
-    0.5,
-    1.8,
-    2.1,
-    1.8,
-    2.2,
-    1.8,
-    1.4,
-    0.1
-  ],
-  "capsuleshape": [
-    0.4,
-    1.1,
-    0.5,
-    1.1,
-    2.6,
-    1.1,
-    2.7,
-    1.1,
-    2.6,
-    0.6,
-    2,
-    0.2,
-    1.1,
-    0.2,
-    0.5,
-    0.6
-  ],
-  "roundshape": [
-    0.4,
-    1.4,
-    0.8,
-    1.7,
-    2.1,
-    1.7,
-    2.4,
-    1.4,
-    2.3,
-    0.8,
-    1.7,
-    0.3,
-    1.1,
-    0.3
-  ],
   "door": {
     "pos": [
       29.916,
@@ -160,7 +114,7 @@
       "name": "present_diamond",
       "pos": [
         11.208,
-        14.64
+        12.64
       ],
       "bodytype": "static",
       "density": 0,
@@ -173,7 +127,7 @@
       "name": "present_diamond",
       "pos": [
         17.256,
-        14.73
+        12.73
       ],
       "bodytype": "static",
       "density": 0,
@@ -194,19 +148,6 @@
       "restitution": 0.1,
       "texture": "past_diamond",
       "space": 2
-    },
-    "diamond4": {
-      "name": "both_diamond",
-      "pos": [
-        10.696,
-        0.87
-      ],
-      "bodytype": "static",
-      "density": 0,
-      "friction": 0.6,
-      "restitution": 0.1,
-      "texture": "both_diamond",
-      "space": 3
     }
   },
   "rounds": {
@@ -337,7 +278,7 @@
       "name": "both_pillar",
       "pos": [
         21.8,
-        8.27
+        8.17
       ],
       "bodytype": "static",
       "density": 0,
@@ -366,19 +307,6 @@
       "pos": [
         21.768,
         7.86
-      ],
-      "bodytype": "static",
-      "density": 0,
-      "friction": 0.6,
-      "restitution": 0.1,
-      "texture": "both_longcapsule",
-      "space": 3
-    },
-    "longcapsule3": {
-      "name": "both_longcapsule",
-      "pos": [
-        12.576,
-        15.03
       ],
       "bodytype": "static",
       "density": 0,
