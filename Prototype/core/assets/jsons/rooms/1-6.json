@@ -8,8 +8,8 @@
   "past_background": "past_background1",
   "door":{
     "pos":[
-      29.724,
-      16.130000000000003
+      28.724,
+      14.130000000000003
     ],
     "size":[
       1.92,
@@ -26,8 +26,8 @@
   },
   "avatar":{
     "pos":[
-      3.636,
-      5.21
+      4.636,
+      2.21
     ],
     "shrink":[
       0.0216,
@@ -66,8 +66,8 @@
     "capsule1":{
       "name":"both_capsule",
       "pos":[
-        2.328,
-        3.75
+        3.328,
+        0.75
       ],
       "bodytype":"static",
       "density":0,
@@ -75,40 +75,14 @@
       "restitution":0.1,
       "texture":"both_capsule",
       "space":3
-    },
-    "capsule2":{
-      "name":"present_capsule",
-      "pos":[
-        4.2,
-        12.03
-      ],
-      "bodytype":"static",
-      "density":0,
-      "friction":0.6,
-      "restitution":0.1,
-      "texture":"present_capsule",
-      "space":1
-    },
-    "capsule3":{
-      "name":"present_capsule",
-      "pos":[
-        18.792,
-        7.29
-      ],
-      "bodytype":"static",
-      "density":0,
-      "friction":0.6,
-      "restitution":0.1,
-      "texture":"present_capsule",
-      "space":1
     }
   },
   "diamonds":{
     "presentdiamond15":{
       "name":"present_diamond",
       "pos":[
-        17.512,
-        10.83
+        18.792,
+        8.29
       ],
       "bodytype":"static",
       "density":0,
@@ -125,7 +99,7 @@
     "enemy1":{
       "pos":[
         15.944,
-        13.05
+        7.05
       ],
       "shrink":[
         0.0168,
@@ -161,7 +135,7 @@
     "pastpillar14":{
       "name":"both_pillar",
       "pos":[
-        28.644,
+        27.644,
         6.29
       ],
       "bodytype":"static",
@@ -176,7 +150,7 @@
     "bothlongcapsule12":{
       "name":"both_longcapsule",
       "pos":[
-        26.024,
+        25.024,
         6
       ],
       "bodytype":"static",
@@ -185,6 +159,32 @@
       "restitution":0.1,
       "texture":"both_longcapsule",
       "space":3
+    },
+    "bothlongcapsule12":{
+      "name":"present_longcapsule",
+      "pos":[
+        4.2,
+        12.03
+      ],
+      "bodytype":"static",
+      "density":0,
+      "friction":0.6,
+      "restitution":0.1,
+      "texture":"present_longcapsule",
+      "space":1
+    },
+    "bothlongcapsule12":{
+      "name":"present_longcapsule",
+      "pos":[
+        15.012,
+        12.83
+      ],
+      "bodytype":"static",
+      "density":0,
+      "friction":0.6,
+      "restitution":0.1,
+      "texture":"present_longcapsule",
+      "space":1
     }
   }
 }
