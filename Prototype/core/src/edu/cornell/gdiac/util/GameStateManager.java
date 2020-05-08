@@ -265,10 +265,11 @@ public class GameStateManager {
         HashMap<Integer, String[]> cards = new HashMap<>();
 
         for(int i=0; i<room_count; i++){
+            cards.put(i, jsonCards.get("c"+(i+1)).asStringArray());
             rooms[i] = new TutorialController(room_paths[i]);
         }
 
-       return new TutorialModel(lv, true, true, 0, rooms);
+       return new TutorialModel(lv, true, true, 0, rooms, cards);
 
     }
 
