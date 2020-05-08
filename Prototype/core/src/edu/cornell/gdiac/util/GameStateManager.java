@@ -20,6 +20,7 @@ import edu.cornell.gdiac.tempus.tempus.models.ScreenExitCodes;
 import edu.cornell.gdiac.tempus.tempus.models.TutorialModel;
 
 import java.io.File;
+import java.util.HashMap;
 
 /**
  * Responsible for managing the loading of an entire level from JSON
@@ -190,15 +191,11 @@ public class GameStateManager {
         last_level_idx = levels.length-1;
 
         levelDirectories[0] = jsonReader.parse(Gdx.files.internal(level_paths[0]));
-//        System.out.println("GDX ERROR 0:" + Gdx.gl.glGetError());
 
         levels[0] = loadTutorial(levelDirectories[0]);
-//        System.out.println("GDX ERROR 1 preload:" + Gdx.gl.glGetError());
         levels[0].preloadLevel();
 
         for(int i = 1; i<num_levels; i++){
-//            System.out.println("GDX ERROR "+ (i+1) +": " + Gdx.gl.glGetError());
-
             levelDirectories[i] = jsonReader.parse(Gdx.files.internal(level_paths[i]));
             levels[i] = loadLevel(levelDirectories[i], unfinishedLevel, unfinishedRoom);
             if(levels[i].getLevelNumber() == unfinishedLevel){
@@ -261,9 +258,11 @@ public class GameStateManager {
     protected TutorialModel loadTutorial(JsonValue levelJson){
         int lv = levelJson.getInt("level");
         int room_count = levelJson.getInt("room_count");
+        JsonValue jsonCards = levelJson.get("cards");
         String[] room_paths = levelJson.get("rooms").asStringArray();
 
         LevelController [] rooms = new LevelController[room_count];
+        HashMap<Integer, String[]> cards = new HashMap<>();
 
         for(int i=0; i<room_count; i++){
             rooms[i] = new TutorialController(room_paths[i]);

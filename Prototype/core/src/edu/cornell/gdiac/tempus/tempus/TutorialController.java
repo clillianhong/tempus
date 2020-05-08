@@ -65,6 +65,12 @@ public class TutorialController extends LevelController {
         tutorial_card = card;
     }
 
+    @Override
+    public void reset() {
+        dialogueNum = 0;
+        super.reset();
+    }
+
     public void setFirst(boolean b) {first = b;};
     @Override
     public void preLoadContent() {
@@ -88,78 +94,6 @@ public class TutorialController extends LevelController {
         float sh = canvas.getHeight();
 
         super.createUI();
-//        // table container to center main table
-//        edgeContainer = new Container<Stack>();
-//        edgeContainer.setSize(sw, sh);
-//        edgeContainer.setPosition(0, 0);
-//        edgeContainer.fillX();
-//        edgeContainer.fillY();
-//
-//
-//        /*
-//         * START PAUSE SCREEN SETUP ---------------------
-//         */
-//        TextureRegionDrawable pauseButtonResource = new TextureRegionDrawable(
-//                new TextureRegion(new Texture(Gdx.files.internal("textures/gui/pausebutton.png"))));
-//        TextureRegionDrawable pauseBG = new TextureRegionDrawable(
-//                new TextureRegion(new Texture(Gdx.files.internal("textures/gui/pause_filter_50_black.png"))));
-//        TextureRegionDrawable pauseBox = new TextureRegionDrawable(
-//                new TextureRegion(new Texture(Gdx.files.internal("textures/gui/frame_pause.png"))));
-//        TextureRegionDrawable resumeResource = new TextureRegionDrawable(
-//                new TextureRegion(new Texture(Gdx.files.internal("textures/gui/pause_resume_button.png"))));
-//        TextureRegionDrawable restartResource = new TextureRegionDrawable(
-//                new TextureRegion(new Texture(Gdx.files.internal("textures/gui/pause_restart_button.png"))));
-//        TextureRegionDrawable exitResource = new TextureRegionDrawable(
-//                new TextureRegion(new Texture(Gdx.files.internal("textures/gui/pause_exit_button.png"))));
-//
-//
-////        press_h_card = new TextureRegionDrawable(
-////                new TextureRegion(new Texture(Gdx.files.internal("tutorial/helpcard.png"))));
-//
-//        pauseButtonContainer = new Container<>();
-//        pauseButtonContainer.setBackground(pauseBG);
-//        pauseButtonContainer.setPosition(0, 0);
-//        pauseButtonContainer.fillX();
-//        pauseButtonContainer.fillY();
-//
-//        pauseTable = new Table();
-//        //pauseTable.background(pauseBox);
-//        pauseButtonContainer.setActor(pauseTable);
-//        pauseButtonContainer.setVisible(false);
-//
-//        Button resumeButton = new Button(resumeResource);
-//        resumeButton.addListener(new ClickListener() {
-//            @Override
-//            public void clicked(InputEvent event, float x, float y) {
-//                super.clicked(event, x, y);
-//                unpauseGame();
-//            }
-//        });
-//
-//        Button restartButton = new Button(restartResource);
-//        restartButton.addListener(new ClickListener() {
-//            @Override
-//            public void clicked(InputEvent event, float x, float y) {
-//                super.clicked(event, x, y);
-//                reset();
-//                unpauseGame();
-//            }
-//        });
-//
-//        Button exitButton = new Button(exitResource);
-//        exitButton.addListener(new ClickListener() {
-//            @Override
-//            public void clicked(InputEvent event, float x, float y) {
-//                super.clicked(event, x, y);
-//                exitLevelSelect();
-//            }
-//        });
-//        pauseTable.add(resumeButton).width(sw / 4 / 1.5f).height(sh / 5.1f / 1.5f).center().expandX().padBottom(sh / 20);
-//        pauseTable.row();
-//        pauseTable.add(restartButton).width(sw / 4 / 1.5f).height(sh / 5.1f / 1.5f).center().expandX().padBottom(sh / 20);
-//        ;
-//        pauseTable.row();
-//        pauseTable.add(exitButton).width(sw / 4 / 1.5f).height(sh / 5.1f / 1.5f).expandX();
 
         tutorialCard = new Table();
         tutorialCard.setPosition(0, 0);
