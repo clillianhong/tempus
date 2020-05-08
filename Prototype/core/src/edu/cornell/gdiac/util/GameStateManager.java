@@ -266,7 +266,6 @@ public class GameStateManager {
         LevelController [] rooms = new LevelController[room_count];
 
         for(int i=0; i<room_count; i++){
-            System.out.println("TUTORIAL JSON: " + room_paths[i]);
             rooms[i] = new TutorialController(room_paths[i]);
         }
 
@@ -289,16 +288,17 @@ public class GameStateManager {
      * 3. Finishing the game
      */
     public void stepGame(boolean is_exit){
-            boolean level_finished = levels[current_level_idx].stepLevel();
-
-            if(level_finished){ // LEVEL HAS FINISHED
-                //TODO: Finish level announcement/screen
+        if(is_exit) {
+            System.out.println("entin");
+            boolean finished = levels[current_level_idx].stepLevel();
+            if(finished){
                 MusicController.getInstance().stopAll();
                 levels[current_level_idx].finishLevel();
-                if(current_level_idx == last_level_idx){
+                if(finished && current_level_idx == last_level_idx){
+
                     //endGameState(); //TODO: end game state accouncement/screen
                 }
-                else{
+                else if(finished){
                     current_level_idx++;
                     levels[current_level_idx].setCurrentRoom(0);
                     levels[current_level_idx].playMusic();
@@ -308,7 +308,15 @@ public class GameStateManager {
                     }
                     //TODO: LEVEL FINISH SCREEN
                 }
+            }
+        }else{ //simply want to unlock next level if locked
+            if(!levels[current_level_idx+1].isUnlocked()){
+                highestUnlockedLevel = levels[current_level_idx];
+                levels[current_level_idx+1].unlockLevel();
+            }
         }
+
+
     }
 
     public void printGameState(){
