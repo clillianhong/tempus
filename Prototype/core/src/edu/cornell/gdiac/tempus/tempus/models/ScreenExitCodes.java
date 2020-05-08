@@ -11,5 +11,6 @@ public enum ScreenExitCodes {
     MENU_START,
     MENU_HELP,
     MENU_ABOUT,
-    EXIT_LOAD
+    EXIT_LOAD,
+    ROOM_SELECT
 }

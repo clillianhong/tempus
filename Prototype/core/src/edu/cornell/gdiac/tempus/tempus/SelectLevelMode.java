@@ -6,7 +6,9 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.*;
@@ -100,27 +102,26 @@ public class SelectLevelMode implements Screen {
                 @Override
                 public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
 //                    if(!(scrolling)){
-                        super.enter(event, x, y, pointer, fromActor);
-                        button.setChecked(true);
+                    super.enter(event, x, y, pointer, fromActor);
+                    button.setChecked(true);
 
-                        if(currentLevel != level){
-                            currentLevel = level;
-                            updatePreview();
-                        }
+                    if(currentLevel != level){
+                        currentLevel = level;
+                        updatePreview();
+                    }
 //                    }
                 }
 
                 @Override
                 public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
 //                    if(!(scrolling)) {
-                        super.exit(event, x, y, pointer, toActor);
-                        button.setChecked(false);
+                    super.exit(event, x, y, pointer, toActor);
+                    button.setChecked(false);
 //                    }
 //                    scrolling = false;
                 }
             });
         }
-
 
         public int getLevel(){
             return level;
@@ -129,7 +130,12 @@ public class SelectLevelMode implements Screen {
 
     /** LISTENERS EVENTS TO CHANGE SCREEN **/
     private void exitToLevel(int level){
-        listener.exitScreen(this, level);
+//        listener.exitScreen(this, level);
+        int curroom = GameStateManager.getInstance().getLevel(level).getCurrentRoomNumber();
+        System.out.println("level: "+ level);
+        System.out.println("curroom " + curroom);
+        GameStateManager.getInstance().setCurrentLevel(level, curroom);
+        listener.exitScreen(this, ScreenExitCodes.ROOM_SELECT.ordinal());
     }
     private void exitBack(){
         listener.exitScreen(this, ScreenExitCodes.EXIT_PREV.ordinal());
@@ -256,29 +262,9 @@ public class SelectLevelMode implements Screen {
      * updates the preview panes based on the level button currently in focus.
      */
     public void updatePreview(){
-        //create mini container
-        Container loreTextContainer = new Container<>();
-        loreTextContainer.size(sw/2.5f*0.7f, sh/6f*0.6f);
-        //label creation
-        GlyphLayout glyphLayout  = new GlyphLayout();
-        Gdx.gl.glClearColor(0,0,0,1);
-        BitmapFont font = new BitmapFont(Gdx.files.internal("fonts/carterone.fnt"));
-        font.getData().setScale(.7f);
-        glyphLayout.setText(font, "testing a  a a a a a a a a a a a a a a a a a a a a a a a a a a a");
-        Label.LabelStyle carterStyle = new Label.LabelStyle(font, Color.WHITE);
-        float loadingHeight = glyphLayout.height;
-        float loadingWidth = glyphLayout.width;
-        Label loadingLabel = new Label("testing a  a a a a a a a a a a a a a a a a a a a a a a a a a a a", carterStyle);
-        loadingLabel.setHeight(loadingHeight);
-        loadingLabel.setWidth(loadingWidth);
-        loadingLabel.setWrap((true));
-        System.out.println(canvas.getWidth() + " " + canvas.getHeight());
-//        loadingLabel.setPosition(canvas.getWidth()/2 - loadingWidth/2, canvas.getHeight()/2);
-        stage.addActor(loadingLabel);
-        //end label creation
         pIContainer.setActor(previewTextures[levels[currentLevel].getLevel()]);
         Image loreImage = new Image( new TextureRegion(new Texture(Gdx.files.internal(levels[currentLevel].getFileLore()))));
-        lbContainer.setActor(loadingLabel);
+        lbContainer.setActor(loreImage);
     }
 
     @Override
@@ -351,7 +337,7 @@ public class SelectLevelMode implements Screen {
                 })));
             }
         });
-        overlayBackButton.add(backButton).width(cw/13f).height(cw/15f).expand().bottom().left();
+        overlayBackButton.add(backButton).width(cw/12f).height(cw/15f).expand().bottom().left();
 
         Table overlayPageHeader = new Table();
         //back button
