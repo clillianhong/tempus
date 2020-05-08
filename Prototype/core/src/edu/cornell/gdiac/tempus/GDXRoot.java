@@ -64,6 +64,7 @@ public class GDXRoot extends Game implements ScreenListener {
 	/** Room Select Mode tester */
 	private SelectRoomMode roomSelectMode;
 
+
 	/**
 	 * Creates a new game from the configuration settings.
 	 *
