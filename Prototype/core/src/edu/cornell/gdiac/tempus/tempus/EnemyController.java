@@ -238,10 +238,17 @@ public class EnemyController {
                         setBulletVelocity(BULLET_OFFSET, e);
                         fly(e);
                         fire(e);
+                    } else {
+                        stopFlying(e);
                     }
                 }
             }
         }
+    }
+
+    public void stopFlying(Enemy e) {
+        e.setVX(e.getVX() * 0.9f);
+        e.setVY(e.getVY() * 0.9f);
     }
 
     /**
