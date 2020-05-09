@@ -147,6 +147,18 @@ public class SelectRoomMode implements Screen {
         roomTables = new Table[numPages];
         curPage = 0;
 
+
+        int rowNum;
+        int colNum;
+
+        if(numRooms > 20){
+            rowNum = 6;
+            colNum = 7;
+        }else{
+            rowNum = 4;
+            colNum = 5;
+        }
+
         float cw = sw * 0.9f;
         float ch = sh * 0.5f;
 
@@ -180,11 +192,11 @@ public class SelectRoomMode implements Screen {
                     finishPage = true;
                     break;
                 }
+                System.out.println("x,y: (" + (wid/colNum)*f + "," + (ht/rowNum)*row + ")");
                 TextureRegionDrawable roomPreview;
                 TextureRegionDrawable roomPreviewDown;
-                System.out.println("x,y: ("+ ((wid/5)*f) + ", "+((ht/4)*f+row));
                 if(roomNum <= highestRoom){
-                    roomPreview = new TextureRegionDrawable(new TextureRegion(bg, (wid/5)*f, (ht/4)*row, wid/5, ht/4));
+                    roomPreview = new TextureRegionDrawable(new TextureRegion(bg, (wid/colNum)*f, (ht/rowNum)*row, wid/colNum, ht/rowNum));
                     roomPreviewDown = roomPreview;
                     roomPreviewDown.tint(Color.BLACK);
                 }else{

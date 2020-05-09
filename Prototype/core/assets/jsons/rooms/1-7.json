@@ -63,7 +63,7 @@
     },
     "turret10": {
       "pos": [
-        6.248,
+        7.248,
         1.41
       ],
       "shrink": [
@@ -85,7 +85,7 @@
     "capsule1": {
       "name": "present_capsule",
       "pos": [
-        1.096,
+        2.596,
         3.33
       ],
       "bodytype": "static",
@@ -98,7 +98,7 @@
     "pastcapsule22": {
       "name": "past_capsule",
       "pos": [
-        28.328,
+        27.328,
         3.69
       ],
       "bodytype": "static",
@@ -114,7 +114,7 @@
   "enemies": {
     "enemy1": {
       "pos": [
-        2.472,
+        3.972,
         5.91
       ],
       "shrink": [
@@ -130,7 +130,7 @@
     },
     "enemy9": {
       "pos": [
-        29.896,
+        28.896,
         6.93
       ],
       "shrink": [
@@ -146,7 +146,34 @@
     }
   },
   "spikes": {},
-  "talls": {},
+  "talls": {
+    "tall1": {
+      "name": "past_tall",
+      "pos": [
+        0.596,
+        5
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "past_tall",
+      "space": 2
+    },
+    "tall2": {
+      "name": "present_tall",
+      "pos": [
+        29.328,
+        5
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "present_tall",
+      "space": 1
+    }
+  },
   "pillars": {},
   "longcapsules": {
     "longcapsule1": {

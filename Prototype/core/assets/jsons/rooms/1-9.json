@@ -8,7 +8,7 @@
   "past_background": "past_background1",
   "door": {
     "pos": [
-      24.956,
+      25.956,
       2.210000000000006
     ],
     "size": [
@@ -42,9 +42,9 @@
     "avatarfalling": "avatarfalling"
   },
   "turrets": {
-    "turret1": {
+    "turret2": {
       "pos": [
-        3.208,
+        9.856,
         1.75
       ],
       "shrink": [
@@ -55,25 +55,6 @@
       "density": 1,
       "bodytype": "static",
       "entitytype": "present",
-      "cooldown": 360,
-      "direction": [
-        0,
-        1.5
-      ]
-    },
-    "turret2": {
-      "pos": [
-        10.856,
-        1.75
-      ],
-      "shrink": [
-        0.0168,
-        0.021375
-      ],
-      "texture": "past_turret",
-      "density": 1,
-      "bodytype": "static",
-      "entitytype": "past",
       "cooldown": 360,
       "direction": [
         0,
@@ -89,14 +70,14 @@
         0.0168,
         0.021375
       ],
-      "texture": "present_turret",
+      "texture": "past_turret",
       "density": 1,
       "bodytype": "static",
-      "entitytype": "present",
+      "entitytype": "past",
       "cooldown": 360,
       "direction": [
         0,
-        2
+        3
       ]
     }
   },
@@ -130,7 +111,7 @@
     "presentcapsule12": {
       "name": "present_capsule",
       "pos": [
-        15.176,
+        14.176,
         1.9
       ],
       "bodytype": "static",
@@ -208,33 +189,61 @@
   },
   "spikes": {},
   "talls": {
-    "pasttall10": {
-      "name": "past_tall",
-      "pos": [
-        11.88,
-        7.71
-      ],
-      "bodytype": "static",
-      "density": 0,
-      "friction": 0.6,
-      "restitution": 0.1,
-      "texture": "past_tall",
-      "space": 2
-    },
     "pasttall11": {
-      "name": "past_tall",
+      "name": "both_tall",
       "pos": [
         11.944,
-        2.31
+        3.31
       ],
       "bodytype": "static",
       "density": 0,
       "friction": 0.6,
       "restitution": 0.1,
-      "texture": "past_tall",
-      "space": 2
+      "texture": "both_tall",
+      "space": 3
+    },
+    "pasttall11": {
+      "name": "both_tall",
+      "pos": [
+        2.4,
+        6.71
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_tall",
+      "space": 3
     }
   },
-  "pillars": {},
-  "longcapsules": {}
+  "pillars": {
+    "bothpillar14":{
+      "name":"both_pillar",
+      "pos":[
+        1.8,
+        2.3
+      ],
+      "bodytype":"static",
+      "density":0,
+      "friction":0.6,
+      "restitution":0.1,
+      "texture":"both_pillar",
+      "space":3
+    }
+  },
+  "longcapsules": {
+    "longcapsule6": {
+      "name": "both_longcapsule",
+      "pos": [
+        2,
+        1.9
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_longcapsule",
+      "space": 3
+    }
+  }
 }

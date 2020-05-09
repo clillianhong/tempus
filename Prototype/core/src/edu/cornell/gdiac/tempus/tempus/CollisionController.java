@@ -157,8 +157,8 @@ public class CollisionController implements ContactListener {
             }
         }
         avatar.resetDashNum(1);
-        avatar.setEnemyContact(true);
         avatar.setLinearVelocity(bounceDir);
+        avatar.setEnemyContact(true);
     }
 
     private void processAvatarEnemyContact(Fixture av, Fixture turret, Contact contact) {
@@ -373,14 +373,56 @@ public class CollisionController implements ContactListener {
                 //if(avatar.getCurrentPlatform() != objB && avatar.getCurrentPlatform() != objA) {
                 if (objB instanceof Platform) {
                     if (avatar.getShifted() > 0 && ((SimpleObstacle) objB).getSpace() != 3 ){
-                        avatar.setSpliced(true);
+                        Float norm_angle = contact.getWorldManifold().getNormal().angle();
+
+                        if (!norm_angle.isNaN()) {
+                        /*if ((norm_angle.intValue()) == 0){
+                            System.out.println("Fekwbfiewq");
+                            cur_normal = (float) Math.toRadians(90);
+                        } else {*/
+                            cur_normal = (float) Math.toRadians(norm_angle + 180);
+                            //}
+                        }
+                        Vector2 bounceDir = new Vector2(5, 5).setAngleRad(cur_normal);
+                        if (fix2.getBody().getPosition().x > avatar.getX()){
+                            if (bounceDir.x > 0){
+                                bounceDir.x = -1 * bounceDir.x;
+                            }
+                        } else {
+                            if (bounceDir.x < 0){
+                                bounceDir.x = -1 * bounceDir.x;
+                            }
+                        }
+                        avatar.resetDashNum(1);
+                        avatar.setLinearVelocity(bounceDir);
                         avatar.setCurrentPlatform((Platform) objB);
                         return;
                     }
                 }
                 if (objA instanceof Platform) {
                     if (avatar.getShifted() > 0 && ((SimpleObstacle) objA).getSpace() != 3 ){
-                        avatar.setSpliced(true);
+                        Float norm_angle = contact.getWorldManifold().getNormal().angle();
+
+                        if (!norm_angle.isNaN()) {
+                        /*if ((norm_angle.intValue()) == 0){
+                            System.out.println("Fekwbfiewq");
+                            cur_normal = (float) Math.toRadians(90);
+                        } else {*/
+                            cur_normal = (float) Math.toRadians(norm_angle + 180);
+                            //}
+                        }
+                        Vector2 bounceDir = new Vector2(5, 5).setAngleRad(cur_normal);
+                        if (fix1.getBody().getPosition().x > avatar.getX()){
+                            if (bounceDir.x > 0){
+                                bounceDir.x = -1 * bounceDir.x;
+                            }
+                        } else {
+                            if (bounceDir.x < 0){
+                                bounceDir.x = -1 * bounceDir.x;
+                            }
+                        }
+                        avatar.resetDashNum(1);
+                        avatar.setLinearVelocity(bounceDir);
                         avatar.setCurrentPlatform((Platform) objA);
                         return;
                     }
@@ -463,8 +505,10 @@ public class CollisionController implements ContactListener {
                 } else if (enemy.getAi() == Enemy.EnemyType.FLY) {
                     if ((enemy != bd1 && !bd1.getName().equals("bullet")) ||
                             (enemy != bd2 && !bd2.getName().equals("bullet"))) {
-                        if (fix1 == enemy.getSensorFixtureCenter() || fix2 == enemy.getSensorFixtureCenter()) {
-                            enemy.setFlyAngle(contact.getWorldManifold().getNormal().angle());
+                        if ((objB instanceof Platform && fix1 == enemy.getSensorFixtureCenter()) ||
+                                (objA instanceof Platform && fix2 == enemy.getSensorFixtureCenter())) {
+                            enemy.setNearPlatform(true);
+                            enemy.setAdjPlatform(contact);
                         }
                     }
                 }
@@ -531,6 +575,9 @@ public class CollisionController implements ContactListener {
                     enemy.setMovement(0);
                     enemy.setNextDirection(-1 * enemy.getNextDirection());
                 }
+            } else if (enemy.getAi() == Enemy.EnemyType.FLY) {
+                enemy.setNearPlatform(false);
+                enemy.setAdjPlatform(null);
             }
         }
     }
