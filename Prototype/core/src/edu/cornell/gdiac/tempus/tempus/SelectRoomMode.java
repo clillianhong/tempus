@@ -178,7 +178,7 @@ public class SelectRoomMode implements Screen {
             //create four buttons and four labels
             roomTables[page] = new Table();
             for(int f = 0; f<4; f++){
-                final int roomNum = page*rowNum + f;
+                final int roomNum = page*4 + f;
                 if(roomNum >= numRooms){
                     finishPage = true;
                     break;
@@ -223,7 +223,7 @@ public class SelectRoomMode implements Screen {
             row+=1;
 
             for(int f = 0; f<4; f++){
-                final int roomNum = page*rowNum + f;
+                final int roomNum = page*4 + f;
                 if(roomNum >= numRooms){
                     finishPage = true;
                     break;
