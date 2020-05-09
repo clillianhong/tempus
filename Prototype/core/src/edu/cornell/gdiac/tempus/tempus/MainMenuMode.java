@@ -231,7 +231,7 @@ public class MainMenuMode implements Screen {
 
             stage.getBatch().begin();
             stage.getBatch().draw(backgroundTexture, 0, 0, sw, sh);
-            stage.getBatch().draw(glow, sw/4*0.94f*anti_mult, sh/2*0.98f*anti_mult, sw/2*1.08f*mult, sh/3*1.04f*mult);
+            stage.getBatch().draw(glow, sw/4*0.91f*anti_mult, sh/2*0.96f*anti_mult, sw/2*1.08f*mult, sh/3*1.04f*mult);
             stage.getBatch().draw(an,sw/4*anti_mult, sh/2*anti_mult, sw/2*mult, sh/3*mult);
 
             stage.getBatch().end();

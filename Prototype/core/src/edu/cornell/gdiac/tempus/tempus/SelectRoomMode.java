@@ -147,8 +147,17 @@ public class SelectRoomMode implements Screen {
         roomTables = new Table[numPages];
         curPage = 0;
 
-        int rowNum = 5;
-        int colNum = 6;
+
+        int rowNum;
+        int colNum;
+
+        if(numRooms > 20){
+            rowNum = 6;
+            colNum = 7;
+        }else{
+            rowNum = 4;
+            colNum = 5;
+        }
 
         float cw = sw * 0.9f;
         float ch = sh * 0.5f;
@@ -178,14 +187,14 @@ public class SelectRoomMode implements Screen {
             //create four buttons and four labels
             roomTables[page] = new Table();
             for(int f = 0; f<4; f++){
-                final int roomNum = page*rowNum + f;
+                final int roomNum = page*4 + f;
                 if(roomNum >= numRooms){
                     finishPage = true;
                     break;
                 }
+                System.out.println("x,y: (" + (wid/colNum)*f + "," + (ht/rowNum)*row + ")");
                 TextureRegionDrawable roomPreview;
                 TextureRegionDrawable roomPreviewDown;
-                System.out.println("x,y: ("+ ((wid/colNum)*f) + ", "+((ht/rowNum)*f+row));
                 if(roomNum <= highestRoom){
                     roomPreview = new TextureRegionDrawable(new TextureRegion(bg, (wid/colNum)*f, (ht/rowNum)*row, wid/colNum, ht/rowNum));
                     roomPreviewDown = roomPreview;
@@ -223,7 +232,7 @@ public class SelectRoomMode implements Screen {
             row+=1;
 
             for(int f = 0; f<4; f++){
-                final int roomNum = page*rowNum + f;
+                final int roomNum = page*4 + f;
                 if(roomNum >= numRooms){
                     finishPage = true;
                     break;
