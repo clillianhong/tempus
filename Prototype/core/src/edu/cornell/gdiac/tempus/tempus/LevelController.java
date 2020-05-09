@@ -483,7 +483,7 @@ public class LevelController extends WorldController {
 		ripple_intensity = 0.009f;
 		rippleSpeed = 0.25f;
 		rippleOn = false;
-		begincount = 0;
+		begincount = 20;
 		updateShader();
 		// world = new World(gravity, false);
 		world.setContactListener(collisionController);
@@ -1239,7 +1239,7 @@ public class LevelController extends WorldController {
 				&& (InputController.getInstance().pressedRightMouseButton())){
 			avatar.setCatchReady(true);
 		}
-		if((InputController.getInstance().releasedRightMouseButton())){
+		if((InputController.getInstance().releasedRightMouseButton()) || avatar.isSticking()){
 			avatar.setCatchReady(false);
 		}
 

@@ -304,7 +304,7 @@ public class SelectLevelMode implements Screen {
         float cw = sw * 0.9f;
         float ch = sh * 0.8f;
 
-        backgroundTexture = new TextureRegion(new Texture(Gdx.files.internal("textures/gui/selectmode/select_level_bg_blur.png")));
+        backgroundTexture = new TextureRegion(new Texture(Gdx.files.internal("textures/gui/selectmode/level_newestbg.png")));
 
         //table container to center main table
         Container<Table> edgeContainer = new Container<Table>();
@@ -377,13 +377,13 @@ public class SelectLevelMode implements Screen {
 
         //lore panel
         lbContainer = new Container<>();
-        lbContainer.size(cw/2f*0.8f, ch/2f - (cw/16f));
+        lbContainer.size(cw/2f*0.8f, ch/2f - (cw/16f) - 20);
         lbContainer.setActor(levels[currentLevel].getFileLore());
 
         Table rightTable = new Table();
         rightTable.setWidth(cw/2 - 10);
         rightTable.add(pIContainer).padTop(cw/16f);
-        rightTable.row();
+        rightTable.row().padTop(30);
         rightTable.add(lbContainer);
 
         //add scroller to dual table
@@ -410,7 +410,6 @@ public class SelectLevelMode implements Screen {
             }
 
         });
-        stage.setDebugAll(true);
 //        stage.addAction(Actions.alpha(0f));
 //        stage.addAction(Actions.fadeIn(1f));
 
