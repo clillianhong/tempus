@@ -202,6 +202,9 @@ public class Avatar extends CapsuleObstacle {
     /** The frame cooldown for the animation */
     private static float frame_cooldown = FRAME_RATE;
 
+    /** Minimize the size of the texture by the factor */
+    private float minimizeScale = 1f;
+
     // CAUGHT PROJECTILE TEXTURES
     /** The texture for the caught projectile of type present */
     private TextureRegion projPresentCaughtTexture;
@@ -1190,18 +1193,18 @@ public class Avatar extends CapsuleObstacle {
                 if (getImmmortality()%20<10) {
                     canvas.draw(currentStrip, (new Color(1, 1, 1, 0.5f)), origin.x + 84f, origin.y + 60f,
                             getX() * drawScale.x, getY() * drawScale.y, angle,
-                            0.02f * drawScale.x * faceDirection, 0.01875f * drawScale.y);
+                            0.02f * drawScale.x * minimizeScale * faceDirection, 0.01875f * minimizeScale * drawScale.y);
                 }
                 else {
                     canvas.draw(currentStrip, (new Color(1, 1, 1, 1f)), origin.x + 84f, origin.y + 60f,
                             getX() * drawScale.x, getY() * drawScale.y, angle,
-                            0.02f * drawScale.x * faceDirection, 0.01875f * drawScale.y);
+                            0.02f * drawScale.x * minimizeScale * faceDirection, 0.01875f * minimizeScale * drawScale.y);
                 }
             }
             else{
                 canvas.draw(currentStrip, Color.WHITE, origin.x + 84f, origin.y + 60f,
                         getX() * drawScale.x, getY() * drawScale.y, angle,
-                        0.02f * drawScale.x * faceDirection, 0.01875f * drawScale.y);
+                        0.02f * drawScale.x * minimizeScale * faceDirection, 0.01875f * minimizeScale * drawScale.y);
             }
         }
 

@@ -20,6 +20,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.HashMap;
 
 /**
  * Responsible for managing the loading of an entire level from JSON
@@ -35,14 +36,14 @@ public class GameStateManager {
         public int room_unlocked;
         public int num_levels;
         public String[] level_jsons;
-        public ArrayList <float []> gameTimes;
+        public ArrayList<float[]> gameTimes;
 
-        public GameState(int h, int r, int n, String [] lj){
+        public GameState(int h, int r, int n, String[] lj) {
             highest_level = h;
             room_unlocked = r;
             num_levels = n;
             level_jsons = lj;
-            gameTimes = new ArrayList<float []>(n);
+            gameTimes = new ArrayList<float[]>(n);
         }
 
         public int getHighest_level() {
@@ -52,6 +53,7 @@ public class GameStateManager {
         public void setHighest_level(int highest_level) {
             this.highest_level = highest_level;
         }
+
         public int getRoom_unlocked() {
             return room_unlocked;
         }
@@ -78,12 +80,13 @@ public class GameStateManager {
 
         /**
          * Updates the gameTimes with the level times
+         * 
          * @param lvs the array of level models to load game time from
          */
-        public void setGameTimes (LevelModel [] lvs){
+        public void setGameTimes(LevelModel[] lvs) {
             gameTimes.clear();
-            for (int i = 0; i<lvs.length; i++){
-                gameTimes.add(i,lvs[i].getBestTime());
+            for (int i = 0; i < lvs.length; i++) {
+                gameTimes.add(i, lvs[i].getBestTime());
             }
         }
     }
@@ -98,14 +101,14 @@ public class GameStateManager {
     private static GameStateManager levelloader;
     /** The reader to process JSON files */
     private JsonReader jsonReader;
-    /** The player progress JSON*/
+    /** The player progress JSON */
     private JsonValue gameDirectory;
-    /** List of Level JSONs*/
+    /** List of Level JSONs */
     private JsonValue[] levelDirectories;
     /** List of all Levels in game */
     private LevelModel[] levels;
-//    /** Current level **/
-//    private LevelModel currentLevel;
+    // /** Current level **/
+    // private LevelModel currentLevel;
     /** Highest level unlocked this session **/
     private LevelModel highestUnlockedLevel;
 
@@ -114,10 +117,10 @@ public class GameStateManager {
     /** index of last level **/
     private int last_level_idx;
 
-    public GameStateManager(){
+    public GameStateManager() {
         listener = null;
         canvas = null;
-//        currentLevel = null;
+        // currentLevel = null;
         gameState = null;
         highestUnlockedLevel = null;
         current_level_idx = 0;
@@ -125,19 +128,19 @@ public class GameStateManager {
         levelloader = this;
     }
 
-    public void setCanvas(GameCanvas canvas){
+    public void setCanvas(GameCanvas canvas) {
         this.canvas = canvas;
     }
 
-    public void setListener(ScreenListener listener){
+    public void setListener(ScreenListener listener) {
         this.listener = listener;
     }
 
     /**
      * Returns a reference to the singleton level loader
      *
-     * If there is no active level loader, this method will initialize
-     * one immediately.
+     * If there is no active level loader, this method will initialize one
+     * immediately.
      *
      * @return a reference to the singleton level loader
      */
@@ -162,7 +165,7 @@ public class GameStateManager {
             return "fonts";
         } else if (type.equals(Sound.class)) {
             return "sounds";
-        } else if (type.equals(FilmStrip.class)){
+        } else if (type.equals(FilmStrip.class)) {
             return "filmstrips";
         }
         // Should never reach here
@@ -173,25 +176,25 @@ public class GameStateManager {
     /**
      * true if the current room is the last room in the level
      */
-    public boolean lastRoom(){
+    public boolean lastRoom() {
         return levels[current_level_idx].getCurrentRoomNumber() == (levels[current_level_idx].getRoomCount() - 1);
     }
 
-
     /**
      * Loads the game state from json.
+     * 
      * @param game_state_json
      * @return generated LevelModel
      */
-    public void loadGameState(String game_state_json){
+    public void loadGameState(String game_state_json) {
 
         jsonReader = new JsonReader();
-        //TODO: CHANGE THIS TO LOCAL (UNCOMMENT AND REPLACE LINE) FOR FINISHED VERSION
-//        gameDirectory = jsonReader.parse(Gdx.files.local(game_state_json));
+        // TODO: CHANGE THIS TO LOCAL (UNCOMMENT AND REPLACE LINE) FOR FINISHED VERSION
+        // gameDirectory = jsonReader.parse(Gdx.files.local(game_state_json));
 
         gameDirectory = jsonReader.parse(Gdx.files.internal(game_state_json));
 
-        //parsing game_state json
+        // parsing game_state json
         int unfinishedLevel = gameDirectory.getInt("highest_level");
         int unfinishedRoom = gameDirectory.getInt("room_unlocked");
         int num_levels = gameDirectory.getInt("num_levels");
@@ -199,17 +202,15 @@ public class GameStateManager {
         gameState = new GameState(unfinishedLevel, unfinishedRoom, num_levels, level_paths);
         levelDirectories = new JsonValue[num_levels];
         levels = new LevelModel[num_levels];
-        last_level_idx = levels.length-1;
+        last_level_idx = levels.length - 1;
 
         levelDirectories[0] = jsonReader.parse(Gdx.files.internal(level_paths[0]));
-//        System.out.println("GDX ERROR 0:" + Gdx.gl.glGetError());
 
         levels[0] = loadTutorial(levelDirectories[0]);
-//        System.out.println("GDX ERROR 1 preload:" + Gdx.gl.glGetError());
         levels[0].preloadLevel();
-        JsonValue gameTime= gameDirectory.get("gameTimes");
-        for(int i = 1; i<num_levels; i++) {
-//            System.out.println("GDX ERROR "+ (i+1) +": " + Gdx.gl.glGetError());
+        JsonValue gameTime = gameDirectory.get("gameTimes");
+        for (int i = 1; i < num_levels; i++) {
+            // System.out.println("GDX ERROR "+ (i+1) +": " + Gdx.gl.glGetError());
 
             levelDirectories[i] = jsonReader.parse(Gdx.files.internal(level_paths[i]));
             levels[i] = loadLevel(levelDirectories[i], unfinishedLevel, unfinishedRoom);
@@ -219,8 +220,8 @@ public class GameStateManager {
             levels[i].setBestTime(gameTime.get(i).asFloatArray());
             levels[i].preloadLevel();
         }
-//        System.out.println("GDX ERROR end:" + Gdx.gl.glGetError());
-        for (int j = 0; j<num_levels;j++){
+        // System.out.println("GDX ERROR end:" + Gdx.gl.glGetError());
+        for (int j = 0; j < num_levels; j++) {
             System.out.println(Arrays.toString(gameTime.get(j).asFloatArray()));
         }
     }
@@ -228,8 +229,8 @@ public class GameStateManager {
     /**
      * Fully creates all levels during the loading period.
      */
-    public void readyLevels(){
-        for(LevelModel level: levels){
+    public void readyLevels() {
+        for (LevelModel level : levels) {
             level.setCanvas(canvas);
             level.setListener(listener);
             level.createLevel();
@@ -242,28 +243,28 @@ public class GameStateManager {
      * @param levelJson
      * @return LevelModel generated from levelJson
      */
-    protected LevelModel loadLevel(JsonValue levelJson, int unfinishedLevel, int unfinishedRoom){
+    protected LevelModel loadLevel(JsonValue levelJson, int unfinishedLevel, int unfinishedRoom) {
         int lv = levelJson.getInt("level");
         int room_count = levelJson.getInt("room_count");
         String[] room_paths = levelJson.get("rooms").asStringArray();
 
-        LevelController [] rooms = new LevelController[room_count];
+        LevelController[] rooms = new LevelController[room_count];
 
-        for(int i=0; i<room_count; i++){
+        for (int i = 0; i < room_count; i++) {
             rooms[i] = new LevelController(room_paths[i]);
         }
 
-       if(lv == unfinishedLevel){
+        if (lv == unfinishedLevel) {
             return new LevelModel(lv, true, false, unfinishedRoom, rooms);
-        }else if(lv > unfinishedLevel){
+        } else if (lv > unfinishedLevel) {
             return new LevelModel(lv, false, false, 0, rooms);
-        }else{
+        } else {
             return new LevelModel(lv, true, true, 0, rooms);
         }
 
     }
 
-    public JsonValue getJson(int level){
+    public JsonValue getJson(int level) {
         return levelDirectories[level];
     }
 
@@ -273,18 +274,23 @@ public class GameStateManager {
      * @param levelJson
      * @return LevelModel generated from levelJson
      */
-    protected TutorialModel loadTutorial(JsonValue levelJson){
+    protected TutorialModel loadTutorial(JsonValue levelJson) {
         int lv = levelJson.getInt("level");
         int room_count = levelJson.getInt("room_count");
+        JsonValue jsonCards = levelJson.get("cards");
         String[] room_paths = levelJson.get("rooms").asStringArray();
 
-        LevelController [] rooms = new LevelController[room_count];
+        LevelController[] rooms = new LevelController[room_count];
+        HashMap<Integer, String[]> cards = new HashMap<>();
 
-        for(int i=0; i<room_count; i++){
+        System.out.println("ROOM COUNT: " + room_count);
+        System.out.println("ROOM_ PATH SIZE: " + room_paths.length);
+        for (int i = 0; i < room_count; i++) {
+            cards.put(i, jsonCards.get("c" + (i + 1)).asStringArray());
             rooms[i] = new TutorialController(room_paths[i]);
         }
 
-       return new TutorialModel(lv, true, true, 0, rooms);
+        return new TutorialModel(lv, true, true, 0, rooms, cards);
 
     }
 
@@ -292,58 +298,55 @@ public class GameStateManager {
      *
      * @return the Screen to the current room being played
      */
-    public LevelController getCurrentRoom(){
+    public LevelController getCurrentRoom() {
         return levels[current_level_idx].getCurrentRoom();
     }
 
     /**
-     * Method called to step game progress, which involves either:
-     * 1. Moving to the next room
-     * 2. Finishing last room in level and finishing level/moving on to next level
-     * 3. Finishing the game
+     * Method called to step game progress, which involves either: 1. Moving to the
+     * next room 2. Finishing last room in level and finishing level/moving on to
+     * next level 3. Finishing the game
      */
-    public void stepGame(boolean is_exit){
+    public void stepGame(boolean is_exit) {
         LevelModel currentLevel = levels[current_level_idx];
-        //Updates the level timer
+        // Updates the level timer
         currentLevel.updateBestTime(currentLevel.getCurrentRoomNumber());
-        if(is_exit) {
+        if (is_exit) {
             System.out.println("entin");
             boolean finished = currentLevel.stepLevel();
-            if(finished){
+            if (finished) {
                 MusicController.getInstance().stopAll();
                 levels[current_level_idx].finishLevel();
-                if(finished && current_level_idx == last_level_idx){
+                if (finished && current_level_idx == last_level_idx) {
 
-                    //endGameState(); //TODO: end game state accouncement/screen
-                }
-                else if(finished){
+                    // endGameState(); //TODO: end game state accouncement/screen
+                } else if (finished) {
                     current_level_idx++;
                     levels[current_level_idx].setCurrentRoom(0);
                     levels[current_level_idx].playMusic();
-                    if(!levels[current_level_idx].isUnlocked()){
+                    if (!levels[current_level_idx].isUnlocked()) {
                         highestUnlockedLevel = levels[current_level_idx];
                         levels[current_level_idx].unlockLevel();
                     }
-                    //TODO: LEVEL FINISH SCREEN
+                    // TODO: LEVEL FINISH SCREEN
                 }
             }
-        }else{ //simply want to unlock next level if locked
-            //Update the best time of the level
-            if(!levels[current_level_idx+1].isUnlocked()){
+        } else { // simply want to unlock next level if locked
+                 // Update the best time of the level
+            if (!levels[current_level_idx + 1].isUnlocked()) {
                 highestUnlockedLevel = currentLevel;
-                levels[current_level_idx+1].unlockLevel();
+                levels[current_level_idx + 1].unlockLevel();
             }
         }
 
-
     }
 
-    public void printGameState(){
+    public void printGameState() {
         System.out.println("current level index" + current_level_idx);
         System.out.println("Current Level: " + levels[current_level_idx].getLevelNumber());
         System.out.println("Current Room: " + levels[current_level_idx].getCurrentRoomNumber());
         System.out.println("--------- LEVELS--------");
-        for(LevelModel l : levels){
+        for (LevelModel l : levels) {
             System.out.println("Level: " + l.getLevelNumber() + "| Unlocked: " + l.isUnlocked());
         }
 
@@ -351,17 +354,19 @@ public class GameStateManager {
 
     /**
      * Returns the current Level
+     * 
      * @return current LevelModel
      */
-    public LevelModel getCurrentLevel(){
+    public LevelModel getCurrentLevel() {
         return levels[current_level_idx];
     }
 
     /**
      * Sets the current Level
+     * 
      * @return current LevelModel
      */
-    public void setCurrentLevel(int idx, int roomidx){
+    public void setCurrentLevel(int idx, int roomidx) {
         current_level_idx = idx;
         levels[current_level_idx].setCurrentRoom(roomidx);
         System.out.println("idx " + idx);
@@ -373,27 +378,26 @@ public class GameStateManager {
      * @param idx
      * @return the level at index idx
      */
-    public LevelModel getLevel(int idx){
+    public LevelModel getLevel(int idx) {
         return levels[idx];
     }
 
     /**
      * Player beat the whole game!
      */
-    public boolean endGameState(){
-        return current_level_idx == last_level_idx && levels[current_level_idx].getCurrentRoomNumber() == levels[current_level_idx].getRoomCount() - 1;
+    public boolean endGameState() {
+        return current_level_idx == last_level_idx
+                && levels[current_level_idx].getCurrentRoomNumber() == levels[current_level_idx].getRoomCount() - 1;
     }
-
 
     /**
      * Updates the whole game state in the directories
      */
-    public void updateGameState(){
+    public void updateGameState() {
         gameState.setHighest_level(highestUnlockedLevel.getLevelNumber());
         gameState.setRoom_unlocked(highestUnlockedLevel.getCurrentRoomNumber());
         gameState.setGameTimes(levels);
     }
-
 
     /**
      * Saves the whole game state to game.json and level jsons
