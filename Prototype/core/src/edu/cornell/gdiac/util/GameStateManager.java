@@ -7,10 +7,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.utils.Json;
-import com.badlogic.gdx.utils.JsonReader;
-import com.badlogic.gdx.utils.JsonValue;
-import com.badlogic.gdx.utils.JsonWriter;
+import com.badlogic.gdx.utils.*;
 import edu.cornell.gdiac.tempus.GameCanvas;
 import edu.cornell.gdiac.tempus.MusicController;
 import edu.cornell.gdiac.tempus.tempus.LevelController;
@@ -20,6 +17,9 @@ import edu.cornell.gdiac.tempus.tempus.models.ScreenExitCodes;
 import edu.cornell.gdiac.tempus.tempus.models.TutorialModel;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 
 /**
  * Responsible for managing the loading of an entire level from JSON
@@ -35,12 +35,14 @@ public class GameStateManager {
         public int room_unlocked;
         public int num_levels;
         public String[] level_jsons;
+        public ArrayList <float []> gameTimes;
 
         public GameState(int h, int r, int n, String [] lj){
             highest_level = h;
             room_unlocked = r;
             num_levels = n;
             level_jsons = lj;
+            gameTimes = new ArrayList<float []>(n);
         }
 
         public int getHighest_level() {
@@ -50,7 +52,6 @@ public class GameStateManager {
         public void setHighest_level(int highest_level) {
             this.highest_level = highest_level;
         }
-
         public int getRoom_unlocked() {
             return room_unlocked;
         }
@@ -73,6 +74,17 @@ public class GameStateManager {
 
         public void setLevel_jsons(String[] level_jsons) {
             this.level_jsons = level_jsons;
+        }
+
+        /**
+         * Updates the gameTimes with the level times
+         * @param lvs the array of level models to load game time from
+         */
+        public void setGameTimes (LevelModel [] lvs){
+            gameTimes.clear();
+            for (int i = 0; i<lvs.length; i++){
+                gameTimes.add(i,lvs[i].getBestTime());
+            }
         }
     }
 
@@ -195,19 +207,22 @@ public class GameStateManager {
         levels[0] = loadTutorial(levelDirectories[0]);
 //        System.out.println("GDX ERROR 1 preload:" + Gdx.gl.glGetError());
         levels[0].preloadLevel();
-
-        for(int i = 1; i<num_levels; i++){
+        JsonValue gameTime= gameDirectory.get("gameTimes");
+        for(int i = 1; i<num_levels; i++) {
 //            System.out.println("GDX ERROR "+ (i+1) +": " + Gdx.gl.glGetError());
 
             levelDirectories[i] = jsonReader.parse(Gdx.files.internal(level_paths[i]));
             levels[i] = loadLevel(levelDirectories[i], unfinishedLevel, unfinishedRoom);
-            if(levels[i].getLevelNumber() == unfinishedLevel){
+            if (levels[i].getLevelNumber() == unfinishedLevel) {
                 highestUnlockedLevel = levels[i];
             }
+            levels[i].setBestTime(gameTime.get(i).asFloatArray());
             levels[i].preloadLevel();
         }
 //        System.out.println("GDX ERROR end:" + Gdx.gl.glGetError());
-
+        for (int j = 0; j<num_levels;j++){
+            System.out.println(Arrays.toString(gameTime.get(j).asFloatArray()));
+        }
     }
 
     /**
@@ -288,9 +303,12 @@ public class GameStateManager {
      * 3. Finishing the game
      */
     public void stepGame(boolean is_exit){
+        LevelModel currentLevel = levels[current_level_idx];
+        //Updates the level timer
+        currentLevel.updateBestTime(currentLevel.getCurrentRoomNumber());
         if(is_exit) {
             System.out.println("entin");
-            boolean finished = levels[current_level_idx].stepLevel();
+            boolean finished = currentLevel.stepLevel();
             if(finished){
                 MusicController.getInstance().stopAll();
                 levels[current_level_idx].finishLevel();
@@ -310,8 +328,9 @@ public class GameStateManager {
                 }
             }
         }else{ //simply want to unlock next level if locked
+            //Update the best time of the level
             if(!levels[current_level_idx+1].isUnlocked()){
-                highestUnlockedLevel = levels[current_level_idx];
+                highestUnlockedLevel = currentLevel;
                 levels[current_level_idx+1].unlockLevel();
             }
         }
@@ -372,15 +391,16 @@ public class GameStateManager {
     public void updateGameState(){
         gameState.setHighest_level(highestUnlockedLevel.getLevelNumber());
         gameState.setRoom_unlocked(highestUnlockedLevel.getCurrentRoomNumber());
+        gameState.setGameTimes(levels);
     }
 
 
     /**
      * Saves the whole game state to game.json and level jsons
      */
-    public void saveGameState(){
+    public void saveGameState() {
         FileHandle gamefile = Gdx.files.local("jsons/game.json");
-        Json json=new Json(JsonWriter.OutputType.json);
+        Json json = new Json(JsonWriter.OutputType.json);
         json.setWriter(gamefile.writer(false));
         json.setOutputType(JsonWriter.OutputType.json);
         gamefile.writeString(json.prettyPrint(gameState), false);

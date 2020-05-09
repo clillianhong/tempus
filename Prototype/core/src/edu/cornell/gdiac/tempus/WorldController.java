@@ -469,10 +469,10 @@ public abstract class WorldController implements Screen {
 			debug = !debug;
 		}
 		
-		// Handle resets
-		if (input.didReset()) {
-			reset();
-		}
+//		// Handle resets
+//		if (input.didReset()) {
+//			reset();
+//		}
 
 
 		return true;
@@ -507,10 +507,10 @@ public abstract class WorldController implements Screen {
 			debug = !debug;
 		}
 
-		// Handle resets
-		if (input.didReset()) {
-			reset();
-		}
+//		// Handle resets
+//		if (input.didReset()) {
+//			reset();
+//		}
 
 		while (!addQueue.isEmpty()) {
 			Obstacle b = addQueue.poll();
