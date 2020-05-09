@@ -383,7 +383,7 @@ public class SelectLevelMode implements Screen {
         Table rightTable = new Table();
         rightTable.setWidth(cw/2 - 10);
         rightTable.add(pIContainer).padTop(cw/16f);
-        rightTable.row().padTop(20);
+        rightTable.row().padTop(30);
         rightTable.add(lbContainer);
 
         //add scroller to dual table
