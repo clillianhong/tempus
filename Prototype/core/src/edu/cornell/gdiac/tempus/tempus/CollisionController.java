@@ -264,6 +264,9 @@ public class CollisionController implements ContactListener {
         if (proj.getType() != e.getType() && !e.getName().equals("turret")) {
             Enemy obs = (Enemy) enemyBody.getUserData();
             obs.setDead();
+            if (obs.getAi() == Enemy.EnemyType.TELEPORT){
+                controller.getEnemyController().removePlat(obs.getCurrPlatform(), obs.getSpace());
+            }
         }
 
         if (e.getBody().getUserData() != proj.getSourceData()) {
