@@ -205,7 +205,7 @@
       "density": 1,
       "bodytype": "dynamic",
       "entitytype": "past",
-      "cooldown": 300,
+      "cooldown": 270,
       "aitype": 4
     },
     "enemy2": {
@@ -222,7 +222,7 @@
       "density": 1,
       "bodytype": "dynamic",
       "entitytype": "past",
-      "cooldown": 300
+      "cooldown": 330
     },
     "enemy3": {
       "pos": [
@@ -237,7 +237,7 @@
       "density": 1,
       "bodytype": "dynamic",
       "entitytype": "present",
-      "cooldown": 300,
+      "cooldown": 270,
       "aitype": 4
     },
     "enemy28": {
@@ -253,7 +253,7 @@
       "density": 1,
       "bodytype": "dynamic",
       "entitytype": "present",
-      "cooldown": 300,
+      "cooldown": 330,
       "aitype": 4
     }
   },

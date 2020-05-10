@@ -167,7 +167,7 @@
       "density": 1,
       "bodytype": "dynamic",
       "entitytype": "past",
-      "cooldown": 120,
+      "cooldown": 175,
       "aitype": 1
     },
     "enemy3": {
