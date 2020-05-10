@@ -23,6 +23,8 @@ import edu.cornell.gdiac.util.GameStateManager;
 import edu.cornell.gdiac.util.JsonAssetManager;
 import edu.cornell.gdiac.util.SoundController;
 
+import java.util.HashMap;
+
 //import javax.xml.soap.Text;
 
 public class TutorialController extends LevelController {
@@ -39,8 +41,16 @@ public class TutorialController extends LevelController {
 
     private Table tutorialCard;
     private boolean isHelp;
+    /** the current dialogue index */
     private int dialogueNum;
+    /** the current background index  */
+    private int bgNum;
+    /** All cutscene dialogues */
     private TextureRegionDrawable[] dialogues;
+    /** All cutscene backgrounds */
+    private TextureRegionDrawable[] backgrounds;
+    /** Mapping of cutscene index to the appropriate dialogue index **/
+    private HashMap<Integer, Integer> dlMap;
     private Table cutsceneTable;
     private Container cutCont;
 
@@ -74,6 +84,12 @@ public class TutorialController extends LevelController {
     }
 
     public void setFirst(boolean b) {first = b;};
+
+    public void setCutScene(TextureRegionDrawable [] bgs, TextureRegionDrawable [] dls, HashMap<Integer, Integer> map){
+        backgrounds = bgs;
+        dialogues = dls;
+        dlMap = map;
+    }
     @Override
     public void preLoadContent() {
         super.preLoadContent();
