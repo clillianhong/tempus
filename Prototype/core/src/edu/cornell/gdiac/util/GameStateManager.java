@@ -108,6 +108,8 @@ public class GameStateManager {
     private JsonValue[] levelDirectories;
     /** List of all Levels in game */
     private LevelModel[] levels;
+    /** whether or not the game is completed */
+    private boolean endGame;
     // /** Current level **/
     // private LevelModel currentLevel;
     /** Highest level unlocked this session **/
@@ -127,6 +129,7 @@ public class GameStateManager {
         current_level_idx = 0;
         last_level_idx = 3;
         levelloader = this;
+        endGame = false;
     }
 
     public void setCanvas(GameCanvas canvas) {
@@ -181,6 +184,10 @@ public class GameStateManager {
         return levels[current_level_idx].getCurrentRoomNumber() == (levels[current_level_idx].getRoomCount() - 1);
     }
 
+    public int getCurrentLevelIndex(){
+        return current_level_idx;
+    }
+
     /**
      * Loads the game state from json.
      * 
@@ -191,9 +198,9 @@ public class GameStateManager {
 
         jsonReader = new JsonReader();
         // TODO: CHANGE THIS TO LOCAL (UNCOMMENT AND REPLACE LINE) FOR FINISHED VERSION
-        // gameDirectory = jsonReader.parse(Gdx.files.local(game_state_json));
+         gameDirectory = jsonReader.parse(Gdx.files.local(game_state_json));
 
-        gameDirectory = jsonReader.parse(Gdx.files.internal(game_state_json));
+//        gameDirectory = jsonReader.parse(Gdx.files.internal(game_state_json));
 
         // parsing game_state json
         int unfinishedLevel = gameDirectory.getInt("highest_level");
@@ -337,7 +344,7 @@ public class GameStateManager {
                 MusicController.getInstance().stopAll();
                 levels[current_level_idx].finishLevel();
                 if (finished && current_level_idx == last_level_idx) {
-
+                    endGame = true;
                     // endGameState(); //TODO: end game state accouncement/screen
                 } else if (finished) {
                     current_level_idx++;
@@ -405,8 +412,12 @@ public class GameStateManager {
      * Player beat the whole game!
      */
     public boolean endGameState() {
-        return current_level_idx == last_level_idx
-                && levels[current_level_idx].getCurrentRoomNumber() == levels[current_level_idx].getRoomCount() - 1;
+        return endGame;
+    }
+
+    /** resets the end game trigger **/
+    public void resetEndGame(){
+        endGame = false;
     }
 
     /**
