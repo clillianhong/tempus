@@ -164,6 +164,8 @@ public class LevelController extends WorldController {
 	protected boolean timeFreeze;
 	protected Vector2 avatarStart;
 	protected int numEnemies;
+	/**The room timer*/
+	protected float roomTimer;
 
 	/**
 	 * Preloads the assets for this controller.
@@ -375,7 +377,22 @@ public class LevelController extends WorldController {
 		viewport.apply();
 	}
 
+	/**
+	 * Gets the value of the timer
+	 * @return the current value of the timer
+	 */
+	public float getTimer(){ return roomTimer;}
 
+	/**
+	 * Increments the value of the timer by delta
+	 * @param delta
+	 */
+	public void incrTimer(float delta){roomTimer += delta;}
+
+	/**
+	 * Resets the room timer when the room has ended
+	 */
+	public void resetTimer(){roomTimer = 0;}
 
 	/**
 	 * Resets the status of the game so that we can play again.
@@ -430,6 +447,7 @@ public class LevelController extends WorldController {
 		// Vector2 gravity = new Vector2(world.getGravity());
 		setComplete(false);
 		setFailure(false);
+		resetTimer();
 		drawEndRoom = false;
 		drawFadeAlpha = 0;
 		stage.clear();
@@ -555,40 +573,8 @@ public class LevelController extends WorldController {
 		goalDoor.setDrawScale(scale);
 		addObject(goalDoor);
 
-		earthTile = JsonAssetManager.getInstance().getEntry("earth", TextureRegion.class);
-		String nameWall = "wall";
-		for (int ii = 0; ii < WALLS.length; ii++) {
-			PolygonObstacle obj;
-			obj = new Platform(WALLS[ii], 0, 0);
-			obj.setBodyType(BodyDef.BodyType.StaticBody);
-			obj.setDensity(BASIC_DENSITY);
-			obj.setFriction(BASIC_FRICTION);
-			obj.setRestitution(BASIC_RESTITUTION);
-			obj.setDrawScale(scale);
-			obj.setTexture(earthTile);
-			obj.setName(nameWall);
-			// addObject(obj);
-		}
+//		earthTile = JsonAssetManager.getInstance().getEntry("earth", TextureRegion.class);
 
-		String namePlatform = "platform";
-		for (int ii = 0; ii < PLATFORMS.length; ii++) {
-			PolygonObstacle obj;
-			obj = new Platform(PLATFORMS[ii], 0, 0);
-			obj.setBodyType(BodyDef.BodyType.StaticBody);
-			obj.setDensity(BASIC_DENSITY);
-			obj.setFriction(BASIC_FRICTION);
-			obj.setRestitution(BASIC_RESTITUTION);
-			obj.setDrawScale(scale);
-			obj.setTexture(earthTile);
-			obj.setName(namePlatform);
-			if (ii <= PLATFORMS.length / 2) {
-				obj.setSpace(1);
-			}
-			if (ii > PLATFORMS.length / 2) {
-				obj.setSpace(2);
-			}
-			// addObject(obj);
-		}
 		float[] newPlatCapsule = {0.5f, 1.1f, 0.6f, 1.1f, 2.5f, 1.1f, 2.6f, 1.1f, 2.6f, 0.6f, 2.0f, 0.3f, 1.1f, 0.3f, 0.5f, 0.6f};
 		float[] newPlatDiamond = {0.4f, 1.8f, 0.5f, 1.8f, 2.1f, 1.8f, 2.2f, 1.8f, 1.4f, 0.1f};
 		float[] newPlatRounded = {0.4f, 1.4f, 0.8f, 1.7f, 2.1f, 1.7f, 2.4f, 1.4f, 2.3f, 0.8f, 1.7f, 0.3f, 1.1f, 0.3f};
@@ -1217,8 +1203,7 @@ public class LevelController extends WorldController {
 	 */
 	public void update(float dt) {
 		// Turn the physics engine crank.
-		// world.step(WORLD_STEP,WORLD_VELOC,WORLD_POSIT);
-
+		// world.step(WORLD_STEP,WORLD_VELOC,WORLD_POSIT)
 		if (InputController.getInstance().didPause() && !paused) {
 			pauseGame();
 		}
@@ -1228,11 +1213,14 @@ public class LevelController extends WorldController {
 			debug = !debug;
 		}
 
-		// Handle resets
+//		 Handle resets
 		if (input.didReset()) {
 			resetGame();
 //			reset();
 		}
+
+		// Increments the timer
+		incrTimer(Gdx.graphics.getDeltaTime());
 
 		//check if avatar is in "catch mode"
 		if (!avatar.isCatchReady() && !avatar.isHolding() && !avatar.isSticking()

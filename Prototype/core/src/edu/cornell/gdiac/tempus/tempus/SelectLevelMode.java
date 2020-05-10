@@ -21,7 +21,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
+//import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import edu.cornell.gdiac.tempus.GameCanvas;
 import edu.cornell.gdiac.tempus.tempus.models.LevelModel;
 import edu.cornell.gdiac.tempus.tempus.models.ScreenExitCodes;
