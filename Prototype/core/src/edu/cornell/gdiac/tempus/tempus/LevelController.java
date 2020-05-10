@@ -873,7 +873,7 @@ public class LevelController extends WorldController {
 		TextureRegionDrawable pauseButtonResource = new TextureRegionDrawable(
 				new TextureRegion(new Texture(Gdx.files.internal("textures/gui/pausebutton.png"))));
 		overlayDark = new TextureRegion(new Texture(Gdx.files.internal("textures/gui/pause_filter_25_black.png")));
-		overlayBG = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/pause_filter_50_black.png"))));
+		overlayBG = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/pause_filter_85_black.png"))));
 		TextureRegionDrawable pauseBox = new TextureRegionDrawable(
 				new TextureRegion(new Texture(Gdx.files.internal("textures/gui/frame_pause.png"))));
 		TextureRegionDrawable resumeResource = new TextureRegionDrawable(
@@ -933,7 +933,15 @@ public class LevelController extends WorldController {
 		/*
 		 * END PAUSE SCREEN SETUP---------------------
 		 */
-
+//		/* create level and room numbers */
+//		displayFont = new BitmapFont(Gdx.files.internal("fonts/carterone.fnt"));
+//		style = new Label.LabelStyle(displayFont, Color.WHITE);
+//		Label level = new Label("Level 3", style);
+//		Container levelCont = new Container();
+//		levelCont.setSize(level.getWidth(), level.getHeight());
+//		levelCont.setActor(level);
+//		levelCont.setPosition(canvas.getWidth()/2, canvas.getHeight()/2);
+//		table.add(levelCont);
 		/* START END-GAME SCREEN CREATION */
 		isEndRoom = false;
 		if(GameStateManager.getInstance().lastRoom()){
@@ -1064,7 +1072,7 @@ public class LevelController extends WorldController {
 	 * game mode. If not, the update proceeds normally.
 	 *
 	 * @param dt Number of seconds since last animation frame
-	 * 
+	 *
 	 * @return whether to process the update loop
 	 */
 	public boolean preUpdate(float dt) {
@@ -1471,7 +1479,7 @@ public class LevelController extends WorldController {
 	}
 
 	/**
-	 * 
+	 *
 	 * Add a new bullet to the world and send it in the direction specified by the
 	 * turret it originated from. Processes physics
 	 *
@@ -1727,7 +1735,6 @@ public class LevelController extends WorldController {
 					canvas.getHeight() - life.getRegionHeight() * 0.007f * scale.y, scale.x, scale.y);
 		}
 	}
-
 	/**
 	 * Writes to shader uniforms for the ripple effect.
 	 */
@@ -1818,10 +1825,9 @@ public class LevelController extends WorldController {
 			drawObjectInWorld();
 			drawIndicator(canvas);
 
-			if(!isTutorial){
+			if(!isTutorial) {
 				drawLives(canvas);
 			}
-
 			if (debug) {
 				canvas.beginDebug();
 				drawDebugInWorld();
