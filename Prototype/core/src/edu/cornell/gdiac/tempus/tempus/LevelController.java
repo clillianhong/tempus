@@ -218,7 +218,7 @@ public class LevelController extends WorldController {
 	/** The density for most physics objects */
 	protected static final float BASIC_DENSITY = 0.0f;
 	/** The density for a bullet */
-	protected static final float HEAVY_DENSITY = 10.0f;
+	protected static final float HEAVY_DENSITY = 1.0f;
 	/** Friction of most platforms */
 	protected static final float BASIC_FRICTION = 0.6f;
 	/** The restitution for all physics objects */
@@ -653,6 +653,7 @@ public class LevelController extends WorldController {
 		avatar = new Avatar();
 		avatar.setCanvas(camera);
 		avatar.setDrawScale(scale);
+		//avatar.setScale(scale);
 		avatar.initialize(json);
 		addObject(avatar);
 		float[] pos = json.get("pos").asFloatArray();
@@ -1480,7 +1481,10 @@ public class LevelController extends WorldController {
 //		printCoordinates();
 
 		if (!avatar.isHolding() && !avatar.isDashing() && !avatar.isSticking() && input.pressedXKey()){
+			avatar.setSlowing(-1);
 			avatar.setVX(avatar.getVX() * 0.9f);
+		} else {
+			avatar.setSlowing(1);
 		}
 	}
 
