@@ -219,7 +219,9 @@ public class SelectLevelMode implements Screen {
                 "textures/gui/selectmode/level1unlocked.png",
                 "textures/gui/selectmode/level1pressed.png",
                 "textures/gui/selectmode/level1locked.png",
-                "this is level 1");
+                "The earth is not what it once was. " +
+                "The Timewalkers certainly left it in quite "+
+                        "the state. ");
         levels[2] = new Level(2,true, "textures/background/bg_past_lv_2.jpg",
                 "textures/gui/selectmode/level2unlocked.png",
                 "textures/gui/selectmode/level2pressed.png",

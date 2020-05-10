@@ -166,9 +166,11 @@ public class GDXRoot extends Game implements ScreenListener {
 
 		if ((screen.getClass() == TutorialController.class ||
 				screen.getClass() == LevelController.class )) {
+
 			if(exitCode == ScreenExitCodes.EXIT_NEXT.ordinal()){
 				if (gameManager.endGameState()) {
 					gameManager.updateGameState();
+					gameManager.resetEndGame();
 					//MusicController.getInstance().stopAll();
 					levelselect.setScreenListener(this);
 					levelselect.setCanvas(canvas);
