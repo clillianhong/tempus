@@ -55,6 +55,5 @@ public class Projectile extends WheelObstacle {
         } else {
             rotation += 1.0f;
         }
-
     }
 }

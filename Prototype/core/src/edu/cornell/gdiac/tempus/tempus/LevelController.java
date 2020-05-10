@@ -1962,4 +1962,8 @@ public class LevelController extends WorldController {
 		SoundController.getInstance().play(portal.get("file").asString(), portal.get("file").asString(),
 				false, portal.get("volume").asFloat());
 	}
+
+	public EnemyController getEnemyController(){
+		return enemyController;
+	}
 }
