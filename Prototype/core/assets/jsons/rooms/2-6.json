@@ -73,7 +73,7 @@
       "name": "both_capsule",
       "pos": [
         5.456,
-        8.1499999999999995
+        7.1499999999999995
       ],
       "bodytype": "static",
       "density": 0,
@@ -86,7 +86,7 @@
       "name": "both_capsule",
       "pos": [
         8.456,
-        13.58
+        12.58
       ],
       "bodytype": "static",
       "density": 0,
@@ -99,7 +99,7 @@
       "name": "both_capsule",
       "pos": [
         8.456,
-        2.69
+        1.69
       ],
       "bodytype": "static",
       "density": 0,
@@ -115,7 +115,7 @@
     "enemy8": {
       "pos": [
         6.864,
-        11.36
+        10.36
       ],
       "shrink": [
         0.0168,
