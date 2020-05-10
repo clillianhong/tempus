@@ -15,11 +15,19 @@ import java.util.HashMap;
 public class TutorialModel extends LevelModel {
 
     private HashMap<Integer, String[]> tutorialCards;
+    private float[] map;
+    private TextureRegionDrawable[] bgs;
+    private TextureRegionDrawable[] dls;
 
 
-    public TutorialModel(int lv, boolean unlocked, boolean finished, int resume, LevelController[] rms, HashMap<Integer, String[]> cards) {
+    public TutorialModel(int lv, boolean unlocked, boolean finished, int resume,
+                         LevelController[] rms, HashMap<Integer, String[]> cards,
+                         TextureRegionDrawable[] bgs, TextureRegionDrawable[] dls, float [] mapping) {
         super(lv, unlocked, finished, resume, rms);
         tutorialCards = cards;
+        this.bgs = bgs;
+        this.dls = dls;
+        this.map = mapping;
 
     }
 
@@ -33,6 +41,8 @@ public class TutorialModel extends LevelModel {
             rc.setScreenListener(listener);
             rc.setCanvas(canvas);
         }
+        //setting cutscenes
+        ((TutorialController)rooms[0]).setCutScene(bgs, dls, map);
     }
 
 
