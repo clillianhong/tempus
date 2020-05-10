@@ -125,9 +125,6 @@ public class LevelModel {
             current_room_idx = 0;
             return true;
         }
-        current_room_idx = current_room_idx + 1;
-        highest_room_unlocked = Math.max(highest_room_unlocked, current_room_idx);
-
         current_room = rooms[current_room_idx];
         return false;
     }
@@ -160,7 +157,6 @@ public class LevelModel {
     }
 
     public void setCurrentRoom(int idx){
-        System.out.println("SETTING CURRENT ROOM PREMATURELY " + idx);
         current_room_idx = idx;
         current_room = rooms[current_room_idx];
     }
