@@ -146,6 +146,8 @@ public class Enemy extends CapsuleObstacle {
     /** Whether the enemy is a turret or not */
     private boolean isTurret;
 
+    private boolean waitToFire;
+
     /** Direction the enemy faces */
     private float faceDirection;
 
@@ -257,6 +259,7 @@ public class Enemy extends CapsuleObstacle {
             tpEndTexture = JsonAssetManager.getInstance().getEntry(("enemyteleporting_deactivate"), FilmStrip.class);
             setFilmStrip(EnemyState.TPEND, tpEndTexture);
             minimizeScale = 0.35f;
+            waitToFire = true;
             break;
 
         case 3:
@@ -298,6 +301,14 @@ public class Enemy extends CapsuleObstacle {
             setGravityScale(0);
             flyingVelocity = new Vector2(0,0);
         }
+    }
+
+    public void setWaitToFire(boolean b){
+        waitToFire = b;
+    }
+
+    public boolean getWaitToFire(){
+        return waitToFire;
     }
 
     public Array<Fixture> getFixtures() {
@@ -820,7 +831,13 @@ public class Enemy extends CapsuleObstacle {
 
             canvas.draw(currentStrip, Color.WHITE, origin.x, origin.y,  (getX() - faceOffset) * drawScale.x, (getY()- 0.6f * getHeight()) * drawScale.y,
                     getAngle(), 0.018f * minimizeScale * drawScale.x * faceDirection , 0.0169f * minimizeScale * drawScale.y);
-        }else{
+        } else if (getAi() == EnemyType.TELEPORT){
+            float faceOffset = 0.7f* getWidth() * faceDirection;
+
+            canvas.draw(currentStrip, Color.WHITE, origin.x, origin.y,  (getX() - faceOffset) * drawScale.x, (getY()- 0.2f * getHeight()) * drawScale.y,
+                    getAngle(), 0.024f * minimizeScale * drawScale.x * faceDirection , 0.0225f * minimizeScale * drawScale.y);
+        }
+        else{
             // Draw enemy filmstrip
             if (currentStrip != null) {
                 canvas.draw(currentStrip, Color.WHITE, origin.x, origin.y, getX() * drawScale.x, getY() * drawScale.y,
@@ -844,7 +861,12 @@ public class Enemy extends CapsuleObstacle {
             canvas.draw(currentStrip, new Color(1,1,1, mul * frames), origin.x, origin.y,
                     (getX() - faceOffset) * drawScale.x, (getY()- 0.6f * getHeight()) * drawScale.y, getAngle(),
                     0.018f * minimizeScale * drawScale.x * faceDirection, 0.0169f * minimizeScale * drawScale.y);
-        }else{
+        } else if (getAi() == EnemyType.TELEPORT){
+            float faceOffset = 0.7f * getWidth() * faceDirection;
+
+            canvas.draw(currentStrip, new Color(1,1,1, mul * frames), origin.x, origin.y,  (getX() - faceOffset) * drawScale.x, (getY()- 0.2f * getHeight()) * drawScale.y,
+                    getAngle(), 0.024f * minimizeScale * drawScale.x * faceDirection , 0.0225f * minimizeScale * drawScale.y);
+        } else{
             if (currentStrip != null) {
                 canvas.draw(currentStrip, new Color(1,1,1, mul * frames), origin.x, origin.y,
                         getX() * drawScale.x, getY() * drawScale.y, getAngle(),
