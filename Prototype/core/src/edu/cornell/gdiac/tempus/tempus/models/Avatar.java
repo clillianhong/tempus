@@ -1,6 +1,7 @@
 package edu.cornell.gdiac.tempus.tempus.models;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -98,6 +99,7 @@ public class Avatar extends CapsuleObstacle {
     public float height;
     private float density;
     private int dashCounter;
+    private int slowing;
 
     private boolean wasDamaged;
     private boolean hitByProjctile;
@@ -233,6 +235,8 @@ public class Avatar extends CapsuleObstacle {
     /** sets whether the avatar touched an enemy recently */
     public void setEnemyContact(boolean e) {enemyContact = e;}
 
+    public void setSlowing(int s) {slowing = s;}
+
     public void setProjectileContact(boolean p) {hitByProjctile = p;}
     /**
      * Returns left/right movement of this character.
@@ -306,8 +310,8 @@ public class Avatar extends CapsuleObstacle {
             this.setDashStartPos(this.getPosition().cpy());
             this.setDashDistance(Math.min(this.getDashRange(), mousePos.cpy().sub(this.getPosition()).len()));
             this.setDashForceDirection(mousePos.cpy().sub(this.getPosition()));
-            System.out.println("dash angle: " + mousePos.cpy().sub(this.getPosition()).angleRad());
-            System.out.println("avatar angle: " + getAngle());
+            //System.out.println("dash angle: " + mousePos.cpy().sub(this.getPosition()).angleRad());
+            //System.out.println("avatar angle: " + getAngle());
             //this.setStartedDashing(2);
             if (Math.abs(mousePos.cpy().sub(this.getPosition()).angleRad() + Math.PI / 2 - getAngle()) > Math.PI / 2.5f) {
                 this.setDimension(width / 4f, height / 4f);
@@ -739,10 +743,15 @@ public class Avatar extends CapsuleObstacle {
         wasDamaged = false;
         shifted = 0;
         spliced = false;
+        slowing = 1;
         dashCounter = 0;
     }
 
     private Vector2 scale;
+
+    /*public void setScale(Vector2 scale){
+        this.scale = scale;
+    }*/
     /**
      * Creates a new dude avatar at the given position.
      *
@@ -940,16 +949,18 @@ public class Avatar extends CapsuleObstacle {
 //        }
 
         //apply dash force only ONCE per dash
-        if(isDashing && !hasDashed){
+        if(isDashing && !hasDashed) {
 //            System.out.println("APPLYING FORCE");
             //linearly interpolate dashForce
 //            System.out.println("dash direction raw: " + dashDirection);
 //            System.out.println("dash direction norm: " + dashDirection.nor());
             forceCache.set(dashDirection.nor().scl(dashForce));
-            body.applyForce(forceCache,getPosition(), true);
+            body.applyForce(forceCache, getPosition(), true);
             hasDashed = true;
-
         }
+        /* else {
+            body.applyForce(forceCache,getPosition(),true);
+        }*/
 
         // Velocity too high, clamp it
         if (Math.abs(getVX()) >= getMaxSpeed()) {
@@ -958,7 +969,6 @@ public class Avatar extends CapsuleObstacle {
             forceCache.set(getMovement(),0);
             body.applyForce(forceCache,getPosition(),true);
         }
-
 //        // Jump!
 //        if (isJumping()) {
 //            forceCache.set(0, JUMP_IMPULSE);
@@ -1045,6 +1055,12 @@ public class Avatar extends CapsuleObstacle {
 //                System.out.println(getDashDistance());
                 setLinearVelocity(getLinearVelocity().cpy().nor().scl(getDashDistance() * 3, getDashDistance() * 4));
 //                setLinearVelocity(new Vector2(0,0));
+                /*cursor = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+                cursor = camera.unproject(cursor);
+                cursor.scl(1/scale.x, 1/scale.y,0);
+                Vector2 mousePos = new Vector2(cursor.x , cursor.y );
+                forceCache.set(mousePos.cpy().sub(this.getPosition()).scl(10));
+                applyForce();*/
             }
         } else {
             setDimension(width, height);
@@ -1193,18 +1209,18 @@ public class Avatar extends CapsuleObstacle {
                 if (getImmmortality()%20<10) {
                     canvas.draw(currentStrip, (new Color(1, 1, 1, 0.5f)), origin.x + 84f, origin.y + 60f,
                             getX() * drawScale.x, getY() * drawScale.y, angle,
-                            0.02f * drawScale.x * minimizeScale * faceDirection, 0.01875f * minimizeScale * drawScale.y);
+                            0.02f * drawScale.x * minimizeScale * faceDirection * slowing, 0.01875f * minimizeScale * drawScale.y);
                 }
                 else {
                     canvas.draw(currentStrip, (new Color(1, 1, 1, 1f)), origin.x + 84f, origin.y + 60f,
                             getX() * drawScale.x, getY() * drawScale.y, angle,
-                            0.02f * drawScale.x * minimizeScale * faceDirection, 0.01875f * minimizeScale * drawScale.y);
+                            0.02f * drawScale.x * minimizeScale * faceDirection * slowing, 0.01875f * minimizeScale * drawScale.y);
                 }
             }
             else{
                 canvas.draw(currentStrip, Color.WHITE, origin.x + 84f, origin.y + 60f,
                         getX() * drawScale.x, getY() * drawScale.y, angle,
-                        0.02f * drawScale.x * minimizeScale * faceDirection, 0.01875f * minimizeScale * drawScale.y);
+                        0.02f * drawScale.x * minimizeScale * faceDirection * slowing, 0.01875f * minimizeScale * drawScale.y);
             }
         }
 
