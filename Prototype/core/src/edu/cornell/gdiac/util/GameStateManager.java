@@ -7,6 +7,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.*;
 import edu.cornell.gdiac.tempus.GameCanvas;
 import edu.cornell.gdiac.tempus.MusicController;
@@ -279,18 +280,29 @@ public class GameStateManager {
         int room_count = levelJson.getInt("room_count");
         JsonValue jsonCards = levelJson.get("cards");
         String[] room_paths = levelJson.get("rooms").asStringArray();
+        String[] bg_paths = levelJson.get("story_backgrounds").asStringArray();
+        String[] dl_paths = levelJson.get("dialogues").asStringArray();
+        float[] map = levelJson.get("mapping").asFloatArray();
+
+        TextureRegionDrawable[] ctBackgrounds = new TextureRegionDrawable[bg_paths.length];
+        TextureRegionDrawable[] ctDialogues = new TextureRegionDrawable[dl_paths.length];
+
+        for(int i = 0; i<bg_paths.length; i++){
+            ctBackgrounds[i] = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal(bg_paths[i]))));
+        }
+        for(int i = 0; i<dl_paths.length; i++){
+            ctDialogues[i] = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal(dl_paths[i]))));
+        }
 
         LevelController[] rooms = new LevelController[room_count];
         HashMap<Integer, String[]> cards = new HashMap<>();
 
-        System.out.println("ROOM COUNT: " + room_count);
-        System.out.println("ROOM_ PATH SIZE: " + room_paths.length);
         for (int i = 0; i < room_count; i++) {
             cards.put(i, jsonCards.get("c" + (i + 1)).asStringArray());
             rooms[i] = new TutorialController(room_paths[i]);
         }
 
-        return new TutorialModel(lv, true, true, 0, rooms, cards);
+        return new TutorialModel(lv, true, true, 0, rooms, cards, ctBackgrounds, ctDialogues, map);
 
     }
 
@@ -308,19 +320,19 @@ public class GameStateManager {
      * next level 3. Finishing the game
      */
 //<<<<<<< HEAD
-    public void stepGame(boolean is_exit){
-        if(is_exit) {
-            boolean finished = levels[current_level_idx].stepLevel();
-            if(finished){
+//    public void stepGame(boolean is_exit){
+//        if(is_exit) {
+//            boolean finished = levels[current_level_idx].stepLevel();
+//            if(finished){
 //=======
-//    public void stepGame(boolean is_exit) {
-//        LevelModel currentLevel = levels[current_level_idx];
-//        // Updates the level timer
-//        currentLevel.updateBestTime(currentLevel.getCurrentRoomNumber());
-//        if (is_exit) {
-//            System.out.println("entin");
-//            boolean finished = currentLevel.stepLevel();
-//            if (finished) {
+    public void stepGame(boolean is_exit) {
+        LevelModel currentLevel = levels[current_level_idx];
+        // Updates the level timer
+        currentLevel.updateBestTime(currentLevel.getCurrentRoomNumber());
+        if (is_exit) {
+            System.out.println("entin");
+            boolean finished = currentLevel.stepLevel();
+            if (finished) {
 //>>>>>>> 10005b486628a19e2e37d77cc1efa2c289a62c3d
                 MusicController.getInstance().stopAll();
                 levels[current_level_idx].finishLevel();

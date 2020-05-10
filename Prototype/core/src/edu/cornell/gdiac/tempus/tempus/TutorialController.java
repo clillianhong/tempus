@@ -50,7 +50,7 @@ public class TutorialController extends LevelController {
     /** All cutscene backgrounds */
     private TextureRegionDrawable[] backgrounds;
     /** Mapping of cutscene index to the appropriate dialogue index **/
-    private HashMap<Integer, Integer> dlMap;
+    private float[] dlMap;
     private Table cutsceneTable;
     private Container cutCont;
 
@@ -85,7 +85,7 @@ public class TutorialController extends LevelController {
 
     public void setFirst(boolean b) {first = b;};
 
-    public void setCutScene(TextureRegionDrawable [] bgs, TextureRegionDrawable [] dls, HashMap<Integer, Integer> map){
+    public void setCutScene(TextureRegionDrawable [] bgs, TextureRegionDrawable [] dls, float [] map){
         backgrounds = bgs;
         dialogues = dls;
         dlMap = map;
@@ -216,34 +216,32 @@ public class TutorialController extends LevelController {
     }
 
     public void createCutScene(Container edgeContainer){
-        dialogues = new TextureRegionDrawable[3];
-        TextureRegionDrawable storyBg = new TextureRegionDrawable(
-                new TextureRegion(new Texture(Gdx.files.internal("tutorial/beginningstorybg.jpg"))));
 
-        TextureRegionDrawable log1img = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("tutorial/dialogue1.png"))));
-        TextureRegionDrawable log2img = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("tutorial/dialogue2.png"))));
-        TextureRegionDrawable log3img = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("tutorial/dialogue3.png"))));
+        dialogueNum = 0;
+        bgNum = 0;
+//
+//        TextureRegionDrawable storyBg = new TextureRegionDrawable(
+//                new TextureRegion(new Texture(Gdx.files.internal("tutorial/beginningstorybg.jpg"))));
 
-
-        dialogues[0] = log1img;
-        dialogues[1] = log2img;
-        dialogues[2] = log3img;
+//        dialogues = new TextureRegionDrawable[3];
+//
+//        TextureRegionDrawable log1img = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("tutorial/dialogue1.png"))));
+//        TextureRegionDrawable log2img = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("tutorial/dialogue2.png"))));
+//        TextureRegionDrawable log3img = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("tutorial/dialogue3.png"))));
+//
+//        dialogues[0] = log1img;
+//        dialogues[1] = log2img;
+//        dialogues[2] = log3img;
 
         cutCont = new Container<>();
-        cutCont.setBackground(storyBg);
+        cutCont.setBackground(backgrounds[bgNum]);
         cutCont.setPosition(0, 0);
         cutCont.fillX();
         cutCont.fillY();
 
         cutsceneTable = new Table();
-        cutsceneTable.setBackground(log1img);
+        cutsceneTable.setBackground(dialogues[dialogueNum]);
         cutCont.setActor(cutsceneTable);
-
-        Container forwardCont = new Container<>();
-        forwardCont.setBackground(storyBg);
-        forwardCont.setPosition(0, 0);
-        forwardCont.fillX();
-        forwardCont.fillY();
 
         Table overlayBackButton = new Table();
         TextureRegionDrawable bup = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("tutorial/forwardbutton.png"))));
@@ -266,10 +264,14 @@ public class TutorialController extends LevelController {
 
     public void nextDialogue(){
         dialogueNum++;
-        if(dialogueNum >= 3){
+        if(dialogueNum >= dialogues.length){
             cutCont.setVisible(false);
             edgeContainer.setActor(tableStack);
         }else{
+            if(dlMap[dialogueNum] != bgNum){
+                bgNum = (int) dlMap[dialogueNum];
+                cutCont.setBackground(backgrounds[bgNum]);
+            }
             cutsceneTable.setBackground(dialogues[dialogueNum]);
         }
     }

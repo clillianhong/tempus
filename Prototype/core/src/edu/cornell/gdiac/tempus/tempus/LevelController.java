@@ -92,6 +92,8 @@ public class LevelController extends WorldController {
 	private float minAlpha;
 	/** Stage for drawing */
 	protected Stage stage;
+	/** is accepting keyboard and mouse input **/
+	protected boolean inputReady;
 
 
 	/*SHADER IMPLEMENTATION*/
@@ -349,6 +351,7 @@ public class LevelController extends WorldController {
 		enemyController = new EnemyController(enemies, objects, avatar, world, scale, this, assetDirectory);
 		isTutorial = false;
 		ripple_intensity = 0.009f;
+		inputReady = true;
 
 		// ripple shader
 		ticks = 0f;
@@ -402,6 +405,7 @@ public class LevelController extends WorldController {
 	public void reset() {
 		// Vector2 gravity = new Vector2(world.getGravity());
 		drawEndRoom = false;
+		inputReady = true;
 		drawFadeAlpha = 0;
 		canvas.getSpriteBatch().setColor(1,1,1,1);
 		canvas.setBlendState(GameCanvas.BlendState.NO_PREMULT);
@@ -443,7 +447,7 @@ public class LevelController extends WorldController {
 	}
 
 	public void resetGame() {
-
+		inputReady = true;
 		// Vector2 gravity = new Vector2(world.getGravity());
 		setComplete(false);
 		setFailure(false);
@@ -1076,13 +1080,13 @@ public class LevelController extends WorldController {
 	 * @return whether to process the update loop
 	 */
 	public boolean preUpdate(float dt) {
-		InputController input = InputController.getInstance();
 
 		if (paused || prepause) {
 			return false;
 		}
 
 		if (complete) {
+			inputReady = false;
 			avatar.setBodyType(BodyDef.BodyType.StaticBody);
 		}
 		if (!super.preUpdate(dt)) {
@@ -1150,6 +1154,7 @@ public class LevelController extends WorldController {
 		if (countdown > 0) {
 			countdown--;
 		} else if (countdown == 0 && complete) {
+				inputReady = false;
 				if(GameStateManager.getInstance().lastRoom()){
 					showWinLevel();
 				}else{
@@ -1212,17 +1217,18 @@ public class LevelController extends WorldController {
 	public void update(float dt) {
 		// Turn the physics engine crank.
 		// world.step(WORLD_STEP,WORLD_VELOC,WORLD_POSIT)
-		if (InputController.getInstance().didPause() && !paused) {
+		InputController input = InputController.getInstance();
+
+		if (inputReady && input.didPause() && !paused) {
 			pauseGame();
 		}
 
-		InputController input = InputController.getInstance();
-		if (input.didDebug()) {
+		if (inputReady && input.didDebug()) {
 			debug = !debug;
 		}
 
 //		 Handle resets
-		if (input.didReset()) {
+		if (inputReady && input.didReset()) {
 			resetGame();
 //			reset();
 		}
@@ -1231,11 +1237,11 @@ public class LevelController extends WorldController {
 		incrTimer(Gdx.graphics.getDeltaTime());
 
 		//check if avatar is in "catch mode"
-		if (!avatar.isCatchReady() && !avatar.isHolding() && !avatar.isSticking()
-				&& (InputController.getInstance().pressedRightMouseButton())){
+		if (inputReady && !avatar.isCatchReady() && !avatar.isHolding() && !avatar.isSticking()
+				&& (input.pressedRightMouseButton())){
 			avatar.setCatchReady(true);
 		}
-		if((InputController.getInstance().releasedRightMouseButton()) || avatar.isSticking()){
+		if(inputReady && (input.releasedRightMouseButton()) || avatar.isSticking()){
 			avatar.setCatchReady(false);
 		}
 
@@ -1342,7 +1348,7 @@ public class LevelController extends WorldController {
 				}
 			}
 		}
-		if (InputController.getInstance().pressedShiftKey()) {
+		if (inputReady && InputController.getInstance().pressedShiftKey()) {
 			// update ripple shader params
 			enemyController.setPlayerVisible(true);
 			rippleOn = true;
@@ -1422,7 +1428,7 @@ public class LevelController extends WorldController {
 		avatar.setShooting(InputController.getInstance().didSecondary());
 
 		// Sets which direction the avatar is facing (left or right)
-		if (InputController.getInstance().pressedLeftMouseButton()) {
+		if (inputReady && input.pressedLeftMouseButton()) {
 			cursor = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
 			cursor = camera.unproject(cursor);
 			cursor.scl(1/scale.x, 1/scale.y,0);
@@ -1473,7 +1479,7 @@ public class LevelController extends WorldController {
 		// so we can know where to spawn enemies for testing purposes.
 //		printCoordinates();
 
-		if (!avatar.isHolding() && !avatar.isDashing() && !avatar.isSticking() && InputController.getInstance().pressedXKey()){
+		if (!avatar.isHolding() && !avatar.isDashing() && !avatar.isSticking() && input.pressedXKey()){
 			avatar.setVX(avatar.getVX() * 0.9f);
 		}
 	}
@@ -1837,6 +1843,7 @@ public class LevelController extends WorldController {
 
 			// Final message
 			if (complete && !failed && !drawEndRoom) {
+				inputReady = false;
 				drawEndRoom = true;
 				canvas.setBlendState(GameCanvas.BlendState.ADDITIVE);
 				stage.getBatch().setBlendFunction(GL20.GL_SRC_ALPHA,GL20.GL_ONE);
