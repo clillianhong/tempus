@@ -27,6 +27,40 @@
     "jsons/rooms/0-20.json",
     "jsons/rooms/0-21.json"
   ],
+
+    "mapping" : [
+      0,0,0,1,2,4,4,3,3,3,3,3,3,3,3,3,3,3,3,3
+    ],
+    "story_backgrounds" : [
+      "tutorial/black_bg.jpg",
+      "tutorial/fluzwakes_bg.jpg",
+      "tutorial/storynoeyes_bg.jpg",
+      "tutorial/storyeyes_bg.jpg",
+      "tutorial/storypast_bg.jpg"
+    ],
+    "dialogues" : [
+      "tutorial/1.png",
+      "tutorial/2.png",
+      "tutorial/3.png",
+      "tutorial/4.png",
+      "tutorial/5.png",
+      "tutorial/6.png",
+      "tutorial/clear.png",
+      "tutorial/clear.png",
+      "tutorial/7.png",
+      "tutorial/8.png",
+      "tutorial/9.png",
+      "tutorial/10.png",
+      "tutorial/11.png",
+      "tutorial/12.png",
+      "tutorial/13.png",
+      "tutorial/14.png",
+      "tutorial/15.png",
+      "tutorial/16.png",
+      "tutorial/17.png",
+      "tutorial/18.png"
+    ]
+  ,
   "cards": {
     "c1": [
       "[Left mouse click] and hold to aim your dash, dash into door!"
