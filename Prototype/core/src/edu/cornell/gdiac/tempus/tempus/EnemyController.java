@@ -34,6 +34,10 @@ public class EnemyController {
     private PooledList<Obstacle> objects  = new PooledList<Obstacle>();
     /** The enemy being controlled */
     private PooledList<Enemy> enemies  = new PooledList<Enemy>();
+
+    private PooledList<Platform> platformsPast = new PooledList<Platform>();
+    private PooledList<Platform> platformsPresent = new PooledList<Platform>();
+
     /** Target being aimed at */
     private Avatar target;
     /** World */
@@ -47,8 +51,6 @@ public class EnemyController {
 
     /** Frames after enemy teleports */
     private float framesAfterMove;
-    /** Waiting to teleport to fire */
-    private boolean waitToFire;
 
     /** Cache for internal force calculations */
     private Vector2 forceCache = new Vector2();
@@ -74,12 +76,27 @@ public class EnemyController {
         for (Enemy e: enemies) {
             if (e.getY() < -6){
                 e.setDead();
+                if (e.getAi() == Enemy.EnemyType.TELEPORT){
+                    if (e.getSpace() == 2) {
+                        platformsPast.remove(e.getCurrPlatform());
+                    } else if (e.getSpace() ==1){
+                        platformsPresent.remove(e.getCurrPlatform());
+                    }
+                }
             }
             if (e.isTurret() || e.isDead()){
                 result --;
             }
         }
         return result;
+    }
+
+    public void removePlat(Platform p, int space){
+        if (space == 2) {
+            platformsPast.remove(p);
+        } else if (space ==1){
+            platformsPresent.remove(p);
+        }
     }
 
     public EnemyController(PooledList<Enemy> enemies, PooledList<Obstacle> objects, Avatar target, World world,
@@ -95,7 +112,6 @@ public class EnemyController {
         this.assetDirectory = assetDirectory;
         canvas = worldController.getCanvas();
         framesAfterMove = 0;
-        waitToFire = true;
         playerVisible = false;
     }
 
@@ -118,10 +134,12 @@ public class EnemyController {
      */
     public void slowCoolDown(boolean flag) {
         for (Enemy e: enemies) {
-            if (flag) {
-                e.setLimiter(0.5f);
-            } else {
-                e.setLimiter(4);
+            if (e.getAi() != Enemy.EnemyType.TELEPORT) {
+                if (flag) {
+                    e.setLimiter(0.5f);
+                } else {
+                    e.setLimiter(4);
+                }
             }
         }
     }
@@ -132,7 +150,7 @@ public class EnemyController {
     public void shift() {
         shifted = !shifted;
         for (Enemy e: enemies) {
-            if (!e.isTurret()) {
+            if (!e.isTurret() && e.getAi() != Enemy.EnemyType.TELEPORT) {
                 e.coolDown(false);
             }
         }
@@ -217,11 +235,11 @@ public class EnemyController {
                     }
                 } else if (e.getAi() == Enemy.EnemyType.TELEPORT) {
                     e.coolDown(true);
-                    if (framesAfterMove == 59 && waitToFire) {
+                    if (framesAfterMove == 59 && e.getWaitToFire()) {
                         if (playerVisible) {
                             setBulletVelocity(BULLET_OFFSET, e);
                             createBullet(e);
-                            waitToFire = false;
+                            e.setWaitToFire(false);
                         }
                     }
                     findPlatform(e);
@@ -275,16 +293,23 @@ public class EnemyController {
      * @param e enemy that is teleporting
      */
     public void findPlatform(Enemy e) {
-        for (Obstacle ob: objects) {
+        for (int i = 0; i < objects.size(); i++) {
+            Obstacle ob = objects.get(i);
             if (ob instanceof Platform &&
                     ((!shifted && ob.getSpace() == 1) || (shifted && ob.getSpace() == 2) || ob.getSpace() == 3)) {
                 Platform p = (Platform) ob;
-                teleportLineOfSight(p, e);
-                if (e.getTeleportTo() != null && e.canFire()
-                        && e.getTeleportTo().getBody().getUserData() != target.getCurrentPlatform()
-                        && e.getCurrPlatform() != e.getTeleportTo()) {
-                    teleport(e, p);
-                    return;
+                if (!p.getName().contains("pillar") && !p.getName().contains("tall") && !p.getName().contains("longcapsule")) {
+                    teleportLineOfSight(p, e);
+                    if (e.getTeleportTo() != null && e.canFire()
+                            && e.getTeleportTo().getBody().getUserData() != target.getCurrentPlatform()
+                            && e.getCurrPlatform() != e.getTeleportTo()) {
+                        if (e.getSpace() == 2 && !platformsPast.contains(p) || e.getSpace() == 1 && !platformsPresent.contains(p)){
+                            teleport(e, p);
+                            objects.remove(i);
+                            objects.add(ob);
+                            return;
+                        }
+                    }
                 }
             }
         }
@@ -301,11 +326,18 @@ public class EnemyController {
         newPos.y += p.getHeight() + (e.getHeight() / 2);
         newPos.x += p.getWidth() / 2;
         e.setPosition(newPos);
+        if (e.getSpace() == 2) {
+            platformsPast.remove(e.getCurrPlatform());
+            platformsPast.add(p);
+        } else if (e.getSpace() ==1){
+            platformsPresent.remove(e.getCurrPlatform());
+            platformsPresent.add(p);
+        }
         e.setCurrPlatform(p);
         e.setTeleportTo(null);
         e.coolDown(false);
         framesAfterMove = 1;
-        waitToFire = true;
+        e.setWaitToFire(true);
     }
 
     /**
@@ -370,7 +402,6 @@ public class EnemyController {
         } else {
             bullet.setTexture(pastbullet);
         }
-
         if (shifted && enemy.getSpace() == 2) { // past world
             JsonValue data = assetDirectory.get("sounds").get("pew_past");
             SoundController.getInstance().play("pew", data.get("file").asString(), false, data.get("volume").asFloat());
