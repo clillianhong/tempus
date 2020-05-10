@@ -19,8 +19,6 @@ public class TutorialModel extends LevelModel {
 
     public TutorialModel(int lv, boolean unlocked, boolean finished, int resume, LevelController[] rms, HashMap<Integer, String[]> cards) {
         super(lv, unlocked, finished, resume, rms);
-
-        int num_rooms = rms.length;
         tutorialCards = cards;
 
     }

@@ -291,7 +291,6 @@ public class GameStateManager {
      */
     public void stepGame(boolean is_exit){
         if(is_exit) {
-            System.out.println("entin");
             boolean finished = levels[current_level_idx].stepLevel();
             if(finished){
                 MusicController.getInstance().stopAll();
