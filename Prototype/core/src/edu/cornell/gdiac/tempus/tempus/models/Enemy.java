@@ -181,8 +181,11 @@ public class Enemy extends CapsuleObstacle {
         neutralTexture = JsonAssetManager.getInstance().getEntry("turret_shooting" + "_" + entitytype, FilmStrip.class);
         setFilmStrip(EnemyState.NEUTRAL, neutralTexture);
 
-        // Minimize present turret texture
+        // Minimize turret textures
         if (entitytype.equals("present")) {
+            minimizeScale = 0.4f;
+            FRAME_RATE = 10;
+        } else if (entitytype.equals("past")) {
             minimizeScale = 0.4f;
             FRAME_RATE = 10;
         }

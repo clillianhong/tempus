@@ -412,9 +412,9 @@
     },
     "turret_shooting_past": {
       "file": "filmstrips/turret/turret_past_lv_1.png",
-      "rows": 1,
-      "cols": 1,
-      "size": 1
+      "rows": 4,
+      "cols": 5,
+      "size": 17
     },
     "door_locked": {
       "file": "filmstrips/door/door_locked.png",
