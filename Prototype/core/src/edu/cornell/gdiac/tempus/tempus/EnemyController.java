@@ -102,7 +102,9 @@ public class EnemyController {
     public EnemyController(PooledList<Enemy> enemies, PooledList<Obstacle> objects, Avatar target, World world,
                            Vector2 scale, WorldController worldController, JsonValue assetDirectory) {
         this.enemies = enemies;
-        this.objects = objects;
+        for (Obstacle ob : objects) {
+            this.objects.add(ob);
+        }
         this.target = target;
         this.world = world;
         this.scale = scale;
@@ -187,7 +189,11 @@ public class EnemyController {
     public void setBulletVelocity(float offset, Enemy enemy) {
         Vector2 projVel = target.getPosition().sub(enemy.getPosition());
         projVel.y -= offset;
-        enemy.setProjVel(projVel);
+        if (enemy.getAi() == Enemy.EnemyType.TELEPORT){
+            enemy.setProjVel(projVel.nor().scl(10));
+        } else {
+            enemy.setProjVel(projVel.nor().scl(10));
+        }
     }
 
     /**
@@ -360,6 +366,12 @@ public class EnemyController {
      */
     private void createBullet(Enemy enemy) {
         float offset = BULLET_OFFSET;
+
+        if (enemy.isTurret()){
+            if (enemy.getProjVel().y < 0 && enemy.getProjVel().x == 0){
+                offset = offset * -1;
+            }
+        }
 
         TextureRegion bulletBigTexture = JsonAssetManager.getInstance().getEntry("bulletbig", TextureRegion.class);
         TextureRegion presentBullet = JsonAssetManager.getInstance().getEntry("projpresent", TextureRegion.class);

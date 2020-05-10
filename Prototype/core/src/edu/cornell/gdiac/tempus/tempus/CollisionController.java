@@ -182,12 +182,21 @@ public class CollisionController implements ContactListener {
                     bounceDir.x = -1 * bounceDir.x;
                 }
             }
+            Enemy obs = (Enemy) turret.getBody().getUserData();
             avatar.resetDashNum(1);
-            if (!(((Enemy) turret.getBody().getUserData()).isDead())) {
+            if (!(obs.isDead())) {
                 avatar.setEnemyContact(true);
             }
             avatar.setLinearVelocity(bounceDir);
             turret.getBody().setLinearVelocity(new Vector2(0, 0));
+
+        if (avatar.getShifted() > 0 && (obs).getSpace() != 3 ) {
+            obs.setDead();
+            if (obs.getAi() == Enemy.EnemyType.TELEPORT){
+                controller.getEnemyController().removePlat(obs.getCurrPlatform(), obs.getSpace());
+            }
+        }
+
             //avatar.getBody().applyForce(new Vector2(-20, 40), avatar.getPosition(), true);
             //TODO: avatar turret contact (die)
         }
