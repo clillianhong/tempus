@@ -1178,6 +1178,10 @@ public class Avatar extends CapsuleObstacle {
         }
     }
 
+    public int getNumDashes(){
+        return numDashes;
+    }
+
     /**
      * Draws the physics object.
      *
@@ -1204,8 +1208,9 @@ public class Avatar extends CapsuleObstacle {
             angle = 0;
         }
 
-//        Color shade = (numDashes > 1) ? new Color(0,0,1, 0.5f) : new Color(0,0,1, 0.25f) ;
-//        shade = (numDashes == 0) ? Color.WHITE : shade;
+
+        Color shade = (numDashes == 0) ? Color.WHITE.cpy().lerp(new Color(0,0,1, 1), .25f)  : Color.WHITE.cpy().lerp(new Color(0,0,1f, 1), .1f)  ;
+        shade = (isSticking) ? new Color(Color.WHITE) : shade;
 
         // Draw avatar body
         if (currentStrip != null) {
@@ -1222,7 +1227,7 @@ public class Avatar extends CapsuleObstacle {
                 }
             }
             else{
-                canvas.draw(currentStrip, Color.WHITE, origin.x + 84f, origin.y + 60f,
+                canvas.draw(currentStrip, shade, origin.x + 84f, origin.y + 60f,
                         getX() * drawScale.x, getY() * drawScale.y, angle,
                         0.02f * drawScale.x * minimizeScale * faceDirection * slowing, 0.01875f * minimizeScale * drawScale.y);
             }
