@@ -10,6 +10,7 @@
  */
 package edu.cornell.gdiac.tempus.tempus;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
@@ -42,6 +43,8 @@ import edu.cornell.gdiac.tempus.*;
 import edu.cornell.gdiac.util.*;
 import edu.cornell.gdiac.tempus.obstacle.*;
 import edu.cornell.gdiac.tempus.tempus.models.*;
+
+import javax.xml.soap.Text;
 
 import static edu.cornell.gdiac.tempus.tempus.models.EntityType.PAST;
 import static edu.cornell.gdiac.tempus.tempus.models.EntityType.PRESENT;
@@ -92,6 +95,7 @@ public class LevelController extends WorldController {
 	private float minAlpha;
 	/** Stage for drawing */
 	protected Stage stage;
+
 	/** is accepting keyboard and mouse input **/
 	protected boolean inputReady;
 
@@ -139,6 +143,8 @@ public class LevelController extends WorldController {
 	protected BitmapFont displayFont;
 	/** The style for giving messages to the player */
 	protected Label.LabelStyle style;
+	/** the glyph for rendering font */
+	protected GlyphLayout glyphLayout;
 
 
 	/** Texture asset for the big bullet */
@@ -206,6 +212,7 @@ public class LevelController extends WorldController {
 //		displayFont = JsonAssetManager.getInstance().getEntry("display", BitmapFont.class);
 		displayFont = new BitmapFont(Gdx.files.internal("fonts/carterone.fnt"));
 		displayFont.getData().setScale(0.5f);
+		glyphLayout = new GlyphLayout();
 		style = new Label.LabelStyle(displayFont, Color.WHITE);
 
 		platformAssetState = AssetState.COMPLETE;
@@ -405,7 +412,7 @@ public class LevelController extends WorldController {
 	public void reset() {
 		// Vector2 gravity = new Vector2(world.getGravity());
 		drawEndRoom = false;
-		inputReady = true;
+		inputReady = false;
 		drawFadeAlpha = 0;
 		canvas.getSpriteBatch().setColor(1,1,1,1);
 		canvas.setBlendState(GameCanvas.BlendState.NO_PREMULT);
@@ -444,10 +451,11 @@ public class LevelController extends WorldController {
 		stage.getCamera().update();
 		stage.getViewport().apply();
 
+
 	}
 
 	public void resetGame() {
-		inputReady = true;
+		inputReady = false;
 		// Vector2 gravity = new Vector2(world.getGravity());
 		setComplete(false);
 		setFailure(false);
@@ -552,6 +560,7 @@ public class LevelController extends WorldController {
 		table.setWidth(stage.getWidth());
 		table.align(Align.center | Align.top);
 		table.setPosition(0, sh);
+
 
 		//initialize backgrounds
 		pastBackgroundTexture = JsonAssetManager.getInstance().getEntry(levelFormat.get("past_background").asString(),
@@ -681,6 +690,7 @@ public class LevelController extends WorldController {
 		enemyController = new EnemyController(enemies, objects, avatar, world, scale, this, assetDirectory);
 		world.setContactListener(collisionController);
 	}
+
 
 	/**
 	 * Lays out the game geography.
@@ -863,6 +873,8 @@ public class LevelController extends WorldController {
 	 */
 	public void createUI() {
 
+
+
 		// table container to center main table
 		edgeContainer = new Container<Stack>();
 		edgeContainer.setSize(sw, sh);
@@ -958,6 +970,7 @@ public class LevelController extends WorldController {
 
 		stage.addActor(edgeContainer);
 
+
 	}
 
 	public void createEndlevelUI(Stack tableStack){
@@ -990,10 +1003,8 @@ public class LevelController extends WorldController {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
-				System.out.println("PREV STATE ");
 				GameStateManager.getInstance().printGameState();
 				GameStateManager.getInstance().stepGame(false);
-				System.out.println("AFTER STATE ");
 				GameStateManager.getInstance().printGameState();
 				exitLevelSelect();
 			}
@@ -1015,9 +1026,12 @@ public class LevelController extends WorldController {
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
 				GameStateManager.getInstance().stepGame(false);
-//				reset();
-				unpauseGame();
-				resetGame();
+				int lv = GameStateManager.getInstance().getCurrentLevelIndex();
+				GameStateManager.getInstance().setCurrentLevel(lv, 0);
+				exitNextRoom();
+////				reset();
+//				unpauseGame();
+//				resetGame();
 			}
 		});
 
@@ -1131,9 +1145,13 @@ public class LevelController extends WorldController {
 			return false;
 		}
 
+
+
 		if (begincount > 0) {
 			begincount--;
 			return false;
+		}else if(!inputReady){
+			inputReady = true;
 		}
 
 		if(failed && countdown==0){
@@ -1246,6 +1264,8 @@ public class LevelController extends WorldController {
 			avatar.setCatchReady(false);
 		}
 
+
+		System.out.println("num dashes! " + avatar.getNumDashes());
 
 		MusicController.getInstance().update(shifted);
 
@@ -1593,8 +1613,6 @@ public class LevelController extends WorldController {
 		cursor = camera.unproject(cursor);
 		cursor.scl(1/scale.x, 1/scale.y,0);
 		Vector2 mousePos = new Vector2(cursor.x , cursor.y );
-//		Vector2 mousePos = canvas.getViewport().u
-//		nproject(InputController.getInstance().getMousePosition());
 		Vector2 redirection = avatar.getPosition().cpy().sub(mousePos).nor();
 		float x0 = avatar.getX() + (redirection.x * avatar.getWidth() * 2f);
 		float y0 = avatar.getY() + (redirection.y * avatar.getHeight() * 2f);
@@ -1672,6 +1690,7 @@ public class LevelController extends WorldController {
 		stage.getBatch().setProjectionMatrix(stage.getCamera().combined);
 		stage.getCamera().update();
 		stage.getViewport().apply();
+
 		super.render(delta);
 	}
 
@@ -1739,6 +1758,14 @@ public class LevelController extends WorldController {
 		TextureRegion streak = JsonAssetManager.getInstance().getEntry("streak", TextureRegion.class);
 		canvas.draw(streak, Color.WHITE, 0, 0, -0.8f * scale.x, canvas.getHeight() / 2 + 2 * scale.y, 9 * scale.x,
 				9 * scale.y);
+		int lvNum = GameStateManager.getInstance().getCurrentLevelIndex();
+		int rmNum = GameStateManager.getInstance().getCurrentLevel().getCurrentRoomNumber() + 1;
+		String levelInfo = "Level " + lvNum+"-"+rmNum;
+		glyphLayout.setText(displayFont, levelInfo);
+
+		displayFont.draw(canvas.getSpriteBatch(), glyphLayout, 60, canvas.getHeight()-75);
+//		displayFont.draw(canvas.getSpriteBatch(), glyphLayout, -0.8f * scale.x, canvas.getHeight() / 2 + 3 * scale.y);
+
 		for (int i = 0; i < avatar.getLives(); i++) {
 			canvas.draw(life, Color.WHITE, 0, 0,
 					life.getRegionWidth() * 0.002f * scale.x + (life.getRegionWidth() * 0.005f * scale.x * i),
@@ -1890,7 +1917,6 @@ public class LevelController extends WorldController {
 		}
 		stage.draw();
 		stage.act(Gdx.graphics.getDeltaTime());
-
 
 	}
 

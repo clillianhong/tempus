@@ -41,6 +41,10 @@ public class SelectRoomMode implements Screen {
     protected Stage stage;
     private Viewport viewport;
     private OrthographicCamera camera;
+    /** Fade in stage */
+    protected Stage fadeinStage;
+    /** count for fading into the screen **/
+    protected int fadeincount;
 
     protected Rectangle bounds;
     /** Listener that will update the player mode when we are done */
@@ -130,13 +134,19 @@ public class SelectRoomMode implements Screen {
     public void createMode(){
         camera.update();
         stage = new Stage(viewport);
+        fadeinStage = new Stage(viewport);
+        fadeincount = 20;
+
+
 
     }
 
 
     @Override
     public void show() {
+        fadeincount = 20;
         Gdx.input.setInputProcessor(stage);
+
         final GameStateManager gameManager = GameStateManager.getInstance();
 
         wholescreenTable = new Table();
@@ -146,6 +156,16 @@ public class SelectRoomMode implements Screen {
         numPages = numRooms % 4 == 0 ? numRooms/4 : (numRooms/4) + 1;
         roomTables = new Table[numPages];
         curPage = 0;
+
+        //fade in hack
+        Container fadeCont = new Container();
+        fadeCont.setSize(sw, sh);
+        fadeCont.setPosition(0, 0);
+        fadeCont.fillX();
+        fadeCont.fillY();
+        TextureRegionDrawable fadeInBG = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("tutorial/black_bg.jpg"))));
+        fadeCont.setBackground(fadeInBG);
+        fadeinStage.addActor(fadeCont);
 
 
         int rowNum;
@@ -213,12 +233,13 @@ public class SelectRoomMode implements Screen {
                             gameManager.setCurrentLevel(levelNum, roomNum);
                             gameManager.getCurrentLevel().setCurrentRoom(roomNum);
                             gameManager.printGameState();
-                            stage.addAction(Actions.sequence(Actions.fadeOut(0.5f), Actions.run(new Runnable() {
-                                @Override
-                                public void run() {
-                                    exitToRoom();
-                                }
-                            })));
+                            exitToRoom();
+//                            stage.addAction(Actions.sequence(Actions.fadeOut(0.5f), Actions.run(new Runnable() {
+//                                @Override
+//                                public void run() {
+//
+//                                }
+//                            })));
                         }
                     }
                 });
@@ -325,6 +346,9 @@ public class SelectRoomMode implements Screen {
 
         stage.addActor(wholescreenTable);
 //        stage.addActor();
+
+        fadeinStage.addAction(Actions.alpha(1f));
+        fadeinStage.addAction(Actions.fadeIn(1f));
     }
 
     public void updateArrows(){
@@ -343,6 +367,9 @@ public class SelectRoomMode implements Screen {
 
     @Override
     public void render(float delta) {
+        if(fadeincount > 0){
+            fadeincount--;
+        }
 
         if(active){
             Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -357,6 +384,15 @@ public class SelectRoomMode implements Screen {
 
             stage.act();
             stage.draw();
+
+            fadeinStage.getBatch().setProjectionMatrix(stage.getCamera().combined);
+            fadeinStage.getCamera().update();
+            fadeinStage.getViewport().apply();
+
+            if(fadeincount>0){
+                fadeinStage.draw();
+            }
+
         }
     }
 
@@ -367,6 +403,8 @@ public class SelectRoomMode implements Screen {
         stage.getCamera().viewportHeight = sh;
         stage.getCamera().position.set(stage.getCamera().viewportWidth / 2, stage.getCamera().viewportHeight / 2, 0);
         stage.getCamera().update();
+        fadeinStage.getCamera().update();
+        fadeinStage.getViewport().apply();
     }
 
     @Override

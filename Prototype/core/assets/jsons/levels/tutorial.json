@@ -100,7 +100,7 @@
       "ORBS can harm you."
     ],
     "c13": [
-      "These are emitters, they shoot projectiles in one direction.",
+      "These are emitters, they shoot orbs in one direction.",
       "Orbs can harm you."
     ],
     "c14": [
@@ -112,7 +112,7 @@
       "Once caught, release [right mouse button] (or C) to dash forward and shoot orb in the opposite direction. "
     ],
     "c16": [
-      "After throwing a projectile, there's one dash left!"
+      "After throwing a orbs, there's one dash left!"
     ],
     "c17": [
       "You can chain together catches to cover large distances."
@@ -122,8 +122,8 @@
       "You can timeshift while holding an orb to bring it with you."
     ],
     "c19": [
-      "This is a guardian; unlike emitters, guardians must be defeated to unlock the gate.",
-      "Defeat it by hitting it with a projectile from another time; it is immune to its own projectiles."
+      "This is a GUARDIAN; unlike emitters, GUARDIANS must be defeated to unlock the gate.",
+      "Defeat it by hitting it with an orb from another time; it is immune to its own orbs."
     ],
     "c20": [
       "The guardian doesn’t notice you until your first move.",
