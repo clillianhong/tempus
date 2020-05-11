@@ -686,6 +686,7 @@ public class LevelController extends WorldController {
 		world.setContactListener(collisionController);
 	}
 
+
 	/**
 	 * Lays out the game geography.
 	 */
@@ -1251,6 +1252,8 @@ public class LevelController extends WorldController {
 			avatar.setCatchReady(false);
 		}
 
+
+		System.out.println("num dashes! " + avatar.getNumDashes());
 
 		MusicController.getInstance().update(shifted);
 
