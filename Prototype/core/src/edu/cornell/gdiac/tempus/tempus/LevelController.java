@@ -27,6 +27,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -1058,12 +1059,19 @@ public class LevelController extends WorldController {
 	}
 
 	public void showWinLevel() {
+		paused = true;
 		stage.getBatch().setColor(1f,1f,1f,1f);
-		canvas.getSpriteBatch().setColor(1f,1f,1f,1f);
+		stage.getBatch().setBlendFunction(GL20.GL_SRC_ALPHA,GL20.GL_ONE_MINUS_SRC_ALPHA);
+
+		System.out.println("stage alpha " + stage.getBatch().getColor());
+		stage.addAction(Actions.alpha(1));
 		endlevelContainer.setVisible(true);
 		endlevelTable.setVisible(true);
 	}
 	public void closeWinLevel() {
+		paused = false;
+
+		canvas.getSpriteBatch().setColor(1f,1f,1f,1f);
 		endlevelContainer.setVisible(false);
 		endlevelTable.setVisible(false);
 	}

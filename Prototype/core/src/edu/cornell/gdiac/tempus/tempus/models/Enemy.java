@@ -255,13 +255,13 @@ public class Enemy extends CapsuleObstacle {
         removalFrames = 60;
         switch (type) {
             case PAST:
-                passiveEnemyIndicator = JsonAssetManager.getInstance().getEntry("enemy_passive_red", TextureRegion.class);
-                activeEnemyIndicator = JsonAssetManager.getInstance().getEntry("enemy_active_red", TextureRegion.class);
+                passiveEnemyIndicator = JsonAssetManager.getInstance().getEntry("enemy_passive_blue", TextureRegion.class);
+                activeEnemyIndicator = JsonAssetManager.getInstance().getEntry("enemy_active_blue", TextureRegion.class);
                 break;
 
             case PRESENT:
-                passiveEnemyIndicator = JsonAssetManager.getInstance().getEntry("enemy_passive_blue", TextureRegion.class);
-                activeEnemyIndicator = JsonAssetManager.getInstance().getEntry("enemy_active_blue", TextureRegion.class);
+                passiveEnemyIndicator = JsonAssetManager.getInstance().getEntry("enemy_passive_red", TextureRegion.class);
+                activeEnemyIndicator = JsonAssetManager.getInstance().getEntry("enemy_active_red", TextureRegion.class);
                 break;
 
         }

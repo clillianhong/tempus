@@ -185,7 +185,6 @@ public class TutorialController extends LevelController {
 
 //        tableStack.add(table);
 //        tableStack.add(pauseButtonContainer);
-        tutorialCard.setDebug(true);
         tableStack.add(tutorialCard);
 //        helpCard.setVisible(true);
 //        tableStack.add(helpCard);
