@@ -474,7 +474,7 @@ public class LevelController extends WorldController {
 		for (Obstacle obj : objects) {
 //			System.out.println("body type: " + obj.getBody().getUserData());
 			if(obj.getBody().getUserData() instanceof Projectile){
-				System.out.println("DELETING PROJECTILE");
+				//System.out.println("DELETING PROJECTILE");
 				obj.deactivatePhysics(world);
 				objects.remove(obj);
 			}
