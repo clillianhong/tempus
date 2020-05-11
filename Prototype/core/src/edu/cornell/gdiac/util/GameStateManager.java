@@ -222,9 +222,9 @@ public class GameStateManager {
             levels[i].preloadLevel();
         }
         // System.out.println("GDX ERROR end:" + Gdx.gl.glGetError());
-        for (int j = 0; j < num_levels; j++) {
-            System.out.println(Arrays.toString(gameTime.get(j).asFloatArray()));
-        }
+//        for (int j = 0; j < num_levels; j++) {
+//            System.out.println(Arrays.toString(gameTime.get(j).asFloatArray()));
+//        }
     }
 
     /**
