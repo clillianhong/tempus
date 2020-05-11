@@ -8,8 +8,8 @@
   "past_background": "past_background3",
   "door": {
     "pos": [
-      29.084,
-      13.79
+      29.372,
+      15.620000000000003
     ],
     "size": [
       1.92,
@@ -26,8 +26,8 @@
   },
   "avatar": {
     "pos": [
-      6.596,
-      4.489999999999998
+      13.86,
+      2.0899999999999994
     ],
     "shrink": [
       0.0216,
@@ -42,48 +42,10 @@
     "avatarfalling": "avatarfalling"
   },
   "turrets": {
-    "turret1": {
+    "turret8": {
       "pos": [
-        1.64,
-        8.100000000000001
-      ],
-      "shrink": [
-        0.0168,
-        0.021375
-      ],
-      "texture": "present_turret",
-      "density": 1,
-      "bodytype": "static",
-      "entitytype": "present",
-      "cooldown": 240,
-      "direction": [
-        3,
-        0
-      ]
-    },
-    "turret2": {
-      "pos": [
-        11.848,
-        16.56
-      ],
-      "shrink": [
-        0.0168,
-        0.021375
-      ],
-      "texture": "present_turret",
-      "density": 1,
-      "bodytype": "static",
-      "entitytype": "present",
-      "cooldown": 360,
-      "direction": [
-        3,
-        -3
-      ]
-    },
-    "turret3": {
-      "pos": [
-        13.928,
-        1.9800000000000004
+        23.272,
+        8.7
       ],
       "shrink": [
         0.0168,
@@ -95,8 +57,8 @@
       "entitytype": "past",
       "cooldown": 360,
       "direction": [
-        3,
-        3
+        -3,
+        0
       ]
     }
   },
@@ -104,26 +66,26 @@
   "diamonds": {},
   "rounds": {},
   "enemies": {
-    "enemy1": {
+    "enemy6": {
       "pos": [
-        25.704,
-        10.62
+        3.272,
+        3
       ],
       "shrink": [
         0.0168,
         0.021375
       ],
-      "texture": "enemypast",
+      "texture": "enemypresent",
       "density": 1,
       "bodytype": "dynamic",
-      "entitytype": "past",
-      "cooldown": 300,
-      "aitype": 1
+      "entitytype": "present",
+      "cooldown": 360,
+      "aitype": 4
     },
-    "enemy2": {
+    "enemy7": {
       "pos": [
-        28.552,
-        2.16
+        28.808,
+        9.66
       ],
       "shrink": [
         0.0168,
@@ -137,144 +99,52 @@
       "aitype": 4
     }
   },
-  "spikes": {
-    "spike0": {
-      "pos": [
-        10.772,
-        8.8
-      ],
-      "bodytype": "static",
-      "density": 0,
-      "friction": 0.6,
-      "restitution": 0.1,
-      "texture": "spikes",
-      "space": 1,
-      "angle": -45
-    },
-    "spike1": {
-      "pos": [
-        10.996,
-        7.450000000000002
-      ],
-      "bodytype": "static",
-      "density": 0,
-      "friction": 0.6,
-      "restitution": 0.1,
-      "texture": "spikes",
-      "space": 1,
-      "angle": -45
-    },
-    "spike2": {
-      "pos": [
-        11.188,
-        6.16
-      ],
-      "bodytype": "static",
-      "density": 0,
-      "friction": 0.6,
-      "restitution": 0.1,
-      "texture": "spikes",
-      "space": 1,
-      "angle": -90
-    },
-    "spike3": {
-      "pos": [
-        12.5,
-        5.98
-      ],
-      "bodytype": "static",
-      "density": 0,
-      "friction": 0.6,
-      "restitution": 0.1,
-      "texture": "spikes",
-      "space": 1,
-      "angle": 180
-    },
-    "spike4": {
-      "pos": [
-        12.852,
-        7.36
-      ],
-      "bodytype": "static",
-      "density": 0,
-      "friction": 0.6,
-      "restitution": 0.1,
-      "texture": "spikes",
-      "space": 1,
-      "angle": 135
-    },
-    "spike5": {
-      "pos": [
-        13.012,
-        8.830000000000002
-      ],
-      "bodytype": "static",
-      "density": 0,
-      "friction": 0.6,
-      "restitution": 0.1,
-      "texture": "spikes",
-      "space": 1,
-      "angle": 135
-    },
-    "spike6": {
-      "pos": [
-        10.612,
-        15.13
-      ],
-      "bodytype": "static",
-      "density": 0,
-      "friction": 0.6,
-      "restitution": 0.1,
-      "texture": "spikes",
-      "space": 2,
-      "angle": -45
-    },
-    "spike7": {
-      "pos": [
-        10.868,
-        14.02
-      ],
-      "bodytype": "static",
-      "density": 0,
-      "friction": 0.6,
-      "restitution": 0.1,
-      "texture": "spikes",
-      "space": 2,
-      "angle": -45
-    },
-    "spike8": {
-      "pos": [
-        10.932,
-        12.910000000000002
-      ],
-      "bodytype": "static",
-      "density": 0,
-      "friction": 0.6,
-      "restitution": 0.1,
-      "texture": "spikes",
-      "space": 2,
-      "angle": -45
-    }
-  },
+  "spikes": {},
   "talls": {
     "tall1": {
-      "name": "past_tall",
+      "name": "both_tall",
       "pos": [
-        10.824,
-        11.820000000000002
+        12.808,
+        -2.22
       ],
       "bodytype": "static",
       "density": 0,
       "friction": 0.6,
       "restitution": 0.1,
-      "texture": "past_tall",
-      "space": 2
+      "texture": "both_tall",
+      "space": 3
     },
-    "tall2": {
+    "tall4": {
+      "name": "both_tall",
+      "pos": [
+        16.904,
+        3.15
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_tall",
+      "space": 3
+    },
+    "presenttall10": {
       "name": "present_tall",
       "pos": [
-        10.8,
-        5.88
+        9.064,
+        7.83
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "present_tall",
+      "space": 1
+    },
+    "presenttall11": {
+      "name": "present_tall",
+      "pos": [
+        16.552,
+        12.99
       ],
       "bodytype": "static",
       "density": 0,
@@ -286,44 +156,31 @@
   },
   "pillars": {},
   "longcapsules": {
-    "longcapsule1": {
-      "name": "both_longcapsule",
+    "pastlongcapsule12": {
+      "name": "past_longcapsule",
       "pos": [
-        3.688,
-        3.06
+        26.664,
+        11.82
       ],
       "bodytype": "static",
       "density": 0,
       "friction": 0.6,
       "restitution": 0.1,
-      "texture": "both_longcapsule",
-      "space": 3
+      "texture": "past_longcapsule",
+      "space": 2
     },
-    "longcapsule2": {
-      "name": "both_longcapsule",
+    "pastlongcapsule13": {
+      "name": "past_longcapsule",
       "pos": [
-        23.304,
-        7.199999999999996
+        21.896,
+        11.82
       ],
       "bodytype": "static",
       "density": 0,
       "friction": 0.6,
       "restitution": 0.1,
-      "texture": "both_longcapsule",
-      "space": 3
-    },
-    "longcapsule3": {
-      "name": "present_longcapsule",
-      "pos": [
-        20.04,
-        14.16
-      ],
-      "bodytype": "static",
-      "density": 0,
-      "friction": 0.6,
-      "restitution": 0.1,
-      "texture": "present_longcapsule",
-      "space": 1
+      "texture": "past_longcapsule",
+      "space": 2
     }
   }
 }
