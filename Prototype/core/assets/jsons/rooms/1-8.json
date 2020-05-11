@@ -113,7 +113,7 @@
       "density": 1,
       "bodytype": "dynamic",
       "entitytype": "past",
-      "cooldown": 300
+      "cooldown": 360
     },
     "enemy15": {
       "pos": [
@@ -129,7 +129,7 @@
       "density": 1,
       "bodytype": "dynamic",
       "entitytype": "present",
-      "cooldown": 300
+      "cooldown": 360
     }
   },
   "spikes": {},
