@@ -215,6 +215,22 @@
     "projectile_arrow": {
       "file": "textures/indicators/projectilearrow.png",
       "wrap": false
+    },
+    "enemy_passive_red": {
+      "file": "textures/indicators/red indicator.png",
+      "wrap": false
+    },
+    "enemy_active_red": {
+      "file": "textures/indicators/red indicator active.png",
+      "wrap": true
+    },
+    "enemy_passive_blue": {
+      "file": "textures/indicators/blue indicator.png",
+      "wrap": false
+    },
+    "enemy_active_blue": {
+      "file": "textures/indicators/blue indicator active.png",
+      "wrap": true
     }
   },
   "fonts": {
