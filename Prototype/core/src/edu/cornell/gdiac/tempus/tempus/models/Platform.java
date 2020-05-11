@@ -30,6 +30,8 @@ public class Platform extends PolygonObstacle {
     /** The debug color for debug mode */
     protected Color debugColor;
 
+    private String key;
+
     /**
      * Create a new PlatformModel with degenerate settings
      */
@@ -37,12 +39,14 @@ public class Platform extends PolygonObstacle {
         super(points, cx, cy);
         shape = new PolygonShape();
         region = null;
+        key = null;
     }
 
     public Platform(float[] points) {
         super(points);
         shape = new PolygonShape();
         region = null;
+        key = null;
     }
 
     /**
@@ -185,7 +189,7 @@ public class Platform extends PolygonObstacle {
         setDensity(json.get("density").asFloat());
         setFriction(json.get("friction").asFloat());
         setRestitution(json.get("restitution").asFloat());
-        String key = json.get("texture").asString();
+        key = json.get("texture").asString();
         TextureRegion texture = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
         setTexture(texture);
         setSpace(json.get("space").asInt());
@@ -194,6 +198,16 @@ public class Platform extends PolygonObstacle {
     public void draw(GameCanvas canvas) {
         if (region != null) {
              canvas.draw(texture,Color.WHITE, 0, 0, getX() * drawScale.x,getY() * drawScale.y, getAngle(), 0.008f * drawScale.x, 0.0075f * drawScale.y);
+        }
+    }
+
+    public void shift(boolean shifted) {
+        if (shifted){
+            TextureRegion texture = JsonAssetManager.getInstance().getEntry(key + "_past", TextureRegion.class);
+            setTexture(texture);
+        } else {
+            TextureRegion texture = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
+            setTexture(texture);
         }
     }
 }

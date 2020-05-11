@@ -206,6 +206,7 @@ public class CollisionController implements ContactListener {
     private void processAvatarProjectileContact(Fixture av, Fixture projectile) {
         if (!avatar.isHolding() && !avatar.isSticking() && InputController.getInstance().pressedRightMouseButton()) {
             Obstacle bullet = (Obstacle) projectile.getBody().getUserData();
+            //controller.playCatch();
             if (bullet.getSpace() == 2 && controller.isShifted()) {
                 avatar.setHolding(true);
                 avatar.setHeldBullet((Projectile) bullet);
@@ -223,13 +224,13 @@ public class CollisionController implements ContactListener {
             Obstacle bullet = (Obstacle) projectile.getBody().getUserData();
             if (bullet.getSpace() == 2 && controller.isShifted()) {
                     if (!bullet.equals(avatar.getHeldBullet())) {
-                        avatar.removeLife();
+                        controller.playAvatarHurt();
                         //avatar.setProjectileContact(true);
                     }
                 removeBullet(bullet);
             } else if (bullet.getSpace() == 1 && !controller.isShifted()){
                     if (!bullet.equals(avatar.getHeldBullet())) {
-                        avatar.removeLife();
+                        controller.playAvatarHurt();
                         //avatar.setProjectileContact(true);
                     }
                 removeBullet(bullet);
