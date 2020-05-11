@@ -1377,6 +1377,14 @@ public class LevelController extends WorldController {
 				avatar.resetDashNum(-1);
 			}
 			shifted = !shifted;
+			for (Obstacle o: objects) {
+				if (o instanceof Platform) {
+					Platform p = (Platform) o;
+					if (p.getSpace() == 3){
+						p.shift(shifted);
+					}
+				}
+			}
 			avatar.setShifted(7);
 			if (shifted) {
 				JsonValue ripple = assetDirectory.get("sounds").get("ripple_to_past");
