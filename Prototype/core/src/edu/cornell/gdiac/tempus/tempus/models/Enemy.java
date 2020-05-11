@@ -64,6 +64,8 @@ public class Enemy extends CapsuleObstacle {
     private static final String ENEMY_CENTER_SENSOR = "EnemyCenterSensor";
     private static final String ENEMY_GROUND_SENSOR = "EnemyGroundSensor";
 
+    private static final float INDICATOR_SCALE = 0.01f;
+
     // ANIMATION FIELDS
     /** Texture filmstrip for enemy chilling */
     private FilmStrip neutralTexture;
@@ -145,7 +147,7 @@ public class Enemy extends CapsuleObstacle {
 
     /** Whether the enemy is a turret or not */
     private boolean isTurret;
-
+    /** Whether the enemy is waiting to fire or not */
     private boolean waitToFire;
 
     /** Direction the enemy faces */
@@ -160,6 +162,11 @@ public class Enemy extends CapsuleObstacle {
     private TextureRegion enemyPresentTexture;
     /** Texture asset for past enemy */
     private TextureRegion enemyPastTexture;
+
+    /** Texture for a passive enemy */
+    private TextureRegion passiveEnemyIndicator;
+    /** Texture for an active enemy */
+    private TextureRegion activeEnemyIndicator;
 
     /**
      * Creates a turret with the provided json value
@@ -252,6 +259,18 @@ public class Enemy extends CapsuleObstacle {
             neutralTexture = JsonAssetManager.getInstance().getEntry(("enemywalking" + "_" + entitytype), FilmStrip.class);
             attackingTexture = neutralTexture;
             setDensity(20);
+            switch (type) {
+                case PAST:
+                    passiveEnemyIndicator = JsonAssetManager.getInstance().getEntry("enemy_passive_red", TextureRegion.class);
+                    activeEnemyIndicator = JsonAssetManager.getInstance().getEntry("enemy_active_red", TextureRegion.class);
+                    break;
+
+                case PRESENT:
+                    passiveEnemyIndicator = JsonAssetManager.getInstance().getEntry("enemy_passive_blue", TextureRegion.class);
+                    activeEnemyIndicator = JsonAssetManager.getInstance().getEntry("enemy_active_blue", TextureRegion.class);
+                    break;
+
+            }
             break;
 
         case 2:
@@ -829,7 +848,7 @@ public class Enemy extends CapsuleObstacle {
      */
     public void draw(GameCanvas canvas) {
 
-        if(getAi() == EnemyType.FLY){
+        if(getAi() == EnemyType.FLY) {
             float faceOffset = 1.5f* getWidth() * faceDirection;
 
             canvas.draw(currentStrip, Color.WHITE, origin.x, origin.y,  (getX() - faceOffset) * drawScale.x, (getY()- 0.6f * getHeight()) * drawScale.y,
@@ -840,7 +859,37 @@ public class Enemy extends CapsuleObstacle {
             canvas.draw(currentStrip, Color.WHITE, origin.x, origin.y,  (getX() - faceOffset) * drawScale.x, (getY()- 0.2f * getHeight()) * drawScale.y,
                     getAngle(), 0.024f * minimizeScale * drawScale.x * faceDirection , 0.0225f * minimizeScale * drawScale.y);
         }
-        else{
+        else {
+
+            if (getAi() == EnemyType.WALK) {
+                float dist = getHeight() * drawScale.y;
+                float offset = type.equals(PAST) ? -3f : 0;
+                float rotation = getAngle();
+                TextureRegion indicator = passiveEnemyIndicator;
+                Vector2 drawLoc = new Vector2(getX() * drawScale.x, getY() * drawScale.y);
+                drawLoc.add(-offset, dist);
+                if (isFiring()) {
+                    float fullDist = target.getPosition().dst(getPosition());
+                    float ratio = dist / fullDist;
+                    float newX = ((target.getX() - getX()) * ratio) + (getX() * drawScale.x);
+                    float newY = ((target.getY() - getY()) * ratio) + (getY() * drawScale.y);
+                    drawLoc = new Vector2(newX, newY);
+                    rotation = getPosition().sub(target.getPosition()).nor().angle() / 57 - 1.6f;
+                    indicator = activeEnemyIndicator;
+                }
+                canvas.draw(indicator, Color.WHITE, origin.x, origin.y, drawLoc.x, drawLoc.y, rotation,
+                        drawScale.x * INDICATOR_SCALE, drawScale.y * INDICATOR_SCALE);
+//                if (isFiring()) {
+//                    canvas.draw(passiveEnemyIndicator, Color.WHITE, origin.x - offset, origin.y + dist,
+//                            getX() * drawScale.x - offset, getY() * drawScale.y  + dist, getAngle(),
+//                            drawScale.x * INDICATOR_SCALE, drawScale.y * INDICATOR_SCALE);
+//                } else {
+//                    canvas.draw(passiveEnemyIndicator, Color.WHITE, origin.x - offset, origin.y + dist,
+//                            getX() * drawScale.x - offset, getY() * drawScale.y  + dist, getAngle(),
+//                            drawScale.x * INDICATOR_SCALE, drawScale.y * INDICATOR_SCALE);
+//                }
+            }
+
             // Draw enemy filmstrip
             if (currentStrip != null) {
                 canvas.draw(currentStrip, Color.WHITE, origin.x, origin.y, getX() * drawScale.x, getY() * drawScale.y,
