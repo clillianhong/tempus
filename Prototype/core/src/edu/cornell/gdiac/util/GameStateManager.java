@@ -332,6 +332,7 @@ public class GameStateManager {
         if (is_exit) {
             System.out.println("entin");
             boolean finished = currentLevel.stepLevel();
+            //System.out.println(finished);
             if (finished) {
 //>>>>>>> 10005b486628a19e2e37d77cc1efa2c289a62c3d
                 MusicController.getInstance().stopAll();

@@ -190,8 +190,10 @@ public class CollisionController implements ContactListener {
             avatar.setLinearVelocity(bounceDir);
             turret.getBody().setLinearVelocity(new Vector2(0, 0));
 
-        if (avatar.getShifted() > 0 && (obs).getSpace() != 3 ) {
-            obs.setDead();
+        if (avatar.getShifted() > 0 && (obs).getSpace() != 3 && avatar.isHolding()) {
+            if (!obs.isTurret()) {
+                obs.setDead();
+            }
             if (obs.getAi() == Enemy.EnemyType.TELEPORT){
                 controller.getEnemyController().removePlat(obs.getCurrPlatform(), obs.getSpace());
             }
