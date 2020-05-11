@@ -8,6 +8,30 @@
       "file": "textures/platform/platform_rectangle_lv_1.png",
       "wrap": true
     },
+    "both_capsule_past": {
+      "file": "textures/platform/past_platform_1_both.png",
+      "wrap": false
+    },
+    "both_diamond_past": {
+      "file": "textures/platform/past_platform_2_both.png",
+      "wrap": false
+    },
+    "both_round_past": {
+      "file": "textures/platform/past_platform_3_both.png",
+      "wrap": false
+    },
+    "both_tall_past": {
+      "file": "textures/platform/past_platform_tall_both.png",
+      "wrap": false
+    },
+    "both_longcapsule_past": {
+      "file": "textures/platform/past_platform_long_both.png",
+      "wrap": false
+    },
+    "both_pillar_past": {
+      "file": "textures/platform/past_platform_pillar_both.png",
+      "wrap": false
+    },
     "present_capsule": {
       "file": "textures/platform/platform_capsule_lv_2_present.png",
       "wrap": false
