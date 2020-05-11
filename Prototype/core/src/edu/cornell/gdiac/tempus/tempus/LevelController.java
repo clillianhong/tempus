@@ -474,7 +474,7 @@ public class LevelController extends WorldController {
 		for (Obstacle obj : objects) {
 //			System.out.println("body type: " + obj.getBody().getUserData());
 			if(obj.getBody().getUserData() instanceof Projectile){
-				System.out.println("DELETING PROJECTILE");
+				//System.out.println("DELETING PROJECTILE");
 				obj.deactivatePhysics(world);
 				objects.remove(obj);
 			}
@@ -1145,8 +1145,6 @@ public class LevelController extends WorldController {
 			return false;
 		}
 
-
-
 		if (begincount > 0) {
 			begincount--;
 			return false;
@@ -1263,9 +1261,6 @@ public class LevelController extends WorldController {
 		if(inputReady && (input.releasedRightMouseButton()) || avatar.isSticking()){
 			avatar.setCatchReady(false);
 		}
-
-
-		System.out.println("num dashes! " + avatar.getNumDashes());
 
 		MusicController.getInstance().update(shifted);
 
