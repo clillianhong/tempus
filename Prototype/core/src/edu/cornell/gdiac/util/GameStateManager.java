@@ -326,22 +326,14 @@ public class GameStateManager {
      * next room 2. Finishing last room in level and finishing level/moving on to
      * next level 3. Finishing the game
      */
-//<<<<<<< HEAD
-//    public void stepGame(boolean is_exit){
-//        if(is_exit) {
-//            boolean finished = levels[current_level_idx].stepLevel();
-//            if(finished){
-//=======
+
     public void stepGame(boolean is_exit) {
         LevelModel currentLevel = levels[current_level_idx];
         // Updates the level timer
         currentLevel.updateBestTime(currentLevel.getCurrentRoomNumber());
         if (is_exit) {
-            System.out.println("entin");
             boolean finished = currentLevel.stepLevel();
-            //System.out.println(finished);
             if (finished) {
-//>>>>>>> 10005b486628a19e2e37d77cc1efa2c289a62c3d
                 MusicController.getInstance().stopAll();
                 levels[current_level_idx].finishLevel();
                 if (finished && current_level_idx == last_level_idx) {
@@ -359,10 +351,12 @@ public class GameStateManager {
                 }
             }
         } else { // simply want to unlock next level if locked
-                 // Update the best time of the levelc
-            if (!levels[current_level_idx + 1].isUnlocked()) {
-                highestUnlockedLevel = levels[current_level_idx + 1];
-                levels[current_level_idx + 1].unlockLevel();
+                 // Update the best time of the level
+            if(current_level_idx < levels.length-1) {
+                if (!levels[current_level_idx + 1].isUnlocked()) {
+                    highestUnlockedLevel = levels[current_level_idx + 1];
+                    levels[current_level_idx + 1].unlockLevel();
+                }
             }
         }
 
