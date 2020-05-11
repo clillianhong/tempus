@@ -50,7 +50,7 @@
   "turrets": {
     "turret8": {
       "pos": [
-        13.032,
+        12.532,
         1.23
       ],
       "shrink": [
@@ -251,7 +251,7 @@
       "space": 3
     },
     "pasttall13": {
-      "name": "past_tall",
+      "name": "present_tall",
       "pos": [
         14.248,
         5.82
@@ -260,8 +260,8 @@
       "density": 0,
       "friction": 0.6,
       "restitution": 0.1,
-      "texture": "past_tall",
-      "space": 2
+      "texture": "present_tall",
+      "space": 1
     },
     "bothtall14": {
       "name": "both_tall",
@@ -277,7 +277,7 @@
       "space": 3
     },
     "presenttall15": {
-      "name": "present_tall",
+      "name": "past_tall",
       "pos": [
         19.464,
         8.31
@@ -286,8 +286,8 @@
       "density": 0,
       "friction": 0.6,
       "restitution": 0.1,
-      "texture": "present_tall",
-      "space": 1
+      "texture": "past_tall",
+      "space": 2
     }
   },
   "pillars": {

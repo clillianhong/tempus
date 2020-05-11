@@ -328,6 +328,9 @@ public class EnemyController {
      * @param p the platform the enemy teleports to
      */
     public void teleport(Enemy e, Platform p) {
+        JsonValue disappear = assetDirectory.get("sounds").get("teleport_disappear");
+        SoundController.getInstance().play(disappear.get("file").asString(), disappear.get("file").asString(),
+                false, disappear.get("volume").asFloat());
         Vector2 newPos = p.getPosition();
         newPos.y += p.getHeight() + (e.getHeight() / 2);
         newPos.x += p.getWidth() / 2;

@@ -27,7 +27,7 @@
   "avatar": {
     "pos": [
       15.972000000000001,
-      13.069999999999999
+      15.11
     ],
     "shrink": [
       0.0216,
@@ -44,8 +44,8 @@
   "turrets": {
     "turret1": {
       "pos": [
-        6.888,
-        8.93
+        6.856,
+        10.999999999999998
       ],
       "shrink": [
         0.0168,
@@ -61,10 +61,10 @@
         0
       ]
     },
-    "turret7": {
+    "turret2": {
       "pos": [
         25.416,
-        6.13
+        5.91
       ],
       "shrink": [
         0.0168,
@@ -87,8 +87,8 @@
   "enemies": {
     "enemy1": {
       "pos": [
-        15.912,
-        3
+        15.176,
+        2.88
       ],
       "shrink": [
         0.0168,
@@ -101,10 +101,10 @@
       "cooldown": 360,
       "aitype": 1
     },
-    "enemy6": {
+    "enemy2": {
       "pos": [
-        16.008,
-        3.9
+        16.648,
+        3.75
       ],
       "shrink": [
         0.0168,
@@ -121,11 +121,11 @@
   "spikes": {},
   "talls": {},
   "pillars": {
-    "pastpillar12": {
+    "pillar1": {
       "name": "past_pillar",
       "pos": [
-        23.848,
-        7.469999999999999
+        23.528,
+        9.769999999999998
       ],
       "bodytype": "static",
       "density": 0,
@@ -134,11 +134,11 @@
       "texture": "past_pillar",
       "space": 2
     },
-    "presentpillar13": {
+    "pillar2": {
       "name": "present_pillar",
       "pos": [
-        6.224,
-        4.469999999999999
+        6.416,
+        4.949999999999998
       ],
       "bodytype": "static",
       "density": 0,
@@ -166,7 +166,7 @@
       "name": "present_longcapsule",
       "pos": [
         11.312,
-        4.32
+        4.27
       ],
       "bodytype": "static",
       "density": 0,
@@ -179,7 +179,7 @@
       "name": "both_longcapsule",
       "pos": [
         13.352,
-        11.46
+        13.650000000000002
       ],
       "bodytype": "static",
       "density": 0,
@@ -191,8 +191,8 @@
     "longcapsule4": {
       "name": "past_longcapsule",
       "pos": [
-        16.616,
-        7.35
+        16.552,
+        9.41
       ],
       "bodytype": "static",
       "density": 0,
@@ -201,11 +201,11 @@
       "texture": "past_longcapsule",
       "space": 2
     },
-    "presentlongcapsule10": {
+    "longcapsule5": {
       "name": "present_longcapsule",
       "pos": [
         6.512,
-        4.29
+        4.27
       ],
       "bodytype": "static",
       "density": 0,
@@ -214,11 +214,11 @@
       "texture": "present_longcapsule",
       "space": 1
     },
-    "pastlongcapsule11": {
+    "longcapsule6": {
       "name": "past_longcapsule",
       "pos": [
-        21.16,
-        7.38
+        21.064,
+        9.41
       ],
       "bodytype": "static",
       "density": 0,

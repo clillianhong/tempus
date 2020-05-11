@@ -1108,7 +1108,7 @@ public class LevelController extends WorldController {
 			return false;
 		}
 		if (avatar.getEnemyContact()){
-			avatar.removeLife();
+			playAvatarHurt();
 			//Vector2 vel = avatar.getLinearVelocity().cpy().scl(-1);
 			//avatar.setPosition(avatar.getPosition().add(vel.cpy()));
 			//avatar.setLinearVelocity(vel);
@@ -1116,7 +1116,7 @@ public class LevelController extends WorldController {
 		}
 
 		if (!isFailure() && avatar.getY() < -6 ) {
-			avatar.removeLife();
+			playAvatarHurt();
 			if (avatar.getLives() > 0 ) {
 				if (shifted) {
 					shifted = false;
@@ -2001,7 +2001,27 @@ public class LevelController extends WorldController {
 				false, portal.get("volume").asFloat());
 	}
 
+	public void playCatch(){
+		JsonValue catching = assetDirectory.get("sounds").get("catch");
+		SoundController.getInstance().stop(catching.get("file").asString());
+		SoundController.getInstance().play(catching.get("file").asString(), catching.get("file").asString(),
+				false, catching.get("volume").asFloat());
+	}
+
 	public EnemyController getEnemyController(){
 		return enemyController;
+	}
+
+	public void playAvatarHurt(){
+		boolean damaged = avatar.removeLife();
+		if (damaged){
+			JsonValue damage = assetDirectory.get("sounds").get("damage");
+			SoundController.getInstance().play(damage.get("file").asString(), damage.get("file").asString(),
+					false, damage.get("volume").asFloat());
+		} else {
+			JsonValue dead = assetDirectory.get("sounds").get("death");
+			SoundController.getInstance().play(dead.get("file").asString(), dead.get("file").asString(),
+					false, dead.get("volume").asFloat());
+		}
 	}
 }
