@@ -68,6 +68,7 @@ public class TutorialController extends LevelController {
         //beginDisplay = 150;
         isTutorial = true;
         dialogueNum = 0;
+        inputReady = false;
 
     }
 
@@ -267,6 +268,7 @@ public class TutorialController extends LevelController {
         if(dialogueNum >= dialogues.length){
             cutCont.setVisible(false);
             edgeContainer.setActor(tableStack);
+            inputReady = true;
         }else{
             if(dlMap[dialogueNum] != bgNum){
                 bgNum = (int) dlMap[dialogueNum];

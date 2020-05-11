@@ -6,16 +6,10 @@
   ],
   "present_background": "present_background3",
   "past_background": "past_background3",
-  "density": 0,
-  "heavy_density": 10,
-  "friction": 0.6,
-  "restitution": 0.1,
-  "bullet_offset": 0.7,
-  "effect_volume": 0.8,
   "door": {
     "pos": [
-      15.644,
-      14.15
+      4.315999999999998,
+      3.920000000000003
     ],
     "size": [
       1.92,
@@ -32,8 +26,8 @@
   },
   "avatar": {
     "pos": [
-      14.748000000000001,
-      5.0299999999999985
+      12.676000000000002,
+      2.929999999999999
     ],
     "shrink": [
       0.0216,
@@ -48,10 +42,10 @@
     "avatarfalling": "avatarfalling"
   },
   "turrets": {
-    "turret8": {
+    "turret28": {
       "pos": [
-        1.96,
-        1.68
+        3.336,
+        9
       ],
       "shrink": [
         0.0168,
@@ -63,14 +57,14 @@
       "entitytype": "present",
       "cooldown": 360,
       "direction": [
-        2.5,
-        3
+        3,
+        1
       ]
     },
-    "turret9": {
+    "turret30": {
       "pos": [
-        29.48,
-        1.83
+        5.704,
+        16.44
       ],
       "shrink": [
         0.0168,
@@ -82,80 +76,144 @@
       "entitytype": "past",
       "cooldown": 360,
       "direction": [
-        -2.5,
-        3
+        0,
+        -3
       ]
     }
   },
-  "capsules": {
-    "presentcapsule18": {
-      "name": "present_capsule",
+  "capsules": {},
+  "diamonds": {
+    "bothdiamond64": {
+      "name": "both_diamond",
       "pos": [
-        28.168,
-        5.07
+        20.872,
+        5.46
       ],
       "bodytype": "static",
       "density": 0,
       "friction": 0.6,
       "restitution": 0.1,
-      "texture": "present_capsule",
-      "space": 1
+      "texture": "both_diamond",
+      "space": 3
     },
-    "pastcapsule19": {
-      "name": "past_capsule",
+    "bothdiamond66": {
+      "name": "both_diamond",
       "pos": [
-        0.488,
-        4.68
+        28.136,
+        15.66
       ],
       "bodytype": "static",
       "density": 0,
       "friction": 0.6,
       "restitution": 0.1,
-      "texture": "past_capsule",
-      "space": 2
+      "texture": "both_diamond",
+      "space": 3
     }
   },
-  "diamonds": {},
   "rounds": {},
   "enemies": {
-    "enemy6": {
+    "enemy22": {
       "pos": [
-        29.672,
-        7.62
+        9.128,
+        8.76
       ],
       "shrink": [
         0.0168,
         0.021375
       ],
       "texture": "enemypresent",
-      "aitype": 1,
       "density": 1,
       "bodytype": "dynamic",
       "entitytype": "present",
-      "cooldown": 275
+      "cooldown": 300,
+      "aitype": 1
     },
-    "enemy7": {
+    "enemy23": {
       "pos": [
-        1.864,
-        7.77
+        9.192,
+        9.51
       ],
       "shrink": [
         0.0168,
         0.021375
       ],
       "texture": "enemypast",
-      "aitype": 1,
       "density": 1,
       "bodytype": "dynamic",
       "entitytype": "past",
-      "cooldown": 275
+      "cooldown": 300,
+      "aitype": 1
+    },
+    "enemy24": {
+      "pos": [
+        14.088,
+        8.67
+      ],
+      "shrink": [
+        0.0168,
+        0.021375
+      ],
+      "texture": "enemypresent",
+      "density": 1,
+      "bodytype": "dynamic",
+      "entitytype": "present",
+      "cooldown": 300,
+      "aitype": 1
+    },
+    "enemy25": {
+      "pos": [
+        14.024,
+        9.42
+      ],
+      "shrink": [
+        0.0168,
+        0.021375
+      ],
+      "texture": "enemypast",
+      "density": 1,
+      "bodytype": "dynamic",
+      "entitytype": "past",
+      "cooldown": 300,
+      "aitype": 1
+    },
+    "enemy26": {
+      "pos": [
+        18.76,
+        8.909999999999998
+      ],
+      "shrink": [
+        0.0168,
+        0.021375
+      ],
+      "texture": "enemypresent",
+      "density": 1,
+      "bodytype": "dynamic",
+      "entitytype": "present",
+      "cooldown": 300,
+      "aitype": 1
+    },
+    "enemy27": {
+      "pos": [
+        18.696,
+        9.3
+      ],
+      "shrink": [
+        0.0168,
+        0.021375
+      ],
+      "texture": "enemypast",
+      "density": 1,
+      "bodytype": "dynamic",
+      "entitytype": "past",
+      "cooldown": 300,
+      "aitype": 1
     }
   },
   "spikes": {
     "spike0": {
       "pos": [
-        11.476,
-        5.2
+        1.62,
+        1.81
       ],
       "bodytype": "static",
       "density": 0,
@@ -163,12 +221,12 @@
       "restitution": 0.1,
       "texture": "spikes",
       "space": 3,
-      "angle": 45
+      "angle": 180
     },
     "spike1": {
       "pos": [
-        10.548,
-        5.14
+        2.164,
+        6.460000000000002
       ],
       "bodytype": "static",
       "density": 0,
@@ -176,12 +234,12 @@
       "restitution": 0.1,
       "texture": "spikes",
       "space": 3,
-      "angle": 45
+      "angle": 90
     },
     "spike2": {
       "pos": [
-        9.78,
-        5.2
+        29.62,
+        5.83
       ],
       "bodytype": "static",
       "density": 0,
@@ -189,12 +247,12 @@
       "restitution": 0.1,
       "texture": "spikes",
       "space": 3,
-      "angle": 45
+      "angle": 225
     },
     "spike3": {
       "pos": [
-        19.38,
-        5.32
+        1.972,
+        7.57
       ],
       "bodytype": "static",
       "density": 0,
@@ -202,51 +260,12 @@
       "restitution": 0.1,
       "texture": "spikes",
       "space": 3,
-      "angle": 45
-    },
-    "spike4": {
-      "pos": [
-        20.276,
-        5.170000000000002
-      ],
-      "bodytype": "static",
-      "density": 0,
-      "friction": 0.6,
-      "restitution": 0.1,
-      "texture": "spikes",
-      "space": 3,
-      "angle": 45
-    },
-    "spike5": {
-      "pos": [
-        21.172,
-        5.26
-      ],
-      "bodytype": "static",
-      "density": 0,
-      "friction": 0.6,
-      "restitution": 0.1,
-      "texture": "spikes",
-      "space": 3,
-      "angle": 45
-    },
-    "spike6": {
-      "pos": [
-        14.228,
-        9.370000000000001
-      ],
-      "bodytype": "static",
-      "density": 0,
-      "friction": 0.6,
-      "restitution": 0.1,
-      "texture": "spikes",
-      "space": 3,
-      "angle": 225
+      "angle": 180
     },
     "spike7": {
       "pos": [
-        15.348,
-        9.700000000000001
+        1.204,
+        12.400000000000002
       ],
       "bodytype": "static",
       "density": 0,
@@ -256,10 +275,10 @@
       "space": 3,
       "angle": 225
     },
-    "spike8": {
+    "spike5": {
       "pos": [
-        16.372,
-        9.55
+        29.428,
+        10.690000000000001
       ],
       "bodytype": "static",
       "density": 0,
@@ -269,10 +288,10 @@
       "space": 3,
       "angle": 225
     },
-    "spike9": {
+    "spike6": {
       "pos": [
-        17.332,
-        9.610000000000001
+        29.428,
+        15.37
       ],
       "bodytype": "static",
       "density": 0,
@@ -283,14 +302,94 @@
       "angle": 225
     }
   },
-  "talls": {},
-  "pillars": {},
+  "talls": {
+    "bothtall42": {
+      "name": "both_tall",
+      "pos": [
+        -0.088,
+        2.01
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_tall",
+      "space": 3
+    },
+    "bothtall49": {
+      "name": "both_tall",
+      "pos": [
+        28.488,
+        6.15
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_tall",
+      "space": 3
+    },
+    "bothtall50": {
+      "name": "both_tall",
+      "pos": [
+        0.104,
+        12.689999999999998
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_tall",
+      "space": 3
+    },
+    "bothtall60": {
+      "name": "both_tall",
+      "pos": [
+        0.264,
+        7.8
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_tall",
+      "space": 3
+    },
+    "bothtall65": {
+      "name": "both_tall",
+      "pos": [
+        28.36,
+        10.919999999999998
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_tall",
+      "space": 3
+    }
+  },
+  "pillars": {
+    "bothpillar48": {
+      "name": "both_pillar",
+      "pos": [
+        27.944,
+        1.2
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_pillar",
+      "space": 3
+    }
+  },
   "longcapsules": {
-    "bothlongcapsule10": {
+    "bothlongcapsule36": {
       "name": "both_longcapsule",
       "pos": [
-        5.736,
-        9.78
+        2.088,
+        6.300000000000003
       ],
       "bodytype": "static",
       "density": 0,
@@ -299,11 +398,11 @@
       "texture": "both_longcapsule",
       "space": 3
     },
-    "bothlongcapsule11": {
+    "bothlongcapsule37": {
       "name": "both_longcapsule",
       "pos": [
-        10.6,
-        9.809999999999999
+        6.344,
+        0.51
       ],
       "bodytype": "static",
       "density": 0,
@@ -312,11 +411,11 @@
       "texture": "both_longcapsule",
       "space": 3
     },
-    "bothlongcapsule12": {
+    "bothlongcapsule38": {
       "name": "both_longcapsule",
       "pos": [
-        15.464,
-        9.84
+        6.824,
+        6.24
       ],
       "bodytype": "static",
       "density": 0,
@@ -325,11 +424,11 @@
       "texture": "both_longcapsule",
       "space": 3
     },
-    "bothlongcapsule13": {
+    "bothlongcapsule39": {
       "name": "both_longcapsule",
       "pos": [
-        20.36,
-        9.87
+        11.56,
+        6.179999999999999
       ],
       "bodytype": "static",
       "density": 0,
@@ -338,11 +437,11 @@
       "texture": "both_longcapsule",
       "space": 3
     },
-    "bothlongcapsule14": {
+    "bothlongcapsule40": {
       "name": "both_longcapsule",
       "pos": [
-        5.832,
-        3.39
+        10.984,
+        0.54
       ],
       "bodytype": "static",
       "density": 0,
@@ -351,11 +450,11 @@
       "texture": "both_longcapsule",
       "space": 3
     },
-    "bothlongcapsule15": {
+    "bothlongcapsule41": {
       "name": "both_longcapsule",
       "pos": [
-        10.6,
-        3.45
+        1.608,
+        0.47999999999999915
       ],
       "bodytype": "static",
       "density": 0,
@@ -364,11 +463,11 @@
       "texture": "both_longcapsule",
       "space": 3
     },
-    "bothlongcapsule16": {
+    "bothlongcapsule43": {
       "name": "both_longcapsule",
       "pos": [
-        15.368,
-        3.42
+        15.816,
+        0.6
       ],
       "bodytype": "static",
       "density": 0,
@@ -377,11 +476,37 @@
       "texture": "both_longcapsule",
       "space": 3
     },
-    "bothlongcapsule17": {
+    "bothlongcapsule44": {
       "name": "both_longcapsule",
       "pos": [
-        20.264,
-        3.48
+        16.2,
+        6.12
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_longcapsule",
+      "space": 3
+    },
+    "bothlongcapsule45": {
+      "name": "both_longcapsule",
+      "pos": [
+        20.712,
+        0.75
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_longcapsule",
+      "space": 3
+    },
+    "bothlongcapsule46": {
+      "name": "both_longcapsule",
+      "pos": [
+        25.512,
+        0.78
       ],
       "bodytype": "static",
       "density": 0,
