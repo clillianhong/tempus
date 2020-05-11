@@ -219,17 +219,23 @@ public class SelectLevelMode implements Screen {
                 "textures/gui/selectmode/level1unlocked.png",
                 "textures/gui/selectmode/level1pressed.png",
                 "textures/gui/selectmode/level1locked.png",
-                "this is level 1");
+                "The terra is not what it once was, such " +
+                "strange guardians wandering about. The Timewalkers " +
+                        "certainly left it in quite the state. "+
+                        "Your wings must be swift if you are to ever"+
+                " leave this twisted forest.");
         levels[2] = new Level(2,true, "textures/background/bg_past_lv_2.jpg",
                 "textures/gui/selectmode/level2unlocked.png",
                 "textures/gui/selectmode/level2pressed.png",
                 "textures/gui/selectmode/level2locked.png",
-                "this is level 2"); //TODO: CHANGE TO LEVEL 2 AND 3 RESOURCES
+                "In the distance, there stands the great nest"+
+                " in the sky. Home feels close, just out of reach." +
+                " And the guardians grow stranger still. "); //TODO: CHANGE TO LEVEL 2 AND 3 RESOURCES
         levels[3] = new Level(3,true, "textures/background/bg_past_lv_3.jpg",
                 "textures/gui/selectmode/level3unlocked.png",
                 "textures/gui/selectmode/level3pressed.png",
                 "textures/gui/selectmode/level3locked.png",
-                "this is level 3");
+                "You are home, and the heart is close, deep in the nest. Timewalkers have always been creatures of time, but perhaps time was never on their side.");
 
         previewTextures = new Image[levels.length];
 
