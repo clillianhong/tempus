@@ -268,8 +268,21 @@
     "longcapsule1": {
       "name": "both_longcapsule",
       "pos": [
-        10.76,
-        8.73
+        10.856,
+        8.76
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_longcapsule",
+      "space": 3
+    },
+    "longcapsule2": {
+      "name": "both_longcapsule",
+      "pos": [
+        15.396,
+        8.819999999999999
       ],
       "bodytype": "static",
       "density": 0,
@@ -281,8 +294,8 @@
     "longcapsule3": {
       "name": "both_longcapsule",
       "pos": [
-        15.688,
-        8.759999999999998
+        9.096,
+        1.98
       ],
       "bodytype": "static",
       "density": 0,
@@ -292,19 +305,6 @@
       "space": 3
     },
     "longcapsule4": {
-      "name": "both_longcapsule",
-      "pos": [
-        8.584,
-        2.04
-      ],
-      "bodytype": "static",
-      "density": 0,
-      "friction": 0.6,
-      "restitution": 0.1,
-      "texture": "both_longcapsule",
-      "space": 3
-    },
-    "longcapsule5": {
       "name": "both_longcapsule",
       "pos": [
         13.384,
@@ -317,11 +317,11 @@
       "texture": "both_longcapsule",
       "space": 3
     },
-    "longcapsule7": {
+    "longcapsule5": {
       "name": "both_longcapsule",
       "pos": [
-        18.184,
-        2.07
+        17.832,
+        2.04
       ],
       "bodytype": "static",
       "density": 0,
