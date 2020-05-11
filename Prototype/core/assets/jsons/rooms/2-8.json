@@ -300,8 +300,8 @@
     "longcapsule2": {
       "name": "present_longcapsule",
       "pos": [
-        21.992,
-        11.910000000000002
+        22.392,
+        11.97
       ],
       "bodytype": "static",
       "density": 0,
