@@ -44,6 +44,8 @@ import edu.cornell.gdiac.util.*;
 import edu.cornell.gdiac.tempus.obstacle.*;
 import edu.cornell.gdiac.tempus.tempus.models.*;
 
+import javax.xml.soap.Text;
+
 import static edu.cornell.gdiac.tempus.tempus.models.EntityType.PAST;
 import static edu.cornell.gdiac.tempus.tempus.models.EntityType.PRESENT;
 
@@ -93,6 +95,7 @@ public class LevelController extends WorldController {
 	private float minAlpha;
 	/** Stage for drawing */
 	protected Stage stage;
+
 	/** is accepting keyboard and mouse input **/
 	protected boolean inputReady;
 
@@ -448,6 +451,7 @@ public class LevelController extends WorldController {
 		stage.getCamera().update();
 		stage.getViewport().apply();
 
+
 	}
 
 	public void resetGame() {
@@ -556,6 +560,7 @@ public class LevelController extends WorldController {
 		table.setWidth(stage.getWidth());
 		table.align(Align.center | Align.top);
 		table.setPosition(0, sh);
+
 
 		//initialize backgrounds
 		pastBackgroundTexture = JsonAssetManager.getInstance().getEntry(levelFormat.get("past_background").asString(),
@@ -868,6 +873,8 @@ public class LevelController extends WorldController {
 	 */
 	public void createUI() {
 
+
+
 		// table container to center main table
 		edgeContainer = new Container<Stack>();
 		edgeContainer.setSize(sw, sh);
@@ -962,6 +969,7 @@ public class LevelController extends WorldController {
 		edgeContainer.setActor(tableStack);
 
 		stage.addActor(edgeContainer);
+
 
 	}
 
@@ -1136,6 +1144,8 @@ public class LevelController extends WorldController {
 			setFailure(true);
 			return false;
 		}
+
+
 
 		if (begincount > 0) {
 			begincount--;
@@ -1678,6 +1688,7 @@ public class LevelController extends WorldController {
 		stage.getBatch().setProjectionMatrix(stage.getCamera().combined);
 		stage.getCamera().update();
 		stage.getViewport().apply();
+
 		super.render(delta);
 	}
 
@@ -1745,7 +1756,7 @@ public class LevelController extends WorldController {
 		TextureRegion streak = JsonAssetManager.getInstance().getEntry("streak", TextureRegion.class);
 		canvas.draw(streak, Color.WHITE, 0, 0, -0.8f * scale.x, canvas.getHeight() / 2 + 2 * scale.y, 9 * scale.x,
 				9 * scale.y);
-		int lvNum = GameStateManager.getInstance().getCurrentLevelIndex() + 1;
+		int lvNum = GameStateManager.getInstance().getCurrentLevelIndex();
 		int rmNum = GameStateManager.getInstance().getCurrentLevel().getCurrentRoomNumber() + 1;
 		String levelInfo = "Level " + lvNum+"-"+rmNum;
 		glyphLayout.setText(displayFont, levelInfo);
@@ -1904,7 +1915,6 @@ public class LevelController extends WorldController {
 		}
 		stage.draw();
 		stage.act(Gdx.graphics.getDeltaTime());
-
 
 	}
 
