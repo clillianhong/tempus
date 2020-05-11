@@ -229,9 +229,9 @@ public class GameStateManager {
             levels[i].preloadLevel();
         }
         // System.out.println("GDX ERROR end:" + Gdx.gl.glGetError());
-        for (int j = 0; j < num_levels; j++) {
-            System.out.println(Arrays.toString(gameTime.get(j).asFloatArray()));
-        }
+//        for (int j = 0; j < num_levels; j++) {
+//            System.out.println(Arrays.toString(gameTime.get(j).asFloatArray()));
+//        }
     }
 
     /**
@@ -339,6 +339,7 @@ public class GameStateManager {
         if (is_exit) {
             System.out.println("entin");
             boolean finished = currentLevel.stepLevel();
+            //System.out.println(finished);
             if (finished) {
 //>>>>>>> 10005b486628a19e2e37d77cc1efa2c289a62c3d
                 MusicController.getInstance().stopAll();
