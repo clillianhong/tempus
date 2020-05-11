@@ -412,7 +412,7 @@ public class LevelController extends WorldController {
 	public void reset() {
 		// Vector2 gravity = new Vector2(world.getGravity());
 		drawEndRoom = false;
-		inputReady = true;
+		inputReady = false;
 		drawFadeAlpha = 0;
 		canvas.getSpriteBatch().setColor(1,1,1,1);
 		canvas.setBlendState(GameCanvas.BlendState.NO_PREMULT);
@@ -455,7 +455,7 @@ public class LevelController extends WorldController {
 	}
 
 	public void resetGame() {
-		inputReady = true;
+		inputReady = false;
 		// Vector2 gravity = new Vector2(world.getGravity());
 		setComplete(false);
 		setFailure(false);
@@ -1150,6 +1150,8 @@ public class LevelController extends WorldController {
 		if (begincount > 0) {
 			begincount--;
 			return false;
+		}else if(!inputReady){
+			inputReady = true;
 		}
 
 		if(failed && countdown==0){
