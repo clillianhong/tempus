@@ -290,6 +290,10 @@ public class GameStateManager {
         String[] bg_paths = levelJson.get("story_backgrounds").asStringArray();
         String[] dl_paths = levelJson.get("dialogues").asStringArray();
         float[] map = levelJson.get("mapping").asFloatArray();
+        float[] stoparray = levelJson.get("stop_array").asFloatArray();
+        float[] startarray = levelJson.get("start_array").asFloatArray();
+
+
 
         TextureRegionDrawable[] ctBackgrounds = new TextureRegionDrawable[bg_paths.length];
         TextureRegionDrawable[] ctDialogues = new TextureRegionDrawable[dl_paths.length];
@@ -309,7 +313,7 @@ public class GameStateManager {
             rooms[i] = new TutorialController(room_paths[i]);
         }
 
-        return new TutorialModel(lv, true, true, 0, rooms, cards, ctBackgrounds, ctDialogues, map);
+        return new TutorialModel(lv, true, true, 0, rooms, cards, ctBackgrounds, ctDialogues, map,stoparray, startarray);
 
     }
 

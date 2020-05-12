@@ -18,16 +18,27 @@ public class TutorialModel extends LevelModel {
     private float[] map;
     private TextureRegionDrawable[] bgs;
     private TextureRegionDrawable[] dls;
+    /** the current dialogue index */
+    public int dialogueNum;
+    /** the current background index  */
+    public int bgNum;
+    /** array of card indexes to stop at for displaying cutscenes */
+    public float [] cutsceneStopArray;
+    /** array of card indexes to start at for displaying cutscenes */
+    public float [] cutsceneStartArray;
 
 
     public TutorialModel(int lv, boolean unlocked, boolean finished, int resume,
                          LevelController[] rms, HashMap<Integer, String[]> cards,
-                         TextureRegionDrawable[] bgs, TextureRegionDrawable[] dls, float [] mapping) {
+                         TextureRegionDrawable[] bgs, TextureRegionDrawable[] dls, float [] mapping,
+                         float [] stopArray, float [] startArray) {
         super(lv, unlocked, finished, resume, rms);
-        tutorialCards = cards;
+        this.tutorialCards = cards;
         this.bgs = bgs;
         this.dls = dls;
         this.map = mapping;
+        this.cutsceneStopArray = stopArray;
+        this.cutsceneStartArray = startArray;
 
     }
 
@@ -36,13 +47,14 @@ public class TutorialModel extends LevelModel {
         for(int i = 0; i<rooms.length; i++) {
             TutorialController rc = (TutorialController) rooms[i];
             rc.loadContent();
-            rc.setFirst(i==0);
             rc.setCard(tutorialCards.get(i));
             rc.setScreenListener(listener);
             rc.setCanvas(canvas);
+            if(i < cutsceneStopArray.length && cutsceneStopArray[i] != -1){
+                rc.setCutScene(bgs, dls, map, (int) cutsceneStopArray[i], (int) cutsceneStartArray[i]);
+            }
         }
-        //setting cutscenes
-        ((TutorialController)rooms[0]).setCutScene(bgs, dls, map);
+
     }
 
 
