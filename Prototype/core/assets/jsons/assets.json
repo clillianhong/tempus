@@ -142,21 +142,14 @@
     },
     "projpastcaught": {
       "file": "textures/enemy/projectile/projectile_past_caught_lv_1.png",
-<<<<<<< HEAD
+
       "wrap": false
     },
     "projpast": {
       "file": "textures/enemy/projectile/projectile_past_stationary_lv1.png",
       "wrap": false
     },
-=======
-      "wrap": false
-    },
-    "projpast": {
-      "file": "textures/enemy/projectile/projectile_past_stationary_lv1.png",
-      "wrap": false
-    },
->>>>>>> e9fc9033905eda29e1f3f9999c2216575bd7fc13
+
     "present_turret": {
       "file": "textures/enemy/turret/turret_present_lv_1.png",
       "wrap": false
@@ -188,7 +181,6 @@
     "past_background3": {
       "file": "textures/background/bg_past_lv_3.jpg",
       "wrap": false
-<<<<<<< HEAD
     },
     "present_background3": {
       "file": "textures/background/bg_present_lv_3.jpg",
@@ -210,29 +202,7 @@
       "file": "textures/enemy/creature/enemy_present_alive_lv_1.png",
       "wrap": false
     },
-=======
-    },
-    "present_background3": {
-      "file": "textures/background/bg_present_lv_3.jpg",
-      "wrap": false
-    },
-    "enemypresent_type1": {
-      "file": "textures/enemy/creature/enemy_present_alive_lv_1.png",
-      "wrap": false
-    },
-    "enemypresent_type2": {
-      "file": "textures/enemy/creature/enemy_present_alive_lv_1.png",
-      "wrap": false
-    },
-    "enemypresent_type3": {
-      "file": "textures/enemy/creature/enemy_present_alive_lv_1.png",
-      "wrap": false
-    },
-    "enemypresent_type4": {
-      "file": "textures/enemy/creature/enemy_present_alive_lv_1.png",
-      "wrap": false
-    },
->>>>>>> e9fc9033905eda29e1f3f9999c2216575bd7fc13
+
     "enemypast_type1": {
       "file": "textures/enemy/creature/enemy_past_alive_lv_1.png",
       "wrap": false
@@ -253,7 +223,6 @@
       "file": "textures/indicators/bird_head.png",
       "wrap": false
     },
-<<<<<<< HEAD
     "white_border": {
       "file": "textures/gui/roomselect/white_border.png",
       "wrap": false
@@ -266,8 +235,6 @@
       "file": "textures/gui/roomselect/room_select.png",
       "wrap": false
     },
-=======
->>>>>>> e9fc9033905eda29e1f3f9999c2216575bd7fc13
     "streak": {
       "file": "textures/indicators/underlinestreak.png",
       "wrap": false

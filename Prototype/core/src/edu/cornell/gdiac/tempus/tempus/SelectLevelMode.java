@@ -298,8 +298,6 @@ public class SelectLevelMode implements Screen {
             l.setUnlocked(mod.isUnlocked());
         }
 
-
-
         active = true;
 
         Table wholescreen = new Table();
