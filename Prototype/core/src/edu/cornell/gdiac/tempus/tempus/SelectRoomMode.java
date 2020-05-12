@@ -182,14 +182,18 @@ public class SelectRoomMode implements Screen {
         }
 
         float cw = sw * 0.9f;
-        float ch = sh * 0.5f;
+        float ch = sh * 0.55f;
         int pad = 20;
+        int w_outpad = 10;
+        int h_outpad = 12;
+
+        int w_inpad = 24;
+        int h_inpad = (h_outpad/w_outpad) * w_inpad;
 
 
         font.getData().setScale(0.75f);
         Label.LabelStyle style = new Label.LabelStyle(font, Color.WHITE);
         FilmStrip bg = JsonAssetManager.getInstance().getEntry("level"+levelNum+"_bg", FilmStrip.class);
-        System.out.println("BACKGROUND " + bg);
 //        backgroundTexture = new TextureRegion(bg.getTexture());
 
         backgroundTexture = assetManager.getEntry("room_select_bg", TextureRegion.class);
@@ -206,6 +210,7 @@ public class SelectRoomMode implements Screen {
 
         //load all room buttons
         int row = 0;
+
 
 
         boolean finishPage = false;
@@ -232,24 +237,13 @@ public class SelectRoomMode implements Screen {
 
 
                 Button tempButton = new Button(roomPreview, roomPreviewDown);
-//                tempButton.addListener(new ClickListener(){
-//                    @Override
-//                    public void clicked(InputEvent event, float x, float y) {
-//                        if(roomNum <= highestRoom){
-//                            gameManager.setCurrentLevel(levelNum, roomNum);
-//                            gameManager.getCurrentLevel().setCurrentRoom(roomNum);
-//                            gameManager.printGameState();
-//                            exitToRoom();
-////                            stage.addAction(Actions.sequence(Actions.fadeOut(0.5f), Actions.run(new Runnable() {
-////                                @Override
-////                                public void run() {
-////
-////                                }
-////                            })));
-//                        }
-//                    }
-//                });
-//                Image whiteBorder = new Image(assetManager.getEntry("white_border", TextureRegion.class));
+
+                Image shadowImg = new Image(assetManager.getEntry("button_shadow", TextureRegion.class));
+
+                Table shadowTable = new Table();
+                shadowTable.add(shadowImg).width(cw/4-pad*2-w_outpad).height(ch*0.8f-pad*2-h_outpad);
+                shadowTable.align(Align.bottomRight);
+
                 TextureRegionDrawable whiteOverlayBorder = new TextureRegionDrawable(assetManager.getEntry("white_border_light", TextureRegion.class));
                 final Button whiteBorder = new Button(new TextureRegionDrawable(assetManager.getEntry("white_border", TextureRegion.class)),
                         whiteOverlayBorder,whiteOverlayBorder);
@@ -280,13 +274,29 @@ public class SelectRoomMode implements Screen {
                     }
 
                 });
-                Container whiteBorderContainer = new Container();
-                whiteBorderContainer.setActor(whiteBorder);
-                whiteBorderContainer.size(cw/4-pad*2,ch*0.8f-pad*2);
+                Table whiteBorderContainer = new Table();
+                whiteBorderContainer.add(whiteBorder).width(cw/4-pad*2-w_outpad).height(ch*0.8f-pad*2-h_outpad);
+//                whiteBorderContainer.size(cw/4-pad*2-15,ch*0.8f-pad*2-15);
+                whiteBorderContainer.align(Align.topLeft);
+
+                Image emptyImg = new Image();
+                Container emptyContainer = new Container();
+                emptyContainer.setActor((emptyImg));
+                emptyContainer.size(cw/4-pad*2-w_outpad,ch*0.8f-pad*2-h_outpad);
 
                 Table buttonstackTable = new Table();
-                buttonstackTable.add(tempButton).width(cw/4-pad*2-15).height(ch*0.8f-pad*2-15);
+
+                Table buttonCont = new Table();
+                buttonCont.add(tempButton).width(cw/4-pad*2-w_inpad).height(ch*0.8f-pad*2-h_inpad);
+
+//                buttonstackTable.setSize(cw/4-pad*2-outpad, ch*0.8f-pad*2-outpad);
+                buttonstackTable.add(buttonCont).width(cw/4-pad*2-w_outpad).height(ch*0.8f-pad*2-h_outpad);
+                buttonstackTable.align(Align.topLeft);
+
                 Stack buttonStack = new Stack();
+//                buttonStack.setSize(cw/4-pad*2-inpad,ch*0.8f-pad*2-inpad);
+                buttonStack.add(emptyContainer);
+                buttonStack.add(shadowTable);
                 buttonStack.add(buttonstackTable);
                 buttonStack.add(whiteBorderContainer);
 
@@ -294,6 +304,7 @@ public class SelectRoomMode implements Screen {
 
             }
             roomTables[page].row();
+//            roomTables[page].debugAll();
 
             row+=1;
 

@@ -232,6 +232,10 @@
       "file": "textures/gui/roomselect/room_select.png",
       "wrap": false
     },
+    "button_shadow" : {
+      "file": "textures/gui/roomselect/shadow_button_big.png",
+      "wrap": false
+    },
     "level_select_bg" : {
       "file": "textures/gui/selectmode/level_newestbg.png",
       "wrap": false

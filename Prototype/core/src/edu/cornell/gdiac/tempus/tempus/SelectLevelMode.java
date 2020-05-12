@@ -397,8 +397,6 @@ public class SelectLevelMode implements Screen {
         wholescreen.row();
         wholescreen.add(overlayBackButton).left();
 
-        wholescreen.setDebug(true);
-
         stage.addActor(wholescreen);
         stage.setScrollFocus(scroller);
         stage.addListener(new InputListener() {
