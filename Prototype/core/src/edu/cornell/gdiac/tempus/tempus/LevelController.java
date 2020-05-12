@@ -27,10 +27,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.*;
-<<<<<<< HEAD
 import com.badlogic.gdx.scenes.scene2d.Action;
-=======
->>>>>>> e9fc9033905eda29e1f3f9999c2216575bd7fc13
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -358,11 +355,7 @@ public class LevelController extends WorldController {
 		timeFreeze = false;
 		json_filepath = json;
 		numEnemies = 0;
-<<<<<<< HEAD
 		begincount = 20;
-=======
-		begincount = 10;
->>>>>>> e9fc9033905eda29e1f3f9999c2216575bd7fc13
 		enemyController = new EnemyController(enemies, objects, avatar, world, scale, this, assetDirectory);
 		isTutorial = false;
 		ripple_intensity = 0.009f;
@@ -448,11 +441,7 @@ public class LevelController extends WorldController {
 		rippleSpeed = 0.25f;
 		rippleOn = false;
 
-<<<<<<< HEAD
 		begincount = 20;
-=======
-		begincount = 10;
->>>>>>> e9fc9033905eda29e1f3f9999c2216575bd7fc13
 		// world = new World(gravity, false);
 		world.setContactListener(collisionController);
 		// world.setContactListener(this);
@@ -1086,27 +1075,19 @@ public class LevelController extends WorldController {
 	}
 
 	public void showWinLevel() {
-<<<<<<< HEAD
 		paused = true;
 		stage.getBatch().setColor(1f,1f,1f,1f);
 		stage.getBatch().setBlendFunction(GL20.GL_SRC_ALPHA,GL20.GL_ONE_MINUS_SRC_ALPHA);
 
 		System.out.println("stage alpha " + stage.getBatch().getColor());
 		stage.addAction(Actions.alpha(1));
-=======
-		stage.getBatch().setColor(1f,1f,1f,1f);
-		canvas.getSpriteBatch().setColor(1f,1f,1f,1f);
->>>>>>> e9fc9033905eda29e1f3f9999c2216575bd7fc13
 		endlevelContainer.setVisible(true);
 		endlevelTable.setVisible(true);
 	}
 	public void closeWinLevel() {
-<<<<<<< HEAD
 		paused = false;
 
 		canvas.getSpriteBatch().setColor(1f,1f,1f,1f);
-=======
->>>>>>> e9fc9033905eda29e1f3f9999c2216575bd7fc13
 		endlevelContainer.setVisible(false);
 		endlevelTable.setVisible(false);
 	}
@@ -1199,11 +1180,7 @@ public class LevelController extends WorldController {
 		if (begincount > 0) {
 			begincount--;
 			return false;
-<<<<<<< HEAD
 		}else if(!inputReady && !isTutorial){
-=======
-		}else if(!inputReady){
->>>>>>> e9fc9033905eda29e1f3f9999c2216575bd7fc13
 			inputReady = true;
 		}
 
@@ -1339,11 +1316,7 @@ public class LevelController extends WorldController {
 			avatar.setStartedDashing(t);
 		}
 		// System.out.println(numEnemies);
-<<<<<<< HEAD
 		if (inputReady && enemyController.getEnemies() == 0) {
-=======
-		if (enemyController.getEnemies() == 0) {
->>>>>>> e9fc9033905eda29e1f3f9999c2216575bd7fc13
 			if (!goalDoor.getOpen()){
 				JsonValue chains = assetDirectory.get("sounds").get("door_unlock");
 				SoundController.getInstance().play(chains.get("file").asString(), chains.get("file").asString(),
@@ -1383,11 +1356,7 @@ public class LevelController extends WorldController {
 			}
 		} else {
 			boolean dashAttempt = InputController.getInstance().releasedLeftMouseButton();
-<<<<<<< HEAD
 			if (inputReady && dashAttempt) {
-=======
-			if (dashAttempt) {
->>>>>>> e9fc9033905eda29e1f3f9999c2216575bd7fc13
 				enemyController.setPlayerVisible(true);
 				if(avatar.isSticking()){
 					avatar.setDashing(false);
@@ -1536,11 +1505,7 @@ public class LevelController extends WorldController {
 		}
 
 		// Update avatar animation state
-<<<<<<< HEAD
 		if (inputReady && InputController.getInstance().pressedLeftMouseButton()) {
-=======
-		if (InputController.getInstance().pressedLeftMouseButton()) {
->>>>>>> e9fc9033905eda29e1f3f9999c2216575bd7fc13
 			// If either mouse button is held, set animation to be crouching
 			avatar.animate(Avatar.AvatarState.CROUCHING, false);
 			avatar.setAnimationState(Avatar.AvatarState.CROUCHING);
@@ -1570,11 +1535,7 @@ public class LevelController extends WorldController {
 		// so we can know where to spawn enemies for testing purposes.
 //		printCoordinates();
 
-<<<<<<< HEAD
 		if (inputReady && !avatar.isHolding() && !avatar.isDashing() && !avatar.isSticking() && input.pressedXKey()){
-=======
-		if (!avatar.isHolding() && !avatar.isDashing() && !avatar.isSticking() && input.pressedXKey()){
->>>>>>> e9fc9033905eda29e1f3f9999c2216575bd7fc13
 			avatar.setSlowing(-1);
 			avatar.setVX(avatar.getVX() * 0.9f);
 		} else {
@@ -1945,10 +1906,6 @@ public class LevelController extends WorldController {
 				canvas.endDebug();
 			}
 
-<<<<<<< HEAD
-=======
-
->>>>>>> e9fc9033905eda29e1f3f9999c2216575bd7fc13
 			// Final message
 			if (complete && !failed && !drawEndRoom) {
 				inputReady = false;
@@ -1956,10 +1913,6 @@ public class LevelController extends WorldController {
 				canvas.setBlendState(GameCanvas.BlendState.ADDITIVE);
 				stage.getBatch().setBlendFunction(GL20.GL_SRC_ALPHA,GL20.GL_ONE);
 
-<<<<<<< HEAD
-=======
-
->>>>>>> e9fc9033905eda29e1f3f9999c2216575bd7fc13
 				if(GameStateManager.getInstance().lastRoom()){
 					rippleOn = true;
 					countdown = 200;
@@ -1967,17 +1920,10 @@ public class LevelController extends WorldController {
 					//TODO: ADD END LEVEL STATE
 				}else{
 					rippleOn = true;
-<<<<<<< HEAD
 					countdown = 30;
 					rippleSpeed = 0.85f;
 				}
 				minAlpha = 0.5f;
-=======
-					countdown = 60;
-				}
-				minAlpha = 0.5f;
-
->>>>>>> e9fc9033905eda29e1f3f9999c2216575bd7fc13
 				ripple_intensity = 0.2f;
 				updateShader();
 

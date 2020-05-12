@@ -27,7 +27,6 @@
     "jsons/rooms/0-20.json",
     "jsons/rooms/0-21.json"
   ],
-<<<<<<< HEAD
   "stop_array" : [
     4, -1, -1, -1,
     -1,-1,-1,-1,
@@ -48,11 +47,6 @@
       3,3,3,3,
       3,3,3,3,
       3,3,3,3
-=======
-
-    "mapping" : [
-      0,0,0,1,2,4,4,3,3,3,3,3,3,3,3,3,3,3,3,3
->>>>>>> e9fc9033905eda29e1f3f9999c2216575bd7fc13
     ],
     "story_backgrounds" : [
       "tutorial/black_bg.jpg",

@@ -125,7 +125,7 @@ public class HelpMode implements Screen {
         //Back button
         Table overlayBackButton = new Table();
         //back button
-        TextureRegionDrawable bup = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/selectmode/backbutton.png"))));
+        TextureRegionDrawable bup = new TextureRegionDrawable(JsonAssetManager.getInstance().getEntry("select_backbutton", TextureRegion.class));
         Button backButton = new Button(bup);
         backButton.addListener(new ClickListener(){
             @Override

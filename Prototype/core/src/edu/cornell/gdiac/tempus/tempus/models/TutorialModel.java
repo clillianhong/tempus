@@ -18,7 +18,6 @@ public class TutorialModel extends LevelModel {
     private float[] map;
     private TextureRegionDrawable[] bgs;
     private TextureRegionDrawable[] dls;
-<<<<<<< HEAD
     /** the current dialogue index */
     public int dialogueNum;
     /** the current background index  */
@@ -27,13 +26,10 @@ public class TutorialModel extends LevelModel {
     public float [] cutsceneStopArray;
     /** array of card indexes to start at for displaying cutscenes */
     public float [] cutsceneStartArray;
-=======
->>>>>>> e9fc9033905eda29e1f3f9999c2216575bd7fc13
 
 
     public TutorialModel(int lv, boolean unlocked, boolean finished, int resume,
                          LevelController[] rms, HashMap<Integer, String[]> cards,
-<<<<<<< HEAD
                          TextureRegionDrawable[] bgs, TextureRegionDrawable[] dls, float [] mapping,
                          float [] stopArray, float [] startArray) {
         super(lv, unlocked, finished, resume, rms);
@@ -43,14 +39,6 @@ public class TutorialModel extends LevelModel {
         this.map = mapping;
         this.cutsceneStopArray = stopArray;
         this.cutsceneStartArray = startArray;
-=======
-                         TextureRegionDrawable[] bgs, TextureRegionDrawable[] dls, float [] mapping) {
-        super(lv, unlocked, finished, resume, rms);
-        tutorialCards = cards;
-        this.bgs = bgs;
-        this.dls = dls;
-        this.map = mapping;
->>>>>>> e9fc9033905eda29e1f3f9999c2216575bd7fc13
 
     }
 
@@ -59,7 +47,6 @@ public class TutorialModel extends LevelModel {
         for(int i = 0; i<rooms.length; i++) {
             TutorialController rc = (TutorialController) rooms[i];
             rc.loadContent();
-<<<<<<< HEAD
             rc.setCard(tutorialCards.get(i));
             rc.setScreenListener(listener);
             rc.setCanvas(canvas);
@@ -68,15 +55,6 @@ public class TutorialModel extends LevelModel {
             }
         }
 
-=======
-            rc.setFirst(i==0);
-            rc.setCard(tutorialCards.get(i));
-            rc.setScreenListener(listener);
-            rc.setCanvas(canvas);
-        }
-        //setting cutscenes
-        ((TutorialController)rooms[0]).setCutScene(bgs, dls, map);
->>>>>>> e9fc9033905eda29e1f3f9999c2216575bd7fc13
     }
 
 

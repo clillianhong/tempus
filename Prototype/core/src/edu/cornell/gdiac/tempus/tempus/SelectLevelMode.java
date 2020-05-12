@@ -308,7 +308,7 @@ public class SelectLevelMode implements Screen {
         float cw = sw * 0.9f;
         float ch = sh * 0.8f;
 
-        backgroundTexture = new TextureRegion(new Texture(Gdx.files.internal("textures/gui/selectmode/level_newestbg.png")));
+        backgroundTexture = JsonAssetManager.getInstance().getEntry("select_backbutton", TextureRegion.class);
 
         //table container to center main table
         Container<Table> edgeContainer = new Container<Table>();
@@ -341,7 +341,7 @@ public class SelectLevelMode implements Screen {
 
         Table overlayBackButton = new Table();
         //back button
-        TextureRegionDrawable bup = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/selectmode/backbutton.png"))));
+        TextureRegionDrawable bup = new TextureRegionDrawable(JsonAssetManager.getInstance().getEntry("select_backbutton", TextureRegion.class));
         Button backButton = new Button(bup);
         backButton.addListener(new ClickListener(){
             @Override
@@ -356,11 +356,6 @@ public class SelectLevelMode implements Screen {
         });
         overlayBackButton.add(backButton).width(cw/12f).height(cw/15f).expand().bottom().left();
 
-        Table overlayPageHeader = new Table();
-        //back button
-        TextureRegionDrawable headerimg = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/selectmode/level_selector_label.png"))));
-        Image header = new Image(headerimg);
-        overlayPageHeader.add(header).width(cw/6f).height(cw/16f).expand().top().left();
 
         Table leftTable = new Table();
         leftTable.setWidth(cw/2 - 10);
