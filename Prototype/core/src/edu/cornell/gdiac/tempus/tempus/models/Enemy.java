@@ -873,7 +873,7 @@ public class Enemy extends CapsuleObstacle {
                 rotation = getAngle();
                 indicator = passiveEnemyIndicator;
                 drawLoc = new Vector2(getX() * drawScale.x, getY() * drawScale.y);
-                drawLoc.add(-offset, dist);
+                drawLoc.add(offset, dist);
             }
 
             canvas.draw(indicator, Color.WHITE, origin.x, origin.y, drawLoc.x, drawLoc.y, rotation,
