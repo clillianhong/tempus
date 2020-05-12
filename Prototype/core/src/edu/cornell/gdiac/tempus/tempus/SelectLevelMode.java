@@ -308,7 +308,7 @@ public class SelectLevelMode implements Screen {
         float cw = sw * 0.9f;
         float ch = sh * 0.8f;
 
-        backgroundTexture = JsonAssetManager.getInstance().getEntry("select_backbutton", TextureRegion.class);
+        backgroundTexture = JsonAssetManager.getInstance().getEntry("room_select_bg", TextureRegion.class);
 
         //table container to center main table
         Container<Table> edgeContainer = new Container<Table>();
@@ -396,6 +396,8 @@ public class SelectLevelMode implements Screen {
         wholescreen.add(edgeContainer);
         wholescreen.row();
         wholescreen.add(overlayBackButton).left();
+
+        wholescreen.setDebug(true);
 
         stage.addActor(wholescreen);
         stage.setScrollFocus(scroller);

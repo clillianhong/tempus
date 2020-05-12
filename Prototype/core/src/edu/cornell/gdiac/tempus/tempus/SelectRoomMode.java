@@ -18,9 +18,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.Json;
-import com.badlogic.gdx.utils.JsonReader;
-import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import edu.cornell.gdiac.tempus.GameCanvas;
@@ -145,11 +142,14 @@ public class SelectRoomMode implements Screen {
 
     @Override
     public void show() {
+
         fadeincount = 20;
         Gdx.input.setInputProcessor(stage);
 
         final GameStateManager gameManager = GameStateManager.getInstance();
+
         JsonAssetManager assetManager = JsonAssetManager.getInstance();
+
 
         wholescreenTable = new Table();
         wholescreenTable.setWidth(sw);
@@ -185,10 +185,13 @@ public class SelectRoomMode implements Screen {
         float ch = sh * 0.5f;
         int pad = 20;
 
+
         font.getData().setScale(0.75f);
         Label.LabelStyle style = new Label.LabelStyle(font, Color.WHITE);
         FilmStrip bg = JsonAssetManager.getInstance().getEntry("level"+levelNum+"_bg", FilmStrip.class);
+        System.out.println("BACKGROUND " + bg);
 //        backgroundTexture = new TextureRegion(bg.getTexture());
+
         backgroundTexture = assetManager.getEntry("room_select_bg", TextureRegion.class);
 
 //        Container whiteBorderContainer = new Container();
@@ -196,12 +199,15 @@ public class SelectRoomMode implements Screen {
         TextureRegionDrawable lockedRoom = new TextureRegionDrawable(
                 new TextureRegion(new Texture(Gdx.files.internal("textures/gui/roomselect/locked_room.png"))));
 
+
         int wid = bg.getTexture().getWidth();
         int ht = bg.getTexture().getHeight();
         final int highestRoom = gameManager.getCurrentLevel().getHighestUnlockedRoom();
 
         //load all room buttons
         int row = 0;
+
+
         boolean finishPage = false;
         for(int page = 0; page < numPages; page++){
             //create four buttons and four labels
@@ -212,6 +218,7 @@ public class SelectRoomMode implements Screen {
                     finishPage = true;
                     break;
                 }
+
                 TextureRegionDrawable roomPreview;
                 TextureRegionDrawable roomPreviewDown;
                 if(roomNum <= highestRoom){
@@ -244,7 +251,6 @@ public class SelectRoomMode implements Screen {
 //                });
 //                Image whiteBorder = new Image(assetManager.getEntry("white_border", TextureRegion.class));
                 TextureRegionDrawable whiteOverlayBorder = new TextureRegionDrawable(assetManager.getEntry("white_border_light", TextureRegion.class));
-
                 final Button whiteBorder = new Button(new TextureRegionDrawable(assetManager.getEntry("white_border", TextureRegion.class)),
                         whiteOverlayBorder,whiteOverlayBorder);
 //                final Button whiteBorder = new Button(whiteOverlayBorder,
@@ -285,6 +291,7 @@ public class SelectRoomMode implements Screen {
                 buttonStack.add(whiteBorderContainer);
 
                 roomTables[page].add(buttonStack).width(cw/4-pad*2).height(ch*0.8f-pad*2).padLeft(pad).padRight(pad).padTop(pad).expand().center();
+
             }
             roomTables[page].row();
 
@@ -319,7 +326,7 @@ public class SelectRoomMode implements Screen {
 
         Table overlayBackButton = new Table();
         //back button
-        TextureRegionDrawable bup = new TextureRegionDrawable(JsonAssetManager.getInstance().getEntry("select_backbutton", TextureRegion.class));
+        TextureRegionDrawable bup = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/selectmode/backbutton.png"))));
         Button backButton = new Button(bup);
         backButton.addListener(new ClickListener(){
             @Override

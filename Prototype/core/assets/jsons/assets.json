@@ -232,6 +232,10 @@
       "file": "textures/gui/roomselect/room_select.png",
       "wrap": false
     },
+    "select_backbutton" : {
+      "file": "textures/gui/selectmode/backbutton.png",
+      "wrap": false
+    },
     "streak": {
       "file": "textures/indicators/underlinestreak.png",
       "wrap": false
