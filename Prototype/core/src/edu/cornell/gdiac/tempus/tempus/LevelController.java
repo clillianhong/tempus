@@ -429,6 +429,14 @@ public class LevelController extends WorldController {
 		addQueue.clear();
 		world.dispose();
 		shifted = false;
+		for (Obstacle o: objects) {
+			if (o instanceof Platform) {
+				Platform p = (Platform) o;
+				if (p.getSpace() == 3){
+					p.shift(shifted);
+				}
+			}
+		}
 		ripple_intensity = 0.009f;
 		rippleSpeed = 0.25f;
 		rippleOn = false;
@@ -511,6 +519,14 @@ public class LevelController extends WorldController {
 //		world.dispose();
 
 		shifted = false;
+		for (Obstacle o: objects) {
+			if (o instanceof Platform) {
+				Platform p = (Platform) o;
+				if (p.getSpace() == 3){
+					p.shift(shifted);
+				}
+			}
+		}
 		ripple_intensity = 0.009f;
 		rippleSpeed = 0.25f;
 		rippleOn = false;
@@ -1128,6 +1144,14 @@ public class LevelController extends WorldController {
 			if (avatar.getLives() > 0 ) {
 				if (shifted) {
 					shifted = false;
+					for (Obstacle o: objects) {
+						if (o instanceof Platform) {
+							Platform p = (Platform) o;
+							if (p.getSpace() == 3){
+								p.shift(shifted);
+							}
+						}
+					}
 					enemyController.shift();
 				}
 				avatar.setEnemyContact(false);
