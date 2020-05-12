@@ -308,7 +308,7 @@ public class SelectLevelMode implements Screen {
         float cw = sw * 0.9f;
         float ch = sh * 0.8f;
 
-        backgroundTexture = JsonAssetManager.getInstance().getEntry("room_select_bg", TextureRegion.class);
+        backgroundTexture = JsonAssetManager.getInstance().getEntry("level_select_bg", TextureRegion.class);
 
         //table container to center main table
         Container<Table> edgeContainer = new Container<Table>();
