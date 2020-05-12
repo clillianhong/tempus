@@ -89,7 +89,6 @@ public class HelpMode implements Screen {
 
     public void createMode(){
 //        atlas = new TextureAtlas("skin.atlas");
-        skin = new Skin(Gdx.files.internal("skins/flat_earth_skin/flat-earth-ui.json"));
 
         camera = new OrthographicCamera(sw, sh);
         stage = new Stage(new FitViewport(sw, sh, camera));
@@ -117,7 +116,7 @@ public class HelpMode implements Screen {
         tableContainer.setPosition(0, 0);
         tableContainer.fillX().fillY();
 
-        Table mainTable = new Table(skin);
+        Table mainTable = new Table();
 
         mainTable.setWidth(canvas.getWidth());
         mainTable.setHeight(canvas.getHeight());
@@ -130,7 +129,7 @@ public class HelpMode implements Screen {
         backButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                stage.addAction(Actions.sequence(Actions.fadeOut(0.5f), Actions.run(new Runnable() {
+                stage.addAction(Actions.sequence(Actions.fadeOut(0.25f), Actions.run(new Runnable() {
                     @Override
                     public void run() {
                         exitBack();
@@ -140,10 +139,6 @@ public class HelpMode implements Screen {
         });
         overlayBackButton.add(backButton).width(sw/10f).height(sw/13f).expand().bottom().left().pad(10);
 
-//        Table overlayBackButton = new Table();
-//        overlayBackButton.add(backButton).width(cw/14f).height(cw/15f).expand().bottom().left();
-
-        //add buttons
         mainTable.add(overlayBackButton).expand().bottom().left();
 
         tableContainer.setActor(mainTable);

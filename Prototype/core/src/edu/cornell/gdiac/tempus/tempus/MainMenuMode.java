@@ -275,6 +275,7 @@ public class MainMenuMode implements Screen {
         //Add table to stage
         //
         stage.addActor(tableContainer);
+        stage.addAction(Actions.sequence(Actions.alpha(1f), Actions.fadeIn(0.25f)));
         stage.getViewport().apply();
 
         MusicController.getInstance().playMenuMusic();

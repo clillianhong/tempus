@@ -835,6 +835,8 @@ public class LevelController extends WorldController {
 		edgeContainer.setActor(tableStack);
 
 		stage.addActor(edgeContainer);
+		stage.addAction(Actions.sequence(Actions.alpha(1f), Actions.fadeIn(0.5f)));
+
 
 
 	}
@@ -1329,12 +1331,7 @@ public class LevelController extends WorldController {
 			if (ticks > ripple_reset) {
 				rippleOn = false;
 				ticks = 0;
-				m_rippleDistance = 0;
-				m_rippleRange = 0;
-				ripple_intensity = 0.009f;
-				rippleSpeed = 0.25f;
-				maxRippleDistance = 2f;
-				ripple_reset = sw * 0.00025f;
+				resetRipple();
 				updateShader();
 			}
 			m_rippleDistance += rippleSpeed * ticks;
@@ -1405,6 +1402,17 @@ public class LevelController extends WorldController {
 		}
 	}
 
+	/**
+	 * restores ripple params to their original setting
+	 */
+	public void resetRipple(){
+		m_rippleDistance = 0;
+		m_rippleRange = 0;
+		ripple_intensity = 0.009f;
+		rippleSpeed = 0.25f;
+		maxRippleDistance = 2f;
+		ripple_reset = sw * 0.00025f;
+	}
 	/**
 	 *
 	 * Add a new bullet to the world and send it in the direction specified by the
@@ -1711,22 +1719,23 @@ public class LevelController extends WorldController {
 				drawEndRoom = true;
 				canvas.setBlendState(GameCanvas.BlendState.ADDITIVE);
 				stage.getBatch().setBlendFunction(GL20.GL_SRC_ALPHA,GL20.GL_ONE);
+				resetRipple();
 
 				if(GameStateManager.getInstance().lastRoom()){
 					rippleOn = true;
 					countdown = 200;
 					rippleSpeed = 0.1f;
+
 					//TODO: ADD END LEVEL STATE
 				}else{
 					rippleOn = true;
 					countdown = 30;
-					rippleSpeed = 0.85f;
+					rippleSpeed = 0.7f;
+
 				}
 				minAlpha = 0.5f;
-				ripple_intensity = 0.2f;
+				ripple_intensity = 0.09f;
 				updateShader();
-
-
 
 
 			} else if (failed) {
