@@ -202,20 +202,8 @@ public class EnemyController {
      * @param enemy the enemy whose flying velocity needs to be set
      */
     public void setFlyingVelocity (Enemy enemy) {
-        Vector2 vel = target.getPosition().sub(enemy.getPosition());
+        Vector2 vel = target.getPosition().cpy().sub(enemy.getPosition().cpy());
         if (vel != enemy.getFlyingVelocity()) {
-//            if (!enemy.isFiring()) {
-//                if (enemy.isNearPlatform()) {
-//                    Vector2 normal = enemy.getAdjPlatform().getWorldManifold().getNormal();
-//                    if (Math.abs(normal.cpy().rotate90(1).angle(vel)) < Math.abs(normal.cpy().rotate(-1).angle(vel))) {
-//                        vel.rotate90(1);
-//                    } else {
-//                        vel.rotate90(-1);
-//                    }
-////                } else {
-////                    vel.rotate(45);
-//                }
-//            }
             enemy.setLinearVelocity(enemy.getLinearVelocity().scl(.7f));
             enemy.setFlyingVelocity(vel.cpy());
         }
@@ -226,7 +214,6 @@ public class EnemyController {
      */
     public void processAction() {
         for (Enemy e: enemies) {
-            e.setCheckSight(true);
             if (e.isTurret()) {
                 fire(e);
             } else if ((!shifted && e.getSpace() == 1) || (shifted && e.getSpace() == 2)) {
@@ -270,6 +257,11 @@ public class EnemyController {
         }
     }
 
+    /**
+     * Stops the enemy from flying
+     *
+     * @param e enemy that needs to be stopped
+     */
     public void stopFlying(Enemy e) {
         e.setVX(e.getVX() * 0.9f);
         e.setVY(e.getVY() * 0.9f);
@@ -305,6 +297,7 @@ public class EnemyController {
                     ((!shifted && ob.getSpace() == 1) || (shifted && ob.getSpace() == 2) || ob.getSpace() == 3)) {
                 Platform p = (Platform) ob;
                 if (!p.getName().contains("pillar") && !p.getName().contains("tall") && !p.getName().contains("longcapsule")) {
+                    e.setCheckSight(true);
                     teleportLineOfSight(p, e);
                     if (e.getTeleportTo() != null && e.canFire()
                             && e.getTeleportTo().getBody().getUserData() != target.getCurrentPlatform()
@@ -443,11 +436,10 @@ public class EnemyController {
      * @param offset offset from the enemy center to where the bullet shoots from
      */
     public void createLineOfSight(World world, float offset, Enemy e) {
+        e.setCheckSight(true);
         Vector2 shootPos = e.getPosition().add(0f, offset);
         TextureRegion bulletBigTexture = JsonAssetManager.getInstance().getEntry("bulletbig", TextureRegion.class);
         float radius = bulletBigTexture.getRegionWidth() / scale.x;
-        Vector2 reference = shootPos.cpy().add(0, radius);
-        Vector2 targetReference = target.getPosition().add(0, radius);
         world.rayCast(e.getSight(), shootPos.cpy().add(0f, -radius), target.getPosition().add(0f, -radius));
         world.rayCast(e.getSight(), shootPos.cpy().add(0f, radius), target.getPosition().add(0f, radius));
         world.rayCast(e.getSight(), shootPos.cpy().add(radius, 0f), target.getPosition().add(radius, 0f));
@@ -480,6 +472,15 @@ public class EnemyController {
         aim.y += e.getHeight() / 2 + p.getHeight() / 2 + BULLET_OFFSET;
         aim.x += p.getWidth() / 2;
         world.rayCast(e.getSight(), aim, target.getPosition());
+
+        if (e.getCheckSight()) {
+            e.setIsFiring(true);
+            e.setShiftedFiring(true);
+        } else {
+            e.setTeleportTo(null);
+            e.setIsFiring(false);
+            e.setShiftedFiring(false);
+        }
     }
 
     /**

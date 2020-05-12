@@ -267,6 +267,14 @@
     "enemy_active_blue": {
       "file": "textures/indicators/blue indicator active.png",
       "wrap": true
+    },
+    "enemy_passive_yellow": {
+      "file": "textures/indicators/yellow_indicator.png",
+      "wrap": false
+    },
+    "enemy_active_yellow": {
+      "file": "textures/indicators/yellow_indicator_active.png",
+      "wrap": true
     }
   },
   "fonts": {

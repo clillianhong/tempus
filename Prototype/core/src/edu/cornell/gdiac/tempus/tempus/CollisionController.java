@@ -517,15 +517,6 @@ public class CollisionController implements ContactListener {
                             enemy.setFaceDirection(-1 * enemy.getFaceDirection());
                         }
                     }
-                } else if (enemy.getAi() == Enemy.EnemyType.FLY) {
-                    if ((enemy != bd1 && !bd1.getName().equals("bullet")) ||
-                            (enemy != bd2 && !bd2.getName().equals("bullet"))) {
-                        if ((objB instanceof Platform && fix1 == enemy.getSensorFixtureCenter()) ||
-                                (objA instanceof Platform && fix2 == enemy.getSensorFixtureCenter())) {
-                            enemy.setNearPlatform(true);
-                            enemy.setAdjPlatform(contact);
-                        }
-                    }
                 }
             }
 
@@ -590,9 +581,6 @@ public class CollisionController implements ContactListener {
                     enemy.setMovement(0);
                     enemy.setNextDirection(-1 * enemy.getNextDirection());
                 }
-            } else if (enemy.getAi() == Enemy.EnemyType.FLY) {
-                enemy.setNearPlatform(false);
-                enemy.setAdjPlatform(null);
             }
         }
     }
