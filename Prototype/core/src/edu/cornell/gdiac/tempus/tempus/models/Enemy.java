@@ -52,7 +52,7 @@ public class Enemy extends CapsuleObstacle {
     /** The factor to multiply by the input */
     private static final float FORCE = 2500.0f;
     /** The factor for flying force */
-    private static final float FLY_FORCE = 50.0f;
+    private static final float FLY_FORCE = 15.0f;
     /** The amount to slow the enemy down */
     private static final float ENEMY_DAMPING = 10.0f;
     /** The maximum enemy speed */
@@ -253,18 +253,20 @@ public class Enemy extends CapsuleObstacle {
         isTurret = false;
         faceDirection = 1f;
         removalFrames = 60;
-        switch (type) {
-            case PAST:
-                passiveEnemyIndicator = JsonAssetManager.getInstance().getEntry("enemy_passive_red", TextureRegion.class);
-                activeEnemyIndicator = JsonAssetManager.getInstance().getEntry("enemy_active_red", TextureRegion.class);
-                break;
-
-            case PRESENT:
-                passiveEnemyIndicator = JsonAssetManager.getInstance().getEntry("enemy_passive_blue", TextureRegion.class);
-                activeEnemyIndicator = JsonAssetManager.getInstance().getEntry("enemy_active_blue", TextureRegion.class);
-                break;
-
-        }
+//        switch (type) {
+//            case PAST:
+//                passiveEnemyIndicator = JsonAssetManager.getInstance().getEntry("enemy_passive_red", TextureRegion.class);
+//                activeEnemyIndicator = JsonAssetManager.getInstance().getEntry("enemy_active_red", TextureRegion.class);
+//                break;
+//
+//            case PRESENT:
+//                passiveEnemyIndicator = JsonAssetManager.getInstance().getEntry("enemy_passive_blue", TextureRegion.class);
+//                activeEnemyIndicator = JsonAssetManager.getInstance().getEntry("enemy_active_blue", TextureRegion.class);
+//                break;
+//
+//        }
+        passiveEnemyIndicator = JsonAssetManager.getInstance().getEntry("enemy_passive_yellow", TextureRegion.class);
+        activeEnemyIndicator = JsonAssetManager.getInstance().getEntry("enemy_active_yellow", TextureRegion.class);
         switch (json.get("aitype").asInt()) {
         case 1:
             ai = EnemyType.WALK;
@@ -308,7 +310,7 @@ public class Enemy extends CapsuleObstacle {
             isFiring = false;
             setActive(false);
         } else if (ai.equals(EnemyType.TELEPORT)) {
-            sight = new TeleportLineOfSight(this);
+            sight = new LineOfSight(this);
             teleportTo = null;
             setName("teleport enemy");
             isFiring = true;
@@ -325,37 +327,36 @@ public class Enemy extends CapsuleObstacle {
         }
     }
 
+    /**
+     * Set whether the enemy is waiting to fire
+     *
+     * @param b boolean for if enemy is waiting to fire
+     */
     public void setWaitToFire(boolean b){
         waitToFire = b;
     }
 
+    /**
+     * Return whether the enemy is waiting to fire
+     *
+     * @return whether enemy is waiting to fire
+     */
     public boolean getWaitToFire(){
         return waitToFire;
     }
 
+    /**
+     * Return an array of the enemy's fixtures
+     *
+     * @return array of enemy's fixtures
+     */
     public Array<Fixture> getFixtures() {
         return getBody().getFixtureList();
     }
 
-    public Fixture getSensorFixtureCenter() {
-        return sensorFixtureCenter;
-    }
-
-    public void setAdjPlatform(Contact adjPlatform) {
-        this.adjPlatform = adjPlatform;
-    }
-
-    public Contact getAdjPlatform() {
-        return adjPlatform;
-    }
-
-    public void setNearPlatform(boolean nearPlatform) {
-        this.nearPlatform = nearPlatform;
-    }
-
-    public boolean isNearPlatform() {
-        return nearPlatform;
-    }
+//    public Fixture getSensorFixtureCenter() {
+//        return sensorFixtureCenter;
+//    }
 
     /**
      * Set whether the enemy controller has checked the line of sight
@@ -735,24 +736,24 @@ public class Enemy extends CapsuleObstacle {
             sensorFixtureGround = body.createFixture(sensorDef);
             sensorFixtureGround.setUserData(ENEMY_GROUND_SENSOR);
         }
-        if(getAi() == EnemyType.FLY){
-
-            Vector2 sensorSky = new Vector2(0, 0);
-//            sensorShapeGround = new PolygonShape();
-//            sensorShapeGround.setAsBox(getWidth() / 4, SENSOR_HEIGHT, sensorSky, 0f);
-
-            FixtureDef sensorDef = new FixtureDef();
-            sensorDef.density = DENSITY;
-            sensorShapeCenter = new CircleShape();
-            sensorShapeCenter.setRadius(1.25f * getWidth());
-            sensorShapeCenter.setPosition(sensorSky);
-            sensorDef.shape = sensorShapeCenter;
-            sensorDef.isSensor = true;
-            sensorDef.filter.groupIndex = -1;
-
-            sensorFixtureCenter = body.createFixture(sensorDef);
-            sensorFixtureCenter.setUserData(ENEMY_CENTER_SENSOR);
-        }
+//        if(getAi() == EnemyType.FLY){
+//
+//            Vector2 sensorSky = new Vector2(0, 0);
+////            sensorShapeGround = new PolygonShape();
+////            sensorShapeGround.setAsBox(getWidth() / 4, SENSOR_HEIGHT, sensorSky, 0f);
+//
+//            FixtureDef sensorDef = new FixtureDef();
+//            sensorDef.density = DENSITY;
+//            sensorShapeCenter = new CircleShape();
+//            sensorShapeCenter.setRadius(1.25f * getWidth());
+//            sensorShapeCenter.setPosition(sensorSky);
+//            sensorDef.shape = sensorShapeCenter;
+//            sensorDef.isSensor = true;
+//            sensorDef.filter.groupIndex = -1;
+//
+//            sensorFixtureCenter = body.createFixture(sensorDef);
+//            sensorFixtureCenter.setUserData(ENEMY_CENTER_SENSOR);
+//        }
 
         return true;
     }
@@ -954,40 +955,6 @@ class LineOfSight implements RayCastCallback {
             return 1;
         } else if (!(fixture.getBody().getUserData() instanceof Avatar)){
             enemy.setCheckSight(false);
-        }
-
-        return fraction;
-    }
-}
-
-class TeleportLineOfSight implements RayCastCallback {
-
-    private Enemy enemy;
-    private Vector2 point;
-    private Vector2 normal;
-
-    public TeleportLineOfSight(Enemy enemy) {
-        this.enemy = enemy;
-    }
-
-    @Override
-    public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction) {
-        this.point = point;
-        this.normal = normal;
-
-        if (fixture.getBody().getUserData() instanceof Avatar) {
-            enemy.setIsFiring(true);
-            enemy.setShiftedFiring(true);
-        } else if (fixture.getBody().getUserData() instanceof Projectile || fixture.getBody().getUserData() == enemy ||
-                (fixture.getBody().getUserData() instanceof Platform &&
-                        ((Platform) fixture.getBody().getUserData()).getSpace() != enemy.getSpace()) ||
-                (fixture.getBody().getUserData() instanceof Spikes &&
-                        (((Spikes) fixture.getBody().getUserData()).getSpace() != enemy.getSpace()))) {
-            return 1;
-        } else {
-            enemy.setTeleportTo(null);
-            enemy.setIsFiring(false);
-            enemy.setShiftedFiring(false);
         }
 
         return fraction;
