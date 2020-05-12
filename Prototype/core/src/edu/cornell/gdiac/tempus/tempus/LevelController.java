@@ -714,152 +714,6 @@ public class LevelController extends WorldController {
 	 */
 	private void rePopulateLevel() {
 
-		// tester stage!
-//		skin = new Skin(Gdx.files.internal("jsons/uiskin.json"));
-//		stage = new Stage(viewport);
-//		Gdx.input.setInputProcessor(stage);//BUGGY CHANGE?
-//		table = new Table();
-//		table.setWidth(stage.getWidth());
-//		table.align(Align.center | Align.top);
-//		table.setPosition(0, sh);
-
-		//initialize backgrounds
-//		pastBackgroundTexture = JsonAssetManager.getInstance().getEntry(levelFormat.get("past_background").asString(),
-//				TextureRegion.class);
-//		presentBackgroundTexture = JsonAssetManager.getInstance().getEntry(levelFormat.get("present_background").asString(),
-//				TextureRegion.class);
-//		bgSprite = new Sprite(presentBackgroundTexture);
-
-//		win_room = new TextureRegion(new Texture(Gdx.files.local("textures/background/blackscreen.png")));
-//		createUI();
-
-		// Initializes the world
-//		float gravity = levelFormat.getFloat("gravity");
-//		float[] pSize = levelFormat.get("bounds").asFloatArray();
-//		world = new World(new Vector2(0, gravity), false);
-//		bounds = new Rectangle(0, 0, pSize[0], pSize[1]);
-//		scale.x = canvas.getWidth() / pSize[0];
-//		scale.y = canvas.getHeight() / pSize[1];
-		// Add level goal
-//		goalDoor = new Door();
-//		goalDoor.initialize(levelFormat.get("door"));
-
-//		goalDoor.setDrawScale(scale);
-//		addObject(goalDoor);
-
-//		earthTile = JsonAssetManager.getInstance().getEntry("earth", TextureRegion.class);
-//		String nameWall = "wall";
-//		for (int ii = 0; ii < WALLS.length; ii++) {
-//			PolygonObstacle obj;
-//			obj = new Platform(WALLS[ii], 0, 0);
-//			obj.setBodyType(BodyDef.BodyType.StaticBody);
-//			obj.setDensity(BASIC_DENSITY);
-//			obj.setFriction(BASIC_FRICTION);
-//			obj.setRestitution(BASIC_RESTITUTION);
-//			obj.setDrawScale(scale);
-//			obj.setTexture(earthTile);
-//			obj.setName(nameWall);
-//			// addObject(obj);
-//		}
-
-//		String namePlatform = "platform";
-//		for (int ii = 0; ii < PLATFORMS.length; ii++) {
-//			PolygonObstacle obj;
-//			obj = new Platform(PLATFORMS[ii], 0, 0);
-//			obj.setBodyType(BodyDef.BodyType.StaticBody);
-//			obj.setDensity(BASIC_DENSITY);
-//			obj.setFriction(BASIC_FRICTION);
-//			obj.setRestitution(BASIC_RESTITUTION);
-//			obj.setDrawScale(scale);
-//			obj.setTexture(earthTile);
-//			obj.setName(namePlatform);
-//			if (ii <= PLATFORMS.length / 2) {
-//				obj.setSpace(1);
-//			}
-//			if (ii > PLATFORMS.length / 2) {
-//				obj.setSpace(2);
-//			}
-//			// addObject(obj);
-//		}
-//		float[] newPlatCapsule = {0.5f, 1.1f, 0.6f, 1.1f, 2.5f, 1.1f, 2.6f, 1.1f, 2.6f, 0.6f, 2.0f, 0.3f, 1.1f, 0.3f, 0.5f, 0.6f};
-//		float[] newPlatDiamond = {0.4f, 1.8f, 0.5f, 1.8f, 2.1f, 1.8f, 2.2f, 1.8f, 1.4f, 0.1f};
-//		float[] newPlatRounded = {0.4f, 1.4f, 0.8f, 1.7f, 2.1f, 1.7f, 2.4f, 1.4f, 2.3f, 0.8f, 1.7f, 0.3f, 1.1f, 0.3f};
-//		float[] newSpikes = {0.3f, -0.6f, 0.0f, -0.2f, -0.6f, 0.0f, -0.5f, 0.4f, 0.0f, 0.6f, 0.4f, -0.2f, 0.6f, -0.3f};
-//		float[] newPlatLongcapsule = {0.5f, 1.1f, 0.6f, 1.1f, 4.8f, 1.1f, 4.9f, 1.1f, 4.9f, 0.6f, 4.3f, 0.3f, 3.4f, 0.3f,
-//				2.7f, 0.5f, 2.0f, 0.3f, 1.1f, 0.3f, 0.5f, 0.6f};
-//		float[] newPlatTall = {0.4f, 3.9f, 0.5f, 3.9f, 1.6f, 3.9f, 1.7f, 3.9f, 1.1f, 0.5f};
-//		float[] newPlatPillar = {1.2f, 4.0f, 1.3f, 4.0f, 2.0f, 4.0f, 2.1f, 4.0f, 2.1f, 1.0f, 1.2f, 1.0f};
-
-
-//		JsonValue capsule = levelFormat.get("capsules").child();
-//		while (capsule != null) {
-//			Platform obj = new Platform(newPlatCapsule);
-//			obj.initialize(capsule);
-//			obj.setDrawScale(scale);
-//			addObject(obj);
-//			capsule = capsule.next();
-//		}
-
-//		JsonValue longcapsule = levelFormat.get("longcapsules").child();
-//		while (longcapsule != null) {
-//			Platform obj = new Platform(newPlatLongcapsule);
-//			obj.initialize(longcapsule);
-//			obj.setDrawScale(scale);
-//			addObject(obj);
-//			longcapsule = longcapsule.next();
-//		}
-
-//		JsonValue pillar = levelFormat.get("pillars").child();
-//		while (pillar != null) {
-//			Platform obj = new Platform(newPlatPillar);
-//			obj.initialize(pillar);
-//			obj.setDrawScale(scale);
-//			addObject(obj);
-//			pillar = pillar.next();
-//		}
-
-//		JsonValue tall = levelFormat.get("talls").child();
-//		while (tall != null) {
-//			Platform obj = new Platform(newPlatTall);
-//			obj.initialize(tall);
-//			obj.setDrawScale(scale);
-//			addObject(obj);
-//			tall = tall.next();
-//		}
-//		JsonValue diamond = levelFormat.get("diamonds").child();
-//		while (diamond != null) {
-//			Platform obj = new Platform(newPlatDiamond);
-//			obj.initialize(diamond);
-//			obj.setDrawScale(scale);
-//			addObject(obj);
-//			diamond = diamond.next();
-//		}
-//		JsonValue round = levelFormat.get("rounds").child();
-//		while (round != null) {
-//			Platform obj = new Platform(newPlatRounded);
-//			obj.initialize(round);
-//			obj.setDrawScale(scale);
-//			addObject(obj);
-//			round = round.next();
-//		}
-//		JsonValue spikes = levelFormat.get("spikes").child();
-//		while (spikes != null) {
-//			Spikes obj = new Spikes(newSpikes);
-//			obj.initialize(spikes);
-//			obj.setDrawScale(scale);
-//			addObject(obj);
-//			spikes = spikes.next();
-//		}
-		// Create avatar
-//		JsonValue json = levelFormat.get("avatar");
-//		avatar = new Avatar();
-//		avatar.setCanvas(camera);
-//		avatar.setDrawScale(scale);
-//		avatar.initialize(json);
-//		addObject(avatar);
-//		float[] pos = json.get("pos").asFloatArray();
-//		avatarStart = new Vector2(pos[0], pos[1]);
-
 		bgSprite = new Sprite(presentBackgroundTexture);
 		JsonValue enemy = levelFormat.get("enemies").child();
 		while (enemy != null) {
@@ -890,7 +744,7 @@ public class LevelController extends WorldController {
 	 */
 	public void createUI() {
 
-
+		JsonAssetManager assetManager = JsonAssetManager.getInstance();
 
 		// table container to center main table
 		edgeContainer = new Container<Stack>();
@@ -904,18 +758,13 @@ public class LevelController extends WorldController {
 		/*
 		 * START PAUSE SCREEN SETUP ---------------------
 		 */
-		TextureRegionDrawable pauseButtonResource = new TextureRegionDrawable(
-				new TextureRegion(new Texture(Gdx.files.internal("textures/gui/pausebutton.png"))));
-		overlayDark = new TextureRegion(new Texture(Gdx.files.internal("textures/gui/pause_filter_25_black.png")));
-		overlayBG = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/pause_filter_85_black.png"))));
-		TextureRegionDrawable pauseBox = new TextureRegionDrawable(
-				new TextureRegion(new Texture(Gdx.files.internal("textures/gui/frame_pause.png"))));
-		TextureRegionDrawable resumeResource = new TextureRegionDrawable(
-				new TextureRegion(new Texture(Gdx.files.internal("textures/gui/pause_resume_button.png"))));
-		TextureRegionDrawable restartResource = new TextureRegionDrawable(
-				new TextureRegion(new Texture(Gdx.files.internal("textures/gui/pause_restart_button.png"))));
-		TextureRegionDrawable exitResource = new TextureRegionDrawable(
-				new TextureRegion(new Texture(Gdx.files.internal("textures/gui/pause_exit_button.png"))));
+		TextureRegionDrawable pauseButtonResource = new TextureRegionDrawable(assetManager.getEntry("pause_button", TextureRegion.class));
+		overlayDark = assetManager.getEntry("25_black_overlay", TextureRegion.class);
+		overlayBG = new TextureRegionDrawable( assetManager.getEntry("85_black_overlay", TextureRegion.class));
+
+		TextureRegionDrawable resumeResource = new TextureRegionDrawable(assetManager.getEntry("resume_button", TextureRegion.class));
+		TextureRegionDrawable restartResource = new TextureRegionDrawable(assetManager.getEntry("restart_button", TextureRegion.class));
+		TextureRegionDrawable exitResource = new TextureRegionDrawable(assetManager.getEntry("pause_exit_button", TextureRegion.class));
 
 		pauseButtonContainer = new Container<>();
 		pauseButtonContainer.setBackground(overlayBG);
@@ -991,6 +840,8 @@ public class LevelController extends WorldController {
 	}
 
 	public void createEndlevelUI(Stack tableStack){
+		JsonAssetManager assetManager = JsonAssetManager.getInstance();
+
 		endlevelContainer = new Container<>();
 		endlevelContainer.setBackground(overlayBG);
 		endlevelContainer.setPosition(0, 0);
@@ -1008,12 +859,9 @@ public class LevelController extends WorldController {
 		Image header = new Image(headerimg);
 		overlayPageHeader.add(header).expand().center();
 
-		TextureRegionDrawable levelsResource = new TextureRegionDrawable(
-				new TextureRegion(new Texture(Gdx.files.internal("textures/gui/win_levelsbutton.png"))));
-		TextureRegionDrawable nextResource = new TextureRegionDrawable(
-				new TextureRegion(new Texture(Gdx.files.internal("textures/gui/win_nextbutton.png"))));
-		TextureRegionDrawable replayResource = new TextureRegionDrawable(
-				new TextureRegion(new Texture(Gdx.files.internal("textures/gui/win_replaybutton.png"))));
+		TextureRegionDrawable levelsResource = new TextureRegionDrawable(assetManager.getEntry("win_levels_button", TextureRegion.class));
+		TextureRegionDrawable nextResource = new TextureRegionDrawable(assetManager.getEntry("win_next_button", TextureRegion.class));
+		TextureRegionDrawable replayResource = new TextureRegionDrawable(assetManager.getEntry("win_replay_button", TextureRegion.class));
 
 		Button levelButton = new Button(levelsResource);
 		levelButton.addListener(new ClickListener() {
@@ -1079,7 +927,6 @@ public class LevelController extends WorldController {
 		stage.getBatch().setColor(1f,1f,1f,1f);
 		stage.getBatch().setBlendFunction(GL20.GL_SRC_ALPHA,GL20.GL_ONE_MINUS_SRC_ALPHA);
 
-		System.out.println("stage alpha " + stage.getBatch().getColor());
 		stage.addAction(Actions.alpha(1));
 		endlevelContainer.setVisible(true);
 		endlevelTable.setVisible(true);

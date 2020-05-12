@@ -46,13 +46,12 @@ public class SelectLevelMode implements Screen {
         private String filePressLocked;
         Button button;
 
-
-        TextArea textLore;
         private TextureRegionDrawable bup;
         private TextureRegionDrawable block;
         private  TextureRegionDrawable bdown;
 
-        public Level(int lev, boolean l, String preview, String buttonUp, String buttonDown, String buttonLocked, String textlore){
+        public Level(int lev, boolean l, String preview, String buttonUp, String buttonDown, String buttonLocked, String textlore)
+        {
             level = lev;
             unlocked = l;
             filePreview = preview;
@@ -63,9 +62,10 @@ public class SelectLevelMode implements Screen {
             this.loreLabel.setAlignment(Align.left);
             this.loreLabel.setWrap(true);
             this.loreLabel.setWidth(100);
-            bup = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal(buttonUp))));
-            block = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal(buttonLocked))));
-            bdown = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal(buttonDown))));
+
+            bup = new TextureRegionDrawable(assetManager.getEntry(buttonUp, TextureRegion.class));
+            block = new TextureRegionDrawable(assetManager.getEntry(buttonLocked, TextureRegion.class));
+            bdown = new TextureRegionDrawable(assetManager.getEntry(buttonDown, TextureRegion.class));
 
         }
 
@@ -147,6 +147,7 @@ public class SelectLevelMode implements Screen {
     private Container pIContainer;
     private Container lbContainer;
 
+    private JsonAssetManager assetManager;
     private boolean scrollPrev;
     private boolean scrolling;
 
@@ -176,8 +177,6 @@ public class SelectLevelMode implements Screen {
     /** label style */
     private Label.LabelStyle style;
 
-
-
     int sw = 1920/2;
     int sh = 1080/2;
 
@@ -196,6 +195,7 @@ public class SelectLevelMode implements Screen {
         active = false;
         currentLevel = 1;
         int numLevels = 4;
+        assetManager = JsonAssetManager.getInstance();
         skin = new Skin(Gdx.files.internal("skins/flat_earth_skin/flat-earth-ui.json"));
 
 
@@ -205,37 +205,6 @@ public class SelectLevelMode implements Screen {
         style = new Label.LabelStyle(font, Color.WHITE);
 
         levels = new Level[numLevels];
-        levels[0] = new Level(0,false, "textures/background/bg_past_lv_1.jpg",
-                "textures/gui/selectmode/tutorialunlocked.png",
-                "textures/gui/selectmode/tutorialpressed.png",
-                "textures/gui/selectmode/tutoriallocked.png",
-                "There was once balance between the terra " +
-                        "and the sky. Long ago, a deal was struck, " +
-                        "a hundred year curse. Beasts of each kind must " +
-                        "stay in their domain. Every living soul " +
-                        "respected this promise. That is, until the " +
-                        "Timewalkers were born.");
-        levels[1] = new Level(1,true, "textures/background/bg_past_lv_1.jpg",
-                "textures/gui/selectmode/level1unlocked.png",
-                "textures/gui/selectmode/level1pressed.png",
-                "textures/gui/selectmode/level1locked.png",
-                "The terra is not what it once was, such " +
-                "strange guardians wandering about. The Timewalkers " +
-                        "certainly left it in quite the state. "+
-                        "Your wings must be swift if you are to ever"+
-                " leave this twisted forest.");
-        levels[2] = new Level(2,true, "textures/background/bg_past_lv_2.jpg",
-                "textures/gui/selectmode/level2unlocked.png",
-                "textures/gui/selectmode/level2pressed.png",
-                "textures/gui/selectmode/level2locked.png",
-                "In the distance, there stands the great nest"+
-                " in the sky. Home feels close, just out of reach." +
-                " And the guardians grow stranger still. "); //TODO: CHANGE TO LEVEL 2 AND 3 RESOURCES
-        levels[3] = new Level(3,true, "textures/background/bg_past_lv_3.jpg",
-                "textures/gui/selectmode/level3unlocked.png",
-                "textures/gui/selectmode/level3pressed.png",
-                "textures/gui/selectmode/level3locked.png",
-                "You are home, and the heart is close, deep in the nest. Timewalkers have always been creatures of time, but perhaps time was never on their side.");
 
         previewTextures = new Image[levels.length];
 
@@ -293,6 +262,40 @@ public class SelectLevelMode implements Screen {
     public void show() {
         Gdx.input.setInputProcessor(stage);
         GameStateManager gameManager = GameStateManager.getInstance();
+
+        levels[0] = new Level(0,false, "present_background1",
+                "tutorial_unlocked_button",
+                "tutorial_pressed_button",
+                "tutorial_locked_button",
+                "There was once balance between the terra " +
+                        "and the sky. Long ago, a deal was struck, " +
+                        "a hundred year curse. Beasts of each kind must " +
+                        "stay in their domain. Every living soul " +
+                        "respected this promise. That is, until the " +
+                        "Timewalkers were born.");
+        levels[1] = new Level(1,true, "past_background1",
+                "l1_unlocked_button",
+                "l1_pressed_button",
+                "l1_locked_button",
+                "The terra is not what it once was, such " +
+                        "strange guardians wandering about. The Timewalkers " +
+                        "certainly left it in quite the state. "+
+                        "Your wings must be swift if you are to ever"+
+                        " leave this twisted forest.");
+        levels[2] = new Level(2,true, "past_background2",
+                "l2_unlocked_button",
+                "l2_pressed_button",
+                "l2_locked_button",
+                "In the distance, there stands the great nest"+
+                        " in the sky. Home feels close, just out of reach." +
+                        " And the guardians grow stranger still. "); //TODO: CHANGE TO LEVEL 2 AND 3 RESOURCES
+        levels[3] = new Level(3,true, "past_background3",
+                "l3_unlocked_button",
+                "l3_pressed_button",
+                "l3_locked_button",
+                "You are home, and the heart is close, deep in the nest. Timewalkers have always been creatures of time, but perhaps time was never on their side.");
+
+
         for(Level l : levels){
             LevelModel mod = gameManager.getLevel(l.getLevel());
             l.setUnlocked(mod.isUnlocked());
@@ -331,7 +334,7 @@ public class SelectLevelMode implements Screen {
         for(Level lev : levels){
             levelTable.add(lev.button).size(cw/2*0.85f, ch/3*0.45f).expandX().fillX();
             levelTable.row().padBottom(ch * 0.08f);
-            previewTextures[lev.getLevel()] = new Image(new TextureRegion(new Texture(Gdx.files.internal(lev.getFilePreview()))));
+            previewTextures[lev.getLevel()] = new Image(assetManager.getEntry(lev.getFilePreview(), TextureRegion.class));
         }
 
         Container<Table> levelTableContainer = new Container<>();
@@ -368,8 +371,8 @@ public class SelectLevelMode implements Screen {
 
         pIContainer = new Container<>();
         pIContainer.size(cw/2f* 0.9f, ch/2f);
-        Texture prevTexture = new Texture(Gdx.files.internal(levels[currentLevel].getFilePreview()));
-        Image previewImg = new Image( new TextureRegion(prevTexture));
+        System.out.println("FILE PREVIEW " + levels[currentLevel].getFilePreview());
+        Image previewImg = new Image(assetManager.getEntry(levels[currentLevel].getFilePreview(), TextureRegion.class));
 
         pIContainer.setActor(previewImg);
 //        prevStack.add(pbContainer);
@@ -409,6 +412,8 @@ public class SelectLevelMode implements Screen {
             }
 
         });
+
+        System.out.println("PREVIEW IMAGES: " + previewTextures);
 //        stage.addAction(Actions.alpha(0f));
 //        stage.addAction(Actions.fadeIn(1f));
 
