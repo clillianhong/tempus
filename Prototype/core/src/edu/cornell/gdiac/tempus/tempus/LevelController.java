@@ -359,7 +359,7 @@ public class LevelController extends WorldController {
 		enemyController = new EnemyController(enemies, objects, avatar, world, scale, this, assetDirectory);
 		isTutorial = false;
 		ripple_intensity = 0.009f;
-		inputReady = true;
+		inputReady = false;
 
 		// ripple shader
 		ticks = 0f;
@@ -1179,7 +1179,6 @@ public class LevelController extends WorldController {
 
 		if (begincount > 0) {
 			begincount--;
-			return false;
 		}else if(!inputReady && !isTutorial){
 			inputReady = true;
 		}
@@ -1346,6 +1345,7 @@ public class LevelController extends WorldController {
 				avatar.setDashing(true);
 				avatar.setDashStartPos(avatar.getPosition().cpy());
 				avatar.setDashDistance(avatar.getDashRange());
+				avatar.setDashDistance(avatar.getDashRange());
 				// avatar.setDashDistance(Math.min(avatar.getDashRange(),
 				// avatar.getPosition().dst(mousePos)));
 				avatar.setDashForceDirection(mousePos.cpy().sub(avatar.getPosition()));
@@ -1357,6 +1357,16 @@ public class LevelController extends WorldController {
 		} else {
 			boolean dashAttempt = InputController.getInstance().releasedLeftMouseButton();
 			if (inputReady && dashAttempt) {
+				if(avatar.getNumDashes()==1){
+					rippleOn = true;
+					ticks = 0;
+					m_rippleDistance = 0;
+					m_rippleRange = 0;
+					ripple_intensity = 0.02f;
+					rippleSpeed = 0.25f;
+					maxRippleDistance = 0.25f;
+					ripple_reset = sw * 0.00025f / 4;
+				}
 				enemyController.setPlayerVisible(true);
 				if(avatar.isSticking()){
 					avatar.setDashing(false);
@@ -1474,6 +1484,11 @@ public class LevelController extends WorldController {
 				ticks = 0;
 				m_rippleDistance = 0;
 				m_rippleRange = 0;
+				ripple_intensity = 0.009f;
+				rippleSpeed = 0.25f;
+				maxRippleDistance = 2f;
+				ripple_reset = sw * 0.00025f;
+				updateShader();
 			}
 			m_rippleDistance += rippleSpeed * ticks;
 			m_rippleRange = (1 - m_rippleDistance / maxRippleDistance) * ripple_intensity;
@@ -1576,69 +1591,6 @@ public class LevelController extends WorldController {
 			avatar.setAngle(avatar.getNewAngle());
 		}
 	}
-
-	// /**
-	// * Add a new bullet to the world and send it in the right direction.
-	// *
-	// * @param enemy enemy
-	// */
-	// private void createBullet(Enemy enemy) {
-	// float offset = BULLET_OFFSET;
-	//
-	//// //TODO: quick fix for enemy projectile offsets
-	//// if (!enemy.isTurret() && enemy.getType() == PAST) {
-	//// offset = 2.5f;
-	//// }
-	//// if (!enemy.isTurret() && enemy.getType() == PRESENT) {
-	//// offset = 1.5f;
-	//// }
-	//
-	// bulletBigTexture = JsonAssetManager.getInstance().getEntry("bulletbig",
-	// TextureRegion.class);
-	// presentBullet = JsonAssetManager.getInstance().getEntry("projpresent",
-	// TextureRegion.class);
-	// pastBullet = JsonAssetManager.getInstance().getEntry("projpast",
-	// TextureRegion.class);
-	// float radius = bulletBigTexture.getRegionWidth() / (30.0f);
-	// Projectile bullet = new Projectile(enemy.getType(), enemy.getX(),
-	// enemy.getY() + offset, radius,
-	// enemy.getBody().getUserData());
-	//
-	// Filter f = new Filter();
-	// f.groupIndex = -1;
-	// enemy.setFilterData(f);
-	// bullet.setFilterData(f);
-	//
-	// bullet.setName("bullet");
-	// bullet.setDensity(HEAVY_DENSITY);
-	// bullet.setDrawScale(scale);
-	// //bullet.setTexture(bulletBigTexture);
-	// bullet.setBullet(true);
-	// bullet.setGravityScale(0);
-	// bullet.setLinearVelocity(enemy.getProjVelocity());
-	// bullet.setSpace(enemy.getSpace());
-	// addQueuedObject(bullet);
-	// if (bullet.getType().equals(PRESENT)){
-	// bullet.setTexture(presentBullet);
-	// } else {
-	// bullet.setTexture(pastBullet);
-	// }
-	//
-	// if (shifted && enemy.getSpace() == 2) { // past world
-	// JsonValue data = assetDirectory.get("sounds").get("pew");
-	//// System.out.println("sound volume: " + data.get("volume").asFloat());
-	// SoundController.getInstance().play("pew", data.get("file").asString(), false,
-	// data.get("volume").asFloat());
-	// } else if (!shifted && enemy.getSpace() == 1) { // present world
-	// JsonValue data = assetDirectory.get("sounds").get("pew");
-	//// System.out.println("sound volume: " + data.get("volume").asFloat());
-	// SoundController.getInstance().play("pew", data.get("file").asString(), false,
-	// data.get("volume").asFloat());
-	// }
-	//
-	// // Reset the firing cooldown.
-	// enemy.coolDown(false);
-	// }
 
 	/**
 	 * Add a new bullet to the world and send it in the right direction.
@@ -1926,6 +1878,8 @@ public class LevelController extends WorldController {
 				minAlpha = 0.5f;
 				ripple_intensity = 0.2f;
 				updateShader();
+
+
 
 
 			} else if (failed) {
