@@ -127,8 +127,9 @@ public class MainMenuMode implements Screen {
 
         float cw = sw * 0.7f;
         float ch = sh * 0.5f;
+        JsonAssetManager assetManager = JsonAssetManager.getInstance();
 
-        backgroundTexture = new TextureRegion(new Texture(Gdx.files.internal("textures/background/mainmenubackground.png")));
+        backgroundTexture = assetManager.getEntry("mainmenu_background", TextureRegion.class);
         //table container to center main table
         Container<Table> tableContainer = new Container<Table>();
         tableContainer.setSize(cw, ch);
@@ -140,22 +141,24 @@ public class MainMenuMode implements Screen {
         mainTable.setWidth(stage.getViewport().getScreenWidth());
 
         anim = GifDecoder.loadGIFAnimation(Animation.PlayMode.LOOP, Gdx.files.internal("textures/gui/tempus_logo_stationary.gif").read());
-        glow = new TextureRegion(new Texture(Gdx.files.internal("textures/gui/glow_logo.png")));
+        glow = new TextureRegion(assetManager.getEntry("logo_glow", TextureRegion.class));
         //Create header
 
-        //Create buttons
-        TextureRegionDrawable startUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/start_button_v3_up.png"))));
-        TextureRegionDrawable helpUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/help_button_v3_up.png"))));
-        TextureRegionDrawable exitUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/quit_button_v3_up.png"))));
-        TextureRegionDrawable aboutUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/about_button_v3_up.png"))));
 
-        final Button startButton = new Button(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/start_button_v3.png")))),
+        //Create buttons
+        TextureRegionDrawable startUp = new TextureRegionDrawable(assetManager.getEntry("menu_start_button_up", TextureRegion.class));
+        TextureRegionDrawable helpUp = new TextureRegionDrawable(assetManager.getEntry("menu_help_button_up", TextureRegion.class));
+        TextureRegionDrawable exitUp = new TextureRegionDrawable(assetManager.getEntry("menu_quit_button_up", TextureRegion.class));
+        TextureRegionDrawable aboutUp = new TextureRegionDrawable(assetManager.getEntry("menu_about_button_up", TextureRegion.class));
+
+        final Button startButton = new Button(new TextureRegionDrawable(assetManager.getEntry("menu_start_button", TextureRegion.class))
+                ,
                 startUp, startUp);
-        final Button helpButton = new Button(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/help_button_v3.png")))),
+        final Button helpButton = new Button(new TextureRegionDrawable(assetManager.getEntry("menu_help_button", TextureRegion.class)),
                 helpUp, helpUp);
-        final Button exitButton = new Button(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/quit_button_v3.png")))),
+        final Button exitButton = new Button(new TextureRegionDrawable(assetManager.getEntry("menu_quit_button", TextureRegion.class)),
                 exitUp, exitUp);
-        final Button aboutButton = new Button(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/about_button_v3.png")))),
+        final Button aboutButton = new Button(new TextureRegionDrawable(assetManager.getEntry("menu_about_button", TextureRegion.class)),
                 aboutUp, aboutUp);
                 
         //Add listeners to buttons

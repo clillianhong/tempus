@@ -160,6 +160,14 @@
       "file": "textures/enemy/turret/turret_past_lv_1.png",
       "wrap": false
     },
+    "mainmenu_background" : {
+      "file" : "textures/background/mainmenubackground.png",
+      "wrap" : false
+    },
+    "logo_glow": {
+      "file": "textures/gui/glow_logo.png",
+      "wrap": false
+    },
     "past_background1": {
       "file": "textures/background/bg_past_lv_1.jpg",
       "wrap": false
@@ -280,6 +288,38 @@
     },
     "win_replay_button" : {
       "file": "textures/gui/win_replaybutton.png",
+      "wrap": false
+    },
+    "menu_start_button_up" : {
+      "file": "textures/gui/start_button_v3_up.png",
+      "wrap": false
+    },
+    "menu_help_button_up" : {
+      "file": "textures/gui/help_button_v3_up.png",
+      "wrap": false
+    },
+    "menu_quit_button_up" : {
+      "file": "textures/gui/quit_button_v3_up.png",
+      "wrap": false
+    },
+    "menu_about_button_up" : {
+      "file": "textures/gui/about_button_v3_up.png",
+      "wrap": false
+    },
+    "menu_start_button" : {
+      "file": "textures/gui/start_button_v3.png",
+      "wrap": false
+    },
+    "menu_help_button" : {
+      "file": "textures/gui/help_button_v3.png",
+      "wrap": false
+    },
+    "menu_quit_button" : {
+      "file": "textures/gui/quit_button_v3.png",
+      "wrap": false
+    },
+    "menu_about_button" : {
+      "file": "textures/gui/about_button_v3.png",
       "wrap": false
     },
     "tutorial_unlocked_button" : {
