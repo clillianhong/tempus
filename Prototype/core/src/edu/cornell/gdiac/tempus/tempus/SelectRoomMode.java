@@ -18,8 +18,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.JsonReader;
-import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import edu.cornell.gdiac.tempus.GameCanvas;
@@ -144,10 +142,14 @@ public class SelectRoomMode implements Screen {
 
     @Override
     public void show() {
+
         fadeincount = 20;
         Gdx.input.setInputProcessor(stage);
 
         final GameStateManager gameManager = GameStateManager.getInstance();
+
+        JsonAssetManager assetManager = JsonAssetManager.getInstance();
+
 
         wholescreenTable = new Table();
         wholescreenTable.setWidth(sw);
@@ -180,28 +182,37 @@ public class SelectRoomMode implements Screen {
         }
 
         float cw = sw * 0.9f;
-        float ch = sh * 0.5f;
+        float ch = sh * 0.55f;
+        int pad = 20;
+        int w_outpad = 10;
+        int h_outpad = 12;
+
+        int w_inpad = 24;
+        int h_inpad = (h_outpad/w_outpad) * w_inpad;
+
 
         font.getData().setScale(0.75f);
         Label.LabelStyle style = new Label.LabelStyle(font, Color.WHITE);
         FilmStrip bg = JsonAssetManager.getInstance().getEntry("level"+levelNum+"_bg", FilmStrip.class);
 //        backgroundTexture = new TextureRegion(bg.getTexture());
-        backgroundTexture = new TextureRegion(new Texture(Gdx.files.internal("textures/gui/roomselect/room_select.png")));
-        TextureRegionDrawable overlayBG = new TextureRegionDrawable(
-                new TextureRegion(new Texture(Gdx.files.internal("textures/gui/pause_filter_50_black.png"))));
 
+        backgroundTexture = assetManager.getEntry("room_select_bg", TextureRegion.class);
+
+//        Container whiteBorderContainer = new Container();
+//        whiteBorderContainer.setActor(whiteBorder);
         TextureRegionDrawable lockedRoom = new TextureRegionDrawable(
                 new TextureRegion(new Texture(Gdx.files.internal("textures/gui/roomselect/locked_room.png"))));
 
-//        wholescreenTable.setBackground(overlayBG);
+
         int wid = bg.getTexture().getWidth();
         int ht = bg.getTexture().getHeight();
         final int highestRoom = gameManager.getCurrentLevel().getHighestUnlockedRoom();
 
         //load all room buttons
         int row = 0;
-        System.out.println("width: " + wid);
-        System.out.println("height: " + ht);
+
+
+
         boolean finishPage = false;
         for(int page = 0; page < numPages; page++){
             //create four buttons and four labels
@@ -212,7 +223,7 @@ public class SelectRoomMode implements Screen {
                     finishPage = true;
                     break;
                 }
-                System.out.println("x,y: (" + (wid/colNum)*f + "," + (ht/rowNum)*row + ")");
+
                 TextureRegionDrawable roomPreview;
                 TextureRegionDrawable roomPreviewDown;
                 if(roomNum <= highestRoom){
@@ -224,9 +235,21 @@ public class SelectRoomMode implements Screen {
                     roomPreviewDown = lockedRoom;
                 }
 
-                Container butCon = new Container();
+
                 Button tempButton = new Button(roomPreview, roomPreviewDown);
-                tempButton.addListener(new ClickListener(){
+
+                Image shadowImg = new Image(assetManager.getEntry("button_shadow", TextureRegion.class));
+
+                Table shadowTable = new Table();
+                shadowTable.add(shadowImg).width(cw/4-pad*2-w_outpad).height(ch*0.8f-pad*2-h_outpad);
+                shadowTable.align(Align.bottomRight);
+
+                TextureRegionDrawable whiteOverlayBorder = new TextureRegionDrawable(assetManager.getEntry("white_border_light", TextureRegion.class));
+                final Button whiteBorder = new Button(new TextureRegionDrawable(assetManager.getEntry("white_border", TextureRegion.class)),
+                        whiteOverlayBorder,whiteOverlayBorder);
+//                final Button whiteBorder = new Button(whiteOverlayBorder,
+//                        whiteOverlayBorder,whiteOverlayBorder);
+                whiteBorder.addListener(new ClickListener(){
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
                         if(roomNum <= highestRoom){
@@ -234,21 +257,54 @@ public class SelectRoomMode implements Screen {
                             gameManager.getCurrentLevel().setCurrentRoom(roomNum);
                             gameManager.printGameState();
                             exitToRoom();
-//                            stage.addAction(Actions.sequence(Actions.fadeOut(0.5f), Actions.run(new Runnable() {
-//                                @Override
-//                                public void run() {
-//
-//                                }
-//                            })));
                         }
                     }
-                });
-                butCon.setActor(tempButton);
 
-                int pad = 20;
-                roomTables[page].add(tempButton).width(cw/4-pad*2).height(ch*0.8f-pad*2).padLeft(pad).padRight(pad).padTop(pad).expand().center();
+                    @Override
+                    public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+//                    if(!(scrolling)){
+                        super.enter(event, x, y, pointer, fromActor);
+                        whiteBorder.setChecked(true);
+                    }
+                    @Override
+                    public void exit(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+//                    if(!(scrolling)){
+                        super.enter(event, x, y, pointer, fromActor);
+                        whiteBorder.setChecked(false);
+                    }
+
+                });
+                Table whiteBorderContainer = new Table();
+                whiteBorderContainer.add(whiteBorder).width(cw/4-pad*2-w_outpad).height(ch*0.8f-pad*2-h_outpad);
+//                whiteBorderContainer.size(cw/4-pad*2-15,ch*0.8f-pad*2-15);
+                whiteBorderContainer.align(Align.topLeft);
+
+                Image emptyImg = new Image();
+                Container emptyContainer = new Container();
+                emptyContainer.setActor((emptyImg));
+                emptyContainer.size(cw/4-pad*2-w_outpad,ch*0.8f-pad*2-h_outpad);
+
+                Table buttonstackTable = new Table();
+
+                Table buttonCont = new Table();
+                buttonCont.add(tempButton).width(cw/4-pad*2-w_inpad).height(ch*0.8f-pad*2-h_inpad);
+
+//                buttonstackTable.setSize(cw/4-pad*2-outpad, ch*0.8f-pad*2-outpad);
+                buttonstackTable.add(buttonCont).width(cw/4-pad*2-w_outpad).height(ch*0.8f-pad*2-h_outpad);
+                buttonstackTable.align(Align.topLeft);
+
+                Stack buttonStack = new Stack();
+//                buttonStack.setSize(cw/4-pad*2-inpad,ch*0.8f-pad*2-inpad);
+                buttonStack.add(emptyContainer);
+                buttonStack.add(shadowTable);
+                buttonStack.add(buttonstackTable);
+                buttonStack.add(whiteBorderContainer);
+
+                roomTables[page].add(buttonStack).width(cw/4-pad*2).height(ch*0.8f-pad*2).padLeft(pad).padRight(pad).padTop(pad).expand().center();
+
             }
             roomTables[page].row();
+//            roomTables[page].debugAll();
 
             row+=1;
 

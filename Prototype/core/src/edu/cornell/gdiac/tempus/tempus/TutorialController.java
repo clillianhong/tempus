@@ -19,6 +19,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.gdiac.tempus.InputController;
 import edu.cornell.gdiac.tempus.tempus.models.Avatar;
+import edu.cornell.gdiac.tempus.tempus.models.TutorialModel;
 import edu.cornell.gdiac.util.GameStateManager;
 import edu.cornell.gdiac.util.JsonAssetManager;
 import edu.cornell.gdiac.util.SoundController;
@@ -41,10 +42,14 @@ public class TutorialController extends LevelController {
 
     private Table tutorialCard;
     private boolean isHelp;
+    /** index of the dialogue card to stop on */
+    private int lastDialogueIndex;
     /** the current dialogue index */
     private int dialogueNum;
     /** the current background index  */
     private int bgNum;
+    /** the original dialogue index */
+    private int ogDialogueNum;
     /** All cutscene dialogues */
     private TextureRegionDrawable[] dialogues;
     /** All cutscene backgrounds */
@@ -67,9 +72,6 @@ public class TutorialController extends LevelController {
         isHelp = false;
         //beginDisplay = 150;
         isTutorial = true;
-        dialogueNum = 0;
-        inputReady = false;
-
     }
 
     public void setCard(String[] card){
@@ -78,18 +80,26 @@ public class TutorialController extends LevelController {
 
     @Override
     public void reset() {
-        dialogueNum = 0;
         isHelp = false;
+        inputReady = false;
+        if(dialogues!= null){
+            dialogueNum  = ogDialogueNum;
+            bgNum = (int) dlMap[dialogueNum];
+        }
         isTutorial = true;
         super.reset();
     }
 
     public void setFirst(boolean b) {first = b;};
 
-    public void setCutScene(TextureRegionDrawable [] bgs, TextureRegionDrawable [] dls, float [] map){
+    public void setCutScene(TextureRegionDrawable [] bgs, TextureRegionDrawable [] dls, float [] map, int stopIdx, int startIdx){
         backgrounds = bgs;
         dialogues = dls;
         dlMap = map;
+        this.ogDialogueNum = startIdx;
+        this.bgNum = (int) map[startIdx];
+        this.lastDialogueIndex = stopIdx;
+        dialogueNum  = ogDialogueNum;
     }
     @Override
     public void preLoadContent() {
@@ -180,59 +190,22 @@ public class TutorialController extends LevelController {
             tutorialCard.add(st2).expandX();
         }
 
-
-//        helpCard = new Table();
-
-//        tableStack.add(table);
-//        tableStack.add(pauseButtonContainer);
-        tutorialCard.setDebug(true);
         tableStack.add(tutorialCard);
-//        helpCard.setVisible(true);
-//        tableStack.add(helpCard);
-
-        /*
-         * END PAUSE SCREEN SETUP---------------------
-         */
 
 
-
-        if(first){
+        if(dialogues != null){
             createCutScene(edgeContainer);
+        }else{
+            inputReady = true;
         }
 
-//        else{
-//            if(GameStateManager.getInstance().lastRoom()){
-//                createEndlevelUI(tableStack);
-//            }
-//            edgeContainer.setActor(tableStack);
-//        }
-
         stage.addActor(edgeContainer);
-//        Gdx.input.setInputProcessor(stage);
-//        stage.getCamera().update();
-//        stage.getViewport().apply();
-
         showTutorial();
+
 
     }
 
     public void createCutScene(Container edgeContainer){
-
-        dialogueNum = 0;
-        bgNum = 0;
-//
-//        TextureRegionDrawable storyBg = new TextureRegionDrawable(
-//                new TextureRegion(new Texture(Gdx.files.internal("tutorial/beginningstorybg.jpg"))));
-
-//        dialogues = new TextureRegionDrawable[3];
-//
-//        TextureRegionDrawable log1img = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("tutorial/dialogue1.png"))));
-//        TextureRegionDrawable log2img = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("tutorial/dialogue2.png"))));
-//        TextureRegionDrawable log3img = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("tutorial/dialogue3.png"))));
-//
-//        dialogues[0] = log1img;
-//        dialogues[1] = log2img;
-//        dialogues[2] = log3img;
 
         cutCont = new Container<>();
         cutCont.setBackground(backgrounds[bgNum]);
@@ -261,11 +234,13 @@ public class TutorialController extends LevelController {
         big.add(overlayBackButton);
         edgeContainer.setActor(big);
 
+        inputReady = false;
+
     }
 
     public void nextDialogue(){
         dialogueNum++;
-        if(dialogueNum >= dialogues.length){
+        if(dialogueNum >= lastDialogueIndex){
             cutCont.setVisible(false);
             edgeContainer.setActor(tableStack);
             inputReady = true;
@@ -298,20 +273,17 @@ public class TutorialController extends LevelController {
         if(drawEndRoom){
             unshowTutorial();
         }
-        if(InputController.getInstance().didHelp()){
-            isHelp = !isHelp;
-        }
+
         return super.preUpdate(dt);
     }
+
 
     @Override
     public void update(float dt) {
 
-//        if (isHelp) {
-//            showTutorial();
-//        } else {
-//            unshowTutorial();
-//        }
+        if(dialogueNum < lastDialogueIndex){
+            inputReady=false;
+        }
 
         avatar.setLives(5);
 

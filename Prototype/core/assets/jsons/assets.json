@@ -160,6 +160,14 @@
       "file": "textures/enemy/turret/turret_past_lv_1.png",
       "wrap": false
     },
+    "mainmenu_background" : {
+      "file" : "textures/background/mainmenubackground.png",
+      "wrap" : false
+    },
+    "logo_glow": {
+      "file": "textures/gui/glow_logo.png",
+      "wrap": false
+    },
     "past_background1": {
       "file": "textures/background/bg_past_lv_1.jpg",
       "wrap": false
@@ -218,6 +226,150 @@
     },
     "life": {
       "file": "textures/indicators/bird_head.png",
+      "wrap": false
+    },
+    "white_border": {
+      "file": "textures/gui/roomselect/white_border.png",
+      "wrap": false
+    },
+    "white_border_light": {
+      "file": "textures/gui/roomselect/light_white_border.png",
+      "wrap": false
+    },
+    "room_select_bg" : {
+      "file": "textures/gui/roomselect/room_select.png",
+      "wrap": false
+    },
+
+    "level_select_bg" : {
+      "file": "textures/gui/selectmode/level_newestbg.png",
+      "wrap": false
+    },
+    "select_backbutton" : {
+      "file": "textures/gui/selectmode/backbutton.png",
+      "wrap": false
+    },
+
+    "25_black_overlay" : {
+      "file": "textures/gui/pause_filter_25_black.png",
+      "wrap": false
+    },
+    "85_black_overlay" : {
+      "file": "textures/gui/pause_filter_85_black.png",
+      "wrap": false
+    },
+    "resume_button" : {
+      "file": "textures/gui/pause_resume_button.png",
+      "wrap": false
+    },
+    "restart_button" : {
+      "file": "textures/gui/pause_restart_button.png",
+      "wrap": false
+    },
+    "pause_button" : {
+      "file": "textures/gui/pausebutton.png",
+      "wrap": false
+    },
+    "button_shadow" : {
+      "file": "textures/gui/roomselect/shadow_button_big.png",
+      "wrap": false
+    },
+    "pause_exit_button" : {
+      "file": "textures/gui/pause_exit_button.png",
+      "wrap": false
+    },
+    "win_levels_button" : {
+      "file": "textures/gui/win_levelsbutton.png",
+      "wrap": false
+    },
+    "win_next_button" : {
+      "file": "textures/gui/win_nextbutton.png",
+      "wrap": false
+    },
+    "win_replay_button" : {
+      "file": "textures/gui/win_replaybutton.png",
+      "wrap": false
+    },
+    "menu_start_button_up" : {
+      "file": "textures/gui/start_button_v3_up.png",
+      "wrap": false
+    },
+    "menu_help_button_up" : {
+      "file": "textures/gui/help_button_v3_up.png",
+      "wrap": false
+    },
+    "menu_quit_button_up" : {
+      "file": "textures/gui/quit_button_v3_up.png",
+      "wrap": false
+    },
+    "menu_about_button_up" : {
+      "file": "textures/gui/about_button_v3_up.png",
+      "wrap": false
+    },
+    "menu_start_button" : {
+      "file": "textures/gui/start_button_v3.png",
+      "wrap": false
+    },
+    "menu_help_button" : {
+      "file": "textures/gui/help_button_v3.png",
+      "wrap": false
+    },
+    "menu_quit_button" : {
+      "file": "textures/gui/quit_button_v3.png",
+      "wrap": false
+    },
+    "menu_about_button" : {
+      "file": "textures/gui/about_button_v3.png",
+      "wrap": false
+    },
+    "tutorial_unlocked_button" : {
+      "file":"textures/gui/selectmode/tutorialunlocked.png",
+      "wrap": false
+    },
+    "tutorial_pressed_button" : {
+      "file": "textures/gui/selectmode/tutorialpressed.png",
+      "wrap": false
+    },
+    "tutorial_locked_button" : {
+      "file": "textures/gui/selectmode/tutoriallocked.png",
+      "wrap": false
+    },
+    "l1_unlocked_button" : {
+      "file": "textures/gui/selectmode/level1unlocked.png",
+      "wrap": false
+    },
+    "l1_pressed_button" : {
+      "file": "textures/gui/selectmode/level1pressed.png",
+      "wrap": false
+    },
+    "l1_locked_button" : {
+      "file": "textures/gui/selectmode/level1locked.png",
+      "wrap": false
+    },
+
+    "l2_unlocked_button" : {
+      "file": "textures/gui/selectmode/level2unlocked.png",
+      "wrap": false
+    },
+    "l2_pressed_button" : {
+      "file": "textures/gui/selectmode/level2pressed.png",
+      "wrap": false
+    },
+    "l2_locked_button" : {
+      "file": "textures/gui/selectmode/level2locked.png",
+      "wrap": false
+    },
+
+    "l3_unlocked_button" : {
+      "file": "textures/gui/selectmode/level3unlocked.png",
+      "wrap": false
+    },
+    "l3_pressed_button" : {
+      "file": "textures/gui/selectmode/level3pressed.png",
+      "wrap": false
+    },
+    "l3_locked_button" : {
+      "file": "textures/gui/selectmode/level3locked.png",
       "wrap": false
     },
     "streak": {

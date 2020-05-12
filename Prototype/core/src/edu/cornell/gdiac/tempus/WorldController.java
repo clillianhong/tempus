@@ -558,16 +558,16 @@ public abstract class WorldController implements Screen {
 	 * @param delta The drawing context
 	 */
 	public void draw(float delta) {
-		canvas.clear();
+//		canvas.clear();
 		
-		canvas.begin();
+//		canvas.begin();
 		for(Obstacle obj : objects) {
 			obj.draw(canvas);
 		}
 		for (Enemy e : enemies){
 			e.draw(canvas);
 		}
-		canvas.end();
+//		canvas.end();
 		
 		if (debug) {
 			canvas.beginDebug();

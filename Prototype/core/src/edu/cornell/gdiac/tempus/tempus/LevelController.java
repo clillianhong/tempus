@@ -27,6 +27,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -354,11 +355,11 @@ public class LevelController extends WorldController {
 		timeFreeze = false;
 		json_filepath = json;
 		numEnemies = 0;
-		begincount = 10;
+		begincount = 20;
 		enemyController = new EnemyController(enemies, objects, avatar, world, scale, this, assetDirectory);
 		isTutorial = false;
 		ripple_intensity = 0.009f;
-		inputReady = true;
+		inputReady = false;
 
 		// ripple shader
 		ticks = 0f;
@@ -440,7 +441,7 @@ public class LevelController extends WorldController {
 		rippleSpeed = 0.25f;
 		rippleOn = false;
 
-		begincount = 10;
+		begincount = 20;
 		// world = new World(gravity, false);
 		world.setContactListener(collisionController);
 		// world.setContactListener(this);
@@ -713,152 +714,6 @@ public class LevelController extends WorldController {
 	 */
 	private void rePopulateLevel() {
 
-		// tester stage!
-//		skin = new Skin(Gdx.files.internal("jsons/uiskin.json"));
-//		stage = new Stage(viewport);
-//		Gdx.input.setInputProcessor(stage);//BUGGY CHANGE?
-//		table = new Table();
-//		table.setWidth(stage.getWidth());
-//		table.align(Align.center | Align.top);
-//		table.setPosition(0, sh);
-
-		//initialize backgrounds
-//		pastBackgroundTexture = JsonAssetManager.getInstance().getEntry(levelFormat.get("past_background").asString(),
-//				TextureRegion.class);
-//		presentBackgroundTexture = JsonAssetManager.getInstance().getEntry(levelFormat.get("present_background").asString(),
-//				TextureRegion.class);
-//		bgSprite = new Sprite(presentBackgroundTexture);
-
-//		win_room = new TextureRegion(new Texture(Gdx.files.local("textures/background/blackscreen.png")));
-//		createUI();
-
-		// Initializes the world
-//		float gravity = levelFormat.getFloat("gravity");
-//		float[] pSize = levelFormat.get("bounds").asFloatArray();
-//		world = new World(new Vector2(0, gravity), false);
-//		bounds = new Rectangle(0, 0, pSize[0], pSize[1]);
-//		scale.x = canvas.getWidth() / pSize[0];
-//		scale.y = canvas.getHeight() / pSize[1];
-		// Add level goal
-//		goalDoor = new Door();
-//		goalDoor.initialize(levelFormat.get("door"));
-
-//		goalDoor.setDrawScale(scale);
-//		addObject(goalDoor);
-
-//		earthTile = JsonAssetManager.getInstance().getEntry("earth", TextureRegion.class);
-//		String nameWall = "wall";
-//		for (int ii = 0; ii < WALLS.length; ii++) {
-//			PolygonObstacle obj;
-//			obj = new Platform(WALLS[ii], 0, 0);
-//			obj.setBodyType(BodyDef.BodyType.StaticBody);
-//			obj.setDensity(BASIC_DENSITY);
-//			obj.setFriction(BASIC_FRICTION);
-//			obj.setRestitution(BASIC_RESTITUTION);
-//			obj.setDrawScale(scale);
-//			obj.setTexture(earthTile);
-//			obj.setName(nameWall);
-//			// addObject(obj);
-//		}
-
-//		String namePlatform = "platform";
-//		for (int ii = 0; ii < PLATFORMS.length; ii++) {
-//			PolygonObstacle obj;
-//			obj = new Platform(PLATFORMS[ii], 0, 0);
-//			obj.setBodyType(BodyDef.BodyType.StaticBody);
-//			obj.setDensity(BASIC_DENSITY);
-//			obj.setFriction(BASIC_FRICTION);
-//			obj.setRestitution(BASIC_RESTITUTION);
-//			obj.setDrawScale(scale);
-//			obj.setTexture(earthTile);
-//			obj.setName(namePlatform);
-//			if (ii <= PLATFORMS.length / 2) {
-//				obj.setSpace(1);
-//			}
-//			if (ii > PLATFORMS.length / 2) {
-//				obj.setSpace(2);
-//			}
-//			// addObject(obj);
-//		}
-//		float[] newPlatCapsule = {0.5f, 1.1f, 0.6f, 1.1f, 2.5f, 1.1f, 2.6f, 1.1f, 2.6f, 0.6f, 2.0f, 0.3f, 1.1f, 0.3f, 0.5f, 0.6f};
-//		float[] newPlatDiamond = {0.4f, 1.8f, 0.5f, 1.8f, 2.1f, 1.8f, 2.2f, 1.8f, 1.4f, 0.1f};
-//		float[] newPlatRounded = {0.4f, 1.4f, 0.8f, 1.7f, 2.1f, 1.7f, 2.4f, 1.4f, 2.3f, 0.8f, 1.7f, 0.3f, 1.1f, 0.3f};
-//		float[] newSpikes = {0.3f, -0.6f, 0.0f, -0.2f, -0.6f, 0.0f, -0.5f, 0.4f, 0.0f, 0.6f, 0.4f, -0.2f, 0.6f, -0.3f};
-//		float[] newPlatLongcapsule = {0.5f, 1.1f, 0.6f, 1.1f, 4.8f, 1.1f, 4.9f, 1.1f, 4.9f, 0.6f, 4.3f, 0.3f, 3.4f, 0.3f,
-//				2.7f, 0.5f, 2.0f, 0.3f, 1.1f, 0.3f, 0.5f, 0.6f};
-//		float[] newPlatTall = {0.4f, 3.9f, 0.5f, 3.9f, 1.6f, 3.9f, 1.7f, 3.9f, 1.1f, 0.5f};
-//		float[] newPlatPillar = {1.2f, 4.0f, 1.3f, 4.0f, 2.0f, 4.0f, 2.1f, 4.0f, 2.1f, 1.0f, 1.2f, 1.0f};
-
-
-//		JsonValue capsule = levelFormat.get("capsules").child();
-//		while (capsule != null) {
-//			Platform obj = new Platform(newPlatCapsule);
-//			obj.initialize(capsule);
-//			obj.setDrawScale(scale);
-//			addObject(obj);
-//			capsule = capsule.next();
-//		}
-
-//		JsonValue longcapsule = levelFormat.get("longcapsules").child();
-//		while (longcapsule != null) {
-//			Platform obj = new Platform(newPlatLongcapsule);
-//			obj.initialize(longcapsule);
-//			obj.setDrawScale(scale);
-//			addObject(obj);
-//			longcapsule = longcapsule.next();
-//		}
-
-//		JsonValue pillar = levelFormat.get("pillars").child();
-//		while (pillar != null) {
-//			Platform obj = new Platform(newPlatPillar);
-//			obj.initialize(pillar);
-//			obj.setDrawScale(scale);
-//			addObject(obj);
-//			pillar = pillar.next();
-//		}
-
-//		JsonValue tall = levelFormat.get("talls").child();
-//		while (tall != null) {
-//			Platform obj = new Platform(newPlatTall);
-//			obj.initialize(tall);
-//			obj.setDrawScale(scale);
-//			addObject(obj);
-//			tall = tall.next();
-//		}
-//		JsonValue diamond = levelFormat.get("diamonds").child();
-//		while (diamond != null) {
-//			Platform obj = new Platform(newPlatDiamond);
-//			obj.initialize(diamond);
-//			obj.setDrawScale(scale);
-//			addObject(obj);
-//			diamond = diamond.next();
-//		}
-//		JsonValue round = levelFormat.get("rounds").child();
-//		while (round != null) {
-//			Platform obj = new Platform(newPlatRounded);
-//			obj.initialize(round);
-//			obj.setDrawScale(scale);
-//			addObject(obj);
-//			round = round.next();
-//		}
-//		JsonValue spikes = levelFormat.get("spikes").child();
-//		while (spikes != null) {
-//			Spikes obj = new Spikes(newSpikes);
-//			obj.initialize(spikes);
-//			obj.setDrawScale(scale);
-//			addObject(obj);
-//			spikes = spikes.next();
-//		}
-		// Create avatar
-//		JsonValue json = levelFormat.get("avatar");
-//		avatar = new Avatar();
-//		avatar.setCanvas(camera);
-//		avatar.setDrawScale(scale);
-//		avatar.initialize(json);
-//		addObject(avatar);
-//		float[] pos = json.get("pos").asFloatArray();
-//		avatarStart = new Vector2(pos[0], pos[1]);
-
 		bgSprite = new Sprite(presentBackgroundTexture);
 		JsonValue enemy = levelFormat.get("enemies").child();
 		while (enemy != null) {
@@ -889,7 +744,7 @@ public class LevelController extends WorldController {
 	 */
 	public void createUI() {
 
-
+		JsonAssetManager assetManager = JsonAssetManager.getInstance();
 
 		// table container to center main table
 		edgeContainer = new Container<Stack>();
@@ -903,18 +758,13 @@ public class LevelController extends WorldController {
 		/*
 		 * START PAUSE SCREEN SETUP ---------------------
 		 */
-		TextureRegionDrawable pauseButtonResource = new TextureRegionDrawable(
-				new TextureRegion(new Texture(Gdx.files.internal("textures/gui/pausebutton.png"))));
-		overlayDark = new TextureRegion(new Texture(Gdx.files.internal("textures/gui/pause_filter_25_black.png")));
-		overlayBG = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/pause_filter_85_black.png"))));
-		TextureRegionDrawable pauseBox = new TextureRegionDrawable(
-				new TextureRegion(new Texture(Gdx.files.internal("textures/gui/frame_pause.png"))));
-		TextureRegionDrawable resumeResource = new TextureRegionDrawable(
-				new TextureRegion(new Texture(Gdx.files.internal("textures/gui/pause_resume_button.png"))));
-		TextureRegionDrawable restartResource = new TextureRegionDrawable(
-				new TextureRegion(new Texture(Gdx.files.internal("textures/gui/pause_restart_button.png"))));
-		TextureRegionDrawable exitResource = new TextureRegionDrawable(
-				new TextureRegion(new Texture(Gdx.files.internal("textures/gui/pause_exit_button.png"))));
+		TextureRegionDrawable pauseButtonResource = new TextureRegionDrawable(assetManager.getEntry("pause_button", TextureRegion.class));
+		overlayDark = assetManager.getEntry("25_black_overlay", TextureRegion.class);
+		overlayBG = new TextureRegionDrawable( assetManager.getEntry("85_black_overlay", TextureRegion.class));
+
+		TextureRegionDrawable resumeResource = new TextureRegionDrawable(assetManager.getEntry("resume_button", TextureRegion.class));
+		TextureRegionDrawable restartResource = new TextureRegionDrawable(assetManager.getEntry("restart_button", TextureRegion.class));
+		TextureRegionDrawable exitResource = new TextureRegionDrawable(assetManager.getEntry("pause_exit_button", TextureRegion.class));
 
 		pauseButtonContainer = new Container<>();
 		pauseButtonContainer.setBackground(overlayBG);
@@ -985,11 +835,15 @@ public class LevelController extends WorldController {
 		edgeContainer.setActor(tableStack);
 
 		stage.addActor(edgeContainer);
+		stage.addAction(Actions.sequence(Actions.alpha(1f), Actions.fadeIn(0.5f)));
+
 
 
 	}
 
 	public void createEndlevelUI(Stack tableStack){
+		JsonAssetManager assetManager = JsonAssetManager.getInstance();
+
 		endlevelContainer = new Container<>();
 		endlevelContainer.setBackground(overlayBG);
 		endlevelContainer.setPosition(0, 0);
@@ -1007,12 +861,9 @@ public class LevelController extends WorldController {
 		Image header = new Image(headerimg);
 		overlayPageHeader.add(header).expand().center();
 
-		TextureRegionDrawable levelsResource = new TextureRegionDrawable(
-				new TextureRegion(new Texture(Gdx.files.internal("textures/gui/win_levelsbutton.png"))));
-		TextureRegionDrawable nextResource = new TextureRegionDrawable(
-				new TextureRegion(new Texture(Gdx.files.internal("textures/gui/win_nextbutton.png"))));
-		TextureRegionDrawable replayResource = new TextureRegionDrawable(
-				new TextureRegion(new Texture(Gdx.files.internal("textures/gui/win_replaybutton.png"))));
+		TextureRegionDrawable levelsResource = new TextureRegionDrawable(assetManager.getEntry("win_levels_button", TextureRegion.class));
+		TextureRegionDrawable nextResource = new TextureRegionDrawable(assetManager.getEntry("win_next_button", TextureRegion.class));
+		TextureRegionDrawable replayResource = new TextureRegionDrawable(assetManager.getEntry("win_replay_button", TextureRegion.class));
 
 		Button levelButton = new Button(levelsResource);
 		levelButton.addListener(new ClickListener() {
@@ -1074,12 +925,18 @@ public class LevelController extends WorldController {
 	}
 
 	public void showWinLevel() {
+		paused = true;
 		stage.getBatch().setColor(1f,1f,1f,1f);
-		canvas.getSpriteBatch().setColor(1f,1f,1f,1f);
+		stage.getBatch().setBlendFunction(GL20.GL_SRC_ALPHA,GL20.GL_ONE_MINUS_SRC_ALPHA);
+
+		stage.addAction(Actions.alpha(1));
 		endlevelContainer.setVisible(true);
 		endlevelTable.setVisible(true);
 	}
 	public void closeWinLevel() {
+		paused = false;
+
+		canvas.getSpriteBatch().setColor(1f,1f,1f,1f);
 		endlevelContainer.setVisible(false);
 		endlevelTable.setVisible(false);
 	}
@@ -1171,8 +1028,7 @@ public class LevelController extends WorldController {
 
 		if (begincount > 0) {
 			begincount--;
-			return false;
-		}else if(!inputReady){
+		}else if(!inputReady && !isTutorial){
 			inputReady = true;
 		}
 
@@ -1308,7 +1164,7 @@ public class LevelController extends WorldController {
 			avatar.setStartedDashing(t);
 		}
 		// System.out.println(numEnemies);
-		if (enemyController.getEnemies() == 0) {
+		if (inputReady && enemyController.getEnemies() == 0) {
 			if (!goalDoor.getOpen()){
 				JsonValue chains = assetDirectory.get("sounds").get("door_unlock");
 				SoundController.getInstance().play(chains.get("file").asString(), chains.get("file").asString(),
@@ -1338,6 +1194,7 @@ public class LevelController extends WorldController {
 				avatar.setDashing(true);
 				avatar.setDashStartPos(avatar.getPosition().cpy());
 				avatar.setDashDistance(avatar.getDashRange());
+				avatar.setDashDistance(avatar.getDashRange());
 				// avatar.setDashDistance(Math.min(avatar.getDashRange(),
 				// avatar.getPosition().dst(mousePos)));
 				avatar.setDashForceDirection(mousePos.cpy().sub(avatar.getPosition()));
@@ -1348,7 +1205,17 @@ public class LevelController extends WorldController {
 			}
 		} else {
 			boolean dashAttempt = InputController.getInstance().releasedLeftMouseButton();
-			if (dashAttempt) {
+			if (inputReady && dashAttempt) {
+				if(avatar.getNumDashes()==1){
+					rippleOn = true;
+					ticks = 0;
+					m_rippleDistance = 0;
+					m_rippleRange = 0;
+					ripple_intensity = 0.02f;
+					rippleSpeed = 0.25f;
+					maxRippleDistance = 0.25f;
+					ripple_reset = sw * 0.00025f / 4;
+				}
 				enemyController.setPlayerVisible(true);
 				if(avatar.isSticking()){
 					avatar.setDashing(false);
@@ -1464,8 +1331,8 @@ public class LevelController extends WorldController {
 			if (ticks > ripple_reset) {
 				rippleOn = false;
 				ticks = 0;
-				m_rippleDistance = 0;
-				m_rippleRange = 0;
+				resetRipple();
+				updateShader();
 			}
 			m_rippleDistance += rippleSpeed * ticks;
 			m_rippleRange = (1 - m_rippleDistance / maxRippleDistance) * ripple_intensity;
@@ -1497,7 +1364,7 @@ public class LevelController extends WorldController {
 		}
 
 		// Update avatar animation state
-		if (InputController.getInstance().pressedLeftMouseButton()) {
+		if (inputReady && InputController.getInstance().pressedLeftMouseButton()) {
 			// If either mouse button is held, set animation to be crouching
 			avatar.animate(Avatar.AvatarState.CROUCHING, false);
 			avatar.setAnimationState(Avatar.AvatarState.CROUCHING);
@@ -1527,7 +1394,7 @@ public class LevelController extends WorldController {
 		// so we can know where to spawn enemies for testing purposes.
 //		printCoordinates();
 
-		if (!avatar.isHolding() && !avatar.isDashing() && !avatar.isSticking() && input.pressedXKey()){
+		if (inputReady && !avatar.isHolding() && !avatar.isDashing() && !avatar.isSticking() && input.pressedXKey()){
 			avatar.setSlowing(-1);
 			avatar.setVX(avatar.getVX() * 0.9f);
 		} else {
@@ -1535,6 +1402,17 @@ public class LevelController extends WorldController {
 		}
 	}
 
+	/**
+	 * restores ripple params to their original setting
+	 */
+	public void resetRipple(){
+		m_rippleDistance = 0;
+		m_rippleRange = 0;
+		ripple_intensity = 0.009f;
+		rippleSpeed = 0.25f;
+		maxRippleDistance = 2f;
+		ripple_reset = sw * 0.00025f;
+	}
 	/**
 	 *
 	 * Add a new bullet to the world and send it in the direction specified by the
@@ -1568,69 +1446,6 @@ public class LevelController extends WorldController {
 			avatar.setAngle(avatar.getNewAngle());
 		}
 	}
-
-	// /**
-	// * Add a new bullet to the world and send it in the right direction.
-	// *
-	// * @param enemy enemy
-	// */
-	// private void createBullet(Enemy enemy) {
-	// float offset = BULLET_OFFSET;
-	//
-	//// //TODO: quick fix for enemy projectile offsets
-	//// if (!enemy.isTurret() && enemy.getType() == PAST) {
-	//// offset = 2.5f;
-	//// }
-	//// if (!enemy.isTurret() && enemy.getType() == PRESENT) {
-	//// offset = 1.5f;
-	//// }
-	//
-	// bulletBigTexture = JsonAssetManager.getInstance().getEntry("bulletbig",
-	// TextureRegion.class);
-	// presentBullet = JsonAssetManager.getInstance().getEntry("projpresent",
-	// TextureRegion.class);
-	// pastBullet = JsonAssetManager.getInstance().getEntry("projpast",
-	// TextureRegion.class);
-	// float radius = bulletBigTexture.getRegionWidth() / (30.0f);
-	// Projectile bullet = new Projectile(enemy.getType(), enemy.getX(),
-	// enemy.getY() + offset, radius,
-	// enemy.getBody().getUserData());
-	//
-	// Filter f = new Filter();
-	// f.groupIndex = -1;
-	// enemy.setFilterData(f);
-	// bullet.setFilterData(f);
-	//
-	// bullet.setName("bullet");
-	// bullet.setDensity(HEAVY_DENSITY);
-	// bullet.setDrawScale(scale);
-	// //bullet.setTexture(bulletBigTexture);
-	// bullet.setBullet(true);
-	// bullet.setGravityScale(0);
-	// bullet.setLinearVelocity(enemy.getProjVelocity());
-	// bullet.setSpace(enemy.getSpace());
-	// addQueuedObject(bullet);
-	// if (bullet.getType().equals(PRESENT)){
-	// bullet.setTexture(presentBullet);
-	// } else {
-	// bullet.setTexture(pastBullet);
-	// }
-	//
-	// if (shifted && enemy.getSpace() == 2) { // past world
-	// JsonValue data = assetDirectory.get("sounds").get("pew");
-	//// System.out.println("sound volume: " + data.get("volume").asFloat());
-	// SoundController.getInstance().play("pew", data.get("file").asString(), false,
-	// data.get("volume").asFloat());
-	// } else if (!shifted && enemy.getSpace() == 1) { // present world
-	// JsonValue data = assetDirectory.get("sounds").get("pew");
-	//// System.out.println("sound volume: " + data.get("volume").asFloat());
-	// SoundController.getInstance().play("pew", data.get("file").asString(), false,
-	// data.get("volume").asFloat());
-	// }
-	//
-	// // Reset the firing cooldown.
-	// enemy.coolDown(false);
-	// }
 
 	/**
 	 * Add a new bullet to the world and send it in the right direction.
@@ -1898,27 +1713,28 @@ public class LevelController extends WorldController {
 				canvas.endDebug();
 			}
 
-
 			// Final message
 			if (complete && !failed && !drawEndRoom) {
 				inputReady = false;
 				drawEndRoom = true;
 				canvas.setBlendState(GameCanvas.BlendState.ADDITIVE);
 				stage.getBatch().setBlendFunction(GL20.GL_SRC_ALPHA,GL20.GL_ONE);
-
+				resetRipple();
 
 				if(GameStateManager.getInstance().lastRoom()){
 					rippleOn = true;
 					countdown = 200;
 					rippleSpeed = 0.1f;
+
 					//TODO: ADD END LEVEL STATE
 				}else{
 					rippleOn = true;
-					countdown = 60;
+					countdown = 30;
+					rippleSpeed = 0.7f;
+
 				}
 				minAlpha = 0.5f;
-
-				ripple_intensity = 0.2f;
+				ripple_intensity = 0.09f;
 				updateShader();
 
 
