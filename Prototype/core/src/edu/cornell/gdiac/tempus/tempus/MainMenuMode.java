@@ -14,7 +14,10 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
+<<<<<<< HEAD
 import com.badlogic.gdx.scenes.scene2d.Actor;
+=======
+>>>>>>> e9fc9033905eda29e1f3f9999c2216575bd7fc13
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -144,6 +147,7 @@ public class MainMenuMode implements Screen {
         //Create header
 
         //Create buttons
+<<<<<<< HEAD
         TextureRegionDrawable startUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/start_button_v3_up.png"))));
         TextureRegionDrawable helpUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/help_button_v3_up.png"))));
         TextureRegionDrawable exitUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/quit_button_v3_up.png"))));
@@ -157,6 +161,12 @@ public class MainMenuMode implements Screen {
                 exitUp, exitUp);
         final Button aboutButton = new Button(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/about_button_v3.png")))),
                 aboutUp, aboutUp);
+=======
+        final Button startButton = new Button(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/start_button_v3.png")))));
+        Button helpButton = new Button(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/help_button_v3.png")))));
+        Button exitButton = new Button(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/quit_button_v3.png")))));
+        Button aboutButton = new Button(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/about_button_v3.png")))));
+>>>>>>> e9fc9033905eda29e1f3f9999c2216575bd7fc13
 
         //Add listeners to buttons
         startButton.addListener(new ClickListener(){
@@ -169,6 +179,7 @@ public class MainMenuMode implements Screen {
                     }
                 })));
             }
+<<<<<<< HEAD
 
             @Override
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
@@ -184,6 +195,8 @@ public class MainMenuMode implements Screen {
             }
 
 
+=======
+>>>>>>> e9fc9033905eda29e1f3f9999c2216575bd7fc13
         });
         helpButton.addListener(new ClickListener(){
             @Override
@@ -195,6 +208,7 @@ public class MainMenuMode implements Screen {
                     }
                 })));
             }
+<<<<<<< HEAD
 
 
             @Override
@@ -209,6 +223,8 @@ public class MainMenuMode implements Screen {
                 super.enter(event, x, y, pointer, fromActor);
                 helpButton.setChecked(false);
             }
+=======
+>>>>>>> e9fc9033905eda29e1f3f9999c2216575bd7fc13
         });
         aboutButton.addListener(new ClickListener(){
             @Override
@@ -220,6 +236,7 @@ public class MainMenuMode implements Screen {
                     }
                 })));
             }
+<<<<<<< HEAD
             @Override
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
 //                    if(!(scrolling)){
@@ -233,12 +250,15 @@ public class MainMenuMode implements Screen {
                 aboutButton.setChecked(false);
             }
 
+=======
+>>>>>>> e9fc9033905eda29e1f3f9999c2216575bd7fc13
         });
         exitButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 exitGame();
             }
+<<<<<<< HEAD
             @Override
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
 //                    if(!(scrolling)){
@@ -252,6 +272,8 @@ public class MainMenuMode implements Screen {
                 exitButton.setChecked(false);
             }
 
+=======
+>>>>>>> e9fc9033905eda29e1f3f9999c2216575bd7fc13
         });
 
 

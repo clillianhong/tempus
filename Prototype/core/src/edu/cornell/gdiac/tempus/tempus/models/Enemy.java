@@ -253,7 +253,10 @@ public class Enemy extends CapsuleObstacle {
         isTurret = false;
         faceDirection = 1f;
         removalFrames = 60;
+<<<<<<< HEAD
 
+=======
+>>>>>>> e9fc9033905eda29e1f3f9999c2216575bd7fc13
 //        switch (type) {
 //            case PAST:
 //                passiveEnemyIndicator = JsonAssetManager.getInstance().getEntry("enemy_passive_red", TextureRegion.class);

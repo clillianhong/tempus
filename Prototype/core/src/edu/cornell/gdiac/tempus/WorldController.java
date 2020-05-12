@@ -567,7 +567,11 @@ public abstract class WorldController implements Screen {
 		for (Enemy e : enemies){
 			e.draw(canvas);
 		}
+<<<<<<< HEAD
 //		canvas.end();
+=======
+		canvas.end();
+>>>>>>> e9fc9033905eda29e1f3f9999c2216575bd7fc13
 		
 		if (debug) {
 			canvas.beginDebug();

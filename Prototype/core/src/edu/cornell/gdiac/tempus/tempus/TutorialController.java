@@ -19,7 +19,10 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.gdiac.tempus.InputController;
 import edu.cornell.gdiac.tempus.tempus.models.Avatar;
+<<<<<<< HEAD
 import edu.cornell.gdiac.tempus.tempus.models.TutorialModel;
+=======
+>>>>>>> e9fc9033905eda29e1f3f9999c2216575bd7fc13
 import edu.cornell.gdiac.util.GameStateManager;
 import edu.cornell.gdiac.util.JsonAssetManager;
 import edu.cornell.gdiac.util.SoundController;
@@ -42,14 +45,20 @@ public class TutorialController extends LevelController {
 
     private Table tutorialCard;
     private boolean isHelp;
+<<<<<<< HEAD
     /** index of the dialogue card to stop on */
     private int lastDialogueIndex;
+=======
+>>>>>>> e9fc9033905eda29e1f3f9999c2216575bd7fc13
     /** the current dialogue index */
     private int dialogueNum;
     /** the current background index  */
     private int bgNum;
+<<<<<<< HEAD
     /** the original dialogue index */
     private int ogDialogueNum;
+=======
+>>>>>>> e9fc9033905eda29e1f3f9999c2216575bd7fc13
     /** All cutscene dialogues */
     private TextureRegionDrawable[] dialogues;
     /** All cutscene backgrounds */
@@ -72,6 +81,12 @@ public class TutorialController extends LevelController {
         isHelp = false;
         //beginDisplay = 150;
         isTutorial = true;
+<<<<<<< HEAD
+=======
+        dialogueNum = 0;
+        inputReady = false;
+
+>>>>>>> e9fc9033905eda29e1f3f9999c2216575bd7fc13
     }
 
     public void setCard(String[] card){
@@ -80,18 +95,24 @@ public class TutorialController extends LevelController {
 
     @Override
     public void reset() {
+<<<<<<< HEAD
         isHelp = false;
         inputReady = false;
         if(dialogues!= null){
             dialogueNum  = ogDialogueNum;
             bgNum = (int) dlMap[dialogueNum];
         }
+=======
+        dialogueNum = 0;
+        isHelp = false;
+>>>>>>> e9fc9033905eda29e1f3f9999c2216575bd7fc13
         isTutorial = true;
         super.reset();
     }
 
     public void setFirst(boolean b) {first = b;};
 
+<<<<<<< HEAD
     public void setCutScene(TextureRegionDrawable [] bgs, TextureRegionDrawable [] dls, float [] map, int stopIdx, int startIdx){
         backgrounds = bgs;
         dialogues = dls;
@@ -100,6 +121,12 @@ public class TutorialController extends LevelController {
         this.bgNum = (int) map[startIdx];
         this.lastDialogueIndex = stopIdx;
         dialogueNum  = ogDialogueNum;
+=======
+    public void setCutScene(TextureRegionDrawable [] bgs, TextureRegionDrawable [] dls, float [] map){
+        backgrounds = bgs;
+        dialogues = dls;
+        dlMap = map;
+>>>>>>> e9fc9033905eda29e1f3f9999c2216575bd7fc13
     }
     @Override
     public void preLoadContent() {
@@ -190,6 +217,7 @@ public class TutorialController extends LevelController {
             tutorialCard.add(st2).expandX();
         }
 
+<<<<<<< HEAD
         tableStack.add(tutorialCard);
 
 
@@ -202,11 +230,65 @@ public class TutorialController extends LevelController {
         stage.addActor(edgeContainer);
         showTutorial();
 
+=======
+
+//        helpCard = new Table();
+
+//        tableStack.add(table);
+//        tableStack.add(pauseButtonContainer);
+        tutorialCard.setDebug(true);
+        tableStack.add(tutorialCard);
+//        helpCard.setVisible(true);
+//        tableStack.add(helpCard);
+
+        /*
+         * END PAUSE SCREEN SETUP---------------------
+         */
+
+
+
+        if(first){
+            createCutScene(edgeContainer);
+        }
+
+//        else{
+//            if(GameStateManager.getInstance().lastRoom()){
+//                createEndlevelUI(tableStack);
+//            }
+//            edgeContainer.setActor(tableStack);
+//        }
+
+        stage.addActor(edgeContainer);
+//        Gdx.input.setInputProcessor(stage);
+//        stage.getCamera().update();
+//        stage.getViewport().apply();
+
+        showTutorial();
+>>>>>>> e9fc9033905eda29e1f3f9999c2216575bd7fc13
 
     }
 
     public void createCutScene(Container edgeContainer){
 
+<<<<<<< HEAD
+=======
+        dialogueNum = 0;
+        bgNum = 0;
+//
+//        TextureRegionDrawable storyBg = new TextureRegionDrawable(
+//                new TextureRegion(new Texture(Gdx.files.internal("tutorial/beginningstorybg.jpg"))));
+
+//        dialogues = new TextureRegionDrawable[3];
+//
+//        TextureRegionDrawable log1img = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("tutorial/dialogue1.png"))));
+//        TextureRegionDrawable log2img = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("tutorial/dialogue2.png"))));
+//        TextureRegionDrawable log3img = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("tutorial/dialogue3.png"))));
+//
+//        dialogues[0] = log1img;
+//        dialogues[1] = log2img;
+//        dialogues[2] = log3img;
+
+>>>>>>> e9fc9033905eda29e1f3f9999c2216575bd7fc13
         cutCont = new Container<>();
         cutCont.setBackground(backgrounds[bgNum]);
         cutCont.setPosition(0, 0);
@@ -234,13 +316,20 @@ public class TutorialController extends LevelController {
         big.add(overlayBackButton);
         edgeContainer.setActor(big);
 
+<<<<<<< HEAD
         inputReady = false;
 
+=======
+>>>>>>> e9fc9033905eda29e1f3f9999c2216575bd7fc13
     }
 
     public void nextDialogue(){
         dialogueNum++;
+<<<<<<< HEAD
         if(dialogueNum >= lastDialogueIndex){
+=======
+        if(dialogueNum >= dialogues.length){
+>>>>>>> e9fc9033905eda29e1f3f9999c2216575bd7fc13
             cutCont.setVisible(false);
             edgeContainer.setActor(tableStack);
             inputReady = true;
@@ -251,7 +340,10 @@ public class TutorialController extends LevelController {
             }
             cutsceneTable.setBackground(dialogues[dialogueNum]);
         }
+<<<<<<< HEAD
 
+=======
+>>>>>>> e9fc9033905eda29e1f3f9999c2216575bd7fc13
     }
 
 
@@ -274,6 +366,7 @@ public class TutorialController extends LevelController {
         if(drawEndRoom){
             unshowTutorial();
         }
+<<<<<<< HEAD
 
         return super.preUpdate(dt);
     }
@@ -285,6 +378,22 @@ public class TutorialController extends LevelController {
         if(dialogueNum < lastDialogueIndex){
             inputReady=false;
         }
+=======
+        if(InputController.getInstance().didHelp()){
+            isHelp = !isHelp;
+        }
+        return super.preUpdate(dt);
+    }
+
+    @Override
+    public void update(float dt) {
+
+//        if (isHelp) {
+//            showTutorial();
+//        } else {
+//            unshowTutorial();
+//        }
+>>>>>>> e9fc9033905eda29e1f3f9999c2216575bd7fc13
 
         avatar.setLives(5);
 
