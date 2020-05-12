@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -143,10 +144,19 @@ public class MainMenuMode implements Screen {
         //Create header
 
         //Create buttons
-        final Button startButton = new Button(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/start_button_v3.png")))));
-        Button helpButton = new Button(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/help_button_v3.png")))));
-        Button exitButton = new Button(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/quit_button_v3.png")))));
-        Button aboutButton = new Button(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/about_button_v3.png")))));
+        TextureRegionDrawable startUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/start_button_v3_up.png"))));
+        TextureRegionDrawable helpUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/help_button_v3_up.png"))));
+        TextureRegionDrawable exitUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/quit_button_v3_up.png"))));
+        TextureRegionDrawable aboutUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/about_button_v3_up.png"))));
+
+        final Button startButton = new Button(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/start_button_v3.png")))),
+                startUp, startUp);
+        final Button helpButton = new Button(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/help_button_v3.png")))),
+                helpUp, helpUp);
+        final Button exitButton = new Button(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/quit_button_v3.png")))),
+                exitUp, exitUp);
+        final Button aboutButton = new Button(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/gui/about_button_v3.png")))),
+                aboutUp, aboutUp);
 
         //Add listeners to buttons
         startButton.addListener(new ClickListener(){
@@ -159,6 +169,21 @@ public class MainMenuMode implements Screen {
                     }
                 })));
             }
+
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+//                    if(!(scrolling)){
+                super.enter(event, x, y, pointer, fromActor);
+                startButton.setChecked(true);
+            }
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+//                    if(!(scrolling)){
+                super.enter(event, x, y, pointer, fromActor);
+                startButton.setChecked(false);
+            }
+
+
         });
         helpButton.addListener(new ClickListener(){
             @Override
@@ -169,6 +194,20 @@ public class MainMenuMode implements Screen {
                         exitToHelpMenu();
                     }
                 })));
+            }
+
+
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+//                    if(!(scrolling)){
+                super.enter(event, x, y, pointer, fromActor);
+                helpButton.setChecked(true);
+            }
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+//                    if(!(scrolling)){
+                super.enter(event, x, y, pointer, fromActor);
+                helpButton.setChecked(false);
             }
         });
         aboutButton.addListener(new ClickListener(){
@@ -181,12 +220,38 @@ public class MainMenuMode implements Screen {
                     }
                 })));
             }
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+//                    if(!(scrolling)){
+                super.enter(event, x, y, pointer, fromActor);
+                aboutButton.setChecked(true);
+            }
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+//                    if(!(scrolling)){
+                super.enter(event, x, y, pointer, fromActor);
+                aboutButton.setChecked(false);
+            }
+
         });
         exitButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 exitGame();
             }
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+//                    if(!(scrolling)){
+                super.enter(event, x, y, pointer, fromActor);
+                exitButton.setChecked(true);
+            }
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+//                    if(!(scrolling)){
+                super.enter(event, x, y, pointer, fromActor);
+                exitButton.setChecked(false);
+            }
+
         });
 
 

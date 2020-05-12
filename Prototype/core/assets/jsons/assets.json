@@ -220,6 +220,18 @@
       "file": "textures/indicators/bird_head.png",
       "wrap": false
     },
+    "white_border": {
+      "file": "textures/gui/roomselect/white_border.png",
+      "wrap": false
+    },
+    "white_border_light": {
+      "file": "textures/gui/roomselect/light_white_border.png",
+      "wrap": false
+    },
+    "room_select_bg" : {
+      "file": "textures/gui/roomselect/room_select.png",
+      "wrap": false
+    },
     "streak": {
       "file": "textures/indicators/underlinestreak.png",
       "wrap": false
