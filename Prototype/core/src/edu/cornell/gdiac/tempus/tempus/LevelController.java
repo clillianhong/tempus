@@ -63,6 +63,8 @@ public class LevelController extends WorldController {
 	/** Stage for adding UI components **/
 	protected Skin skin;
 
+	ParticleEffect dashTrail;
+
 	protected Table table;
 	protected Table pauseTable;
 	protected Container pauseButtonContainer;
@@ -386,6 +388,7 @@ public class LevelController extends WorldController {
 		viewport = new FitViewport(sw, sh, camera);
 		extendViewport = new ExtendViewport(sw,sh);
 		viewport.apply();
+		dashTrail = new ParticleEffect();
 	}
 
 	/**
@@ -568,7 +571,10 @@ public class LevelController extends WorldController {
 	 * Lays out the game geography.
 	 */
 	private void populateLevel() {
-
+		//Loads the dashTrail
+		dashTrail.load(Gdx.files.internal("particles/dashtrail.party"),Gdx.files.internal("particles"));
+		dashTrail.setPosition(canvas.getWidth()/2,canvas.getHeight()/2);
+		dashTrail.start();
 		// tester stage!
 		skin = new Skin(Gdx.files.internal("jsons/uiskin.json"));
 		stage = new Stage(viewport);
@@ -870,9 +876,9 @@ public class LevelController extends WorldController {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
-				GameStateManager.getInstance().printGameState();
+//				GameStateManager.getInstance().printGameState();
 				GameStateManager.getInstance().stepGame(false);
-				GameStateManager.getInstance().printGameState();
+//				GameStateManager.getInstance().printGameState();
 				exitLevelSelect();
 			}
 		});
@@ -1115,7 +1121,7 @@ public class LevelController extends WorldController {
 		// Turn the physics engine crank.
 		// world.step(WORLD_STEP,WORLD_VELOC,WORLD_POSIT)
 		InputController input = InputController.getInstance();
-
+		dashTrail.setPosition(avatar.getPosition().x*scale.x,avatar.getPosition().y*scale.y);
 		if (inputReady && input.didPause() && !paused) {
 			pauseGame();
 		}
@@ -1532,7 +1538,6 @@ public class LevelController extends WorldController {
 		stage.getBatch().setProjectionMatrix(stage.getCamera().combined);
 		stage.getCamera().update();
 		stage.getViewport().apply();
-
 		super.render(delta);
 	}
 
@@ -1701,6 +1706,11 @@ public class LevelController extends WorldController {
 
 			canvas.begin();
 
+			dashTrail.draw(canvas.getSpriteBatch(),delta);
+			//Loops the dash trail
+			if (dashTrail.isComplete()){
+				dashTrail.reset();
+			}
 			drawObjectInWorld();
 			drawIndicator(canvas);
 
