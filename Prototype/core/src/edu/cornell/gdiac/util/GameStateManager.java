@@ -39,12 +39,19 @@ public class GameStateManager {
         public String[] level_jsons;
         public ArrayList<float[]> gameTimes;
 
+        public GameState(int h, int r, int n, String[] lj, ArrayList<float[]> times) {
+            highest_level = h;
+            room_unlocked = r;
+            num_levels = n;
+            level_jsons = lj;
+            gameTimes = times;
+        }
         public GameState(int h, int r, int n, String[] lj) {
             highest_level = h;
             room_unlocked = r;
             num_levels = n;
             level_jsons = lj;
-            gameTimes = new ArrayList<float[]>(n);
+            gameTimes = new ArrayList<>();
         }
 
         public int getHighest_level() {
@@ -188,6 +195,47 @@ public class GameStateManager {
         return current_level_idx;
     }
 
+    public GameState writeNewGameState(){
+        FileHandle gamefile = Gdx.files.external("tempus/jsons/game.json");
+        Json json = new Json(JsonWriter.OutputType.json);
+        json.setWriter(gamefile.writer(false));
+        json.setOutputType(JsonWriter.OutputType.json);
+        int unfinishedLevel = 3;
+        int unfinishedRoom = 9;
+        int num_levels = 4;
+
+        String[] level_paths = {
+                "jsons/levels/tutorial.json",
+        "jsons/levels/level_1.json",
+                "jsons/levels/level_2.json",
+                "jsons/levels/level_3.json"};
+        ArrayList<float []> timelist = new ArrayList<>();
+        //TODO: MAKE THIS DYNAMIC
+        float [] t0 = {100f,100f,100f,100f,100f,
+                100f,100f,100f,100f,100f,
+                100f,100f,100f,100f,100f,
+                100f,100f,100f,100f,100f,100f};
+        float [] t1 = {100f,100f,100f,100f,100f,
+                100f,100f,100f,100f,100f,
+                100f,100f,100f,100f,100f,};
+        float [] t2 = {100f,100f,100f,100f,100f,
+                100f,100f,100f,100f,100f,
+                100f,100f,100f,100f,100f,
+                100f,100f,100f,100f,100f,100f};
+        float [] t3 = {100f,100f,100f,100f,100f,
+                100f,100f,100f,100f,100f,
+                100f,100f,100f,100f,100f,
+                100f,100f,100f,100f,100f,100f};
+
+        timelist.add(t1);
+        timelist.add(t1);
+        timelist.add(t2);
+        timelist.add(t3);
+
+        GameState freshGame = new GameState(unfinishedLevel, unfinishedRoom, num_levels, level_paths, timelist);
+        gamefile.writeString(json.prettyPrint(freshGame), false);
+        return freshGame;
+    }
     /**
      * Loads the game state from json.
      * 
@@ -197,17 +245,31 @@ public class GameStateManager {
     public void loadGameState(String game_state_json) {
 
         jsonReader = new JsonReader();
+        String[] level_paths = {"jsons/levels/tutorial.json",
+                "jsons/levels/level_1.json",
+                "jsons/levels/level_2.json",
+                "jsons/levels/level_3.json"};
         // TODO: CHANGE THIS TO LOCAL (UNCOMMENT AND REPLACE LINE) FOR FINISHED VERSION
-         gameDirectory = jsonReader.parse(Gdx.files.local(game_state_json));
+        try{
+            gameDirectory = jsonReader.parse(Gdx.files.external(game_state_json));
+            // parsing game_state json
 
-//        gameDirectory = jsonReader.parse(Gdx.files.internal(game_state_json));
+//        String[] level_paths = gameDirectory.get("level_jsons").asStringArray();
 
-        // parsing game_state json
+        }catch(Exception e){
+            gameState = writeNewGameState();
+            gameDirectory = jsonReader.parse(Gdx.files.external(game_state_json));
+        }
         int unfinishedLevel = gameDirectory.getInt("highest_level");
         int unfinishedRoom = gameDirectory.getInt("room_unlocked");
         int num_levels = gameDirectory.getInt("num_levels");
-        String[] level_paths = gameDirectory.get("level_jsons").asStringArray();
-        gameState = new GameState(unfinishedLevel, unfinishedRoom, num_levels, level_paths);
+        if(gameState == null){
+            gameState = new GameState(unfinishedLevel, unfinishedRoom, num_levels, level_paths);
+
+        }
+
+//        gameDirectory = jsonReader.parse(Gdx.files.internal(game_state_json));
+
         levelDirectories = new JsonValue[num_levels];
         levels = new LevelModel[num_levels];
         last_level_idx = levels.length - 1;
@@ -432,7 +494,8 @@ public class GameStateManager {
      * Saves the whole game state to game.json and level jsons
      */
     public void saveGameState() {
-        FileHandle gamefile = Gdx.files.local("jsons/game.json");
+        String currentdir = System.getProperty("user.dir");
+        FileHandle gamefile = Gdx.files.external("jsons/game.json");
         Json json = new Json(JsonWriter.OutputType.json);
         json.setWriter(gamefile.writer(false));
         json.setOutputType(JsonWriter.OutputType.json);
