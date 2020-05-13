@@ -816,15 +816,6 @@ public class LevelController extends WorldController {
 		/*
 		 * END PAUSE SCREEN SETUP---------------------
 		 */
-//		/* create level and room numbers */
-//		displayFont = new BitmapFont(Gdx.files.internal("fonts/carterone.fnt"));
-//		style = new Label.LabelStyle(displayFont, Color.WHITE);
-//		Label level = new Label("Level 3", style);
-//		Container levelCont = new Container();
-//		levelCont.setSize(level.getWidth(), level.getHeight());
-//		levelCont.setActor(level);
-//		levelCont.setPosition(canvas.getWidth()/2, canvas.getHeight()/2);
-//		table.add(levelCont);
 		/* START END-GAME SCREEN CREATION */
 		isEndRoom = false;
 		if(GameStateManager.getInstance().lastRoom()){
@@ -833,11 +824,8 @@ public class LevelController extends WorldController {
 		}
 
 		edgeContainer.setActor(tableStack);
-
 		stage.addActor(edgeContainer);
-		stage.addAction(Actions.sequence(Actions.alpha(1f), Actions.fadeIn(0.5f)));
-
-
+//		stage.addAction(Actions.sequence(Actions.alpha(1f), Actions.fadeIn(0.5f)));
 
 	}
 
@@ -1028,7 +1016,7 @@ public class LevelController extends WorldController {
 
 		if (begincount > 0) {
 			begincount--;
-		}else if(!inputReady && !isTutorial){
+		}else if(!inputReady){
 			inputReady = true;
 		}
 
@@ -1729,8 +1717,8 @@ public class LevelController extends WorldController {
 					//TODO: ADD END LEVEL STATE
 				}else{
 					rippleOn = true;
-					countdown = 30;
-					rippleSpeed = 0.7f;
+					countdown = 60;
+					rippleSpeed = 0.2f;
 
 				}
 				minAlpha = 0.5f;

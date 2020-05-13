@@ -243,7 +243,8 @@ public class TutorialController extends LevelController {
         if(dialogueNum >= lastDialogueIndex){
             cutCont.setVisible(false);
             edgeContainer.setActor(tableStack);
-            inputReady = true;
+            inputReady = false;
+            begincount = 20;
         }else{
             if(dlMap[dialogueNum] != bgNum){
                 bgNum = (int) dlMap[dialogueNum];
