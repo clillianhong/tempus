@@ -89,9 +89,9 @@ active: false
 active: false
 - Tint - 
 colorsCount: 6
-colors0: 0.25490198
-colors1: 0.7372549
-colors2: 1.0
+colors0: 1.0
+colors1: 0.7647059
+colors2: 0.24313726
 colors3: 0.8392157
 colors4: 0.23137255
 colors5: 1.0
@@ -104,16 +104,14 @@ lowMax: 0.0
 highMin: 1.0
 highMax: 1.0
 relative: false
-scalingCount: 4
+scalingCount: 3
 scaling0: 0.0
 scaling1: 1.0
-scaling2: 0.75
-scaling3: 0.0
-timelineCount: 4
+scaling2: 0.0
+timelineCount: 3
 timeline0: 0.0
-timeline1: 0.2
-timeline2: 0.8
-timeline3: 1.0
+timeline1: 0.001
+timeline2: 1.0
 - Options - 
 attached: false
 continuous: false
