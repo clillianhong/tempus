@@ -150,7 +150,7 @@
       "friction": 0.6,
       "restitution": 0.1,
       "texture": "spikes",
-      "space": 1,
+      "space": 3,
       "angle": 45
     },
     "spike2": {
@@ -163,7 +163,7 @@
       "friction": 0.6,
       "restitution": 0.1,
       "texture": "spikes",
-      "space": 1,
+      "space": 3,
       "angle": 45
     },
     "spike3": {
@@ -176,7 +176,7 @@
       "friction": 0.6,
       "restitution": 0.1,
       "texture": "spikes",
-      "space": 1,
+      "space": 3,
       "angle": 45
     },
     "spike4": {
@@ -189,7 +189,7 @@
       "friction": 0.6,
       "restitution": 0.1,
       "texture": "spikes",
-      "space": 1,
+      "space": 3,
       "angle": 45
     },
     "spike5": {
@@ -202,7 +202,7 @@
       "friction": 0.6,
       "restitution": 0.1,
       "texture": "spikes",
-      "space": 1,
+      "space": 3,
       "angle": 45
     },
     "spike6": {
@@ -215,7 +215,7 @@
       "friction": 0.6,
       "restitution": 0.1,
       "texture": "spikes",
-      "space": 1,
+      "space": 3,
       "angle": 45
     },
     "spike7": {
@@ -228,7 +228,7 @@
       "friction": 0.6,
       "restitution": 0.1,
       "texture": "spikes",
-      "space": 1,
+      "space": 3,
       "angle": 45
     },
     "spike8": {
@@ -241,7 +241,7 @@
       "friction": 0.6,
       "restitution": 0.1,
       "texture": "spikes",
-      "space": 1,
+      "space": 3,
       "angle": 90
     },
     "spike9": {
@@ -254,7 +254,7 @@
       "friction": 0.6,
       "restitution": 0.1,
       "texture": "spikes",
-      "space": 1,
+      "space": 3,
       "angle": 45
     },
     "spike10": {
@@ -267,7 +267,7 @@
       "friction": 0.6,
       "restitution": 0.1,
       "texture": "spikes",
-      "space": 1,
+      "space": 3,
       "angle": 45
     },
     "spike11": {
@@ -280,7 +280,7 @@
       "friction": 0.6,
       "restitution": 0.1,
       "texture": "spikes",
-      "space": 1,
+      "space": 3,
       "angle": 45
     },
     "spike12": {
@@ -293,7 +293,7 @@
       "friction": 0.6,
       "restitution": 0.1,
       "texture": "spikes",
-      "space": 1,
+      "space": 3,
       "angle": 45
     },
     "spike13": {
@@ -306,7 +306,7 @@
       "friction": 0.6,
       "restitution": 0.1,
       "texture": "spikes",
-      "space": 1,
+      "space": 3,
       "angle": 45
     },
     "spike14": {
@@ -319,7 +319,7 @@
       "friction": 0.6,
       "restitution": 0.1,
       "texture": "spikes",
-      "space": 1,
+      "space": 3,
       "angle": 45
     },
     "spike15": {
@@ -332,7 +332,7 @@
       "friction": 0.6,
       "restitution": 0.1,
       "texture": "spikes",
-      "space": 1,
+      "space": 3,
       "angle": 45
     },
     "spike16": {
@@ -345,7 +345,7 @@
       "friction": 0.6,
       "restitution": 0.1,
       "texture": "spikes",
-      "space": 1,
+      "space": 3,
       "angle": 90
     },
     "spike17": {
@@ -358,7 +358,7 @@
       "friction": 0.6,
       "restitution": 0.1,
       "texture": "spikes",
-      "space": 1,
+      "space": 3,
       "angle": 45
     },
     "spike18": {
@@ -371,7 +371,7 @@
       "friction": 0.6,
       "restitution": 0.1,
       "texture": "spikes",
-      "space": 1,
+      "space": 3,
       "angle": 45
     },
     "spike19": {
@@ -384,7 +384,7 @@
       "friction": 0.6,
       "restitution": 0.1,
       "texture": "spikes",
-      "space": 1,
+      "space": 3,
       "angle": 350
     },
     "spike20": {
@@ -397,7 +397,7 @@
       "friction": 0.6,
       "restitution": 0.1,
       "texture": "spikes",
-      "space": 1,
+      "space": 3,
       "angle": 350
     }
   },
