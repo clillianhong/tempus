@@ -210,6 +210,7 @@ public class GameStateManager {
                 "jsons/levels/level_2.json",
                 "jsons/levels/level_3.json"};
         ArrayList<float []> timelist = new ArrayList<>();
+
         //TODO: MAKE THIS DYNAMIC
         float [] t0 = {100f,100f,100f,100f,100f,
                 100f,100f,100f,100f,100f,
@@ -220,14 +221,11 @@ public class GameStateManager {
                 100f,100f,100f,100f,100f,};
         float [] t2 = {100f,100f,100f,100f,100f,
                 100f,100f,100f,100f,100f,
-                100f,100f,100f,100f,100f,
-                100f,100f,100f,100f,100f,100f};
+                100f,100f,100f,100f,100f};
         float [] t3 = {100f,100f,100f,100f,100f,
-                100f,100f,100f,100f,100f,
-                100f,100f,100f,100f,100f,
-                100f,100f,100f,100f,100f,100f};
+                100f,100f,100f,100f,100f};
 
-        timelist.add(t1);
+        timelist.add(t0);
         timelist.add(t1);
         timelist.add(t2);
         timelist.add(t3);
@@ -249,20 +247,25 @@ public class GameStateManager {
                 "jsons/levels/level_1.json",
                 "jsons/levels/level_2.json",
                 "jsons/levels/level_3.json"};
+//        gameDirectory = jsonReader.parse(Gdx.files.external(game_state_json));
         // TODO: CHANGE THIS TO LOCAL (UNCOMMENT AND REPLACE LINE) FOR FINISHED VERSION
-        try{
-            gameDirectory = jsonReader.parse(Gdx.files.external(game_state_json));
-            // parsing game_state json
-
-//        String[] level_paths = gameDirectory.get("level_jsons").asStringArray();
-
-        }catch(Exception e){
-            gameState = writeNewGameState();
-            gameDirectory = jsonReader.parse(Gdx.files.external(game_state_json));
-        }
-        int unfinishedLevel = gameDirectory.getInt("highest_level");
-        int unfinishedRoom = gameDirectory.getInt("room_unlocked");
-        int num_levels = gameDirectory.getInt("num_levels");
+//        try{
+//            gameDirectory = jsonReader.parse(Gdx.files.external(game_state_json));
+//            // parsing game_state json
+//
+////        String[] level_paths = gameDirectory.get("level_jsons").asStringArray();
+//
+//        }catch(Exception e){
+//            gameState = writeNewGameState();
+//            gameDirectory = jsonReader.parse(Gdx.files.external(game_state_json));
+//        }
+//        int unfinishedLevel = gameDirectory.getInt("highest_level");
+//        int unfinishedRoom = gameDirectory.getInt("room_unlocked");
+//        int num_levels = gameDirectory.getInt("num_levels");
+        gameState = writeNewGameState();
+        int unfinishedLevel = gameState.getHighest_level();
+        int unfinishedRoom = gameState.getRoom_unlocked();
+        int num_levels = gameState.num_levels;
         if(gameState == null){
             gameState = new GameState(unfinishedLevel, unfinishedRoom, num_levels, level_paths);
 
@@ -278,7 +281,7 @@ public class GameStateManager {
 
         levels[0] = loadTutorial(levelDirectories[0]);
         levels[0].preloadLevel();
-        JsonValue gameTime = gameDirectory.get("gameTimes");
+//        JsonValue gameTime = gameDirectory.get("gameTimes");
         for (int i = 1; i < num_levels; i++) {
             // System.out.println("GDX ERROR "+ (i+1) +": " + Gdx.gl.glGetError());
 
@@ -287,7 +290,7 @@ public class GameStateManager {
             if (levels[i].getLevelNumber() == unfinishedLevel) {
                 highestUnlockedLevel = levels[i];
             }
-            levels[i].setBestTime(gameTime.get(i).asFloatArray());
+//            levels[i].setBestTime(gameTime.get(i).asFloatArray());
             levels[i].preloadLevel();
         }
         // System.out.println("GDX ERROR end:" + Gdx.gl.glGetError());
@@ -495,7 +498,7 @@ public class GameStateManager {
      */
     public void saveGameState() {
         String currentdir = System.getProperty("user.dir");
-        FileHandle gamefile = Gdx.files.external("jsons/game.json");
+        FileHandle gamefile = Gdx.files.external("tempus/jsons/game.json");
         Json json = new Json(JsonWriter.OutputType.json);
         json.setWriter(gamefile.writer(false));
         json.setOutputType(JsonWriter.OutputType.json);
