@@ -265,7 +265,6 @@ public class GameStateManager {
         int num_levels = gameDirectory.getInt("num_levels");
         if(gameState == null){
             gameState = new GameState(unfinishedLevel, unfinishedRoom, num_levels, level_paths);
-
         }
 
 //        gameDirectory = jsonReader.parse(Gdx.files.internal(game_state_json));

@@ -47,7 +47,6 @@ public class DesktopLauncher {
 		settings.resizable = true;
 		settings.forceExit = true;
 		settings.title = "Tempus";
-		//what 
 		new GDXApp(new GDXRoot(), settings);
 	}
 }
