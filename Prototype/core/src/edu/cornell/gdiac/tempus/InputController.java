@@ -109,8 +109,6 @@ public class InputController {
 	private boolean hKeyPressed;
 	private boolean hKeyPrevious;
 
-	/** An X-Box controller (if it is connected) */
-	XBox360Controller xbox;
 	
 	/**
 	 * Returns the amount of sideways movement. 
@@ -345,7 +343,6 @@ public class InputController {
 
 	public InputController() { 
 		// If we have a game-pad for id, then use it.
-		xbox = new XBox360Controller(0);
 		crosshair = new Vector2();
 		crosscache = new Vector2();
 		mousePosition = new Vector2();

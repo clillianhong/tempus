@@ -45,6 +45,8 @@ public class DesktopLauncher {
 		settings.width  = (int) (lillian_width * resolution_multiplier);
 		settings.height = (int) (lillian_height * resolution_multiplier);
 		settings.resizable = true;
+		settings.forceExit = true;
+		settings.title = "Tempus";
 		new GDXApp(new GDXRoot(), settings);
 	}
 }
