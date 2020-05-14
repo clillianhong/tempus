@@ -1,0 +1,149 @@
+{
+  "gravity": -14.7,
+  "bounds": [
+    32,
+    18
+  ],
+  "present_background": "present_background2",
+  "past_background": "past_background2",
+  "density": 0,
+  "heavy_density": 10,
+  "friction": 0.6,
+  "restitution": 0.1,
+  "bullet_offset": 0.7,
+  "effect_volume": 0.8,
+  "door": {
+    "pos": [
+      24.06,
+      9.410000000000004
+    ],
+    "size": [
+      1.92,
+      1.92
+    ],
+    "bodytype": "static",
+    "density": 0,
+    "friction": 0,
+    "restitution": 0,
+    "texture": "goal",
+    "sensor": true,
+    "nextlevel": 0,
+    "space": 3
+  },
+  "avatar": {
+    "pos": [
+      7.908,
+      7.43
+    ],
+    "shrink": [
+      0.0216,
+      0.01125
+    ],
+    "texture": "dude",
+    "density": 1,
+    "bodytype": "dynamic",
+    "avatarstanding": "avatarstanding",
+    "avatarcrouching": "avatarcrouching",
+    "avatardashing": "avatardashing",
+    "avatarfalling": "avatarfalling"
+  },
+  "turrets": {
+    "turret8": {
+      "pos": [
+        27.72,
+        11.79
+      ],
+      "shrink": [
+        0.0168,
+        0.021375
+      ],
+      "texture": "past_turret",
+      "density": 1,
+      "bodytype": "static",
+      "entitytype": "past",
+      "cooldown": 360,
+      "direction": [
+        -3,
+        0
+      ]
+    }
+  },
+  "capsules": {},
+  "diamonds": {},
+  "rounds": {},
+  "enemies": {
+    "enemy6": {
+      "pos": [
+        15.912,
+        3
+      ],
+      "shrink": [
+        0.0168,
+        0.021375
+      ],
+      "texture": "enemypresent",
+      "density": 1,
+      "bodytype": "dynamic",
+      "entitytype": "present",
+      "cooldown": 360,
+      "aitype": 1
+    }
+  },
+  "spikes": {},
+  "talls": {},
+  "pillars": {},
+  "longcapsules": {
+    "bothlongcapsule20": {
+      "name": "both_longcapsule",
+      "pos": [
+        13.416,
+        0.4500000000000002
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_longcapsule",
+      "space": 3
+    },
+    "presentlongcapsule23": {
+      "name": "present_longcapsule",
+      "pos": [
+        13.512,
+        8.82
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "present_longcapsule",
+      "space": 1
+    },
+    "bothlongcapsule24": {
+      "name": "both_longcapsule",
+      "pos": [
+        6.504,
+        5.88
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_longcapsule",
+      "space": 3
+    },
+    "pastlongcapsule26": {
+      "name": "past_longcapsule",
+      "pos": [
+        19.848,
+        5.76
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "past_longcapsule",
+      "space": 2
+    }
+  }
+}

@@ -41,6 +41,7 @@ public class GDXApp extends LwjglProxy {
     public GDXApp(ApplicationListener listener, GDXAppSettings config) {
         super( listener, config.getLwjglConfiguration() );
         this.config = config;
+        this.config.vSyncEnabled = false;
     }
 
     /**

@@ -1,0 +1,115 @@
+{
+  "gravity": -14.7,
+  "bounds": [
+    32,
+    18
+  ],
+  "present_background": "present_background1",
+  "past_background": "past_background1",
+  "density": 0,
+  "heavy_density": 10,
+  "friction": 0.6,
+  "restitution": 0.1,
+  "bullet_offset": 0.7,
+  "effect_volume": 0.8,
+  "door": {
+    "pos": [
+      28.188,
+      15.23
+    ],
+    "size": [
+      1.92,
+      1.92
+    ],
+    "bodytype": "static",
+    "density": 0,
+    "friction": 0,
+    "restitution": 0,
+    "texture": "goal",
+    "sensor": true,
+    "nextlevel": 0,
+    "space": 3
+  },
+  "avatar": {
+    "pos": [
+      3.492,
+      5.06
+    ],
+    "shrink": [
+      0.0216,
+      0.01125
+    ],
+    "texture": "dude",
+    "density": 1,
+    "bodytype": "dynamic",
+    "avatarstanding": "avatarstanding",
+    "avatarcrouching": "avatarcrouching",
+    "avatardashing": "avatardashing",
+    "avatarfalling": "avatarfalling"
+  },
+  "turrets": {},
+  "capsules": {},
+  "diamonds": {
+    "bothdiamond13": {
+      "name": "both_diamond",
+      "pos": [
+        26.728,
+        10.46
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_diamond",
+      "space": 3
+    }
+  },
+  "rounds": {
+    "bothround11": {
+      "name": "both_round",
+      "pos": [
+        2.056,
+        2.7299999999999995
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_round",
+      "space": 3
+    }
+  },
+  "enemies": {},
+  "spikes": {},
+  "talls": {
+    "pasttall12": {
+      "name": "past_tall",
+      "pos": [
+        19.912,
+        6.75
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "past_tall",
+      "space": 2
+    }
+  },
+  "pillars": {},
+  "longcapsules": {
+    "bothlongcapsule18": {
+      "name": "both_longcapsule",
+      "pos": [
+        9.304,
+        5.01
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_longcapsule",
+      "space": 3
+    }
+  }
+}

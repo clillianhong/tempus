@@ -1,0 +1,164 @@
+{
+  "gravity": -14.7,
+  "bounds": [
+    32,
+    18
+  ],
+  "present_background": "present_background1",
+  "past_background": "past_background1",
+  "density": 0,
+  "heavy_density": 10,
+  "friction": 0.6,
+  "restitution": 0.1,
+  "bullet_offset": 0.7,
+  "effect_volume": 0.8,
+  "door": {
+    "pos": [
+      6.836,
+      13.14
+    ],
+    "size": [
+      1.92,
+      1.92
+    ],
+    "bodytype": "static",
+    "density": 0,
+    "friction": 0,
+    "restitution": 0,
+    "texture": "goal",
+    "sensor": true,
+    "nextlevel": 0,
+    "space": 3
+  },
+  "avatar": {
+    "pos": [
+      19.1,
+      8.269999999999998
+    ],
+    "shrink": [
+      0.0216,
+      0.01125
+    ],
+    "texture": "dude",
+    "density": 1,
+    "bodytype": "dynamic",
+    "avatarstanding": "avatarstanding",
+    "avatarcrouching": "avatarcrouching",
+    "avatardashing": "avatardashing",
+    "avatarfalling": "avatarfalling"
+  },
+  "turrets": {
+    "turret7": {
+      "pos": [
+        14.532,
+        5.6100000000000003
+      ],
+      "shrink": [
+        0.0168,
+        0.021375
+      ],
+      "texture": "past_turret",
+      "density": 1,
+      "bodytype": "static",
+      "entitytype": "past",
+      "cooldown": 360,
+      "direction": [
+        0,
+        3
+      ]
+    }
+  },
+  "capsules": {
+    "presentcapsule14": {
+      "name": "present_capsule",
+      "pos": [
+        25.568,
+        5.73
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "present_capsule",
+      "space": 1
+    }
+  },
+  "diamonds": {},
+  "rounds": {},
+  "enemies": {
+    "enemy6": {
+      "pos": [
+        27.104,
+        8.28
+      ],
+      "shrink": [
+        0.0168,
+        0.021375
+      ],
+      "texture": "enemypresent",
+      "density": 1,
+      "bodytype": "dynamic",
+      "entitytype": "present",
+      "cooldown": 360,
+      "aitype": 1
+    }
+  },
+  "spikes": {},
+  "talls": {
+    "presenttall21": {
+      "name": "both_tall",
+      "pos": [
+        2.572,
+        4.85
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_tall",
+      "space": 3
+    },
+    "presenttall22": {
+      "name": "present_tall",
+      "pos": [
+        9.072,
+        7.47
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "present_tall",
+      "space": 1
+    }
+  },
+  "pillars": {},
+  "longcapsules": {
+    "bothlongcapsule18": {
+      "name": "both_longcapsule",
+      "pos": [
+        16.936,
+        5.24
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_longcapsule",
+      "space": 3
+    },
+    "bothlongcapsule19": {
+      "name": "past_longcapsule",
+      "pos": [
+        7.152,
+        3.69
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "past_longcapsule",
+      "space": 2
+    }
+  }
+}

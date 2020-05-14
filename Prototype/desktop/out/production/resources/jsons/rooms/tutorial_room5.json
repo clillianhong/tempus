@@ -1,0 +1,135 @@
+{
+  "gravity": -14.7,
+  "bounds": [
+    32,
+    18
+  ],
+  "present_background": "present_background1",
+  "past_background": "past_background1",
+  "door": {
+    "pos": [
+      28.188,
+      8.690000000000005
+    ],
+    "size": [
+      1.92,
+      1.92
+    ],
+    "bodytype": "static",
+    "density": 0,
+    "friction": 0,
+    "restitution": 0,
+    "texture": "goal",
+    "sensor": true,
+    "nextlevel": 0,
+    "space": 3
+  },
+  "avatar": {
+    "pos": [
+      5.364,
+      7.789999999999998
+    ],
+    "shrink": [
+      0.0216,
+      0.01125
+    ],
+    "texture": "dude",
+    "density": 1,
+    "bodytype": "dynamic",
+    "avatarstanding": "avatarstanding",
+    "avatarcrouching": "avatarcrouching",
+    "avatardashing": "avatardashing",
+    "avatarfalling": "avatarfalling"
+  },
+  "turrets": {
+    "turret1": {
+      "pos": [
+        13.928,
+        2.3699999999999997
+      ],
+      "shrink": [
+        0.0168,
+        0.021375
+      ],
+      "texture": "present_turret",
+      "density": 1,
+      "bodytype": "static",
+      "entitytype": "present",
+      "cooldown": 360,
+      "direction": [
+        0,
+        3
+      ],
+      "turretshooting": "turret_shooting"
+    },
+    "turret2": {
+      "pos": [
+        23.016,
+        2.28
+      ],
+      "shrink": [
+        0.0168,
+        0.021375
+      ],
+      "texture": "past_turret",
+      "density": 1,
+      "bodytype": "static",
+      "entitytype": "past",
+      "cooldown": 360,
+      "direction": [
+        0,
+        3
+      ],
+      "turretshooting": "turret_shooting"
+    }
+  },
+  "capsules": {
+    "capsule1": {
+      "name": "present_capsule",
+      "pos": [
+        7.896,
+        10.62
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "present_capsule",
+      "space": 1
+    },
+    "capsule2": {
+      "name": "both_capsule",
+      "pos": [
+        16.896,
+        10.62
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_capsule",
+      "space": 3
+    }
+  },
+  "diamonds": {},
+  "rounds": {
+    "round1": {
+      "name": "both_round",
+      "pos": [
+        3.992,
+        5.4
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_round",
+      "space": 3
+    }
+  },
+  "enemies": {},
+  "spikes": {},
+  "talls": {},
+  "pillars": {},
+  "longcapsules": {}
+}
