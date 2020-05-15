@@ -494,7 +494,7 @@ public class GameStateManager {
      */
     public void saveGameState() {
         String currentdir = System.getProperty("user.dir");
-        FileHandle gamefile = Gdx.files.external("jsons/game.json");
+        FileHandle gamefile = Gdx.files.external("tempus/jsons/game.json");
         Json json = new Json(JsonWriter.OutputType.json);
         json.setWriter(gamefile.writer(false));
         json.setOutputType(JsonWriter.OutputType.json);

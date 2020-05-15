@@ -201,7 +201,6 @@ public class JsonAssetManager extends AssetManager {
         JsonValue json = directory.getChild(getClassIdentifier(Sound.class));
         while (json != null) {
             String file= json.getString("file");
-            System.out.println("Loading "+json.name()+" at "+file);
             load(file,Sound.class);
             json = json.next;
         }
