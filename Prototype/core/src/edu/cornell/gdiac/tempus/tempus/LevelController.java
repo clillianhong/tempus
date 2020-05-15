@@ -45,8 +45,6 @@ import edu.cornell.gdiac.util.*;
 import edu.cornell.gdiac.tempus.obstacle.*;
 import edu.cornell.gdiac.tempus.tempus.models.*;
 
-import javax.xml.soap.Text;
-
 import static edu.cornell.gdiac.tempus.tempus.models.EntityType.PAST;
 import static edu.cornell.gdiac.tempus.tempus.models.EntityType.PRESENT;
 
@@ -62,7 +60,7 @@ import static edu.cornell.gdiac.tempus.tempus.models.EntityType.PRESENT;
 public class LevelController extends WorldController {
 
 	/** STARTUP INPUT DELAY COUNTER **/
-	protected int BEGIN_COUNT_OG = Gdx.graphics.getFramesPerSecond()/2;
+	protected int BEGIN_COUNT_OG;
 	/** Stage for adding UI components **/
 	protected Skin skin;
 
@@ -358,7 +356,7 @@ public class LevelController extends WorldController {
 		timeFreeze = false;
 		json_filepath = json;
 		numEnemies = 0;
-		begincount = BEGIN_COUNT_OG;
+		begincount = 20;
 		enemyController = new EnemyController(enemies, objects, avatar, world, scale, this, assetDirectory);
 		isTutorial = false;
 		ripple_intensity = 0.009f;
@@ -484,18 +482,13 @@ public class LevelController extends WorldController {
 		prepause = false;
 
 		for (Obstacle obj : objects) {
-//			System.out.println("body type: " + obj.getBody().getUserData());
 			if(obj.getBody().getUserData() instanceof Projectile){
-				//System.out.println("DELETING PROJECTILE");
 				obj.deactivatePhysics(world);
 				objects.remove(obj);
 			}
 		}
 
 		enemyController.reset();
-
-//		System.out.println("enemies size: " + enemies.size());
-
 
 		createUI();
 		if(isEndRoom){
@@ -960,6 +953,13 @@ public class LevelController extends WorldController {
 	 */
 	public boolean preUpdate(float dt) {
 
+		//set values relative to FPS
+		if(BEGIN_COUNT_OG == 0){
+			BEGIN_COUNT_OG = Gdx.graphics.getFramesPerSecond()/2;
+			begincount = BEGIN_COUNT_OG;
+			resetRipple();
+		}
+
 		if (paused || prepause) {
 			return false;
 		}
@@ -1208,9 +1208,9 @@ public class LevelController extends WorldController {
 					m_rippleDistance = 0;
 					m_rippleRange = 0;
 					ripple_intensity = 0.02f;
-					rippleSpeed = 0.25f;
+					rippleSpeed = (60/(float) Gdx.graphics.getFramesPerSecond()) * 0.25f ;
 					maxRippleDistance = 0.25f;
-					ripple_reset = sw * 0.00025f / 4;
+					ripple_reset = ((float)Gdx.graphics.getFramesPerSecond() / 60f)* sw * 0.00025f / 4;
 				}
 				enemyController.setPlayerVisible(true);
 				if(avatar.isSticking()){
@@ -1405,9 +1405,9 @@ public class LevelController extends WorldController {
 		m_rippleDistance = 0;
 		m_rippleRange = 0;
 		ripple_intensity = 0.009f;
-		rippleSpeed = 0.25f;
+		rippleSpeed =  60 * (0.25f/(float) Gdx.graphics.getFramesPerSecond());
 		maxRippleDistance = 2f;
-		ripple_reset = sw * 0.00025f;
+		ripple_reset = Gdx.graphics.getFramesPerSecond() * (sw * 0.00025f / 60f);
 	}
 	/**
 	 *
@@ -1720,14 +1720,14 @@ public class LevelController extends WorldController {
 				if(GameStateManager.getInstance().lastRoom()){
 					rippleOn = true;
 					countdown = Gdx.graphics.getFramesPerSecond()*3;
-					rippleSpeed = 0.1f;
-
+					rippleSpeed = 60 * (0.1f/(float) Gdx.graphics.getFramesPerSecond());
 					//TODO: ADD END LEVEL STATE
 				}else{
 					rippleOn = true;
 					countdown = Gdx.graphics.getFramesPerSecond();
-					rippleSpeed = 0.2f;
+					rippleSpeed =  Gdx.graphics.getFramesPerSecond() >= 60 ? 0.2f : 0.75f;
 				}
+				ripple_reset = ((float)Gdx.graphics.getFramesPerSecond() / 60f)* (sw * 0.0006f);
 				minAlpha = 0.5f;
 				ripple_intensity = 0.09f;
 				updateShader();
