@@ -958,16 +958,17 @@ public class Avatar extends CapsuleObstacle {
             body.applyForce(forceCache, getPosition(), true);
             hasDashed = true;
         }
-        /* else {
-            body.applyForce(forceCache,getPosition(),true);
-        }*/
+        else {
+            //  body.applyForce(forceCache,getPosition(),true);
+            //}
 
-        // Velocity too high, clamp it
-        if (Math.abs(getVX()) >= getMaxSpeed()) {
-            setVX(Math.signum(getVX())*getMaxSpeed());
-        } else {
-            forceCache.set(getMovement(),0);
-            body.applyForce(forceCache,getPosition(),true);
+            // Velocity too high, clamp it
+            if (Math.abs(getVX()) >= getMaxSpeed()) {
+                setVX(Math.signum(getVX()) * getMaxSpeed());
+            } else {
+                forceCache.set(getMovement(), 0);
+                body.applyForce(forceCache, getPosition(), true);
+            }
         }
 //        // Jump!
 //        if (isJumping()) {

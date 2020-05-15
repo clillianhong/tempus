@@ -168,6 +168,7 @@ public class EnemyController {
 
         // Don't want to be moving. Damp out player motion
         if (e.getMovement() == 0f) {
+            //e.setVX(-1 * e.getVX());
             forceCache.set(-e.getDamping() * e.getVX(), 0);
             e.getBody().applyForce(forceCache,e.getPosition(),true);
         }
@@ -189,11 +190,7 @@ public class EnemyController {
     public void setBulletVelocity(float offset, Enemy enemy) {
         Vector2 projVel = target.getPosition().sub(enemy.getPosition());
         projVel.y -= offset;
-        if (enemy.getAi() == Enemy.EnemyType.TELEPORT){
-            enemy.setProjVel(projVel.nor().scl(10));
-        } else {
-            enemy.setProjVel(projVel.nor().scl(10));
-        }
+        enemy.setProjVel(projVel.nor().scl(9));
     }
 
     /**
