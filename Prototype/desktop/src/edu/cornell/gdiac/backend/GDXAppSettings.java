@@ -41,7 +41,7 @@ public class GDXAppSettings {
      *
      * This value can be changed at runtime via {@link Graphics#setVSync(boolean)}
      */
-    public boolean vSyncEnabled = false;
+    public boolean vSyncEnabled = true;
     /** The number of samples for MSAA **/
     public int samples = 2;
     /**

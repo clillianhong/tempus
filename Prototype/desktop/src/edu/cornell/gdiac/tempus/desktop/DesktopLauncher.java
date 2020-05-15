@@ -47,6 +47,8 @@ public class DesktopLauncher {
 		settings.resizable = true;
 		settings.forceExit = true;
 		settings.title = "Tempus";
+		settings.foregroundFPS = 30; // This one is important
+		settings.backgroundFPS = 30; // Just in case
 		new GDXApp(new GDXRoot(), settings);
 	}
 }

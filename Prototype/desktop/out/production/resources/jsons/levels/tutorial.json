@@ -1,0 +1,154 @@
+{
+  "level": 0,
+  "room_count": 21,
+  "unlocked": true,
+  "finished": true,
+  "resume_room_index": 0,
+  "rooms": [
+    "jsons/rooms/0-1.json",
+    "jsons/rooms/0-2.json",
+    "jsons/rooms/0-3.json",
+    "jsons/rooms/0-4.json",
+    "jsons/rooms/0-5.json",
+    "jsons/rooms/0-6.json",
+    "jsons/rooms/0-7.json",
+    "jsons/rooms/0-8.json",
+    "jsons/rooms/0-9.json",
+    "jsons/rooms/0-10.json",
+    "jsons/rooms/0-11.json",
+    "jsons/rooms/0-12.json",
+    "jsons/rooms/0-13.json",
+    "jsons/rooms/0-14.json",
+    "jsons/rooms/0-15.json",
+    "jsons/rooms/0-16.json",
+    "jsons/rooms/0-17.json",
+    "jsons/rooms/0-18.json",
+    "jsons/rooms/0-19.json",
+    "jsons/rooms/0-20.json",
+    "jsons/rooms/0-21.json"
+  ],
+  "stop_array" : [
+    4, -1, -1, -1,
+    -1,-1,-1,-1,
+    8, -1, -1, 16,
+    -1, -1, -1, -1,
+    -1, 20, -1,-1
+  ],
+  "start_array" : [
+    0, -1, -1, -1,
+    -1,-1,-1,-1,
+    4, -1, -1, 8,
+    -1, -1, -1, -1,
+    -1, 16, -1,-1
+  ],
+    "mapping" : [
+      0,0,0,1,
+      2,4,4,3,
+      3,3,3,3,
+      3,3,3,3,
+      3,3,3,3
+    ],
+    "story_backgrounds" : [
+      "tutorial/black_bg.jpg",
+      "tutorial/fluzwakes_bg.jpg",
+      "tutorial/storynoeyes_bg.jpg",
+      "tutorial/storyeyes_bg.jpg",
+      "tutorial/storypast_bg.jpg"
+    ],
+    "dialogues" : [
+      "tutorial/1.png",
+      "tutorial/2.png",
+      "tutorial/3.png",
+      "tutorial/4.png",
+      "tutorial/5.png",
+      "tutorial/6.png",
+      "tutorial/clear.png",
+      "tutorial/clear.png",
+      "tutorial/7.png",
+      "tutorial/8.png",
+      "tutorial/9.png",
+      "tutorial/10.png",
+      "tutorial/11.png",
+      "tutorial/12.png",
+      "tutorial/13.png",
+      "tutorial/14.png",
+      "tutorial/15.png",
+      "tutorial/16.png",
+      "tutorial/17.png",
+      "tutorial/18.png"
+    ]
+  ,
+  "cards": {
+    "c1": [
+      "[Left mouse click] and hold to aim your dash, dash into door!"
+    ],
+    "c2": [
+      "Every time you stick to a platform, your dash refreshes."
+    ],
+    "c3": [
+      "While aiming your dash, move the mouse closer to Fluz to adjust dash distance"
+    ],
+    "c4": [
+      "[Left mouse click] in mid air to get a mid-air dash (2 dashes total) "
+    ],
+    "c5": [
+      "Don’t touch spikes"
+    ],
+    "c6": [
+      "You can stick to any side of the platforms"
+    ],
+    "c7": [
+      "Hold [X] to dampen your horizontal motion."
+    ],
+    "c8": [
+      "Hold [X] to dampen your horizontal motion."
+    ],
+    "c9": [
+      "Press [SPACE] to timeshift to the past or back to the present"
+    ],
+    "c10": [
+      "Some platforms exist in both times, some only in one."
+    ],
+    "c11": [
+      "Some platforms exist in both times, some only in one."
+    ],
+    "c12": [
+      "These are EMITTERS, they shoot ORBS in one direction.",
+      "ORBS can harm you."
+    ],
+    "c13": [
+      "These are emitters, they shoot orbs in one direction.",
+      "Orbs can harm you."
+    ],
+    "c14": [
+      "Dash into orb while holding down the [right mouse button] (or C) to catch it! Don’t let go.",
+      "Once caught, release [right mouse button] (or C) to dash forward and shoot orb in the opposite direction. "
+    ],
+    "c15": [
+      "Dash into orb while holding down the [right mouse button] (or C) to catch it! Don’t let go.",
+      "Once caught, release [right mouse button] (or C) to dash forward and shoot orb in the opposite direction. "
+    ],
+    "c16": [
+      "After throwing a orbs, there's one dash left!"
+    ],
+    "c17": [
+      "You can chain together catches to cover large distances."
+    ],
+    "c18": [
+      "You can chain together catches to cover large distances.",
+      "You can timeshift while holding an orb to bring it with you."
+    ],
+    "c19": [
+      "This is a GUARDIAN; unlike emitters, GUARDIANS must be defeated to unlock the gate.",
+      "Defeat it by hitting it with an orb from another time; it is immune to its own orbs."
+    ],
+    "c20": [
+      "The guardian doesn’t notice you until your first move.",
+      "You can only catch in mid-air. "
+    ],
+    "c21": [
+      "There are guardians in the past and the present."
+    ]
+  }
+}
+

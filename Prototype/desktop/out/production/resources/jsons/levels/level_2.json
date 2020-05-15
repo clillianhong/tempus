@@ -1,0 +1,22 @@
+{
+  "level": 2,
+  "room_count": 15,
+  "rooms" : [
+    "jsons/rooms/2-1.json",
+    "jsons/rooms/2-2.json",
+    "jsons/rooms/2-3.json",
+    "jsons/rooms/2-4.json",
+    "jsons/rooms/2-5.json",
+    "jsons/rooms/2-6.json",
+    "jsons/rooms/2-7.json",
+    "jsons/rooms/2-8.json",
+    "jsons/rooms/2-9.json",
+    "jsons/rooms/2-10.json",
+    "jsons/rooms/2-11.json",
+    "jsons/rooms/2-12.json",
+    "jsons/rooms/2-13.json",
+    "jsons/rooms/2-14.json",
+    "jsons/rooms/2-15.json"
+  ]
+}
+

@@ -61,6 +61,8 @@ public class MusicController {
 
     private boolean shifted;
 
+    private float volume;
+
     /** The reader to process JSON files */
     protected JsonReader jsonReader;
     /** The JSON asset directory */
@@ -76,6 +78,7 @@ public class MusicController {
         actives = new ObjectMap<String, ActiveMusic>();
         collection = new Array<String>();
         shifted = false;
+        volume = 1;
     }
 
     /**
@@ -90,6 +93,22 @@ public class MusicController {
             controller = new MusicController();
         }
         return controller;
+    }
+
+    /**
+     * returns the volume modifier
+     * @return the volume modifier
+     */
+    public float getVolume(){
+        return volume;
+    }
+
+    /**
+     * sets the new volume modifier
+     * @param v new volume modifier
+     */
+    public void setVolume(float v){
+        volume = v;
     }
 
     /// Music Management
@@ -184,7 +203,7 @@ public class MusicController {
         }
 
         // Play the new sound and add it
-        music.setVolume(volume);
+        music.setVolume(volume * this.volume);
         music.play();
         if (loop) {
             music.setLooping(true);
@@ -267,19 +286,19 @@ public class MusicController {
                 //present_music.setVolume(0);
                 //past_music.setVolume(1);
                 if (presVol > 0) {
-                    present_music.setVolume(Math.max(0, presVol - crossfade));
+                    present_music.setVolume(Math.max(0, presVol - crossfade) * volume);
                 }
-                if (pastVol < 1) {
-                    past_music.setVolume(Math.min(1, pastVol + crossfade));
+                if (pastVol < volume) {
+                    past_music.setVolume(Math.min(1, pastVol + crossfade)* volume);
                 }
             } else {
                 //present_music.setVolume(1);
                 //past_music.setVolume(0);
-                if (presVol < 1) {
-                    present_music.setVolume(Math.max(1, presVol + crossfade));
+                if (presVol < volume) {
+                    present_music.setVolume(Math.max(1, presVol + crossfade)* volume);
                 }
                 if (pastVol > 0) {
-                    past_music.setVolume(Math.min(0, pastVol - crossfade));
+                    past_music.setVolume(Math.min(0, pastVol - crossfade)* volume);
                 }
             }
         }

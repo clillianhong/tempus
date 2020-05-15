@@ -238,6 +238,18 @@ public class TutorialController extends LevelController {
 
     }
 
+    @Override
+    public void resetGame() {
+        isHelp = false;
+        inputReady = false;
+        if(dialogues!= null){
+            dialogueNum  = ogDialogueNum;
+            bgNum = (int) dlMap[dialogueNum];
+        }
+        isTutorial = true;
+        super.resetGame();
+    }
+
     public void nextDialogue(){
         dialogueNum++;
         if(dialogueNum >= lastDialogueIndex){

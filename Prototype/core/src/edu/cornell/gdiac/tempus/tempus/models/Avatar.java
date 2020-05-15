@@ -958,16 +958,17 @@ public class Avatar extends CapsuleObstacle {
             body.applyForce(forceCache, getPosition(), true);
             hasDashed = true;
         }
-        /* else {
-            body.applyForce(forceCache,getPosition(),true);
-        }*/
+        else {
+            //  body.applyForce(forceCache,getPosition(),true);
+            //}
 
-        // Velocity too high, clamp it
-        if (Math.abs(getVX()) >= getMaxSpeed()) {
-            setVX(Math.signum(getVX())*getMaxSpeed());
-        } else {
-            forceCache.set(getMovement(),0);
-            body.applyForce(forceCache,getPosition(),true);
+            // Velocity too high, clamp it
+            if (Math.abs(getVX()) >= getMaxSpeed()) {
+                setVX(Math.signum(getVX()) * getMaxSpeed());
+            } else {
+                forceCache.set(getMovement(), 0);
+                body.applyForce(forceCache, getPosition(), true);
+            }
         }
 //        // Jump!
 //        if (isJumping()) {
@@ -1148,7 +1149,7 @@ public class Avatar extends CapsuleObstacle {
         if (frame_cooldown > 0) {
             frame_cooldown--;
             return;
-        } else frame_cooldown = FRAME_RATE;
+        } else frame_cooldown = Gdx.graphics.getFramesPerSecond()/10;
 
         // Manage current frame to draw
         if (currentStrip.getFrame() < currentStrip.getSize()-1) {

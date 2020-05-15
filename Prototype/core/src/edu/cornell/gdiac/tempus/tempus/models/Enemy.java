@@ -1,5 +1,6 @@
 package edu.cornell.gdiac.tempus.tempus.models;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -191,10 +192,12 @@ public class Enemy extends CapsuleObstacle {
         // Minimize turret textures
         if (entitytype.equals("present")) {
             minimizeScale = 0.4f;
-            FRAME_RATE = 10;
+//            FRAME_RATE = 10;
+            FRAME_RATE = Gdx.graphics.getFramesPerSecond()/6;
         } else if (entitytype.equals("past")) {
             minimizeScale = 0.4f;
-            FRAME_RATE = 10;
+//            FRAME_RATE = 10;
+            FRAME_RATE = Gdx.graphics.getFramesPerSecond()/6;
         }
 
         setPosition(pos[0], pos[1]);
@@ -277,7 +280,8 @@ public class Enemy extends CapsuleObstacle {
 
         case 2:
             ai = EnemyType.TELEPORT;
-            FRAME_RATE = 11;
+//            FRAME_RATE = 11;
+            FRAME_RATE = Gdx.graphics.getFramesPerSecond()/4;
             neutralTexture = JsonAssetManager.getInstance().getEntry(("enemyteleporting" + "_" + entitytype), FilmStrip.class);
             attackingTexture = JsonAssetManager.getInstance().getEntry(("enemyteleporting_activate"), FilmStrip.class);
             tpEndTexture = JsonAssetManager.getInstance().getEntry(("enemyteleporting_deactivate"), FilmStrip.class);
@@ -294,7 +298,8 @@ public class Enemy extends CapsuleObstacle {
 
         case 4:
             ai = EnemyType.FLY;
-            FRAME_RATE = 6;
+//            FRAME_RATE = 6;
+            FRAME_RATE = Gdx.graphics.getFramesPerSecond()/10;
             neutralTexture = JsonAssetManager.getInstance().getEntry(("enemyflying" + "_" + entitytype), FilmStrip.class);
             attackingTexture = neutralTexture;
             minimizeScale = 0.5f;

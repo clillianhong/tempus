@@ -608,11 +608,11 @@ public class LevelController extends WorldController {
 
 //		earthTile = JsonAssetManager.getInstance().getEntry("earth", TextureRegion.class);
 
-		float[] newPlatCapsule = {0.5f, 1.1f, 0.6f, 1.1f, 2.5f, 1.1f, 2.6f, 1.1f, 2.6f, 0.6f, 2.0f, 0.3f, 1.1f, 0.3f, 0.5f, 0.6f};
-		float[] newPlatDiamond = {0.4f, 1.8f, 0.5f, 1.8f, 2.1f, 1.8f, 2.2f, 1.8f, 1.4f, 0.1f};
+		float[] newPlatCapsule = {0.5f, 1.1f, 0.6f, 1.1f, 2.4f, 1.1f, 2.6f, 1.1f, 2.6f, 0.6f, 2.0f, 0.3f, 1.1f, 0.3f, 0.5f, 0.6f};
+		float[] newPlatDiamond = {0.4f, 1.8f, 0.5f, 1.8f, 2.0f, 1.8f, 2.2f, 1.8f, 1.4f, 0.1f};
 		float[] newPlatRounded = {0.4f, 1.4f, 0.8f, 1.7f, 2.1f, 1.7f, 2.4f, 1.4f, 2.3f, 0.8f, 1.7f, 0.3f, 1.1f, 0.3f};
 		float[] newSpikes = {0.3f, -0.6f, 0.0f, -0.2f, -0.6f, 0.0f, -0.5f, 0.4f, 0.0f, 0.6f, 0.4f, -0.2f, 0.6f, -0.3f};
-		float[] newPlatLongcapsule = {0.5f, 1.1f, 0.6f, 1.1f, 4.8f, 1.1f, 4.9f, 1.1f, 4.9f, 0.6f, 4.3f, 0.3f, 3.4f, 0.3f,
+		float[] newPlatLongcapsule = {0.5f, 1.1f, 0.6f, 1.1f, 4.7f, 1.1f, 4.9f, 1.1f, 4.9f, 0.6f, 4.3f, 0.3f, 3.4f, 0.3f,
 				2.7f, 0.5f, 2.0f, 0.3f, 1.1f, 0.3f, 0.5f, 0.6f};
 		float[] newPlatTall = {0.4f, 3.9f, 0.5f, 3.9f, 1.6f, 3.9f, 1.7f, 3.9f, 1.1f, 0.5f};
 		float[] newPlatPillar = {1.2f, 4.0f, 1.3f, 4.0f, 2.0f, 4.0f, 2.1f, 4.0f, 2.1f, 1.0f, 1.2f, 1.0f};
@@ -1019,8 +1019,9 @@ public class LevelController extends WorldController {
 
 		if (begincount > 0) {
 			begincount--;
-		}else if(!inputReady){
-			inputReady = true;
+			if(begincount == 0){
+				inputReady = true;
+			}
 		}
 
 		if(failed && countdown==0){
@@ -1107,7 +1108,9 @@ public class LevelController extends WorldController {
 		// world.step(WORLD_STEP,WORLD_VELOC,WORLD_POSIT)
 		InputController input = InputController.getInstance();
 
+		//System.out.println("input ready: " + inputReady);
 		if (inputReady && input.didPause() && !paused) {
+			System.out.println("I PAUSED YA");
 			pauseGame();
 		}
 
@@ -1139,13 +1142,15 @@ public class LevelController extends WorldController {
 			avatar.setShifted(avatar.getShifted() - 1);
 		}
 
+		float delta = 1.0f/Gdx.graphics.getFramesPerSecond();
+//		float delta = Gdx.graphics.getDeltaTime();
 		// test slow down time
 		if (timeFreeze) {
-			world.step(WORLD_STEP / 8, WORLD_VELOC, WORLD_POSIT);
+			world.step(delta / 8, WORLD_VELOC, WORLD_POSIT);
 			enemyController.slowCoolDown(true);
 
 		} else {
-			world.step(WORLD_STEP, WORLD_VELOC, WORLD_POSIT);
+			world.step(delta, WORLD_VELOC, WORLD_POSIT);
 			enemyController.slowCoolDown(false);
 		}
 		avatar.decImmortality();
@@ -1235,8 +1240,8 @@ public class LevelController extends WorldController {
 					avatar.setDashStartPos(avatar.getPosition().cpy());
 					avatar.setDashDistance(Math.min(avatar.getDashRange(), mousePos.cpy().sub(avatar.getPosition()).len()));
 					avatar.setDashForceDirection(mousePos.cpy().sub(avatar.getPosition()));
-//				avatar.setStartedDashing(1);
-					avatar.setDashCounter(4);
+					//avatar.setStartedDashing(180/Gdx.graphics.getFramesPerSecond());
+					avatar.setDashCounter(Gdx.graphics.getFramesPerSecond()/15);
 					if (Math.abs(mousePos.cpy().sub(avatar.getPosition()).angleRad() + Math.PI / 2 - avatar.getAngle()) > Math.PI / 2.5f) {
 						avatar.setDimension(avatar.width / 4f, avatar.height / 4f);
 						avatar.setDensity(avatar.getDensity() * 16f);
@@ -1267,7 +1272,7 @@ public class LevelController extends WorldController {
 					}
 				}
 			}
-			avatar.setShifted(7);
+			avatar.setShifted(8 * Gdx.graphics.getFramesPerSecond() / 60);
 			if (shifted) {
 				JsonValue ripple = assetDirectory.get("sounds").get("ripple_to_past");
 				SoundController.getInstance().play(ripple.get("file").asString(), ripple.get("file").asString(), false, EFFECT_VOLUME * 2);
@@ -1722,7 +1727,6 @@ public class LevelController extends WorldController {
 					rippleOn = true;
 					countdown = Gdx.graphics.getFramesPerSecond();
 					rippleSpeed = 0.2f;
-
 				}
 				minAlpha = 0.5f;
 				ripple_intensity = 0.09f;
