@@ -35,6 +35,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import edu.cornell.gdiac.tempus.tempus.models.ScreenExitCodes;
 import edu.cornell.gdiac.util.*;
 import jdk.nashorn.internal.runtime.JSONFunctions;
@@ -247,11 +248,11 @@ public class LoadingMode implements Screen {
 		if (progress >= 1.0f) {
 			this.progress = 1.0f;
 		}
-		animeframe += 0.12f;
+		animeframe += delta*6f;
 		if (animeframe >= 14) {
-			animeframe -= 14;
+			animeframe = 0;
 		}
-		circleAngle += 0.1f;
+		circleAngle += delta*5f;
 	}
 
 	String loadingMessage;
