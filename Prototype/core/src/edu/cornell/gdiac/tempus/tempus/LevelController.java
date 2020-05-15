@@ -60,6 +60,9 @@ import static edu.cornell.gdiac.tempus.tempus.models.EntityType.PRESENT;
  * multiple instances place nicely with the static assets.
  */
 public class LevelController extends WorldController {
+
+	/** STARTUP INPUT DELAY COUNTER **/
+	protected int BEGIN_COUNT_OG = Gdx.graphics.getFramesPerSecond()/2;
 	/** Stage for adding UI components **/
 	protected Skin skin;
 
@@ -355,7 +358,7 @@ public class LevelController extends WorldController {
 		timeFreeze = false;
 		json_filepath = json;
 		numEnemies = 0;
-		begincount = 20;
+		begincount = BEGIN_COUNT_OG;
 		enemyController = new EnemyController(enemies, objects, avatar, world, scale, this, assetDirectory);
 		isTutorial = false;
 		ripple_intensity = 0.009f;
@@ -441,7 +444,7 @@ public class LevelController extends WorldController {
 		rippleSpeed = 0.25f;
 		rippleOn = false;
 
-		begincount = 20;
+		begincount = BEGIN_COUNT_OG;
 		// world = new World(gravity, false);
 		world.setContactListener(collisionController);
 		// world.setContactListener(this);
@@ -530,7 +533,7 @@ public class LevelController extends WorldController {
 		ripple_intensity = 0.009f;
 		rippleSpeed = 0.25f;
 		rippleOn = false;
-		begincount = 20;
+		begincount = BEGIN_COUNT_OG;
 		updateShader();
 		// world = new World(gravity, false);
 		world.setContactListener(collisionController);
@@ -931,7 +934,7 @@ public class LevelController extends WorldController {
 
 	public void unpauseGame() {
 		paused = false;
-		begincount = 30;
+		begincount = BEGIN_COUNT_OG;
 		pauseButtonContainer.setVisible(false);
 		pauseTable.setVisible(false);
 
@@ -1711,13 +1714,13 @@ public class LevelController extends WorldController {
 
 				if(GameStateManager.getInstance().lastRoom()){
 					rippleOn = true;
-					countdown = 200;
+					countdown = Gdx.graphics.getFramesPerSecond()*3;
 					rippleSpeed = 0.1f;
 
 					//TODO: ADD END LEVEL STATE
 				}else{
 					rippleOn = true;
-					countdown = 60;
+					countdown = Gdx.graphics.getFramesPerSecond();
 					rippleSpeed = 0.2f;
 
 				}

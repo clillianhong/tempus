@@ -162,7 +162,7 @@ public abstract class WorldController implements Screen {
 	/** Exit code for jumping back to previous level */
 	public static final int EXIT_PREV = 2;
     /** How many frames after winning/losing do we continue? */
-	public static final int EXIT_COUNT = 20;
+	public static final int EXIT_COUNT = Gdx.graphics.getFramesPerSecond()/3;
 
 	/** The amount of time for a physics engine step. */
 	public static final float WORLD_STEP = 1/60.0f;
@@ -276,7 +276,7 @@ public abstract class WorldController implements Screen {
 	public void setFailure(boolean value) {
 		if (value) {
 //			countdown = EXIT_COUNT;
-			countdown = 20;
+			countdown = EXIT_COUNT;
 		}
 		failed = value;
 	}

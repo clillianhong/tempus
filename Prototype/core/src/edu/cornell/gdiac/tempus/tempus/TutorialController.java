@@ -244,7 +244,7 @@ public class TutorialController extends LevelController {
             cutCont.setVisible(false);
             edgeContainer.setActor(tableStack);
             inputReady = false;
-            begincount = 20;
+            begincount = BEGIN_COUNT_OG;
         }else{
             if(dlMap[dialogueNum] != bgNum){
                 bgNum = (int) dlMap[dialogueNum];
