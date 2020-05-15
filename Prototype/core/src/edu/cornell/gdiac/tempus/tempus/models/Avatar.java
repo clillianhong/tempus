@@ -89,7 +89,7 @@ public class Avatar extends CapsuleObstacle {
     private static final float SSHRINK = 0.6f;
 
     /** The current immortality frame */
-    private int immortality;
+    private float immortality;
     private GameCanvas canvas;
     /** The threshold for immortality */
     private static final int threshold = 120;
@@ -677,16 +677,16 @@ public class Avatar extends CapsuleObstacle {
      * Returns the current immortality frame of the player
      * @return the current immortality frame
      */
-    public int getImmmortality(){return immortality;}
+    public float getImmmortality(){return immortality;}
 
     /**
      * Decrements the immortality frame
      */
-    public void  decImmortality(){
+    public void  decImmortality(float dec){
         if (immortality <= 0) {
             immortality = 0;
         }
-        immortality -- ;
+        immortality -= dec ;
     }
 
     /**

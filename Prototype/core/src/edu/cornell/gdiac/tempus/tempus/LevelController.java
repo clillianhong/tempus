@@ -1116,7 +1116,7 @@ public class LevelController extends WorldController {
 
 		//System.out.println("input ready: " + inputReady);
 		if (inputReady && input.didPause() && !paused) {
-			System.out.println("I PAUSED YA");
+			//System.out.println("I PAUSED YA");
 			pauseGame();
 		}
 
@@ -1159,7 +1159,7 @@ public class LevelController extends WorldController {
 			world.step(delta, WORLD_VELOC, WORLD_POSIT);
 			enemyController.slowCoolDown(false);
 		}
-		avatar.decImmortality();
+		avatar.decImmortality(60f/Gdx.graphics.getFramesPerSecond());
 		int t = avatar.getStartedDashing();
 		if (t > 0) {
 			t = t - 1;
