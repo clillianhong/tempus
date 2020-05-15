@@ -1139,7 +1139,7 @@ public class LevelController extends WorldController {
 			avatar.setShifted(avatar.getShifted() - 1);
 		}
 
-		float delta = 1f/Gdx.graphics.getFramesPerSecond();
+		float delta = 1.0f/Gdx.graphics.getFramesPerSecond();
 //		float delta = Gdx.graphics.getDeltaTime();
 		// test slow down time
 		if (timeFreeze) {
@@ -1237,7 +1237,7 @@ public class LevelController extends WorldController {
 					avatar.setDashStartPos(avatar.getPosition().cpy());
 					avatar.setDashDistance(Math.min(avatar.getDashRange(), mousePos.cpy().sub(avatar.getPosition()).len()));
 					avatar.setDashForceDirection(mousePos.cpy().sub(avatar.getPosition()));
-//				avatar.setStartedDashing(1);
+					//avatar.setStartedDashing(180/Gdx.graphics.getFramesPerSecond());
 					avatar.setDashCounter(4);
 					if (Math.abs(mousePos.cpy().sub(avatar.getPosition()).angleRad() + Math.PI / 2 - avatar.getAngle()) > Math.PI / 2.5f) {
 						avatar.setDimension(avatar.width / 4f, avatar.height / 4f);

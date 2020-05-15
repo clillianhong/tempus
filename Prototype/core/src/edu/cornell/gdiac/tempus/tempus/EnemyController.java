@@ -190,7 +190,7 @@ public class EnemyController {
     public void setBulletVelocity(float offset, Enemy enemy) {
         Vector2 projVel = target.getPosition().sub(enemy.getPosition());
         projVel.y -= offset;
-        enemy.setProjVel(projVel.nor().scl(9));
+        enemy.setProjVel(projVel.nor().scl(8));
     }
 
     /**
