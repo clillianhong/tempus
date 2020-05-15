@@ -114,6 +114,8 @@ public class SoundController {
 	/** The number of sounds we have played this animation frame */
 	private int current;
 
+	private float volume;
+
 	/** 
 	 * Creates a new SoundController with the default settings.
 	 */
@@ -126,6 +128,7 @@ public class SoundController {
 		timeLimit = DEFAULT_LIMIT;
 		frameLimit = DEFAULT_FRAME;
 		current = 0;
+		volume = 1;
 	}
 
 	/**
@@ -140,6 +143,22 @@ public class SoundController {
 			controller = new SoundController();
 		}
 		return controller;
+	}
+
+	/**
+	 * returns the volume modifier
+	 * @return the volume modifier
+	 */
+	public float getVolume(){
+		return volume;
+	}
+
+	/**
+	 * sets the new volume modifier
+	 * @param v new volume modifier
+	 */
+	public void setVolume(float v){
+		volume = v;
 	}
 	
 	/// Properties
@@ -325,7 +344,7 @@ public class SoundController {
 		}
 		
 		// Play the new sound and add it
-		long id = sound.play(volume);
+		long id = sound.play(volume * this.volume);
 		if (id == -1) {
 			return false;
 		} else if (loop) {
