@@ -339,6 +339,9 @@ public class LevelController extends WorldController {
 
 	protected OrthographicCamera camera;
 
+	/** is the timeshift ripple active */
+	protected boolean shiftripple;
+
 	/**
 	 * Creates and initialize a new instance of the platformer game
 	 *
@@ -352,6 +355,7 @@ public class LevelController extends WorldController {
 		shifted = false;
 		paused = false;
 		prepause = false;
+		shiftripple = false;
 		debug = false;
 		timeFreeze = false;
 		json_filepath = json;
@@ -415,6 +419,7 @@ public class LevelController extends WorldController {
 		// Vector2 gravity = new Vector2(world.getGravity());
 		drawEndRoom = false;
 		inputReady = false;
+		shiftripple = false;
 		drawFadeAlpha = 0;
 		canvas.getSpriteBatch().setColor(1,1,1,1);
 		canvas.setBlendState(GameCanvas.BlendState.NO_PREMULT);
@@ -471,6 +476,7 @@ public class LevelController extends WorldController {
 		setFailure(false);
 		resetTimer();
 		drawEndRoom = false;
+		shiftripple = false;
 		drawFadeAlpha = 0;
 		stage.clear();
 		stage.getBatch().setColor(1,1,1,1);
@@ -1202,7 +1208,7 @@ public class LevelController extends WorldController {
 		} else {
 			boolean dashAttempt = InputController.getInstance().releasedLeftMouseButton();
 			if (inputReady && dashAttempt) {
-				if(avatar.getNumDashes()==1){
+				if(avatar.getNumDashes()==1 && !shiftripple){
 					rippleOn = true;
 					ticks = 0;
 					m_rippleDistance = 0;
@@ -1258,7 +1264,7 @@ public class LevelController extends WorldController {
 			ticks = 0;
 			m_rippleDistance = 0;
 			m_rippleRange = 0;
-
+			shiftripple = true;
 
 			if (avatar.isSticking()) {
 				avatar.resetDashNum(-1);
@@ -1329,6 +1335,7 @@ public class LevelController extends WorldController {
 				ticks = 0;
 				resetRipple();
 				updateShader();
+				shiftripple = false;
 			}
 			m_rippleDistance += rippleSpeed * ticks;
 			m_rippleRange = (1 - m_rippleDistance / maxRippleDistance) * ripple_intensity;
