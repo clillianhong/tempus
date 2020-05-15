@@ -1719,7 +1719,6 @@ public class LevelController extends WorldController {
 					rippleOn = true;
 					countdown = 60;
 					rippleSpeed = 0.2f;
-
 				}
 				minAlpha = 0.5f;
 				ripple_intensity = 0.09f;
