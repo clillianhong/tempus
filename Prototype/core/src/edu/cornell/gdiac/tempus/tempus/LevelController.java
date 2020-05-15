@@ -1139,9 +1139,8 @@ public class LevelController extends WorldController {
 			avatar.setShifted(avatar.getShifted() - 1);
 		}
 
-		float delta = dt;
-
-
+		float delta = 1f/Gdx.graphics.getFramesPerSecond();
+//		float delta = Gdx.graphics.getDeltaTime();
 		// test slow down time
 		if (timeFreeze) {
 			world.step(delta / 8, WORLD_VELOC, WORLD_POSIT);
