@@ -1105,9 +1105,7 @@ public class LevelController extends WorldController {
 		// world.step(WORLD_STEP,WORLD_VELOC,WORLD_POSIT)
 		InputController input = InputController.getInstance();
 
-		System.out.println("input ready: " + inputReady);
 		if (inputReady && input.didPause() && !paused) {
-			System.out.println("I PAUSED YA");
 			pauseGame();
 		}
 
@@ -1139,7 +1137,8 @@ public class LevelController extends WorldController {
 			avatar.setShifted(avatar.getShifted() - 1);
 		}
 
-		float delta = dt * 0.8f;
+		float delta = 1f/Gdx.graphics.getFramesPerSecond();
+//		float delta = Gdx.graphics.getDeltaTime();
 		// test slow down time
 		if (timeFreeze) {
 			world.step(delta / 8, WORLD_VELOC, WORLD_POSIT);
