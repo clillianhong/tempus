@@ -1148,7 +1148,7 @@ public class Avatar extends CapsuleObstacle {
         if (frame_cooldown > 0) {
             frame_cooldown--;
             return;
-        } else frame_cooldown = FRAME_RATE;
+        } else frame_cooldown = Gdx.graphics.getFramesPerSecond()/10;
 
         // Manage current frame to draw
         if (currentStrip.getFrame() < currentStrip.getSize()-1) {

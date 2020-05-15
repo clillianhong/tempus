@@ -1,5 +1,6 @@
 package edu.cornell.gdiac.tempus.tempus.models;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -44,9 +45,12 @@ public class Door extends BoxObstacle {
 
     /** The frame rate for the animation. How many seconds should elapse
      * to move to the next frame. Lower values give a faster playback. */
-    private static float FRAME_RATE = 15;
-    /** The frame cooldown for the animation */
-    private static float frame_cooldown = FRAME_RATE;
+//    private static float FRAME_RATE = 15;
+//    /** The frame cooldown for the animation */
+    private static float frame_cooldown = 15;
+
+//    private float FRAME_RATE;
+//    private float frame_cooldown;
 
     /** Minimize the size of the texture by the factor */
     private float minimizeScale = 1;
@@ -164,7 +168,7 @@ public class Door extends BoxObstacle {
             frame_cooldown--;
             return;
         } else
-            frame_cooldown = FRAME_RATE;
+            frame_cooldown = Gdx.graphics.getFramesPerSecond()/10 ;
 
         if (currentStrip.getFrame() < currentStrip.getSize() - 1) {
             currentStrip.setFrame(currentStrip.getFrame() + 1);

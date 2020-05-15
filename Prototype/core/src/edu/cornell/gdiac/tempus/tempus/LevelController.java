@@ -1016,8 +1016,9 @@ public class LevelController extends WorldController {
 
 		if (begincount > 0) {
 			begincount--;
-		}else if(!inputReady){
-			inputReady = true;
+			if(begincount == 0){
+				inputReady = true;
+			}
 		}
 
 		if(failed && countdown==0){
@@ -1104,7 +1105,9 @@ public class LevelController extends WorldController {
 		// world.step(WORLD_STEP,WORLD_VELOC,WORLD_POSIT)
 		InputController input = InputController.getInstance();
 
+		System.out.println("input ready: " + inputReady);
 		if (inputReady && input.didPause() && !paused) {
+			System.out.println("I PAUSED YA");
 			pauseGame();
 		}
 
@@ -1136,13 +1139,14 @@ public class LevelController extends WorldController {
 			avatar.setShifted(avatar.getShifted() - 1);
 		}
 
+		float delta = dt * 0.8f;
 		// test slow down time
 		if (timeFreeze) {
-			world.step(WORLD_STEP / 8, WORLD_VELOC, WORLD_POSIT);
+			world.step(delta / 8, WORLD_VELOC, WORLD_POSIT);
 			enemyController.slowCoolDown(true);
 
 		} else {
-			world.step(WORLD_STEP, WORLD_VELOC, WORLD_POSIT);
+			world.step(delta, WORLD_VELOC, WORLD_POSIT);
 			enemyController.slowCoolDown(false);
 		}
 		avatar.decImmortality();
