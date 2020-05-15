@@ -1238,7 +1238,7 @@ public class LevelController extends WorldController {
 					avatar.setDashDistance(Math.min(avatar.getDashRange(), mousePos.cpy().sub(avatar.getPosition()).len()));
 					avatar.setDashForceDirection(mousePos.cpy().sub(avatar.getPosition()));
 					//avatar.setStartedDashing(180/Gdx.graphics.getFramesPerSecond());
-					avatar.setDashCounter(4);
+					avatar.setDashCounter(Gdx.graphics.getFramesPerSecond()/15);
 					if (Math.abs(mousePos.cpy().sub(avatar.getPosition()).angleRad() + Math.PI / 2 - avatar.getAngle()) > Math.PI / 2.5f) {
 						avatar.setDimension(avatar.width / 4f, avatar.height / 4f);
 						avatar.setDensity(avatar.getDensity() * 16f);
@@ -1269,7 +1269,7 @@ public class LevelController extends WorldController {
 					}
 				}
 			}
-			avatar.setShifted(7);
+			avatar.setShifted(8 * Gdx.graphics.getFramesPerSecond() / 60);
 			if (shifted) {
 				JsonValue ripple = assetDirectory.get("sounds").get("ripple_to_past");
 				SoundController.getInstance().play(ripple.get("file").asString(), ripple.get("file").asString(), false, EFFECT_VOLUME * 2);
