@@ -284,7 +284,7 @@ public class GameStateManager {
         levels[0] = loadTutorial(levelDirectories[0]);
         levels[0].preloadLevel();
         JsonValue gameTime = gameDirectory.get("gameTimes");
-        for (int i = 0; i < num_levels; i++) {
+        for (int i = 1; i < num_levels; i++) {
             // System.out.println("GDX ERROR "+ (i+1) +": " + Gdx.gl.glGetError());
 
             levelDirectories[i] = jsonReader.parse(Gdx.files.internal(level_paths[i]));
