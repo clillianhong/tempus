@@ -34,21 +34,27 @@ public class GameStateManager {
 
     private class GameState {
         public int highest_level;
-        public int room_unlocked;
+        public int[] room_unlocked;
         public int num_levels;
         public String[] level_jsons;
         public ArrayList<float[]> gameTimes;
 
-        public GameState(int h, int r, int n, String[] lj, ArrayList<float[]> times) {
+        public GameState(int h, int[] r, int n, String[] lj, ArrayList<float[]> times) {
             highest_level = h;
-            room_unlocked = r;
+            room_unlocked = new int[n];
+            for (int i = 0; i < n; i++) {
+                room_unlocked[i] = r[i];
+            }
             num_levels = n;
             level_jsons = lj;
             gameTimes = times;
         }
-        public GameState(int h, int r, int n, String[] lj) {
+        public GameState(int h, int[] r, int n, String[] lj) {
             highest_level = h;
-            room_unlocked = r;
+            room_unlocked = new int[n];
+            for (int i = 0; i < n; i++) {
+                room_unlocked[i] = r[i];
+            }
             num_levels = n;
             level_jsons = lj;
             gameTimes = new ArrayList<>();
@@ -62,12 +68,12 @@ public class GameStateManager {
             this.highest_level = highest_level;
         }
 
-        public int getRoom_unlocked() {
+        public int[] getRoom_unlocked() {
             return room_unlocked;
         }
 
-        public void setRoom_unlocked(int room_unlocked) {
-            this.room_unlocked = room_unlocked;
+        public void setRoom_unlocked(int i, int room_unlocked) {
+            this.room_unlocked[i] = room_unlocked;
         }
 
         public int getNum_levels() {
@@ -201,7 +207,7 @@ public class GameStateManager {
         json.setWriter(gamefile.writer(false));
         json.setOutputType(JsonWriter.OutputType.json);
         int unfinishedLevel = 3;
-        int unfinishedRoom = 9;
+        int[] unfinishedRoom = {20, 14, 14, 9};
         int num_levels = 4;
 
         String[] level_paths = {
@@ -261,7 +267,7 @@ public class GameStateManager {
             gameDirectory = jsonReader.parse(Gdx.files.external(game_state_json));
         }
         int unfinishedLevel = gameDirectory.getInt("highest_level");
-        int unfinishedRoom = gameDirectory.getInt("room_unlocked");
+        int[] unfinishedRoom = gameDirectory.get("room_unlocked").asIntArray();
         int num_levels = gameDirectory.getInt("num_levels");
         if(gameState == null){
             gameState = new GameState(unfinishedLevel, unfinishedRoom, num_levels, level_paths);
@@ -278,11 +284,11 @@ public class GameStateManager {
         levels[0] = loadTutorial(levelDirectories[0]);
         levels[0].preloadLevel();
         JsonValue gameTime = gameDirectory.get("gameTimes");
-        for (int i = 1; i < num_levels; i++) {
+        for (int i = 0; i < num_levels; i++) {
             // System.out.println("GDX ERROR "+ (i+1) +": " + Gdx.gl.glGetError());
 
             levelDirectories[i] = jsonReader.parse(Gdx.files.internal(level_paths[i]));
-            levels[i] = loadLevel(levelDirectories[i], unfinishedLevel, unfinishedRoom);
+            levels[i] = loadLevel(levelDirectories[i], unfinishedLevel, unfinishedRoom[i]);
             if (levels[i].getLevelNumber() == unfinishedLevel) {
                 highestUnlockedLevel = levels[i];
             }
@@ -324,11 +330,11 @@ public class GameStateManager {
         }
 
         if (lv == unfinishedLevel) {
-            return new LevelModel(lv, true, false, unfinishedRoom, rooms);
+        return new LevelModel(lv, true, false, unfinishedRoom, rooms);
         } else if (lv > unfinishedLevel) {
-            return new LevelModel(lv, false, false, 0, rooms);
+            return new LevelModel(lv, false, false, unfinishedRoom, rooms);
         } else {
-            return new LevelModel(lv, true, true, 0, rooms);
+            return new LevelModel(lv, true, false, unfinishedRoom, rooms);
         }
 
     }
@@ -398,6 +404,10 @@ public class GameStateManager {
         currentLevel.updateBestTime(currentLevel.getCurrentRoomNumber());
         if (is_exit) {
             boolean finished = currentLevel.stepLevel();
+            if (currentLevel.getHighestUnlockedRoom() == 10 && current_level_idx != 0){
+                highestUnlockedLevel = levels[current_level_idx + 1];
+                levels[current_level_idx + 1].unlockLevel();
+            }
             if (finished) {
                 MusicController.getInstance().stopAll();
                 levels[current_level_idx].finishLevel();
@@ -485,7 +495,9 @@ public class GameStateManager {
      */
     public void updateGameState() {
         gameState.setHighest_level(highestUnlockedLevel.getLevelNumber());
-        gameState.setRoom_unlocked(highestUnlockedLevel.getCurrentRoomNumber());
+        for (int i = 0; i < gameState.num_levels; i++) {
+            gameState.setRoom_unlocked(i, getLevel(i).getHighestUnlockedRoom());
+        }
         gameState.setGameTimes(levels);
     }
 
