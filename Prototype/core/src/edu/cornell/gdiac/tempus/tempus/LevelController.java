@@ -1276,6 +1276,11 @@ public class LevelController extends WorldController {
 					if (p.getSpace() == 3){
 						p.shift(shifted);
 					}
+				} else if (o instanceof Spikes){
+					Spikes s = (Spikes) o;
+					if (s.getSpace() == 3){
+						s.shift(shifted);
+					}
 				}
 			}
 			avatar.setShifted(8 * Gdx.graphics.getFramesPerSecond() / 60);

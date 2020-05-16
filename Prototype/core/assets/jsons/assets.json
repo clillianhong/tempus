@@ -105,7 +105,11 @@
       "wrap": false
     },
     "spikes": {
-      "file": "textures/general/spike2.png",
+      "file": "textures/general/spikey_boi_present_darkerbottom.png",
+      "wrap": true
+    },
+    "spikes_past": {
+      "file": "textures/general/spike2_darkerbottom.png",
       "wrap": true
     },
     "goal": {
