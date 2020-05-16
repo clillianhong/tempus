@@ -26,7 +26,7 @@
   },
   "avatar": {
     "pos": [
-      6.724,
+      5.724,
       3.869999999999998
     ],
     "shrink": [
@@ -120,19 +120,6 @@
       "restitution": 0.1,
       "texture": "present_capsule",
       "space": 1
-    },
-    "bothcapsule12": {
-      "name": "both_capsule",
-      "pos": [
-        5.416,
-        1.9
-      ],
-      "bodytype": "static",
-      "density": 0,
-      "friction": 0.6,
-      "restitution": 0.1,
-      "texture": "both_capsule",
-      "space": 3
     }
   },
   "diamonds": {},
