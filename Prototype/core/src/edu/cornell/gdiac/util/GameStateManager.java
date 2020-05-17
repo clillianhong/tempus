@@ -255,25 +255,28 @@ public class GameStateManager {
                 "jsons/levels/level_1.json",
                 "jsons/levels/level_2.json",
                 "jsons/levels/level_3.json"};
+        int unfinishedLevel;
+        int[] unfinishedRoom;
         // TODO: CHANGE THIS TO LOCAL (UNCOMMENT AND REPLACE LINE) FOR FINISHED VERSION
         try{
             gameDirectory = jsonReader.parse(Gdx.files.external(game_state_json));
             // parsing game_state json
+            unfinishedLevel = gameDirectory.getInt("highest_level");
+            unfinishedRoom = gameDirectory.get("room_unlocked").asIntArray();
 
 //        String[] level_paths = gameDirectory.get("level_jsons").asStringArray();
 
         }catch(Exception e){
             gameState = writeNewGameState();
             gameDirectory = jsonReader.parse(Gdx.files.external(game_state_json));
+            unfinishedLevel = gameState.getHighest_level();
+            unfinishedRoom = gameState.getRoom_unlocked();
         }
-        int unfinishedLevel = gameDirectory.getInt("highest_level");
-        int[] unfinishedRoom = gameDirectory.get("room_unlocked").asIntArray();
+
         int num_levels = gameDirectory.getInt("num_levels");
         if(gameState == null){
             gameState = new GameState(unfinishedLevel, unfinishedRoom, num_levels, level_paths);
         }
-
-//        gameDirectory = jsonReader.parse(Gdx.files.internal(game_state_json));
 
         levelDirectories = new JsonValue[num_levels];
         levels = new LevelModel[num_levels];

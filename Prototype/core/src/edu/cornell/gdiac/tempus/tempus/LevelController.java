@@ -1116,7 +1116,6 @@ public class LevelController extends WorldController {
 
 		//System.out.println("input ready: " + inputReady);
 		if (inputReady && input.didPause() && !paused) {
-			//System.out.println("I PAUSED YA");
 			pauseGame();
 		}
 
