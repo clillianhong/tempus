@@ -14,6 +14,8 @@ public class Projectile extends WheelObstacle {
 
     private Object sourceData;
 
+    private boolean slowed;
+
 
     public Projectile(EntityType type, float x, float y, float radius, Object sourceData) {
         super(x, y, radius);
@@ -21,10 +23,15 @@ public class Projectile extends WheelObstacle {
         rotation = 0;
         this.sourceData = sourceData;
         this.setSensor(true);
+        slowed = false;
     }
 
     public Object getSourceData() {
         return sourceData;
+    }
+
+    public void slow(boolean slow){
+        slowed = slow;
     }
 
     /**
@@ -50,10 +57,18 @@ public class Projectile extends WheelObstacle {
                 canvas.draw(texture, Color.WHITE, origin.x, origin.y, getX() * drawScale.x, getY() * drawScale.y, rotation, 0.005f * drawScale.x, 0.005f * drawScale.y);
             }
         }
-        if (type.equals(EntityType.PRESENT)) {
-            rotation += 0.01f;
+        if (!slowed) {
+            if (type.equals(EntityType.PRESENT)) {
+                rotation += 0.04f;
+            } else {
+                rotation += 1.0f;
+            }
         } else {
-            rotation += 1.0f;
+            if (type.equals(EntityType.PRESENT)) {
+                rotation += 0.01f;
+            } else {
+                rotation += 0.25f;
+            }
         }
     }
 }

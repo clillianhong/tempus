@@ -138,7 +138,7 @@ public class EnemyController {
         for (Enemy e: enemies) {
             if (e.getAi() != Enemy.EnemyType.TELEPORT) {
                 if (flag) {
-                    e.setLimiter(0.5f);
+                    e.setLimiter(1);
                 } else {
                     e.setLimiter(4);
                 }

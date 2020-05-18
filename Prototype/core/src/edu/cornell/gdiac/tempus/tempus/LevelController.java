@@ -1151,12 +1151,23 @@ public class LevelController extends WorldController {
 //		float delta = Gdx.graphics.getDeltaTime();
 		// test slow down time
 		if (timeFreeze) {
-			world.step(delta / 8, WORLD_VELOC, WORLD_POSIT);
+			world.step(delta / 4, WORLD_VELOC, WORLD_POSIT);
 			enemyController.slowCoolDown(true);
-
+			for (Obstacle ob : objects){
+				if (ob instanceof Projectile){
+					Projectile p = (Projectile) ob;
+					p.slow(true);
+				}
+			}
 		} else {
 			world.step(delta, WORLD_VELOC, WORLD_POSIT);
 			enemyController.slowCoolDown(false);
+			for (Obstacle ob : objects){
+				if (ob instanceof Projectile){
+					Projectile p = (Projectile) ob;
+					p.slow(false);
+				}
+			}
 		}
 		avatar.decImmortality(60f/Gdx.graphics.getFramesPerSecond());
 		int t = avatar.getStartedDashing();
@@ -1258,7 +1269,7 @@ public class LevelController extends WorldController {
 		}
 		if (inputReady && InputController.getInstance().pressedShiftKey()) {
 			// update ripple shader params
-			enemyController.setPlayerVisible(true);
+			//enemyController.setPlayerVisible(true);
 			rippleOn = true;
 			ticks = 0;
 			m_rippleDistance = 0;
