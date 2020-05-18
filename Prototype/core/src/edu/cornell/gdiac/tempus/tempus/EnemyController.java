@@ -198,8 +198,8 @@ public class EnemyController {
      *
      * @param enemy the enemy whose flying velocity needs to be set
      */
-    public void setFlyingVelocity (Enemy enemy) {
-        Vector2 vel = target.getPosition().cpy().sub(enemy.getPosition().cpy());
+    public void setFlyingVelocity (Enemy enemy, Vector2 location) {
+        Vector2 vel = location.cpy().sub(enemy.getPosition().cpy());
         if (vel != enemy.getFlyingVelocity()) {
             enemy.setLinearVelocity(enemy.getLinearVelocity().scl(.7f));
             enemy.setFlyingVelocity(vel.cpy());
@@ -242,12 +242,14 @@ public class EnemyController {
                 } else {
                     if (playerVisible) {
                         createLineOfSight(world, BULLET_OFFSET, e);
-                        setFlyingVelocity(e);
+                        setFlyingVelocity(e, target.getPosition());
                         setBulletVelocity(BULLET_OFFSET, e);
                         fly(e);
                         fire(e);
                     } else {
-                        stopFlying(e);
+//                        stopFlying(e);
+                        setFlyingVelocity(e, e.getStartPosition());
+                        fly(e);
                     }
                 }
             }
@@ -486,18 +488,21 @@ public class EnemyController {
     public void sleepIfNotInWorld() {
         for (Enemy e: enemies) {
             if (!e.isTurret()) {
-                e.setBodyType(BodyDef.BodyType.DynamicBody);
+//                e.setBodyType(BodyDef.BodyType.DynamicBody);
+                e.setActive(true);
                 if (e.getSpace() == 3) {
                     e.setIsFiring(true);
                     e.setBodyType(BodyDef.BodyType.DynamicBody);
                 } else if (!shifted && (e.getSpace() == 2)) {
-                    e.setIsFiring(false);
-                    e.setBodyType(BodyDef.BodyType.StaticBody);
+//                    e.setIsFiring(false);
+//                    e.setBodyType(BodyDef.BodyType.StaticBody);
+                    e.setActive(false);
                 } else if (shifted && (e.getSpace() == 2)) {
                     e.setIsFiring(e.getShiftedFiring());
                 } else if (shifted && (e.getSpace() == 1)) {
-                    e.setIsFiring(false);
-                    e.setBodyType(BodyDef.BodyType.StaticBody);
+//                    e.setIsFiring(false);
+//                    e.setBodyType(BodyDef.BodyType.StaticBody);
+                    e.setActive(false);
                 } else if (!shifted && (e.getSpace() == 1)) {
                     e.setIsFiring(e.getShiftedFiring());
                 }
@@ -542,7 +547,9 @@ public class EnemyController {
             } else if (e.getSpace() == 3) {
                 e.draw(canvas);
             } else if ((shifted && (e.getSpace() == 2)) || (!shifted && (e.getSpace() == 1))) { // past world
-                if (e.getAi() != Enemy.EnemyType.WALK) {
+                if (e.getAi() == Enemy.EnemyType.FLY && !playerVisible) {
+                    e.setFaceDirection((e.getX() - e.getStartPosition().x < 0 ? 1 : -1));
+                } else if (e.getAi() != Enemy.EnemyType.WALK) {
                     e.setFaceDirection((e.getX() - target.getX()) < 0 ? 1 : -1);
                 }
                 if (e.getAi() == Enemy.EnemyType.TELEPORT) {
@@ -555,11 +562,11 @@ public class EnemyController {
                         framesAfterMove += 1;
                     } else {
                         e.animate(Enemy.EnemyState.NEUTRAL, true);
-                        e.draw(canvas);
+                        e.draw(canvas, playerVisible);
                     }
                 } else {
                     e.animate(Enemy.EnemyState.NEUTRAL, true);
-                    e.draw(canvas);
+                    e.draw(canvas, playerVisible);
                 }
 //            } else if (!shifted && (e.getSpace() == 1)) { // present world
 //                e.draw(canvas);
