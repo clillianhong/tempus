@@ -407,7 +407,7 @@ public class GameStateManager {
         currentLevel.updateBestTime(currentLevel.getCurrentRoomNumber());
         if (is_exit) {
             boolean finished = currentLevel.stepLevel();
-            if (currentLevel.getHighestUnlockedRoom() == 10 && current_level_idx != 0){
+            if (currentLevel.getHighestUnlockedRoom() == 10 && current_level_idx != 0 && current_level_idx != last_level_idx){
                 highestUnlockedLevel = levels[current_level_idx + 1];
                 levels[current_level_idx + 1].unlockLevel();
             }
