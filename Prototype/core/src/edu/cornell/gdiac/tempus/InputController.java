@@ -286,6 +286,8 @@ public class InputController {
 		return rightMousePressed;
 	}
 
+	//public boolean justPressedRightMouseButton() {return rightMousePressed && !rightMousePrevious;}
+
 	/**
 	 * Returns true if the left mouse button was pressed.
 	 *

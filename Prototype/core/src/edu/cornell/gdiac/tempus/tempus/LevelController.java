@@ -121,8 +121,8 @@ public class LevelController extends WorldController {
 	float m_rippleRange;
 	boolean rippleOn;
 	float ripple_intensity;
-	float catchTicks;
-
+	//float catchTicks;
+	private boolean catchRepress;
 	float time_incr;
 
 	/** whether or not game is paused **/
@@ -369,7 +369,7 @@ public class LevelController extends WorldController {
 		ripple_intensity = 0.009f;
 		inputReady = false;
 		isLongRoom = false;
-		catchTicks = 0;
+		//catchTicks = 0;
 		// ripple shader
 		ticks = 0f;
 		rippleOn = false;
@@ -390,6 +390,7 @@ public class LevelController extends WorldController {
 		drawEndRoom = false;
 		drawFadeAlpha = 0;
 		minAlpha = 0.5f;
+		catchRepress = false;
 
 		camera = new OrthographicCamera(sw,sh);
 		viewport = new FitViewport(sw, sh, camera);
@@ -1156,19 +1157,24 @@ public class LevelController extends WorldController {
 		incrTimer(Gdx.graphics.getDeltaTime());
 
 		//check if avatar is in "catch mode"
+		if (input.releasedRightMouseButton()) {
+			catchRepress = true;
+		}
 		if (inputReady && !avatar.isCatchReady() && !avatar.isHolding() && !avatar.isSticking()
-				&& (input.pressedRightMouseButton()) && catchTicks == 0){
+				&& input.pressedRightMouseButton() && catchRepress){
 			avatar.setCatchReady(true);
-			catchTicks = 3 * Gdx.graphics.getFramesPerSecond();
+			catchRepress = false;
+			//catchTicks = 3 * Gdx.graphics.getFramesPerSecond();
 		}
-		if (catchTicks > 0){
+		/*if (catchTicks > 0){
 			catchTicks --;
-		}
-		if(catchTicks <= Gdx.graphics.getFramesPerSecond() * 2 || (inputReady && (input.releasedRightMouseButton()) || avatar.isSticking())) {
+		}*/
+		//if(catchTicks <= Gdx.graphics.getFramesPerSecond() * 2 || (inputReady && (input.releasedRightMouseButton()) || avatar.isSticking())) {
+		if(inputReady && (input.releasedRightMouseButton()) || avatar.isSticking()) {
 			avatar.setCatchReady(false);
-			if (avatar.isSticking() || avatar.isHolding() || (inputReady && (input.releasedRightMouseButton()))) {
+			/*if (avatar.isSticking() || avatar.isHolding() || (inputReady && (input.releasedRightMouseButton()))) {
 				catchTicks = 0;
-			}
+			}*/
 		}
 
 		MusicController.getInstance().update(shifted);
