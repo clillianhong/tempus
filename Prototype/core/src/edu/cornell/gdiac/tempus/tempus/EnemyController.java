@@ -76,6 +76,8 @@ public class EnemyController {
         for (Enemy e: enemies) {
             if (e.getY() < -6){
                 e.setDead();
+                //e.setRespawnQueued(true);
+                //e.setPosition(e.getStartPosition());
                 if (e.getAi() == Enemy.EnemyType.TELEPORT){
                     if (e.getSpace() == 2) {
                         platformsPast.remove(e.getCurrPlatform());
@@ -84,6 +86,19 @@ public class EnemyController {
                     }
                 }
             }
+            /*if (e.getResawnQueued()){
+                if ((shifted == true && e.getSpace() == 1) ||
+                        (shifted == false && e.getSpace() == 2)){
+                    e.setShiftQueued(true);
+                }
+            }
+            if ((!playerVisible && e.getY() < -6) || (e.getShiftQueued() && ((shifted == true && e.getSpace() == 2) ||
+                    (shifted == false && e.getSpace() == 1)))) {
+                e.setLinearVelocity(new Vector2(0,0));
+                e.setPosition(e.getStartPosition());
+                e.setShiftQueued(false);
+                e.setRespawnQueued(false);
+            }*/
             if (e.isTurret() || e.isDead()){
                 result --;
             }
@@ -347,7 +362,7 @@ public class EnemyController {
      * @param e enemy that is firing
      */
     public void fire(Enemy e) {
-        if (e.canFire()) {
+        if (e.canFire() && !e.getResawnQueued()) {
             createBullet(e);
         } else {
             e.coolDown(true);
@@ -488,21 +503,21 @@ public class EnemyController {
     public void sleepIfNotInWorld() {
         for (Enemy e: enemies) {
             if (!e.isTurret()) {
-//                e.setBodyType(BodyDef.BodyType.DynamicBody);
-                e.setActive(true);
+                e.setBodyType(BodyDef.BodyType.DynamicBody);
+                //e.setActive(true);
                 if (e.getSpace() == 3) {
                     e.setIsFiring(true);
                     e.setBodyType(BodyDef.BodyType.DynamicBody);
                 } else if (!shifted && (e.getSpace() == 2)) {
-//                    e.setIsFiring(false);
-//                    e.setBodyType(BodyDef.BodyType.StaticBody);
-                    e.setActive(false);
+                    e.setIsFiring(false);
+                    e.setBodyType(BodyDef.BodyType.StaticBody);
+                    //e.setActive(false);
                 } else if (shifted && (e.getSpace() == 2)) {
                     e.setIsFiring(e.getShiftedFiring());
                 } else if (shifted && (e.getSpace() == 1)) {
-//                    e.setIsFiring(false);
-//                    e.setBodyType(BodyDef.BodyType.StaticBody);
-                    e.setActive(false);
+                    e.setIsFiring(false);
+                    e.setBodyType(BodyDef.BodyType.StaticBody);
+                    //e.setActive(false);
                 } else if (!shifted && (e.getSpace() == 1)) {
                     e.setIsFiring(e.getShiftedFiring());
                 }

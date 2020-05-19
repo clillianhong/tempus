@@ -121,6 +121,7 @@ public class LevelController extends WorldController {
 	float m_rippleRange;
 	boolean rippleOn;
 	float ripple_intensity;
+	float catchTicks;
 
 	float time_incr;
 
@@ -365,6 +366,7 @@ public class LevelController extends WorldController {
 		isTutorial = false;
 		ripple_intensity = 0.009f;
 		inputReady = false;
+		catchTicks = 0;
 
 		// ripple shader
 		ticks = 0f;
@@ -504,7 +506,7 @@ public class LevelController extends WorldController {
 		avatar.setEnemyContact(false);
 		avatar.setCatchReady(false);
 		avatar.setPosition(avatarStart);
-		avatar.setLives(5);
+		avatar.setLives(3);
 		avatar.getBody().setLinearVelocity(0, 0);
 		avatar.setHolding(false);
 		avatar.setHeldBullet(null);
@@ -1134,11 +1136,18 @@ public class LevelController extends WorldController {
 
 		//check if avatar is in "catch mode"
 		if (inputReady && !avatar.isCatchReady() && !avatar.isHolding() && !avatar.isSticking()
-				&& (input.pressedRightMouseButton())){
+				&& (input.pressedRightMouseButton()) && catchTicks == 0){
 			avatar.setCatchReady(true);
+			catchTicks = 2 * Gdx.graphics.getFramesPerSecond();
 		}
-		if(inputReady && (input.releasedRightMouseButton()) || avatar.isSticking()){
+		if (catchTicks > 0){
+			catchTicks --;
+		}
+		if(catchTicks == Gdx.graphics.getFramesPerSecond() || (inputReady && (input.releasedRightMouseButton()) || avatar.isSticking())) {
 			avatar.setCatchReady(false);
+			if (avatar.isSticking() || avatar.isHolding() || (inputReady && (input.releasedRightMouseButton()))) {
+				catchTicks = 0;
+			}
 		}
 
 		MusicController.getInstance().update(shifted);
@@ -1616,19 +1625,20 @@ public class LevelController extends WorldController {
 	public void drawLives(GameCanvas canvas) {
 		TextureRegion life = JsonAssetManager.getInstance().getEntry("life", TextureRegion.class);
 		TextureRegion streak = JsonAssetManager.getInstance().getEntry("streak", TextureRegion.class);
-		canvas.draw(streak, Color.WHITE, 0, 0, -0.8f * scale.x, canvas.getHeight() / 2 + 2 * scale.y, 9 * scale.x,
-				9 * scale.y);
+		canvas.draw(streak, Color.WHITE, 0, 0, -0.2f * scale.x, canvas.getHeight() / 2 + 3.45f * scale.y, 6.5f * scale.x,
+				6.5f * scale.y);
 		int lvNum = GameStateManager.getInstance().getCurrentLevelIndex();
 		int rmNum = GameStateManager.getInstance().getCurrentLevel().getCurrentRoomNumber() + 1;
 		String levelInfo = "Level " + lvNum+"-"+rmNum;
 		glyphLayout.setText(displayFont, levelInfo);
-
-		displayFont.draw(canvas.getSpriteBatch(), glyphLayout, 60, canvas.getHeight()-75);
+		System.out.println(scale.x);
+		System.out.println(scale.y);
+		displayFont.draw(canvas.getSpriteBatch(), glyphLayout, 1.5f * scale.x, canvas.getHeight()-2.5f * scale.y);
 //		displayFont.draw(canvas.getSpriteBatch(), glyphLayout, -0.8f * scale.x, canvas.getHeight() / 2 + 3 * scale.y);
 
 		for (int i = 0; i < avatar.getLives(); i++) {
 			canvas.draw(life, Color.WHITE, 0, 0,
-					life.getRegionWidth() * 0.002f * scale.x + (life.getRegionWidth() * 0.005f * scale.x * i),
+					life.getRegionWidth() * 0.004f * scale.x + (life.getRegionWidth() * 0.005f * scale.x * i),
 					canvas.getHeight() - life.getRegionHeight() * 0.007f * scale.y, scale.x, scale.y);
 		}
 	}

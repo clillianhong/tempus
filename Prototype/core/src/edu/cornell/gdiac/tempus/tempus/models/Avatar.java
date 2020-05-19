@@ -721,7 +721,7 @@ public class Avatar extends CapsuleObstacle {
         setFixedRotation(true);
 
         // Gameplay attributes
-        lives = 5;
+        lives = 3;
         state = AvatarState.STANDING;
         animationState = state;
         isGrounded = false;
@@ -1193,7 +1193,7 @@ public class Avatar extends CapsuleObstacle {
         // flipping the avatar when they are sticking
         // below a platform looks off
 
-        if(catchReady){
+        if(catchReady || isHolding){
             canvas.draw(JsonAssetManager.getInstance().getEntry("catch_indicator", TextureRegion.class),
                     Color.WHITE, origin.x + 84/4f, origin.y + 60/4f,
                     getX() * drawScale.x, getY() * drawScale.y, 0,

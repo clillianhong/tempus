@@ -171,6 +171,9 @@ public class Enemy extends CapsuleObstacle {
     /** Texture for an active enemy */
     private TextureRegion activeEnemyIndicator;
 
+    private Boolean queueRespawn;
+    private Boolean shiftQueued;
+
     /**
      * Creates a turret with the provided json value
      * 
@@ -217,6 +220,8 @@ public class Enemy extends CapsuleObstacle {
         shiftedActive = isFiring;
         framesTillFire = this.cooldown;
         limiter = 4;
+        shiftQueued = false;
+        queueRespawn = false;
         setName("turret");
     }
 
@@ -239,6 +244,7 @@ public class Enemy extends CapsuleObstacle {
         setTexture(texture);
 
         setPosition(pos[0], pos[1]);
+        startPosition = getPosition();
         setDimension(texture.getRegionWidth() * shrink[0], texture.getRegionHeight() * shrink[1]);
         setType(json.get("entitytype").asString().equals("present") ? EntityType.PRESENT : PAST);
         setBodyType(json.get("bodytype").asString().equals("static") ? BodyDef.BodyType.StaticBody
@@ -258,6 +264,8 @@ public class Enemy extends CapsuleObstacle {
         isTurret = false;
         faceDirection = 1f;
         removalFrames = 60;
+        shiftQueued = false;
+        queueRespawn = false;
 //        switch (type) {
 //            case PAST:
 //                passiveEnemyIndicator = JsonAssetManager.getInstance().getEntry("enemy_passive_red", TextureRegion.class);
@@ -321,7 +329,6 @@ public class Enemy extends CapsuleObstacle {
             isFiring = false;
             setGravityScale(0);
             flyingVelocity = new Vector2(0,0);
-            startPosition = getPosition();
             break;
         }
         setFilmStrip(EnemyState.NEUTRAL, neutralTexture);
@@ -333,7 +340,25 @@ public class Enemy extends CapsuleObstacle {
         return startPosition;
     }
 
+    public Boolean getResawnQueued(){
+        return queueRespawn;
+    }
+
+    public void setRespawnQueued(boolean s){
+        queueRespawn = s;
+    }
+
+    public Boolean getShiftQueued(){
+        return shiftQueued;
+    }
+
+    public void setShiftQueued(boolean s){
+        shiftQueued = s;
+    }
+
     /**
+     *
+     *
      * Set whether the enemy is waiting to fire
      *
      * @param b boolean for if enemy is waiting to fire
