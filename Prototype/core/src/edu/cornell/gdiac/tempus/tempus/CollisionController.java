@@ -381,6 +381,42 @@ public class CollisionController implements ContactListener {
                 }
             }
         }
+        if ((objA instanceof Enemy && objB instanceof Avatar) ||
+                (objB instanceof Enemy && objA instanceof Avatar)) {
+            boolean correctWorlds = false;
+            if (objB instanceof Enemy) {
+                if (((Enemy) objB).getSpace() == 3) {
+                    correctWorlds = true;
+                } else if (controller.getShifted()) {
+                    if (((Enemy) objB).getSpace() == 2) {
+                        correctWorlds = true;
+                    }
+                } else {
+                    if (((Enemy) objB).getSpace() == 1) {
+                        correctWorlds = true;
+                    }
+                }
+            } else {
+                if (((Enemy) objA).getSpace() == 3) {
+                    correctWorlds = true;
+                } else if (controller.getShifted()) {
+                    if (((Enemy) objA).getSpace() == 2) {
+                        correctWorlds = true;
+                    }
+                } else {
+                    if (((Enemy) objA).getSpace() == 1) {
+                        correctWorlds = true;
+                    }
+                }
+            }
+            if (!correctWorlds) {
+                if (objB instanceof Enemy) {
+                    avatar.setInSpikes(((Enemy) objB).getSpace());
+                } else {
+                    avatar.setInSpikes(((Enemy) objA).getSpace());
+                }
+            }
+        }
 
         if (((objB instanceof Platform)) || ((objA instanceof Platform))) {
             //if(avatar.getCurrentPlatform() != objB && avatar.getCurrentPlatform() != objA) {

@@ -1,0 +1,953 @@
+{
+  "gravity": -14.7,
+  "bounds": [
+    32,
+    18
+  ],
+  "present_background": "present_background3",
+  "past_background": "past_background3",
+  "door": {
+    "pos": [
+      11.9,
+      13.28
+    ],
+    "size": [
+      1.92,
+      1.92
+    ],
+    "bodytype": "static",
+    "density": 0,
+    "friction": 0,
+    "restitution": 0,
+    "texture": "goal",
+    "sensor": true,
+    "nextlevel": 0,
+    "space": 3
+  },
+  "avatar": {
+    "pos": [
+      2.98,
+      9.62
+    ],
+    "shrink": [
+      0.0216,
+      0.01125
+    ],
+    "texture": "dude",
+    "density": 1,
+    "bodytype": "dynamic",
+    "avatarstanding": "avatarstanding",
+    "avatarcrouching": "avatarcrouching",
+    "avatardashing": "avatardashing",
+    "avatarfalling": "avatarfalling"
+  },
+  "turrets": {
+    "turret1": {
+      "pos": [
+        15.592,
+        3.84
+      ],
+      "shrink": [
+        0.0168,
+        0.021375
+      ],
+      "texture": "present_turret",
+      "density": 1,
+      "bodytype": "static",
+      "entitytype": "present",
+      "cooldown": 400,
+      "direction": [
+        3,
+        0
+      ]
+    },
+    "turret2": {
+      "pos": [
+        29.48,
+        11.91
+      ],
+      "shrink": [
+        0.0168,
+        0.021375
+      ],
+      "texture": "past_turret",
+      "density": 1,
+      "bodytype": "static",
+      "entitytype": "past",
+      "cooldown": 360,
+      "direction": [
+        -3,
+        0
+      ]
+    }
+  },
+  "capsules": {},
+  "diamonds": {},
+  "rounds": {},
+  "enemies": {
+    "enemy1": {
+      "pos": [
+        3.432,
+        3.930000000000003
+      ],
+      "shrink": [
+        0.0168,
+        0.021375
+      ],
+      "texture": "enemypresent",
+      "density": 1,
+      "bodytype": "dynamic",
+      "entitytype": "past",
+      "cooldown": 360,
+      "aitype": 4
+    },
+    "enemy2": {
+      "pos": [
+        12.584,
+        3.690000000000003
+      ],
+      "shrink": [
+        0.0168,
+        0.021375
+      ],
+      "texture": "enemypresent",
+      "density": 1,
+      "bodytype": "dynamic",
+      "entitytype": "past",
+      "cooldown": 360,
+      "aitype": 4
+    },
+    "enemy3": {
+      "pos": [
+        19.592,
+        12.96
+      ],
+      "shrink": [
+        0.0168,
+        0.021375
+      ],
+      "texture": "enemypresent",
+      "density": 1,
+      "bodytype": "dynamic",
+      "entitytype": "present",
+      "cooldown": 360,
+      "aitype": 4
+    },
+    "enemy4": {
+      "pos": [
+        26.024,
+        13.229999999999993
+      ],
+      "shrink": [
+        0.0168,
+        0.021375
+      ],
+      "texture": "enemypresent",
+      "density": 1,
+      "bodytype": "dynamic",
+      "entitytype": "present",
+      "cooldown": 360,
+      "aitype": 4
+    }
+  },
+  "spikes": {
+    "spike1": {
+      "pos": [
+        1.812,
+        0.9700000000000004
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "spikes",
+      "space": 1,
+      "angle": 45
+    },
+    "spike2": {
+      "pos": [
+        2.964,
+        0.9700000000000004
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "spikes",
+      "space": 1,
+      "angle": 45
+    },
+    "spike3": {
+      "pos": [
+        4.148,
+        0.8200000000000003
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "spikes",
+      "space": 1,
+      "angle": 45
+    },
+    "spike4": {
+      "pos": [
+        5.332,
+        0.8800000000000003
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "spikes",
+      "space": 1,
+      "angle": 45
+    },
+    "spike5": {
+      "pos": [
+        6.42,
+        0.8800000000000003
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "spikes",
+      "space": 1,
+      "angle": 45
+    },
+    "spike6": {
+      "pos": [
+        7.54,
+        0.8500000000000004
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "spikes",
+      "space": 1,
+      "angle": 45
+    },
+    "spike7": {
+      "pos": [
+        8.66,
+        1.0000000000000004
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "spikes",
+      "space": 1,
+      "angle": 45
+    },
+    "spike8": {
+      "pos": [
+        9.78,
+        0.9700000000000004
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "spikes",
+      "space": 1,
+      "angle": 45
+    },
+    "spike9": {
+      "pos": [
+        10.804,
+        0.9700000000000004
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "spikes",
+      "space": 1,
+      "angle": 45
+    },
+    "spike10": {
+      "pos": [
+        11.7,
+        1.0000000000000004
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "spikes",
+      "space": 1,
+      "angle": 45
+    },
+    "spike11": {
+      "pos": [
+        12.628,
+        1.0900000000000003
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "spikes",
+      "space": 1,
+      "angle": 45
+    },
+    "spike12": {
+      "pos": [
+        13.62,
+        1.0600000000000003
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "spikes",
+      "space": 1,
+      "angle": 45
+    },
+    "spike13": {
+      "pos": [
+        14.548,
+        1.0600000000000003
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "spikes",
+      "space": 1,
+      "angle": 45
+    },
+    "spike14": {
+      "pos": [
+        17.812,
+        16.99
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "spikes",
+      "space": 1,
+      "angle": 225
+    },
+    "spike15": {
+      "pos": [
+        18.708,
+        16.72
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "spikes",
+      "space": 1,
+      "angle": 225
+    },
+    "spike16": {
+      "pos": [
+        19.764,
+        16.87
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "spikes",
+      "space": 1,
+      "angle": 225
+    },
+    "spike17": {
+      "pos": [
+        20.948,
+        16.63
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "spikes",
+      "space": 1,
+      "angle": 225
+    },
+    "spike18": {
+      "pos": [
+        22.26,
+        16.87
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "spikes",
+      "space": 1,
+      "angle": 225
+    },
+    "spike19": {
+      "pos": [
+        23.508,
+        16.6
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "spikes",
+      "space": 1,
+      "angle": 225
+    },
+    "spike20": {
+      "pos": [
+        24.564,
+        16.78
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "spikes",
+      "space": 1,
+      "angle": 225
+    },
+    "spike21": {
+      "pos": [
+        25.62,
+        16.66
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "spikes",
+      "space": 1,
+      "angle": 225
+    },
+    "spike22": {
+      "pos": [
+        26.74,
+        16.72
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "spikes",
+      "space": 1,
+      "angle": 225
+    },
+    "spike23": {
+      "pos": [
+        27.732,
+        16.57
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "spikes",
+      "space": 1,
+      "angle": 225
+    },
+    "spike24": {
+      "pos": [
+        28.82,
+        16.75
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "spikes",
+      "space": 1,
+      "angle": 225
+    },
+    "spike25": {
+      "pos": [
+        29.908,
+        16.39
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "spikes",
+      "space": 1,
+      "angle": 225
+    },
+    "spike26": {
+      "pos": [
+        16.756,
+        16.63
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "spikes",
+      "space": 1,
+      "angle": 225
+    }
+  },
+  "talls": {
+    "tall1": {
+      "name": "both_tall",
+      "pos": [
+        -0.696,
+        8.34
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_tall",
+      "space": 3
+    },
+    "tall2": {
+      "name": "both_tall",
+      "pos": [
+        -0.792,
+        11.04
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_tall",
+      "space": 3
+    },
+    "tall3": {
+      "name": "both_tall",
+      "pos": [
+        -0.728,
+        13.62
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_tall",
+      "space": 3
+    },
+    "tall4": {
+      "name": "both_tall",
+      "pos": [
+        -0.728,
+        5.43
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_tall",
+      "space": 3
+    },
+    "tall5": {
+      "name": "both_tall",
+      "pos": [
+        -0.696,
+        2.46
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_tall",
+      "space": 3
+    },
+    "tall6": {
+      "name": "both_tall",
+      "pos": [
+        -0.632,
+        -0.69
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_tall",
+      "space": 3
+    },
+    "tall7": {
+      "name": "both_tall",
+      "pos": [
+        30.312,
+        14.1
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_tall",
+      "space": 3
+    },
+    "tall8": {
+      "name": "both_tall",
+      "pos": [
+        30.376,
+        11.37
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_tall",
+      "space": 3
+    },
+    "tall9": {
+      "name": "both_tall",
+      "pos": [
+        30.408,
+        8.429999999999998
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_tall",
+      "space": 3
+    },
+    "tall10": {
+      "name": "both_tall",
+      "pos": [
+        30.312,
+        5.459999999999998
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_tall",
+      "space": 3
+    },
+    "tall11": {
+      "name": "both_tall",
+      "pos": [
+        30.344,
+        2.3999999999999986
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_tall",
+      "space": 3
+    },
+    "tall12": {
+      "name": "both_tall",
+      "pos": [
+        30.408,
+        -0.7200000000000017
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_tall",
+      "space": 3
+    },
+    "tall13": {
+      "name": "both_tall",
+      "pos": [
+        14.376,
+        13.919999999999996
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_tall",
+      "space": 3
+    },
+    "tall14": {
+      "name": "both_tall",
+      "pos": [
+        14.504,
+        8.219999999999997
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_tall",
+      "space": 3
+    },
+    "tall15": {
+      "name": "both_tall",
+      "pos": [
+        14.568,
+        6.179999999999997
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_tall",
+      "space": 3
+    },
+    "tall16": {
+      "name": "both_tall",
+      "pos": [
+        14.344,
+        11.129999999999997
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_tall",
+      "space": 3
+    },
+    "tall17": {
+      "name": "both_tall",
+      "pos": [
+        14.6,
+        -1.3200000000000034
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_tall",
+      "space": 3
+    }
+  },
+  "pillars": {},
+  "longcapsules": {
+    "longcapsule1": {
+      "name": "both_longcapsule",
+      "pos": [
+        0.488,
+        16.92
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_longcapsule",
+      "space": 3
+    },
+    "longcapsule2": {
+      "name": "both_longcapsule",
+      "pos": [
+        4.392,
+        16.89
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_longcapsule",
+      "space": 3
+    },
+    "longcapsule3": {
+      "name": "both_longcapsule",
+      "pos": [
+        8.552,
+        16.86
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_longcapsule",
+      "space": 3
+    },
+    "longcapsule4": {
+      "name": "both_longcapsule",
+      "pos": [
+        12.712,
+        16.83
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_longcapsule",
+      "space": 3
+    },
+    "longcapsule5": {
+      "name": "both_longcapsule",
+      "pos": [
+        17.384,
+        16.92
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_longcapsule",
+      "space": 3
+    },
+    "longcapsule6": {
+      "name": "both_longcapsule",
+      "pos": [
+        21.864,
+        16.890000000000004
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_longcapsule",
+      "space": 3
+    },
+    "longcapsule7": {
+      "name": "both_longcapsule",
+      "pos": [
+        26.44,
+        16.770000000000003
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_longcapsule",
+      "space": 3
+    },
+    "longcapsule8": {
+      "name": "both_longcapsule",
+      "pos": [
+        26.792,
+        -0.4799999999999966
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_longcapsule",
+      "space": 3
+    },
+    "longcapsule9": {
+      "name": "both_longcapsule",
+      "pos": [
+        22.472,
+        -0.5099999999999966
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_longcapsule",
+      "space": 3
+    },
+    "longcapsule10": {
+      "name": "both_longcapsule",
+      "pos": [
+        18.408,
+        -0.5399999999999966
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_longcapsule",
+      "space": 3
+    },
+    "longcapsule11": {
+      "name": "both_longcapsule",
+      "pos": [
+        14.216,
+        -0.5999999999999965
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_longcapsule",
+      "space": 3
+    },
+    "longcapsule12": {
+      "name": "both_longcapsule",
+      "pos": [
+        10.248,
+        -0.6299999999999965
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_longcapsule",
+      "space": 3
+    },
+    "longcapsule13": {
+      "name": "both_longcapsule",
+      "pos": [
+        6.248,
+        -0.7199999999999965
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_longcapsule",
+      "space": 3
+    },
+    "longcapsule14": {
+      "name": "both_longcapsule",
+      "pos": [
+        2.248,
+        -0.6599999999999965
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_longcapsule",
+      "space": 3
+    },
+    "longcapsule15": {
+      "name": "both_longcapsule",
+      "pos": [
+        -0.984,
+        -0.6899999999999965
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_longcapsule",
+      "space": 3
+    },
+    "longcapsule16": {
+      "name": "both_longcapsule",
+      "pos": [
+        0.488,
+        8.040000000000003
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_longcapsule",
+      "space": 3
+    },
+    "longcapsule17": {
+      "name": "both_longcapsule",
+      "pos": [
+        9.992,
+        7.950000000000003
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_longcapsule",
+      "space": 3
+    },
+    "longcapsule18": {
+      "name": "present_longcapsule",
+      "pos": [
+        5.128,
+        7.980000000000003
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "present_longcapsule",
+      "space": 1
+    }
+  }
+}
