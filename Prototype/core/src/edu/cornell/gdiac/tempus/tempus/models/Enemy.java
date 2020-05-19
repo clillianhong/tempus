@@ -574,7 +574,7 @@ public class Enemy extends CapsuleObstacle {
      * @param f fixture the enemy stands on
      */
     public void setPlatformFixture(Fixture f) {
-        System.out.println("platform: " + f);
+        //System.out.println("platform: " + f);
         platformFixture = f;
     }
 
@@ -768,24 +768,24 @@ public class Enemy extends CapsuleObstacle {
             sensorFixtureGround = body.createFixture(sensorDef);
             sensorFixtureGround.setUserData(ENEMY_GROUND_SENSOR);
         }
-//        if(getAi() == EnemyType.FLY){
+        if(getAi() == EnemyType.FLY){
+
+            Vector2 sensorSky = new Vector2(0, 0);
+//            sensorShapeGround = new PolygonShape();
+//            sensorShapeGround.setAsBox(getWidth() / 4, SENSOR_HEIGHT, sensorSky, 0f);
 //
-//            Vector2 sensorSky = new Vector2(0, 0);
-////            sensorShapeGround = new PolygonShape();
-////            sensorShapeGround.setAsBox(getWidth() / 4, SENSOR_HEIGHT, sensorSky, 0f);
+            FixtureDef sensorDef = new FixtureDef();
+            sensorDef.density = 0;
+            sensorShapeCenter = new CircleShape();
+            sensorShapeCenter.setRadius(1.25f * getWidth());
+            sensorShapeCenter.setPosition(sensorSky);
+            sensorDef.shape = sensorShapeCenter;
+            sensorDef.isSensor = true;
+            sensorDef.filter.groupIndex = -1;
 //
-//            FixtureDef sensorDef = new FixtureDef();
-//            sensorDef.density = DENSITY;
-//            sensorShapeCenter = new CircleShape();
-//            sensorShapeCenter.setRadius(1.25f * getWidth());
-//            sensorShapeCenter.setPosition(sensorSky);
-//            sensorDef.shape = sensorShapeCenter;
-//            sensorDef.isSensor = true;
-//            sensorDef.filter.groupIndex = -1;
-//
-//            sensorFixtureCenter = body.createFixture(sensorDef);
-//            sensorFixtureCenter.setUserData(ENEMY_CENTER_SENSOR);
-//        }
+            sensorFixtureCenter = body.createFixture(sensorDef);
+            sensorFixtureCenter.setUserData(ENEMY_CENTER_SENSOR);
+        }
 
         return true;
     }

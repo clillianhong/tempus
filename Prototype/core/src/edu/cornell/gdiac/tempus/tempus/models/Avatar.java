@@ -100,6 +100,7 @@ public class Avatar extends CapsuleObstacle {
     private float density;
     private int dashCounter;
     private int slowing;
+    private int inSpikes;
 
     private boolean wasDamaged;
     private boolean hitByProjctile;
@@ -383,6 +384,10 @@ public class Avatar extends CapsuleObstacle {
     public int getLives() {
         return lives;
     }
+
+    public int getInSpikes(){return inSpikes;}
+
+    public void setInSpikes(int s) {inSpikes = s;}
 
     /** sets the number of lives the avatar has */
     public void setLives(int lives){
@@ -745,6 +750,7 @@ public class Avatar extends CapsuleObstacle {
         spliced = false;
         slowing = 1;
         dashCounter = 0;
+        inSpikes = 0;
     }
 
     private Vector2 scale;

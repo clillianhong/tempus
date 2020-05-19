@@ -462,15 +462,15 @@ public class EnemyController {
         if (e.getCheckSight() && playerVisible) {
             e.setIsFiring(true);
             e.setShiftedFiring(true);
-            if (e.getAi() == Enemy.EnemyType.WALK) {
+            /*if (e.getAi() == Enemy.EnemyType.WALK) {
                 e.setMovement(0);
-            }
+            }*/
         } else {
             e.setIsFiring(false);
             e.setShiftedFiring(false);
-            if (e.getAi() == Enemy.EnemyType.WALK && e.getMovement() == 0) {
-                e.setMovement(e.getNextDirection());
-            }
+        }
+        if (e.getAi() == Enemy.EnemyType.WALK && e.getMovement() == 0) {
+            e.setMovement(e.getNextDirection());
         }
     }
 

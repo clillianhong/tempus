@@ -168,6 +168,7 @@ public class CollisionController implements ContactListener {
         avatar.resetDashNum(1);
         avatar.setLinearVelocity(bounceDir);
         avatar.setEnemyContact(true);
+        //System.out.println("fwkjefneww");
         avatar.setDashing(false);
     }
 
@@ -344,6 +345,42 @@ public class CollisionController implements ContactListener {
         Object objA = fix1.getBody().getUserData();
         Object objB = fix2.getBody().getUserData();
 
+        if ((objA instanceof Spikes && objB instanceof Avatar) ||
+                (objB instanceof Spikes && objA instanceof Avatar)) {
+            boolean correctWorlds = false;
+            if (objB instanceof Spikes) {
+                if (((Spikes) objB).getSpace() == 3) {
+                    correctWorlds = true;
+                } else if (controller.getShifted()) {
+                    if (((Spikes) objB).getSpace() == 2) {
+                        correctWorlds = true;
+                    }
+                } else {
+                    if (((Spikes) objB).getSpace() == 1) {
+                        correctWorlds = true;
+                    }
+                }
+            } else {
+                if (((Spikes) objA).getSpace() == 3) {
+                    correctWorlds = true;
+                } else if (controller.getShifted()) {
+                    if (((Spikes) objA).getSpace() == 2) {
+                        correctWorlds = true;
+                    }
+                } else {
+                    if (((Spikes) objA).getSpace() == 1) {
+                        correctWorlds = true;
+                    }
+                }
+            }
+            if (!correctWorlds) {
+                if (objB instanceof Spikes) {
+                    avatar.setInSpikes(((Spikes) objB).getSpace());
+                } else {
+                    avatar.setInSpikes(((Spikes) objA).getSpace());
+                }
+            }
+        }
 
         if (((objB instanceof Platform)) || ((objA instanceof Platform))) {
             //if(avatar.getCurrentPlatform() != objB && avatar.getCurrentPlatform() != objA) {
@@ -383,7 +420,7 @@ public class CollisionController implements ContactListener {
 
             // Test bullet collision with world
             if (bd1.getSpace() != 3 && bd2.getSpace() != 3 && bd1.getSpace() != bd2.getSpace()) {
-                    return;
+                return;
             }
             if (bd1.getName().equals("bullet") && bd2 != avatar) {
                 if (bd2.getBody().getUserData() instanceof Enemy) {

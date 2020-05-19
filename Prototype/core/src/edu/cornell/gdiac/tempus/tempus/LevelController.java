@@ -513,6 +513,7 @@ public class LevelController extends WorldController {
 		avatar.setAngle(0);
 		avatar.setBodyType(BodyDef.BodyType.DynamicBody);
 		avatar.setAnimationState(Avatar.AvatarState.FALLING);
+		avatar.setInSpikes(0);
 
 
 //		for (Obstacle obj : objects) {
@@ -972,6 +973,7 @@ public class LevelController extends WorldController {
 			return false;
 		}
 
+
 		if (complete) {
 			inputReady = false;
 			avatar.setBodyType(BodyDef.BodyType.StaticBody);
@@ -985,6 +987,13 @@ public class LevelController extends WorldController {
 			//avatar.setPosition(avatar.getPosition().add(vel.cpy()));
 			//avatar.setLinearVelocity(vel);
 			avatar.setEnemyContact(false);
+		}
+		if (!avatar.isSticking()){
+			avatar.setInSpikes(0);
+		} else if (avatar.getInSpikes() == 2 && shifted){
+			playAvatarHurt();
+		} else if(avatar.getInSpikes() == 1 && !shifted){
+			playAvatarHurt();
 		}
 
 		if (!isFailure() && avatar.getY() < -6 ) {
@@ -1888,6 +1897,7 @@ public class LevelController extends WorldController {
 	}
 
 	public void playAvatarHurt(){
+		//avatar.setInSpikes(false);
 		int lives = avatar.getLives();
 		boolean damaged = avatar.removeLife();
 		if (lives != avatar.getLives()) {
