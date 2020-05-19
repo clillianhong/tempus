@@ -109,8 +109,8 @@ public class GDXRoot extends Game implements ScreenListener {
 		current = 0;
 		loading.setScreenListener(this);
 		roomSelectMode = new SelectRoomMode(0);
-		endgame = new EndGameController("jsons/rooms/level_tallboi.json");
-		endgame.preLoadContent();
+//		endgame = new EndGameController("jsons/rooms/level_tallboi.json");
+//		endgame.preLoadContent();
 
 		setScreen(loading);
 
@@ -169,7 +169,8 @@ public class GDXRoot extends Game implements ScreenListener {
 		gameManager.printGameState();
 
 		if ((screen.getClass() == TutorialController.class ||
-				screen.getClass() == LevelController.class )) {
+				screen.getClass() == LevelController.class ||
+				screen.getClass() == EndGameController.class )) {
 
 			if(exitCode == ScreenExitCodes.EXIT_NEXT.ordinal()){
 				if (gameManager.endGameState()) {
@@ -210,19 +211,18 @@ public class GDXRoot extends Game implements ScreenListener {
 			roomSelectMode = null;
 		}
 		else if (screen == loading || exitCode == ScreenExitCodes.EXIT_LOAD.ordinal()) {
-//			gameManager.readyLevels();
-//			menu.createMode();
-//			menu.setScreenListener(this);
-//			menu.setCanvas(canvas);
-//			setScreen(menu);
+			gameManager.readyLevels();
+			menu.createMode();
+			menu.setScreenListener(this);
+			menu.setCanvas(canvas);
+			setScreen(menu);
 
-			endgame.loadContent();
-			endgame.setScreenListener(this);
-			endgame.setCanvas(canvas);
-			endgame.reset();
-			endgame.playMusic(1);
+//			endgame.loadContent();
+//			endgame.setScreenListener(this);
+//			endgame.setCanvas(canvas);
+//			endgame.reset();
+//			endgame.playMusic(1);
 
-			setScreen(endgame);
 			loading.dispose();
 			loading = null;
 		} else if (screen == menu) {

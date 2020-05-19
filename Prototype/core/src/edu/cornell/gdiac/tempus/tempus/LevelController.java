@@ -294,6 +294,8 @@ public class LevelController extends WorldController {
 	protected Door goalDoor;
 	/** is tutorial mode */
 	protected boolean isTutorial;
+	/** is long room mode */
+	protected boolean isLongRoom;
 	/** is end of level room */
 	protected boolean isEndRoom;
 
@@ -365,7 +367,7 @@ public class LevelController extends WorldController {
 		isTutorial = false;
 		ripple_intensity = 0.009f;
 		inputReady = false;
-
+		isLongRoom = false;
 		// ripple shader
 		ticks = 0f;
 		rippleOn = false;
@@ -392,6 +394,14 @@ public class LevelController extends WorldController {
 		OrthographicCamera cam = new OrthographicCamera(sw,sh);
 		hudViewport = new FitViewport(sw, sh, cam);
 		hudViewport.getCamera().position.set(new Vector3(sw/2, sh/2,0));
+	}
+
+	/**
+	 * Sets isLongRoom
+	 * @param isLong
+	 */
+	public void setLongRoom(boolean isLong){
+		isLongRoom = isLong;
 	}
 
 	/**
@@ -465,6 +475,8 @@ public class LevelController extends WorldController {
 		viewport.getCamera().update();
 		stage.getCamera().update();
 		hudViewport.getCamera().update();
+		resetRipple();
+		updateShader();
 
 	}
 
@@ -962,6 +974,7 @@ public class LevelController extends WorldController {
 		if(BEGIN_COUNT_OG == 0){
 			BEGIN_COUNT_OG = Gdx.graphics.getFramesPerSecond()/2;
 			begincount = BEGIN_COUNT_OG;
+			System.out.println("BEGIN COUNT OG " + BEGIN_COUNT_OG);
 			resetRipple();
 		}
 
@@ -1208,16 +1221,16 @@ public class LevelController extends WorldController {
 			boolean dashAttempt = InputController.getInstance().releasedLeftMouseButton();
 			if (inputReady && dashAttempt) {
 
-				if(avatar.getNumDashes()==1 && !shiftripple){
-					rippleOn = true;
-					ticks = 0;
-					m_rippleDistance = 0;
-					m_rippleRange = 0;
-					ripple_intensity = 0.02f;
-					rippleSpeed = (60/(float) Gdx.graphics.getFramesPerSecond()) * 0.25f ;
-					maxRippleDistance = 0.25f;
-					ripple_reset = ((float)Gdx.graphics.getFramesPerSecond() / 60f)* sw * 0.00025f / 4;
-				}
+//				if(avatar.getNumDashes()==1 && !shiftripple){
+//					rippleOn = true;
+//					ticks = 0;
+//					m_rippleDistance = 0;
+//					m_rippleRange = 0;
+//					ripple_intensity = 0.02f;
+//					rippleSpeed = (60/(float) Gdx.graphics.getFramesPerSecond()) * 0.25f ;
+//					maxRippleDistance = 0.25f;
+//					ripple_reset = ((float)Gdx.graphics.getFramesPerSecond() / 60f)* sw * 0.00025f / 4;
+//				}
 				enemyController.setPlayerVisible(true);
 				if(avatar.isSticking()){
 					avatar.setDashing(false);
@@ -1260,7 +1273,9 @@ public class LevelController extends WorldController {
 		if (inputReady && InputController.getInstance().pressedShiftKey()) {
 			// update ripple shader params
 			enemyController.setPlayerVisible(true);
-			rippleOn = true;
+			if(!isLongRoom){
+				rippleOn = true;
+			}
 			ticks = 0;
 			m_rippleDistance = 0;
 			m_rippleRange = 0;
@@ -1627,10 +1642,6 @@ public class LevelController extends WorldController {
 		// shaderprog.setUniformf("mousePos", new Vector2(0 * scale.x /
 		// sw , 0 * scale.y / sh));
 //		System.out.println("shader y position " + ((DEFAULT_HEIGHT - avatar.getPosition().y) * scale.y / sh));
-		System.out.println("camera position " + camera.position.y);
-		System.out.println("height " + sh);
-		System.out.println("final shader position " + (1f - (camera.position.y % sh)/sh));
-
 		shaderprog.setUniformf("mousePos", new Vector2(avatar.getPosition().x * scale.x / sw,
 				 (DEFAULT_HEIGHT - avatar.getPosition().y)*scale.y / sh));
 		shaderprog.setUniformf("deltax", Math.abs(delta_x / 100));
@@ -1686,38 +1697,43 @@ public class LevelController extends WorldController {
 			}
 
 			//VIEWPORT UPDATES
-//			stage.getBatch().setProjectionMatrix(stage.getViewport().getCamera().combined);
+			if(!isLongRoom){
+				stage.getBatch().setProjectionMatrix(stage.getViewport().getCamera().combined);
 
-			// render batch with shader
-//			stage.getBatch().begin();
-//			if (rippleOn) {
-//				updateShader();
-//				stage.getBatch().setShader(shaderprog);
-//			}
-//			if (shifted) {
-//				bgSprite.setRegion(pastBackgroundTexture);
-//			} else {
-//				bgSprite.setRegion(presentBackgroundTexture);
-//			}
-//			stage.getBatch().draw(bgSprite, 0, 0, sw, sh);
-//			stage.getBatch().end();
-
-			canvas.begin();
-
-			canvas.getSpriteBatch().setProjectionMatrix(hudViewport.getCamera().combined);
-			hudViewport.apply();
-
+//				 render batch with shader
+			stage.getBatch().begin();
 			if (rippleOn) {
 				updateShader();
-				canvas.getSpriteBatch().setShader(shaderprog);
+				stage.getBatch().setShader(shaderprog);
 			}
 			if (shifted) {
 				bgSprite.setRegion(pastBackgroundTexture);
 			} else {
 				bgSprite.setRegion(presentBackgroundTexture);
 			}
+			stage.getBatch().draw(bgSprite, 0, 0, sw, sh);
+			stage.getBatch().end();
+			}
 
-			canvas.getSpriteBatch().draw(bgSprite, 0, 0, sw , sh);
+
+			canvas.begin();
+
+			if(isLongRoom){
+				canvas.getSpriteBatch().setProjectionMatrix(hudViewport.getCamera().combined);
+				hudViewport.apply();
+
+				if (rippleOn) {
+					updateShader();
+					canvas.getSpriteBatch().setShader(shaderprog);
+				}
+				if (shifted) {
+					bgSprite.setRegion(pastBackgroundTexture);
+				} else {
+					bgSprite.setRegion(presentBackgroundTexture);
+				}
+
+				canvas.getSpriteBatch().draw(bgSprite, 0, 0, sw , sh);
+			}
 
 			canvas.getSpriteBatch().setProjectionMatrix(viewport.getCamera().combined);
 			viewport.apply();
@@ -1736,7 +1752,8 @@ public class LevelController extends WorldController {
 				canvas.getSpriteBatch().setProjectionMatrix(hudViewport.getCamera().combined);
 				hudViewport.apply();
 				drawLives(canvas);
-
+			}else{
+				drawLives(canvas);
 			}
 
 			// Final message
@@ -1761,8 +1778,6 @@ public class LevelController extends WorldController {
 				minAlpha = 0.5f;
 				ripple_intensity = 0.09f;
 				updateShader();
-
-
 			} else if (failed) {
 //				rippleOn = true;
 //				rippleSpeed = 0.1f;
@@ -1784,7 +1799,12 @@ public class LevelController extends WorldController {
 
 		}
 //		stage.setViewport(hudViewport);
-		stage.getBatch().setProjectionMatrix(hudViewport.getCamera().combined);
+		if(isLongRoom){
+			stage.getBatch().setProjectionMatrix(hudViewport.getCamera().combined);
+		}else{
+			stage.getBatch().setProjectionMatrix(viewport.getCamera().combined);
+		}
+
 //		hudViewport.apply();
 //		stage.getCamera().update();
 		stage.draw();

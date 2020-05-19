@@ -33,34 +33,12 @@ public class EndGameController extends LevelController{
         this.bounds.height = DEFAULT_HEIGHT * 2;
     }
 
-    @Override
-    public void draw(float delta) {
-        super.draw(delta);
-    }
-
-    @Override
-    public void update(float dt) {
-//        avatar.update(dt);
-        super.update(dt);
-    }
 
     @Override
     public void render(float delta) {
         canvas.updateSpriteBatch();
         updateCamera(sh, 2*sh);
-
-        float lerp = 0.4f;
-//        stage.getCamera().position.y += (stage.getCamera().project(new Vector3(avatar.getPosition().x, avatar.getPosition().y, 0)).y - stage.getCamera().position.y) * lerp * delta;
-//        System.out.println("y : " + stage.getCamera().position.y);
-//        camera.position.y += (camera.project(new Vector3(avatar.getPosition().x, avatar.getPosition().y, 0)).y - camera.position.y) * lerp * delta;
-//        viewport.getCamera().position.y += (viewport.getCamera().project(new Vector3(avatar.getPosition().x, avatar.getPosition().y, 0)).y - viewport.getCamera().position.y) * lerp * delta;
-//        viewport.getCamera().position.y += (avatar.getPosition().y - viewport.getCamera().position.y) * lerp * delta;
-//        stage.getBatch().setProjectionMatrix(stage.getCamera().combined);
-//        updateCamera(sh/2, sh*3);
-
-//        stage.getCamera().position.set(camera.position);
         stage.getCamera().update();
-
         super.render(delta);
     }
 
@@ -75,7 +53,6 @@ public class EndGameController extends LevelController{
         table.setWidth(stage.getWidth());
         table.align(Align.center | Align.top);
         table.setPosition(0, sh);
-
 
         //initialize backgrounds
         pastBackgroundTexture = JsonAssetManager.getInstance().getEntry(levelFormat.get("past_background").asString(),
@@ -208,7 +185,7 @@ public class EndGameController extends LevelController{
     }
 
     public void updateCamera(float bottomCiel, float topFloor){
-        Vector3 screenAvatarPos =new Vector3(camera.position.x, camera.position.y + (avatar.getY()*scale.y - camera.position.y) * 0.02f, 0);
+        Vector3 screenAvatarPos =new Vector3(camera.position.x, camera.position.y + (avatar.getY()*scale.y - camera.position.y) * 0.08f, 0);
         camera.position.set(screenAvatarPos);
         if(screenAvatarPos.y < bottomCiel/2) {
             camera.position.y = camera.position.y + ( bottomCiel/2 - camera.position.y) * 0.02f;
