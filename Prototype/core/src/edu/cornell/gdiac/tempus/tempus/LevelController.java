@@ -1138,12 +1138,12 @@ public class LevelController extends WorldController {
 		if (inputReady && !avatar.isCatchReady() && !avatar.isHolding() && !avatar.isSticking()
 				&& (input.pressedRightMouseButton()) && catchTicks == 0){
 			avatar.setCatchReady(true);
-			catchTicks = 2 * Gdx.graphics.getFramesPerSecond();
+			catchTicks = 3 * Gdx.graphics.getFramesPerSecond();
 		}
 		if (catchTicks > 0){
 			catchTicks --;
 		}
-		if(catchTicks == Gdx.graphics.getFramesPerSecond() || (inputReady && (input.releasedRightMouseButton()) || avatar.isSticking())) {
+		if(catchTicks <= Gdx.graphics.getFramesPerSecond() * 2 || (inputReady && (input.releasedRightMouseButton()) || avatar.isSticking())) {
 			avatar.setCatchReady(false);
 			if (avatar.isSticking() || avatar.isHolding() || (inputReady && (input.releasedRightMouseButton()))) {
 				catchTicks = 0;
