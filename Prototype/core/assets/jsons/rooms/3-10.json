@@ -55,7 +55,7 @@
       "density": 1,
       "bodytype": "static",
       "entitytype": "present",
-      "cooldown": 300,
+      "cooldown": 600,
       "direction": [
         0,
         3
@@ -74,7 +74,7 @@
       "density": 1,
       "bodytype": "static",
       "entitytype": "past",
-      "cooldown": 300,
+      "cooldown": 600,
       "direction": [
         0,
         3
@@ -246,8 +246,40 @@
     },
     "enemy6": {
       "pos": [
-        2.12,
-        5.1
+        2.152,
+        14.849999999999996
+      ],
+      "shrink": [
+        0.0168,
+        0.021375
+      ],
+      "texture": "enemypresent",
+      "aitype": 2,
+      "density": 1,
+      "bodytype": "dynamic",
+      "entitytype": "present",
+      "cooldown": 300
+    },
+    "enemy8": {
+      "pos": [
+        2.216,
+        5.31
+      ],
+      "shrink": [
+        0.0168,
+        0.021375
+      ],
+      "texture": "enemypast",
+      "density": 1,
+      "bodytype": "dynamic",
+      "entitytype": "past",
+      "cooldown": 300,
+      "aitype": 2
+    },
+    "enemy10": {
+      "pos": [
+        29.032,
+        16.53
       ],
       "shrink": [
         0.0168,

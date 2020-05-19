@@ -145,6 +145,8 @@ public class Enemy extends CapsuleObstacle {
     private boolean nearPlatform;
     /** Platform the enemy is near */
     private Contact adjPlatform;
+    /** Start position of enemy */
+    private Vector2 startPosition;
 
     /** Whether the enemy is a turret or not */
     private boolean isTurret;
@@ -168,6 +170,9 @@ public class Enemy extends CapsuleObstacle {
     private TextureRegion passiveEnemyIndicator;
     /** Texture for an active enemy */
     private TextureRegion activeEnemyIndicator;
+
+    private Boolean queueRespawn;
+    private Boolean shiftQueued;
 
     /**
      * Creates a turret with the provided json value
@@ -215,6 +220,8 @@ public class Enemy extends CapsuleObstacle {
         shiftedActive = isFiring;
         framesTillFire = this.cooldown;
         limiter = 4;
+        shiftQueued = false;
+        queueRespawn = false;
         setName("turret");
     }
 
@@ -237,6 +244,7 @@ public class Enemy extends CapsuleObstacle {
         setTexture(texture);
 
         setPosition(pos[0], pos[1]);
+        startPosition = getPosition();
         setDimension(texture.getRegionWidth() * shrink[0], texture.getRegionHeight() * shrink[1]);
         setType(json.get("entitytype").asString().equals("present") ? EntityType.PRESENT : PAST);
         setBodyType(json.get("bodytype").asString().equals("static") ? BodyDef.BodyType.StaticBody
@@ -256,6 +264,8 @@ public class Enemy extends CapsuleObstacle {
         isTurret = false;
         faceDirection = 1f;
         removalFrames = 60;
+        shiftQueued = false;
+        queueRespawn = false;
 //        switch (type) {
 //            case PAST:
 //                passiveEnemyIndicator = JsonAssetManager.getInstance().getEntry("enemy_passive_red", TextureRegion.class);
@@ -276,6 +286,10 @@ public class Enemy extends CapsuleObstacle {
             neutralTexture = JsonAssetManager.getInstance().getEntry(("enemywalking" + "_" + entitytype), FilmStrip.class);
             attackingTexture = neutralTexture;
             setDensity(20);
+            sight = new LineOfSight(this);
+            setName("enemy");
+            isFiring = false;
+            setActive(false);
             break;
 
         case 2:
@@ -288,12 +302,19 @@ public class Enemy extends CapsuleObstacle {
             setFilmStrip(EnemyState.TPEND, tpEndTexture);
             minimizeScale = 0.35f;
             waitToFire = true;
+            sight = new LineOfSight(this);
+            teleportTo = null;
+            setName("teleport enemy");
+            isFiring = true;
             break;
 
         case 3:
             ai = EnemyType.GUN;
             neutralTexture = JsonAssetManager.getInstance().getEntry(("enemyshooting" + "_" + entitytype), FilmStrip.class);
             attackingTexture = neutralTexture;
+            sight = new LineOfSight(this);
+            setName("gun enemy");
+            isFiring = false;
             break;
 
         case 4:
@@ -303,36 +324,41 @@ public class Enemy extends CapsuleObstacle {
             neutralTexture = JsonAssetManager.getInstance().getEntry(("enemyflying" + "_" + entitytype), FilmStrip.class);
             attackingTexture = neutralTexture;
             minimizeScale = 0.5f;
-            break;
-        }
-        setFilmStrip(EnemyState.NEUTRAL, neutralTexture);
-        setFilmStrip(EnemyState.ATTACKING, attackingTexture);
-        setFilmStrip(EnemyState.TPEND, neutralTexture);
-
-        if (ai.equals(EnemyType.WALK)) {
-            sight = new LineOfSight(this);
-            setName("enemy");
-            isFiring = false;
-            setActive(false);
-        } else if (ai.equals(EnemyType.TELEPORT)) {
-            sight = new LineOfSight(this);
-            teleportTo = null;
-            setName("teleport enemy");
-            isFiring = true;
-        } else if (ai.equals(EnemyType.GUN)) {
-            sight = new LineOfSight(this);
-            setName("gun enemy");
-            isFiring = false;
-        } else {
             sight = new LineOfSight(this);
             setName("fly enemy");
             isFiring = false;
             setGravityScale(0);
             flyingVelocity = new Vector2(0,0);
+            break;
         }
+        setFilmStrip(EnemyState.NEUTRAL, neutralTexture);
+        setFilmStrip(EnemyState.ATTACKING, attackingTexture);
+        setFilmStrip(EnemyState.TPEND, neutralTexture);
+    }
+
+    public Vector2 getStartPosition() {
+        return startPosition;
+    }
+
+    public Boolean getResawnQueued(){
+        return queueRespawn;
+    }
+
+    public void setRespawnQueued(boolean s){
+        queueRespawn = s;
+    }
+
+    public Boolean getShiftQueued(){
+        return shiftQueued;
+    }
+
+    public void setShiftQueued(boolean s){
+        shiftQueued = s;
     }
 
     /**
+     *
+     *
      * Set whether the enemy is waiting to fire
      *
      * @param b boolean for if enemy is waiting to fire
@@ -548,6 +574,7 @@ public class Enemy extends CapsuleObstacle {
      * @param f fixture the enemy stands on
      */
     public void setPlatformFixture(Fixture f) {
+        System.out.println("platform: " + f);
         platformFixture = f;
     }
 
@@ -852,7 +879,7 @@ public class Enemy extends CapsuleObstacle {
      *
      * @param canvas Drawing context
      */
-    public void draw(GameCanvas canvas) {
+    public void draw(GameCanvas canvas, boolean playerVisible) {
 
         if (!isTurret) {
             float dist = getHeight() * drawScale.y;
@@ -874,7 +901,7 @@ public class Enemy extends CapsuleObstacle {
             float rotation = getPosition().sub(target.getPosition()).nor().angle() / 57 - 1.6f;
             TextureRegion indicator = activeEnemyIndicator;
 
-            if (getAi() == EnemyType.WALK && !isFiring) {
+            if ((getAi() == EnemyType.WALK && !isFiring) || !playerVisible) {
                 rotation = getAngle();
                 indicator = passiveEnemyIndicator;
                 drawLoc = new Vector2(getX() * drawScale.x, getY() * drawScale.y);

@@ -76,6 +76,8 @@ public class EnemyController {
         for (Enemy e: enemies) {
             if (e.getY() < -6){
                 e.setDead();
+                //e.setRespawnQueued(true);
+                //e.setPosition(e.getStartPosition());
                 if (e.getAi() == Enemy.EnemyType.TELEPORT){
                     if (e.getSpace() == 2) {
                         platformsPast.remove(e.getCurrPlatform());
@@ -84,6 +86,19 @@ public class EnemyController {
                     }
                 }
             }
+            /*if (e.getResawnQueued()){
+                if ((shifted == true && e.getSpace() == 1) ||
+                        (shifted == false && e.getSpace() == 2)){
+                    e.setShiftQueued(true);
+                }
+            }
+            if ((!playerVisible && e.getY() < -6) || (e.getShiftQueued() && ((shifted == true && e.getSpace() == 2) ||
+                    (shifted == false && e.getSpace() == 1)))) {
+                e.setLinearVelocity(new Vector2(0,0));
+                e.setPosition(e.getStartPosition());
+                e.setShiftQueued(false);
+                e.setRespawnQueued(false);
+            }*/
             if (e.isTurret() || e.isDead()){
                 result --;
             }
@@ -138,7 +153,7 @@ public class EnemyController {
         for (Enemy e: enemies) {
             if (e.getAi() != Enemy.EnemyType.TELEPORT) {
                 if (flag) {
-                    e.setLimiter(0.5f);
+                    e.setLimiter(1);
                 } else {
                     e.setLimiter(4);
                 }
@@ -198,8 +213,8 @@ public class EnemyController {
      *
      * @param enemy the enemy whose flying velocity needs to be set
      */
-    public void setFlyingVelocity (Enemy enemy) {
-        Vector2 vel = target.getPosition().cpy().sub(enemy.getPosition().cpy());
+    public void setFlyingVelocity (Enemy enemy, Vector2 location) {
+        Vector2 vel = location.cpy().sub(enemy.getPosition().cpy());
         if (vel != enemy.getFlyingVelocity()) {
             enemy.setLinearVelocity(enemy.getLinearVelocity().scl(.7f));
             enemy.setFlyingVelocity(vel.cpy());
@@ -242,12 +257,14 @@ public class EnemyController {
                 } else {
                     if (playerVisible) {
                         createLineOfSight(world, BULLET_OFFSET, e);
-                        setFlyingVelocity(e);
+                        setFlyingVelocity(e, target.getPosition());
                         setBulletVelocity(BULLET_OFFSET, e);
                         fly(e);
                         fire(e);
                     } else {
-                        stopFlying(e);
+//                        stopFlying(e);
+                        setFlyingVelocity(e, e.getStartPosition());
+                        fly(e);
                     }
                 }
             }
@@ -345,7 +362,7 @@ public class EnemyController {
      * @param e enemy that is firing
      */
     public void fire(Enemy e) {
-        if (e.canFire()) {
+        if (e.canFire() && !e.getResawnQueued()) {
             createBullet(e);
         } else {
             e.coolDown(true);
@@ -487,17 +504,20 @@ public class EnemyController {
         for (Enemy e: enemies) {
             if (!e.isTurret()) {
                 e.setBodyType(BodyDef.BodyType.DynamicBody);
+                //e.setActive(true);
                 if (e.getSpace() == 3) {
                     e.setIsFiring(true);
                     e.setBodyType(BodyDef.BodyType.DynamicBody);
                 } else if (!shifted && (e.getSpace() == 2)) {
                     e.setIsFiring(false);
                     e.setBodyType(BodyDef.BodyType.StaticBody);
+                    //e.setActive(false);
                 } else if (shifted && (e.getSpace() == 2)) {
                     e.setIsFiring(e.getShiftedFiring());
                 } else if (shifted && (e.getSpace() == 1)) {
                     e.setIsFiring(false);
                     e.setBodyType(BodyDef.BodyType.StaticBody);
+                    //e.setActive(false);
                 } else if (!shifted && (e.getSpace() == 1)) {
                     e.setIsFiring(e.getShiftedFiring());
                 }
@@ -542,7 +562,9 @@ public class EnemyController {
             } else if (e.getSpace() == 3) {
                 e.draw(canvas);
             } else if ((shifted && (e.getSpace() == 2)) || (!shifted && (e.getSpace() == 1))) { // past world
-                if (e.getAi() != Enemy.EnemyType.WALK) {
+                if (e.getAi() == Enemy.EnemyType.FLY && !playerVisible) {
+                    e.setFaceDirection((e.getX() - e.getStartPosition().x < 0 ? 1 : -1));
+                } else if (e.getAi() != Enemy.EnemyType.WALK) {
                     e.setFaceDirection((e.getX() - target.getX()) < 0 ? 1 : -1);
                 }
                 if (e.getAi() == Enemy.EnemyType.TELEPORT) {
@@ -555,11 +577,11 @@ public class EnemyController {
                         framesAfterMove += 1;
                     } else {
                         e.animate(Enemy.EnemyState.NEUTRAL, true);
-                        e.draw(canvas);
+                        e.draw(canvas, playerVisible);
                     }
                 } else {
                     e.animate(Enemy.EnemyState.NEUTRAL, true);
-                    e.draw(canvas);
+                    e.draw(canvas, playerVisible);
                 }
 //            } else if (!shifted && (e.getSpace() == 1)) { // present world
 //                e.draw(canvas);

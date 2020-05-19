@@ -22,12 +22,15 @@ import edu.cornell.gdiac.util.*;
  */
 public class Spikes extends PolygonObstacle {
 
+    private String key;
+
     /**
      * Create a new SpikesModel with degenerate settings
      */
     public Spikes(float[] points) {
         super(points);
         region = null;
+        key = null;
     }
 
     /**
@@ -46,10 +49,13 @@ public class Spikes extends PolygonObstacle {
         setDensity(json.get("density").asFloat());
         setFriction(json.get("friction").asFloat());
         setRestitution(json.get("restitution").asFloat());
-        String key = json.get("texture").asString();
-        TextureRegion texture = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
-        setTexture(texture);
         setSpace(json.get("space").asInt());
+        key = json.get("texture").asString();
+        TextureRegion texture = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
+        if (getSpace() == 2) {
+            texture = JsonAssetManager.getInstance().getEntry(key + "_past", TextureRegion.class);
+        }
+        setTexture(texture);
         setAngle(-1 * (float) Math.toRadians(json.get("angle").asFloat()));
         getFilterData().groupIndex = -1;
     }
@@ -57,6 +63,16 @@ public class Spikes extends PolygonObstacle {
     public void draw(GameCanvas canvas) {
         if (region != null) {
             canvas.draw(texture,Color.WHITE, texture.getRegionWidth()/2, texture.getRegionHeight()/2, getX() * drawScale.x,getY() * drawScale.y, getAngle(), 0.01f * drawScale.x, 0.01f * drawScale.y);
+        }
+    }
+
+    public void shift(boolean shifted) {
+        if (shifted){
+            TextureRegion texture = JsonAssetManager.getInstance().getEntry(key + "_past", TextureRegion.class);
+            setTexture(texture);
+        } else {
+            TextureRegion texture = JsonAssetManager.getInstance().getEntry(key, TextureRegion.class);
+            setTexture(texture);
         }
     }
 }

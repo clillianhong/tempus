@@ -430,7 +430,7 @@
     },
     "pew": {
       "file": "sounds/redirect_pluck_shoot.mp3",
-      "volume": 0.3
+      "volume": 0.4
     },
     "pew_past": {
       "file": "sounds/turrent_sound_rhodes.mp3",
@@ -462,11 +462,11 @@
     },
     "dash": {
       "file": "sounds/dash.mp3",
-      "volume": 0.5
+      "volume": 0.4
     },
     "dash2": {
       "file": "sounds/double_dash_pitched_more.mp3",
-      "volume": 0.5
+      "volume": 0.4
     },
     "damage": {
       "file": "sounds/shake_plain.mp3",
@@ -474,7 +474,7 @@
     },
     "death": {
       "file": "sounds/shake_delay.mp3",
-      "volume": 0.5
+      "volume": 0.6
     },
     "teleport_disappear": {
       "file": "sounds/teleport_higher.mp3",

@@ -121,6 +121,7 @@ public class LevelController extends WorldController {
 	float m_rippleRange;
 	boolean rippleOn;
 	float ripple_intensity;
+	float catchTicks;
 
 	float time_incr;
 
@@ -368,6 +369,7 @@ public class LevelController extends WorldController {
 		ripple_intensity = 0.009f;
 		inputReady = false;
 		isLongRoom = false;
+		catchTicks = 0;
 		// ripple shader
 		ticks = 0f;
 		rippleOn = false;
@@ -515,7 +517,7 @@ public class LevelController extends WorldController {
 		avatar.setEnemyContact(false);
 		avatar.setCatchReady(false);
 		avatar.setPosition(avatarStart);
-		avatar.setLives(5);
+		avatar.setLives(3);
 		avatar.getBody().setLinearVelocity(0, 0);
 		avatar.setHolding(false);
 		avatar.setHeldBullet(null);
@@ -1128,7 +1130,6 @@ public class LevelController extends WorldController {
 
 		//System.out.println("input ready: " + inputReady);
 		if (inputReady && input.didPause() && !paused) {
-			System.out.println("I PAUSED YA");
 			pauseGame();
 		}
 
@@ -1147,11 +1148,18 @@ public class LevelController extends WorldController {
 
 		//check if avatar is in "catch mode"
 		if (inputReady && !avatar.isCatchReady() && !avatar.isHolding() && !avatar.isSticking()
-				&& (input.pressedRightMouseButton())){
+				&& (input.pressedRightMouseButton()) && catchTicks == 0){
 			avatar.setCatchReady(true);
+			catchTicks = 3 * Gdx.graphics.getFramesPerSecond();
 		}
-		if(inputReady && (input.releasedRightMouseButton()) || avatar.isSticking()){
+		if (catchTicks > 0){
+			catchTicks --;
+		}
+		if(catchTicks <= Gdx.graphics.getFramesPerSecond() * 2 || (inputReady && (input.releasedRightMouseButton()) || avatar.isSticking())) {
 			avatar.setCatchReady(false);
+			if (avatar.isSticking() || avatar.isHolding() || (inputReady && (input.releasedRightMouseButton()))) {
+				catchTicks = 0;
+			}
 		}
 
 		MusicController.getInstance().update(shifted);
@@ -1160,18 +1168,29 @@ public class LevelController extends WorldController {
 			avatar.setShifted(avatar.getShifted() - 1);
 		}
 
-		float delta = 1.0f/Gdx.graphics.getFramesPerSecond();
+		float delta = Math.min(1.0f/Gdx.graphics.getFramesPerSecond(), .017f);
 //		float delta = Gdx.graphics.getDeltaTime();
 		// test slow down time
 		if (timeFreeze) {
-			world.step(delta / 8, WORLD_VELOC, WORLD_POSIT);
+			world.step(delta / 4, WORLD_VELOC, WORLD_POSIT);
 			enemyController.slowCoolDown(true);
-
+			for (Obstacle ob : objects){
+				if (ob instanceof Projectile){
+					Projectile p = (Projectile) ob;
+					p.slow(true);
+				}
+			}
 		} else {
 			world.step(delta, WORLD_VELOC, WORLD_POSIT);
 			enemyController.slowCoolDown(false);
+			for (Obstacle ob : objects){
+				if (ob instanceof Projectile){
+					Projectile p = (Projectile) ob;
+					p.slow(false);
+				}
+			}
 		}
-		avatar.decImmortality();
+		avatar.decImmortality(60f/Gdx.graphics.getFramesPerSecond());
 		int t = avatar.getStartedDashing();
 		if (t > 0) {
 			t = t - 1;
@@ -1272,10 +1291,12 @@ public class LevelController extends WorldController {
 		}
 		if (inputReady && InputController.getInstance().pressedShiftKey()) {
 			// update ripple shader params
-			enemyController.setPlayerVisible(true);
 			if(!isLongRoom){
 				rippleOn = true;
 			}
+
+			//enemyController.setPlayerVisible(true);
+			rippleOn = true;
 			ticks = 0;
 			m_rippleDistance = 0;
 			m_rippleRange = 0;
@@ -1290,6 +1311,11 @@ public class LevelController extends WorldController {
 					Platform p = (Platform) o;
 					if (p.getSpace() == 3){
 						p.shift(shifted);
+					}
+				} else if (o instanceof Spikes){
+					Spikes s = (Spikes) o;
+					if (s.getSpace() == 3){
+						s.shift(shifted);
 					}
 				}
 			}
@@ -1611,19 +1637,20 @@ public class LevelController extends WorldController {
 	public void drawLives(GameCanvas canvas) {
 		TextureRegion life = JsonAssetManager.getInstance().getEntry("life", TextureRegion.class);
 		TextureRegion streak = JsonAssetManager.getInstance().getEntry("streak", TextureRegion.class);
-		canvas.draw(streak, Color.WHITE, 0, 0, -0.8f * scale.x, canvas.getHeight() / 2 + 2 * scale.y, 9 * scale.x,
-				9 * scale.y);
+		canvas.draw(streak, Color.WHITE, 0, 0, -0.2f * scale.x, canvas.getHeight() / 2 + 3.45f * scale.y, 6.5f * scale.x,
+				6.5f * scale.y);
 		int lvNum = GameStateManager.getInstance().getCurrentLevelIndex();
 		int rmNum = GameStateManager.getInstance().getCurrentLevel().getCurrentRoomNumber() + 1;
 		String levelInfo = "Level " + lvNum+"-"+rmNum;
 		glyphLayout.setText(displayFont, levelInfo);
-
-		displayFont.draw(canvas.getSpriteBatch(), glyphLayout, 60, canvas.getHeight()-75);
+		//System.out.println(scale.x);
+		//System.out.println(scale.y);
+		displayFont.draw(canvas.getSpriteBatch(), glyphLayout, 1.5f * scale.x, canvas.getHeight()-2.5f * scale.y);
 //		displayFont.draw(canvas.getSpriteBatch(), glyphLayout, -0.8f * scale.x, canvas.getHeight() / 2 + 3 * scale.y);
 
 		for (int i = 0; i < avatar.getLives(); i++) {
 			canvas.draw(life, Color.WHITE, 0, 0,
-					life.getRegionWidth() * 0.002f * scale.x + (life.getRegionWidth() * 0.005f * scale.x * i),
+					life.getRegionWidth() * 0.004f * scale.x + (life.getRegionWidth() * 0.005f * scale.x * i),
 					canvas.getHeight() - life.getRegionHeight() * 0.007f * scale.y, scale.x, scale.y);
 		}
 	}
@@ -1916,15 +1943,18 @@ public class LevelController extends WorldController {
 	}
 
 	public void playAvatarHurt(){
+		int lives = avatar.getLives();
 		boolean damaged = avatar.removeLife();
-		if (damaged){
-			JsonValue damage = assetDirectory.get("sounds").get("damage");
-			SoundController.getInstance().play(damage.get("file").asString(), damage.get("file").asString(),
-					false, damage.get("volume").asFloat());
-		} else {
-			JsonValue dead = assetDirectory.get("sounds").get("death");
-			SoundController.getInstance().play(dead.get("file").asString(), dead.get("file").asString(),
-					false, dead.get("volume").asFloat());
+		if (lives != avatar.getLives()) {
+			if (damaged) {
+				JsonValue damage = assetDirectory.get("sounds").get("damage");
+				SoundController.getInstance().play(damage.get("file").asString(), damage.get("file").asString(),
+						false, damage.get("volume").asFloat());
+			} else {
+				JsonValue dead = assetDirectory.get("sounds").get("death");
+				SoundController.getInstance().play(dead.get("file").asString(), dead.get("file").asString(),
+						false, dead.get("volume").asFloat());
+			}
 		}
 	}
 }
