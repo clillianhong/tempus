@@ -291,37 +291,37 @@ public class Avatar extends CapsuleObstacle {
     /** Enacts a dash
      *
      * @return true if there the player did a dash (still has dashes left) **/
-    public boolean dash() {
-        if(isSticking){
-            this.setDashing(false);
-            numDashes = maxDashes;
-        }
-        boolean candash = canDash();
-        if(candash){
-            cursor = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
-            cursor = camera.unproject(cursor);
-            cursor.scl(1/scale.x, 1/scale.y,0);
-            Vector2 mousePos = new Vector2(cursor.x , cursor.y );
-//            Vector2 mousePos = canvas.getViewport().unproject(InputController.getInstance().getMousePosition());
-            this.setBodyType(BodyDef.BodyType.DynamicBody);
-            this.setSticking(false);
-            this.setWasSticking(false);
-            this.setDashing(true);
-            this.setDashStartPos(this.getPosition().cpy());
-            this.setDashDistance(Math.min(this.getDashRange(), mousePos.cpy().sub(this.getPosition()).len()));
-            this.setDashForceDirection(mousePos.cpy().sub(this.getPosition()));
-            //System.out.println("dash angle: " + mousePos.cpy().sub(this.getPosition()).angleRad());
-            //System.out.println("avatar angle: " + getAngle());
-            //this.setStartedDashing(2);
-            if (Math.abs(mousePos.cpy().sub(this.getPosition()).angleRad() + Math.PI / 2 - getAngle()) > Math.PI / 2.5f) {
-                this.setDimension(width / 4f, height / 4f);
-                this.setDensity(density * 16f);
-            }
-            //dashCounter = 10;
-            numDashes--;
-        }
-        return candash;
-    }
+//    public boolean dash() {
+//        if(isSticking){
+//            this.setDashing(false);
+//            numDashes = maxDashes;
+//        }
+//        boolean candash = canDash();
+//        if(candash){
+//            cursor = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+//            cursor = camera.unproject(cursor);
+//            cursor.scl(1/scale.x, 1/scale.y,0);
+//            Vector2 mousePos = new Vector2(cursor.x , cursor.y );
+////            Vector2 mousePos = canvas.getViewport().unproject(InputController.getInstance().getMousePosition());
+//            this.setBodyType(BodyDef.BodyType.DynamicBody);
+//            this.setSticking(false);
+//            this.setWasSticking(false);
+//            this.setDashing(true);
+//            this.setDashStartPos(this.getPosition().cpy());
+//            this.setDashDistance(Math.min(this.getDashRange(), mousePos.cpy().sub(this.getPosition()).len()));
+//            this.setDashForceDirection(mousePos.cpy().sub(this.getPosition()));
+//            //System.out.println("dash angle: " + mousePos.cpy().sub(this.getPosition()).angleRad());
+//            //System.out.println("avatar angle: " + getAngle());
+//            //this.setStartedDashing(2);
+//            if (Math.abs(mousePos.cpy().sub(this.getPosition()).angleRad() + Math.PI / 2 - getAngle()) > Math.PI / 2.5f) {
+//                this.setDimension(width / 4f, height / 4f);
+//                this.setDensity(density * 16f);
+//            }
+//            //dashCounter = 10;
+//            numDashes--;
+//        }
+//        return candash;
+//    }
 
     /**
      * Sets whether or not avatar is dashing.
@@ -1193,6 +1193,8 @@ public class Avatar extends CapsuleObstacle {
         // flipping the avatar when they are sticking
         // below a platform looks off
 
+
+        canvas.getSpriteBatch().setProjectionMatrix(camera.combined);
         if(catchReady || isHolding){
             canvas.draw(JsonAssetManager.getInstance().getEntry("catch_indicator", TextureRegion.class),
                     Color.WHITE, origin.x + 84/4f, origin.y + 60/4f,

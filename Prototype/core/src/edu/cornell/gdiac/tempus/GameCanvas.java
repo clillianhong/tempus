@@ -122,8 +122,8 @@ public class GameCanvas {
 		camera.update();
 
 //		camera.setToOrtho(false);
-		spriteBatch.setProjectionMatrix(camera.combined);
-		debugRender.setProjectionMatrix(camera.combined);
+		spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
+		debugRender.setProjectionMatrix(viewport.getCamera().combined);
 		System.out.println(
 				"SCREEN WIDTH: " + getWidth() + "\n" +
 						"SCREEN HEIGHT: " + getHeight()
@@ -415,7 +415,7 @@ public class GameCanvas {
 	 */
     public void begin(Affine2 affine) {
 		global.setAsAffine(affine);
-    	global.mulLeft(camera.combined);
+    	global.mulLeft(viewport.getCamera().combined);
 		spriteBatch.setProjectionMatrix(global);
 		
 		setBlendState(BlendState.NO_PREMULT);
@@ -434,7 +434,7 @@ public class GameCanvas {
     public void begin(float sx, float sy) {
 		global.idt();
 		global.scl(sx,sy,1.0f);
-    	global.mulLeft(camera.combined);
+    	global.mulLeft(viewport.getCamera().combined);
 		spriteBatch.setProjectionMatrix(global);
 		
     	spriteBatch.begin();
@@ -447,7 +447,7 @@ public class GameCanvas {
 	 * Nothing is flushed to the graphics card until the method end() is called.
 	 */
     public void begin() {
-		spriteBatch.setProjectionMatrix(camera.combined);
+		spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
     	spriteBatch.begin();
     	active = DrawPass.STANDARD;
     }
@@ -1063,7 +1063,7 @@ public class GameCanvas {
 	 * Nothing is flushed to the graphics card until the method end() is called.
 	 */
     public void beginDebug() {
-    	debugRender.setProjectionMatrix(camera.combined);
+    	debugRender.setProjectionMatrix(viewport.getCamera().combined);
     	debugRender.begin(ShapeRenderer.ShapeType.Filled);
     	debugRender.setColor(Color.RED);
     	debugRender.circle(0, 0, 10);
