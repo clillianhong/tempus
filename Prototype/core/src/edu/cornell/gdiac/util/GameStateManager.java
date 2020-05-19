@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.*;
 import edu.cornell.gdiac.tempus.GameCanvas;
 import edu.cornell.gdiac.tempus.MusicController;
+import edu.cornell.gdiac.tempus.tempus.EndGameController;
 import edu.cornell.gdiac.tempus.tempus.LevelController;
 import edu.cornell.gdiac.tempus.tempus.TutorialController;
 import edu.cornell.gdiac.tempus.tempus.models.LevelModel;
@@ -329,8 +330,14 @@ public class GameStateManager {
         LevelController[] rooms = new LevelController[room_count];
 
         for (int i = 0; i < room_count; i++) {
-            rooms[i] = new LevelController(room_paths[i]);
+            if(i==0){
+                rooms[i] = new EndGameController(room_paths[i]);
+                rooms[i].setLongRoom(true);
+            }else{
+                rooms[i] = new LevelController(room_paths[i]);
+            }
         }
+
 
         if (lv == unfinishedLevel) {
         return new LevelModel(lv, true, false, unfinishedRoom, rooms);
@@ -407,7 +414,9 @@ public class GameStateManager {
         currentLevel.updateBestTime(currentLevel.getCurrentRoomNumber());
         if (is_exit) {
             boolean finished = currentLevel.stepLevel();
-            if (currentLevel.getHighestUnlockedRoom() == 10 && current_level_idx != 0 && current_level_idx != last_level_idx){
+
+            if (currentLevel.getHighestUnlockedRoom() == 11 && current_level_idx != 0 && current_level_idx != last_level_idx){
+
                 highestUnlockedLevel = levels[current_level_idx + 1];
                 levels[current_level_idx + 1].unlockLevel();
             }
