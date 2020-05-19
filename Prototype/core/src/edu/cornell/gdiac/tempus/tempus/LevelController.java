@@ -1631,8 +1631,8 @@ public class LevelController extends WorldController {
 		int rmNum = GameStateManager.getInstance().getCurrentLevel().getCurrentRoomNumber() + 1;
 		String levelInfo = "Level " + lvNum+"-"+rmNum;
 		glyphLayout.setText(displayFont, levelInfo);
-		System.out.println(scale.x);
-		System.out.println(scale.y);
+		//System.out.println(scale.x);
+		//System.out.println(scale.y);
 		displayFont.draw(canvas.getSpriteBatch(), glyphLayout, 1.5f * scale.x, canvas.getHeight()-2.5f * scale.y);
 //		displayFont.draw(canvas.getSpriteBatch(), glyphLayout, -0.8f * scale.x, canvas.getHeight() / 2 + 3 * scale.y);
 
@@ -1888,15 +1888,18 @@ public class LevelController extends WorldController {
 	}
 
 	public void playAvatarHurt(){
+		int lives = avatar.getLives();
 		boolean damaged = avatar.removeLife();
-		if (damaged){
-			JsonValue damage = assetDirectory.get("sounds").get("damage");
-			SoundController.getInstance().play(damage.get("file").asString(), damage.get("file").asString(),
-					false, damage.get("volume").asFloat());
-		} else {
-			JsonValue dead = assetDirectory.get("sounds").get("death");
-			SoundController.getInstance().play(dead.get("file").asString(), dead.get("file").asString(),
-					false, dead.get("volume").asFloat());
+		if (lives != avatar.getLives()) {
+			if (damaged) {
+				JsonValue damage = assetDirectory.get("sounds").get("damage");
+				SoundController.getInstance().play(damage.get("file").asString(), damage.get("file").asString(),
+						false, damage.get("volume").asFloat());
+			} else {
+				JsonValue dead = assetDirectory.get("sounds").get("death");
+				SoundController.getInstance().play(dead.get("file").asString(), dead.get("file").asString(),
+						false, dead.get("volume").asFloat());
+			}
 		}
 	}
 }

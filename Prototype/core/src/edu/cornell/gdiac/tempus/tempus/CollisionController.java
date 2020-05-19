@@ -156,12 +156,23 @@ public class CollisionController implements ContactListener {
                 bounceDir.x = -1 * bounceDir.x;
             }
         }
+        if (spike.getBody().getPosition().y > avatar.getY()){
+            if (bounceDir.y > 0){
+                bounceDir.y = -1 * bounceDir.y;
+            }
+        } else {
+            if (bounceDir.y < 0){
+                bounceDir.y = -1 * bounceDir.y;
+            }
+        }
         avatar.resetDashNum(1);
         avatar.setLinearVelocity(bounceDir);
         avatar.setEnemyContact(true);
+        avatar.setDashing(false);
     }
 
     private void processAvatarEnemyContact(Fixture av, Fixture turret, Contact contact) {
+            avatar.setDashing(false);
             Float norm_angle = contact.getWorldManifold().getNormal().angle();
 
             if (!norm_angle.isNaN()) {
@@ -182,6 +193,15 @@ public class CollisionController implements ContactListener {
                     bounceDir.x = -1 * bounceDir.x;
                 }
             }
+            if (turret.getBody().getPosition().y > avatar.getY()){
+                if (bounceDir.y > 0){
+                    bounceDir.y = -1 * bounceDir.y;
+                 }
+            } else {
+                if (bounceDir.y < 0){
+                    bounceDir.y = -1 * bounceDir.y;
+                 }
+            }
             Enemy obs = (Enemy) turret.getBody().getUserData();
             avatar.resetDashNum(1);
             if (!(obs.isDead())) {
@@ -189,6 +209,7 @@ public class CollisionController implements ContactListener {
             }
             avatar.setLinearVelocity(bounceDir);
             turret.getBody().setLinearVelocity(new Vector2(0, 0));
+            avatar.setDashing(false);
 
         if (avatar.getShifted() > 0 && (obs).getSpace() != 3 && avatar.isHolding()) {
             if (!obs.isTurret()) {
@@ -408,6 +429,15 @@ public class CollisionController implements ContactListener {
                                 bounceDir.x = -1 * bounceDir.x;
                             }
                         }
+                        if (fix2.getBody().getPosition().y > avatar.getY()){
+                            if (bounceDir.y > 0){
+                                bounceDir.y = -1 * bounceDir.y;
+                            }
+                        } else {
+                            if (bounceDir.y < 0) {
+                                bounceDir.y = -1 * bounceDir.y;
+                            }
+                        }
                         avatar.resetDashNum(1);
                         avatar.setLinearVelocity(bounceDir);
                         avatar.setCurrentPlatform((Platform) objB);
@@ -434,6 +464,15 @@ public class CollisionController implements ContactListener {
                         } else {
                             if (bounceDir.x < 0){
                                 bounceDir.x = -1 * bounceDir.x;
+                            }
+                        }
+                        if (fix1.getBody().getPosition().y > avatar.getY()){
+                            if (bounceDir.y > 0){
+                                bounceDir.y = -1 * bounceDir.y;
+                            }
+                        } else {
+                            if (bounceDir.y < 0) {
+                                bounceDir.y = -1 * bounceDir.y;
                             }
                         }
                         avatar.resetDashNum(1);

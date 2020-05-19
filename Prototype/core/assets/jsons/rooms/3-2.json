@@ -55,7 +55,7 @@
       "density": 1,
       "bodytype": "static",
       "entitytype": "past",
-      "cooldown": 360,
+      "cooldown": 600,
       "direction": [
         -3,
         0
