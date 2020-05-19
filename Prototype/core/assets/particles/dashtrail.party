@@ -8,12 +8,12 @@ lowMin: 1000.0
 lowMax: 1000.0
 - Count - 
 min: 0
-max: 20
+max: 300
 - Emission - 
 lowMin: 0.0
 lowMax: 0.0
-highMin: 30.0
-highMax: 30.0
+highMin: 150.0
+highMax: 150.0
 relative: false
 scalingCount: 1
 scaling0: 1.0
@@ -22,17 +22,15 @@ timeline0: 0.0
 - Life - 
 lowMin: 0.0
 lowMax: 0.0
-highMin: 400.0
-highMax: 400.0
+highMin: 1500.0
+highMax: 1500.0
 relative: false
-scalingCount: 3
+scalingCount: 2
 scaling0: 1.0
-scaling1: 1.0
-scaling2: 0.3
-timelineCount: 3
+scaling1: 0.0
+timelineCount: 2
 timeline0: 0.0
-timeline1: 0.66
-timeline2: 1.0
+timeline1: 1.0
 independent: false
 - Life Offset - 
 active: false
@@ -66,8 +64,8 @@ timeline0: 0.0
 - X Scale - 
 lowMin: 0.0
 lowMax: 0.0
-highMin: 80.0
-highMax: 80.0
+highMin: 3.0
+highMax: 3.0
 relative: false
 scalingCount: 2
 scaling0: 1.0
@@ -78,9 +76,29 @@ timeline1: 1.0
 - Y Scale - 
 active: false
 - Velocity - 
-active: false
+active: true
+lowMin: 0.0
+lowMax: 0.0
+highMin: 100.0
+highMax: 100.0
+relative: false
+scalingCount: 2
+scaling0: 1.0
+scaling1: 0.3137255
+timelineCount: 2
+timeline0: 0.0
+timeline1: 0.96575344
 - Angle - 
-active: false
+active: true
+lowMin: 0.0
+lowMax: 0.0
+highMin: 0.0
+highMax: 360.0
+relative: false
+scalingCount: 1
+scaling0: 1.0
+timelineCount: 1
+timeline0: 0.0
 - Rotation - 
 active: false
 - Wind - 
@@ -88,16 +106,24 @@ active: false
 - Gravity - 
 active: false
 - Tint - 
-colorsCount: 6
+colorsCount: 12
 colors0: 1.0
 colors1: 0.75686276
 colors2: 0.24313726
-colors3: 0.8392157
-colors4: 0.23137255
-colors5: 1.0
-timelineCount: 2
+colors3: 1.0
+colors4: 0.75686276
+colors5: 0.24313726
+colors6: 1.0
+colors7: 0.75686276
+colors8: 0.24313726
+colors9: 0.8392157
+colors10: 0.23137255
+colors11: 1.0
+timelineCount: 4
 timeline0: 0.0
-timeline1: 1.0
+timeline1: 0.13989638
+timeline2: 0.13989638
+timeline3: 1.0
 - Transparency - 
 lowMin: 0.0
 lowMax: 0.0
@@ -106,8 +132,8 @@ highMax: 1.0
 relative: false
 scalingCount: 3
 scaling0: 0.0
-scaling1: 1.0
-scaling2: 0.0
+scaling1: 0.752809
+scaling2: 1.0
 timelineCount: 3
 timeline0: 0.0
 timeline1: 0.001
