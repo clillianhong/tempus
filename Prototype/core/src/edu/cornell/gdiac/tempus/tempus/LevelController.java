@@ -931,15 +931,15 @@ public class LevelController extends WorldController {
 		Label musicPlusLabel = new Label("+", carterStyleSlider);
 		Label musicMinusLabel = new Label("-", carterStyleSlider);
 //		volumeTable.debug();
-		volumeTable.add(soundEffectsLabel).colspan(sw/4).left().padBottom(sh / 10).padLeft(sw/8).expandX();
-		volumeTable.add(soundEffectsMinusLabel).colspan(sw/8).padBottom(sh/10).right().padRight(4).expandX();
-		volumeTable.add(soundEffectsSlider).colspan(2 * sw / 4).padBottom(sh / 10).right().fillX().expandX();
-		volumeTable.add(soundEffectsPlusLabel).colspan(sw/8).padBottom(sh / 10).padLeft(4).left().expandX().padLeft(2).padRight(sw/8).row();
+		volumeTable.add(soundEffectsLabel).colspan(sw/4).left().padBottom(sh / 10).padLeft(sw/8).padTop(sh/4).expandX();
+		volumeTable.add(soundEffectsMinusLabel).colspan(sw/8).padBottom(sh/10).right().padRight(4).padTop(sh/4).expandX();
+		volumeTable.add(soundEffectsSlider).colspan(2 * sw / 4).padBottom(sh / 10).right().fillX().padTop(sh/4).expandX();
+		volumeTable.add(soundEffectsPlusLabel).colspan(sw/8).padBottom(sh / 10).padLeft(4).left().expandX().padTop(sh/4).padLeft(2).padRight(sw/8).row();
 		volumeTable.add(musicLabel).colspan(sw/4).left().padBottom(sh / 10).padLeft(sw/8).expandX();
 		volumeTable.add(musicMinusLabel).colspan(sw/8).padBottom(sh/10).padRight(4).right().expandX();
 		volumeTable.add(musicSlider).left().colspan(2 * sw / 4).fillX().padBottom(sh / 10).expandX();
 		volumeTable.add(musicPlusLabel).colspan(sw/8).padBottom(sh / 10).left().padLeft(4).expandX().padLeft(2).padRight(sw/8).row();
-		volumeTable.add(exitVolumeMenuButton).width(sw / 4 / 1.5f).height(sh / 5.1f / .9f).colspan(sw).expandX();
+		volumeTable.add(exitVolumeMenuButton).width(sw / 8 / 1.5f).height(sh / 5.1f / .9f /2).colspan(sw).expand().bottom().left();
 
 		tableStack.add(volumeContainer);
 		/*
