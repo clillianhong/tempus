@@ -283,8 +283,8 @@ public class Enemy extends CapsuleObstacle {
         switch (json.get("aitype").asInt()) {
         case 1:
             ai = EnemyType.WALK;
-            if (entitytype == "past") {
-                FRAME_RATE = Gdx.graphics.getFramesPerSecond()/8;
+            if (entitytype.equals("past")) {
+                FRAME_RATE = Gdx.graphics.getFramesPerSecond()/4;
             }
             neutralTexture = JsonAssetManager.getInstance().getEntry(("enemywalking" + "_" + entitytype), FilmStrip.class);
             attackingTexture = neutralTexture;
@@ -323,10 +323,15 @@ public class Enemy extends CapsuleObstacle {
         case 4:
             ai = EnemyType.FLY;
 //            FRAME_RATE = 6;
-            FRAME_RATE = Gdx.graphics.getFramesPerSecond()/10;
+            if (entitytype.equals("present")) {
+                FRAME_RATE = Gdx.graphics.getFramesPerSecond()/10;
+                minimizeScale = 0.5f;
+            } else if (entitytype.equals("past")) {
+                FRAME_RATE = Gdx.graphics.getFramesPerSecond()/8;
+                minimizeScale = 0.4f;
+            }
             neutralTexture = JsonAssetManager.getInstance().getEntry(("enemyflying" + "_" + entitytype), FilmStrip.class);
             attackingTexture = neutralTexture;
-            minimizeScale = 0.5f;
             sight = new LineOfSight(this);
             setName("fly enemy");
             isFiring = false;

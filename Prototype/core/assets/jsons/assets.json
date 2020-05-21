@@ -586,13 +586,13 @@
       "size": 35
     },
     "enemyflying_past": {
-      "file": "filmstrips/enemy/enemy_flying.png",
-      "rows": 5,
-      "cols": 5,
-      "size": 22
+      "file": "filmstrips/enemy/enemy_flying_past.png",
+      "rows": 2,
+      "cols": 3,
+      "size": 6
     },
     "enemyflying_present": {
-      "file": "filmstrips/enemy/enemy_flying.png",
+      "file": "filmstrips/enemy/enemy_flying_present.png",
       "rows": 5,
       "cols": 5,
       "size": 22
