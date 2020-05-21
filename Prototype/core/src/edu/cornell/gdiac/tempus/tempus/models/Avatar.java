@@ -175,6 +175,10 @@ public class Avatar extends CapsuleObstacle {
     private Platform currentPlat;
     /** the avatar is currently in catch mode */
     private boolean catchReady;
+    /** the avatar's last position */
+    private float highestPos;
+    /** the avatar's start position */
+    private Vector2 startPos;
 
     /** Cache for internal force calculations */
     private Vector2 forceCache = new Vector2();
@@ -213,6 +217,18 @@ public class Avatar extends CapsuleObstacle {
     private TextureRegion projPresentCaughtTexture;
     /** The texture for the caught projectile of type past */
     private TextureRegion projPastCaughtTexture;
+
+    public Vector2 getStartPos() {
+        return startPos;
+    }
+
+    public void setHighestPos(float highestPos) {
+        this.highestPos = highestPos;
+    }
+
+    public float getHighestPos() {
+        return highestPos;
+    }
 
     public void setDashCounter( int n) {
         dashCounter = n;
@@ -824,6 +840,8 @@ public class Avatar extends CapsuleObstacle {
 		width = dwidth*shrink[0];
 		height = dheight*shrink[1] * 1.5f;
         setPosition(pos[0],pos[1]);
+        startPos = getPosition();
+        highestPos = getY();
 		setTexture(avatarTexture);
         setDensity(json.get("density").asFloat());
         density = getDensity();

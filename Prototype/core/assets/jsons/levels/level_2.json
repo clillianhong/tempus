@@ -2,7 +2,7 @@
   "level": 2,
   "room_count": 16,
   "rooms" : [
-    "jsons/rooms/2-1.json",
+    "jsons/rooms/2-intro.json",
     "jsons/rooms/2-1.json",
     "jsons/rooms/2-2.json",
     "jsons/rooms/2-3.json",

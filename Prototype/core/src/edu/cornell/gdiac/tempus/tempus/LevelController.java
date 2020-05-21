@@ -24,6 +24,7 @@ import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -364,6 +365,10 @@ public class LevelController extends WorldController {
 	/** is the timeshift ripple active */
 	protected boolean shiftripple;
 
+	protected float zoom;
+	protected Float x_dist;
+	protected Float y_dist;
+
 	/**
 	 * Creates and initialize a new instance of the platformer game
 	 *
@@ -499,7 +504,10 @@ public class LevelController extends WorldController {
 		hudViewport.getCamera().update();
 		resetRipple();
 		updateShader();
-
+		x_dist = null;
+		y_dist = null;
+		zoom = 3;
+		avatar.setHighestPos(avatar.getY());
 	}
 
 	public void resetGame() {
@@ -588,7 +596,10 @@ public class LevelController extends WorldController {
 		viewport.getCamera().update();
 		stage.getCamera().update();
 		hudViewport.getCamera().update();
-
+		x_dist = null;
+		y_dist = null;
+		zoom = 3;
+		avatar.setHighestPos(avatar.getY());
 	}
 
 
@@ -2006,8 +2017,21 @@ public class LevelController extends WorldController {
 				} else {
 					bgSprite.setRegion(presentBackgroundTexture);
 				}
-
-				canvas.getSpriteBatch().draw(bgSprite, 0, 0, sw , sh);
+				avatar.setHighestPos(Math.max(avatar.getY(), avatar.getHighestPos()));
+				if (x_dist == null) {
+					x_dist = -canvas.getWidth() * 1f;
+				}
+				if (y_dist == null) {
+					y_dist = -canvas.getHeight() * 1f;
+				}
+				canvas.getSpriteBatch().draw(bgSprite, x_dist,y_dist, sw * zoom, sh * zoom);
+				float ratio = 3 / (goalDoor.getY() - avatar.getStartPos().y);
+				float x_ratio = -canvas.getWidth() * (zoom - 1) / 2f / (goalDoor.getY() - avatar.getStartPos().y);
+				float y_ratio = -canvas.getHeight() * (zoom - 1) / 2f / (goalDoor.getY() - avatar.getStartPos().y);
+				float dist = goalDoor.getY() - avatar.getHighestPos();
+				zoom = Interpolation.pow2Out.apply(zoom, Math.max(ratio * dist, 1), 0.025f);
+				x_dist = Interpolation.pow2Out.apply(x_dist, Math.min(x_ratio * dist, 0), 0.025f);
+				y_dist = Interpolation.pow2Out.apply(y_dist, Math.min(y_ratio * dist, 0), 0.025f);
 			}
 
 			canvas.getSpriteBatch().setProjectionMatrix(viewport.getCamera().combined);
