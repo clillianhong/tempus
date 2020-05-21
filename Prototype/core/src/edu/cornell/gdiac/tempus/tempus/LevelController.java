@@ -463,7 +463,6 @@ public class LevelController extends WorldController {
 		stage.getCamera().update();
 		stage.getViewport().apply();
 
-
 	}
 
 	public void resetGame() {
@@ -1705,10 +1704,14 @@ public class LevelController extends WorldController {
 			stage.getBatch().end();
 
 			canvas.begin();
-
-			dashTrail.draw(canvas.getSpriteBatch(),delta);
+			if (avatar.isDashing()) {
+				dashTrail.draw(canvas.getSpriteBatch(), delta);
+			}
+			else if (!dashTrail.isComplete()){
+				dashTrail.draw(canvas.getSpriteBatch(), delta);
+			}
 			//Loops the dash trail
-			if (dashTrail.isComplete()){
+			if (dashTrail.isComplete()&&avatar.isDashing()){
 				dashTrail.reset();
 			}
 			drawObjectInWorld();
