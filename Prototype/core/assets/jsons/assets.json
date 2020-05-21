@@ -1,5 +1,33 @@
 {
   "textures": {
+    "timer" : {
+      "file": "textures/gui/roommode/timer.png",
+      "wrap": false
+    },
+    "you_win" : {
+      "file": "textures/gui/roommode/you_win.png",
+      "wrap": false
+    },
+    "new_record" : {
+      "file": "textures/gui/roommode/new_record.png",
+      "wrap": false
+    },
+    "level_0_win" : {
+      "file": "textures/gui/roommode/level_0_win.png",
+      "wrap": false
+    },
+    "level_1_win" : {
+      "file": "textures/gui/roommode/level_1_win.png",
+      "wrap": false
+    },
+    "level_2_win" : {
+      "file": "textures/gui/roommode/level_2_win.png",
+      "wrap": false
+    },
+    "level_3_win" : {
+      "file": "textures/gui/roommode/level_3_win.png",
+      "wrap": false
+    },
     "lv10_unlock_message" : {
       "file": "textures/gui/roommode/unlock_text.png",
       "wrap": false
@@ -265,7 +293,6 @@
       "file": "textures/gui/selectmode/backbutton.png",
       "wrap": false
     },
-
     "25_black_overlay" : {
       "file": "textures/gui/pause_filter_25_black.png",
       "wrap": false
@@ -280,6 +307,10 @@
     },
     "restart_button" : {
       "file": "textures/gui/pause_restart_button.png",
+      "wrap": false
+    },
+    "settings_button" : {
+      "file": "textures/gui/settings_button.png",
       "wrap": false
     },
     "pause_button" : {

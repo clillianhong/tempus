@@ -36,8 +36,12 @@ public class LevelModel {
 
     protected int highest_room_unlocked;
 
+    protected float bestLevelTime;
+
     /**The best time on the level*/
     protected float [] bestTime;
+    /** the current time on the level*/
+    protected float [] curTime;
 
     public LevelModel(int lv, boolean unlocked, boolean finished, int resume, LevelController[] rms){
         level_number = lv;
@@ -55,8 +59,10 @@ public class LevelModel {
         canvas = null;
         //Initializes bestTime for this level.
         bestTime = new float [rms.length];
+        curTime = new float[rms.length];
         Arrays.fill(bestTime, Float.MAX_VALUE);
-
+        Arrays.fill(curTime, 0);
+        bestLevelTime = 0;
         jsonReader = new JsonReader();
         assetDirectory = jsonReader.parse(Gdx.files.internal("jsons/assets.json"));
     }
@@ -68,6 +74,7 @@ public class LevelModel {
     public void updateBestTime(int room_idx){
         float time = rooms[room_idx].getTimer();
         if (time<bestTime[room_idx]){bestTime[room_idx]=time;}
+        curTime[room_idx] = time;
         rooms[room_idx].resetTimer();
     }
 
@@ -82,7 +89,30 @@ public class LevelModel {
      * @param time the level times to be set
      *
      */
-    public void setBestTime(float [] time){bestTime = time;}
+    public void setBestTime(float [] time){
+        for (float f : time){
+            bestLevelTime += f;
+        }
+        bestTime = time;
+    }
+
+    /**
+     * Sums all the room times up till room idx
+     * @param idx
+     * @return the total time
+     */
+    public float sumTimer(int idx){
+        float sum = 0;
+        for (int f = 0; f < idx; f++){
+            sum+=curTime[f];
+        }
+        System.out.println("SUM " + sum);
+        return sum;
+    }
+
+    public float getBestLevelTime(){
+        return bestLevelTime;
+    }
 
     public int getHighestUnlockedRoom(){
         return highest_room_unlocked;
@@ -119,7 +149,7 @@ public class LevelModel {
     public boolean stepLevel(){
         //Steps the room
         current_room_idx = current_room_idx + 1;
-        highest_room_unlocked = Math.max(highest_room_unlocked, current_room_idx);
+        highest_room_unlocked = Math.min(rooms.length-1, Math.max(highest_room_unlocked, current_room_idx));
         if(current_room_idx == rooms.length){
             current_room_idx = 0;
             return true;
