@@ -26,8 +26,8 @@
   },
   "avatar": {
     "pos": [
-      12.996,
-      1.8799999999999992
+      12.676,
+      2.149999999999999
     ],
     "shrink": [
       0.0216,
@@ -44,8 +44,8 @@
   "turrets": {
     "turret1": {
       "pos": [
-        1.352,
-        11.249999999999995
+        1.256,
+        12.989999999999993
       ],
       "shrink": [
         0.0168,
@@ -55,7 +55,7 @@
       "density": 1,
       "bodytype": "static",
       "entitytype": "present",
-      "cooldown": 250,
+      "cooldown": 400,
       "direction": [
         4,
         0
@@ -68,8 +68,8 @@
   "enemies": {
     "enemy1": {
       "pos": [
-        3.784,
-        8.49
+        3.624,
+        9.72
       ],
       "shrink": [
         0.0168,
@@ -79,13 +79,13 @@
       "density": 1,
       "bodytype": "dynamic",
       "entitytype": "past",
-      "cooldown": 300,
+      "cooldown": 250,
       "aitype": 1
     },
     "enemy2": {
       "pos": [
-        22.44,
-        8.7
+        22.184,
+        9.81
       ],
       "shrink": [
         0.0168,
@@ -95,12 +95,44 @@
       "density": 1,
       "bodytype": "dynamic",
       "entitytype": "past",
-      "cooldown": 300,
+      "cooldown": 250,
       "aitype": 1
+    },
+    "enemy7": {
+      "pos": [
+        22.472,
+        4.14
+      ],
+      "shrink": [
+        0.0168,
+        0.021375
+      ],
+      "texture": "enemypast",
+      "aitype": 1,
+      "density": 1,
+      "bodytype": "dynamic",
+      "entitytype": "past",
+      "cooldown": 250
+    },
+    "enemy8": {
+      "pos": [
+        3.368,
+        3.9
+      ],
+      "shrink": [
+        0.0168,
+        0.021375
+      ],
+      "texture": "enemypast",
+      "aitype": 1,
+      "density": 1,
+      "bodytype": "dynamic",
+      "entitytype": "past",
+      "cooldown": 250
     }
   },
   "spikes": {
-    "spike0": {
+    "spike1": {
       "pos": [
         15.188,
         5.02
@@ -113,7 +145,7 @@
       "space": 1,
       "angle": 225
     },
-    "spike1": {
+    "spike2": {
       "pos": [
         14.1,
         5.41
@@ -126,7 +158,7 @@
       "space": 1,
       "angle": -90
     },
-    "spike2": {
+    "spike3": {
       "pos": [
         16.564,
         5.23
@@ -139,7 +171,7 @@
       "space": 1,
       "angle": 225
     },
-    "spike3": {
+    "spike4": {
       "pos": [
         17.876,
         4.99
@@ -152,7 +184,7 @@
       "space": 1,
       "angle": 225
     },
-    "spike4": {
+    "spike5": {
       "pos": [
         19.22,
         5.32
@@ -165,7 +197,7 @@
       "space": 1,
       "angle": 180
     },
-    "spike5": {
+    "spike6": {
       "pos": [
         14.196,
         6.7
@@ -178,7 +210,7 @@
       "space": 1,
       "angle": 0
     },
-    "spike6": {
+    "spike7": {
       "pos": [
         6.772,
         6.7
@@ -191,7 +223,7 @@
       "space": 1,
       "angle": 0
     },
-    "spike7": {
+    "spike8": {
       "pos": [
         19.284,
         6.790000000000002
@@ -204,7 +236,7 @@
       "space": 1,
       "angle": 90
     },
-    "spike8": {
+    "spike9": {
       "pos": [
         15.348,
         7
@@ -217,7 +249,7 @@
       "space": 1,
       "angle": 45
     },
-    "spike9": {
+    "spike10": {
       "pos": [
         16.756,
         6.94
@@ -230,7 +262,7 @@
       "space": 1,
       "angle": 45
     },
-    "spike10": {
+    "spike11": {
       "pos": [
         17.972,
         7.060000000000001
@@ -243,7 +275,7 @@
       "space": 1,
       "angle": 45
     },
-    "spike11": {
+    "spike12": {
       "pos": [
         11.796,
         5.17
@@ -256,7 +288,7 @@
       "space": 1,
       "angle": 180
     },
-    "spike12": {
+    "spike13": {
       "pos": [
         11.924,
         6.52
@@ -269,7 +301,7 @@
       "space": 1,
       "angle": 90
     },
-    "spike13": {
+    "spike14": {
       "pos": [
         6.612,
         5.23
@@ -282,7 +314,7 @@
       "space": 1,
       "angle": -90
     },
-    "spike14": {
+    "spike15": {
       "pos": [
         7.956,
         6.94
@@ -295,7 +327,7 @@
       "space": 1,
       "angle": 45
     },
-    "spike15": {
+    "spike16": {
       "pos": [
         9.396,
         6.82
@@ -308,7 +340,7 @@
       "space": 1,
       "angle": 45
     },
-    "spike16": {
+    "spike17": {
       "pos": [
         10.612,
         6.88
@@ -321,7 +353,7 @@
       "space": 1,
       "angle": 45
     },
-    "spike17": {
+    "spike18": {
       "pos": [
         7.732,
         4.9
@@ -334,7 +366,7 @@
       "space": 1,
       "angle": 225
     },
-    "spike18": {
+    "spike19": {
       "pos": [
         9.172,
         4.99
@@ -347,7 +379,7 @@
       "space": 1,
       "angle": 225
     },
-    "spike19": {
+    "spike20": {
       "pos": [
         10.388,
         4.84
@@ -362,20 +394,7 @@
     }
   },
   "talls": {
-    "tall1": {
-      "name": "both_tall",
-      "pos": [
-        11.944,
-        -2.6100000000000003
-      ],
-      "bodytype": "static",
-      "density": 0,
-      "friction": 0.6,
-      "restitution": 0.1,
-      "texture": "both_tall",
-      "space": 3
-    },
-    "pasttall63": {
+    "tall2": {
       "name": "past_tall",
       "pos": [
         11.784,
@@ -407,8 +426,8 @@
     "longcapsule2": {
       "name": "present_longcapsule",
       "pos": [
-        22.568,
-        11.97
+        22.152,
+        11.91
       ],
       "bodytype": "static",
       "density": 0,
@@ -420,8 +439,8 @@
     "longcapsule3": {
       "name": "past_longcapsule",
       "pos": [
-        19.752,
-        5.43
+        19.656,
+        6.45
       ],
       "bodytype": "static",
       "density": 0,
@@ -433,8 +452,8 @@
     "longcapsule4": {
       "name": "past_longcapsule",
       "pos": [
-        0.936,
-        5.43
+        0.904,
+        6.3
       ],
       "bodytype": "static",
       "density": 0,
@@ -443,7 +462,7 @@
       "texture": "past_longcapsule",
       "space": 2
     },
-    "presentlongcapsule64": {
+    "longcapsule5": {
       "name": "present_longcapsule",
       "pos": [
         6.632,
@@ -456,7 +475,7 @@
       "texture": "present_longcapsule",
       "space": 1
     },
-    "presentlongcapsule65": {
+    "longcapsule6": {
       "name": "present_longcapsule",
       "pos": [
         13.992,
@@ -468,6 +487,45 @@
       "restitution": 0.1,
       "texture": "present_longcapsule",
       "space": 1
+    },
+    "past_longcapsule10": {
+      "name": "past_longcapsule",
+      "pos": [
+        19.656,
+        0.66
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "past_longcapsule",
+      "space": 2
+    },
+    "past_longcapsule11": {
+      "name": "past_longcapsule",
+      "pos": [
+        0.712,
+        0.57
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "past_longcapsule",
+      "space": 2
+    },
+    "bothlongcapsule12": {
+      "name": "both_longcapsule",
+      "pos": [
+        10.12,
+        0.45
+      ],
+      "bodytype": "static",
+      "density": 0,
+      "friction": 0.6,
+      "restitution": 0.1,
+      "texture": "both_longcapsule",
+      "space": 3
     }
   }
 }

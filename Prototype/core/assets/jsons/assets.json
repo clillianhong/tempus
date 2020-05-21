@@ -4,6 +4,14 @@
       "file": "textures/gui/roommode/timer.png",
       "wrap": false
     },
+    "help_info_transparent" : {
+      "file": "textures/gui/roommode/help_transparent.png",
+      "wrap": false
+    },
+    "help_icon" : {
+      "file": "textures/gui/roommode/help_icon.png",
+      "wrap": false
+    },
     "you_win" : {
       "file": "textures/gui/roommode/you_win.png",
       "wrap": false
@@ -145,7 +153,6 @@
       "wrap": false
     },
     "spikes": {
-
       "file": "textures/general/spikey_boi_present_darkerbottom.png",
       "wrap": true
     },
