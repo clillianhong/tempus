@@ -10,27 +10,18 @@
  */
 package edu.cornell.gdiac.tempus.tempus;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.scenes.scene2d.Action;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -38,10 +29,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.*;
-import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import edu.cornell.gdiac.audio.MusicBuffer;
 import edu.cornell.gdiac.tempus.*;
 import edu.cornell.gdiac.util.*;
 import edu.cornell.gdiac.tempus.obstacle.*;
@@ -369,8 +357,6 @@ public class LevelController extends WorldController {
 	protected boolean shiftripple;
 
 	protected float zoom;
-	protected Float x_dist;
-	protected Float y_dist;
 
 	/**
 	 * Creates and initialize a new instance of the platformer game
@@ -513,8 +499,6 @@ public class LevelController extends WorldController {
 		hudViewport.getCamera().update();
 		resetRipple();
 		updateShader();
-		x_dist = null;
-		y_dist = null;
 		zoom = 3;
 		avatar.setHighestPos(avatar.getY());
 	}
@@ -611,8 +595,6 @@ public class LevelController extends WorldController {
 		viewport.getCamera().update();
 		stage.getCamera().update();
 		hudViewport.getCamera().update();
-		x_dist = null;
-		y_dist = null;
 		zoom = 3;
 		avatar.setHighestPos(avatar.getY());
 	}
@@ -2084,20 +2066,12 @@ public class LevelController extends WorldController {
 					bgSprite.setRegion(presentBackgroundTexture);
 				}
 				avatar.setHighestPos(Math.max(avatar.getY(), avatar.getHighestPos()));
-				if (x_dist == null) {
-					x_dist = -canvas.getWidth() * 1f;
-				}
-				if (y_dist == null) {
-					y_dist = -canvas.getHeight() * 1f;
-				}
-				canvas.getSpriteBatch().draw(bgSprite, x_dist,y_dist, sw * zoom, sh * zoom);
+
+				canvas.getSpriteBatch().draw(bgSprite, 0, 0, canvas.getWidth() / 2,
+						canvas.getHeight() / 2, sw, sh, zoom, zoom, 0);
 				float ratio = 3 / (goalDoor.getY() - avatar.getStartPos().y);
-				float x_ratio = -canvas.getWidth() * (zoom - 1) / 2f / (goalDoor.getY() - avatar.getStartPos().y);
-				float y_ratio = -canvas.getHeight() * (zoom - 1) / 2f / (goalDoor.getY() - avatar.getStartPos().y);
 				float dist = goalDoor.getY() - avatar.getHighestPos();
 				zoom = Interpolation.pow2Out.apply(zoom, Math.max(ratio * dist, 1), 0.025f);
-				x_dist = Interpolation.pow2Out.apply(x_dist, Math.min(x_ratio * dist, 0), 0.025f);
-				y_dist = Interpolation.pow2Out.apply(y_dist, Math.min(y_ratio * dist, 0), 0.025f);
 			}
 
 			canvas.getSpriteBatch().setProjectionMatrix(viewport.getCamera().combined);
