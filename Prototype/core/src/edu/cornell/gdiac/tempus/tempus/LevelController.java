@@ -1968,14 +1968,15 @@ public class LevelController extends WorldController {
 		canvas.draw(streak, Color.WHITE, 0, 0, -0.2f * scale.x, canvas.getHeight() / 2 + 3.45f * scale.y, 6.5f * scale.x,
 				6.5f * scale.y);
 		int lvNum = GameStateManager.getInstance().getCurrentLevelIndex();
-		int rmNum = GameStateManager.getInstance().getCurrentLevel().getCurrentRoomNumber() + 1;
-		String levelInfo = "Level " + lvNum+"-"+rmNum;
-		glyphLayout.setText(displayFont, levelInfo);
-		//System.out.println(scale.x);
-		//System.out.println(scale.y);
-		displayFont.draw(canvas.getSpriteBatch(), glyphLayout, 1.5f * scale.x, canvas.getHeight()-2.5f * scale.y);
+		int rmNum = GameStateManager.getInstance().getCurrentLevel().getCurrentRoomNumber();
+		if (rmNum != 0) {
+			String levelInfo = "Level " + lvNum + "-" + rmNum;
+			glyphLayout.setText(displayFont, levelInfo);
+			//System.out.println(scale.x);
+			//System.out.println(scale.y);
+			displayFont.draw(canvas.getSpriteBatch(), glyphLayout, 1.5f * scale.x, canvas.getHeight() - 2.5f * scale.y);
 //		displayFont.draw(canvas.getSpriteBatch(), glyphLayout, -0.8f * scale.x, canvas.getHeight() / 2 + 3 * scale.y);
-
+		}
 		for (int i = 0; i < avatar.getLives(); i++) {
 			canvas.draw(life, Color.WHITE, 0, 0,
 					life.getRegionWidth() * 0.004f * scale.x + (life.getRegionWidth() * 0.005f * scale.x * i),
@@ -2116,7 +2117,6 @@ public class LevelController extends WorldController {
 				canvas.getSpriteBatch().setProjectionMatrix(hudViewport.getCamera().combined);
 				hudViewport.apply();
 			}
-
 			drawLives(canvas);
 
 			// Final message
