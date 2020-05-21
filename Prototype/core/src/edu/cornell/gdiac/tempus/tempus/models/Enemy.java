@@ -1,6 +1,7 @@
 package edu.cornell.gdiac.tempus.tempus.models;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -11,6 +12,7 @@ import edu.cornell.gdiac.tempus.GameCanvas;
 import edu.cornell.gdiac.tempus.obstacle.CapsuleObstacle;
 import edu.cornell.gdiac.util.FilmStrip;
 import edu.cornell.gdiac.util.JsonAssetManager;
+import edu.cornell.gdiac.util.SoundController;
 
 import static edu.cornell.gdiac.tempus.tempus.models.EntityType.PAST;
 import static edu.cornell.gdiac.tempus.tempus.models.EntityType.PRESENT;
@@ -444,6 +446,8 @@ public class Enemy extends CapsuleObstacle {
         setNextDirection(0);
         setLinearVelocity(new Vector2(0,0));
         dead = true;
+        Sound deathSound = JsonAssetManager.getInstance().getEntry("enemy_death", Sound.class);
+        deathSound.play();
     }
 
 
