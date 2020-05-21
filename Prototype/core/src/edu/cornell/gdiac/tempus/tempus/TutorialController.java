@@ -298,7 +298,7 @@ public class TutorialController extends LevelController {
             inputReady=false;
         }
 
-        avatar.setLives(5);
+        avatar.setLives(3);
 
         super.update(dt);
 
