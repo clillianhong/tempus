@@ -496,6 +496,10 @@
     "teleport_disappear": {
       "file": "sounds/teleport_higher.mp3",
       "volume": 0.5
+    },
+    "enemy_death": {
+      "file": "sounds/enemy_death_cymbal.mp3",
+      "volume": 0.1
     }
   },
   "music": {

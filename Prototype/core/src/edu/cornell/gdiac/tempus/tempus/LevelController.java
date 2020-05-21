@@ -870,14 +870,8 @@ public class LevelController extends WorldController {
 		volumeTable = new Table();
 		volumeContainer.setActor(volumeTable);
 		volumeContainer.setVisible(false);
-		float soundVolume = 1f;
-		if (soundEffectsSlider != null){
-			soundVolume = soundEffectsSlider.getValue();
-		}
-		float musicVolume = 1f;
-		if (musicSlider != null){
-			musicVolume = musicSlider.getValue();
-		}
+		float soundVolume = SoundController.getInstance().getVolume();
+		float musicVolume = MusicController.getInstance().getVolume();
 		soundEffectsSlider = new Slider(0.0f, 1.25f, .05f, false, skin);
 		soundEffectsSlider.setValue(soundVolume);
 		musicSlider = new Slider(0.0f, 1.25f, .05f, false, skin);
