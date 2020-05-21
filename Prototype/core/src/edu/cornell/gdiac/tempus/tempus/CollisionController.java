@@ -244,18 +244,20 @@ public class CollisionController implements ContactListener {
 //            projectile.getBody().setType(BodyDef.BodyType.StaticBody);
         } else {
             Obstacle bullet = (Obstacle) projectile.getBody().getUserData();
-            if (bullet.getSpace() == 2 && controller.isShifted()) {
+            if (!controller.isComplete()) {
+                if (bullet.getSpace() == 2 && controller.isShifted()) {
                     if (!bullet.equals(avatar.getHeldBullet())) {
                         controller.playAvatarHurt();
                         //avatar.setProjectileContact(true);
                     }
-                removeBullet(bullet);
-            } else if (bullet.getSpace() == 1 && !controller.isShifted()){
+                    removeBullet(bullet);
+                } else if (bullet.getSpace() == 1 && !controller.isShifted()) {
                     if (!bullet.equals(avatar.getHeldBullet())) {
                         controller.playAvatarHurt();
                         //avatar.setProjectileContact(true);
                     }
-                removeBullet(bullet);
+                    removeBullet(bullet);
+                }
             }
             /*else if (avatar.isHolding() && InputController.getInstance().releasedLeftMouseButton()){
             Vector2 mousePos = InputController.getInstance().getMousePosition();
