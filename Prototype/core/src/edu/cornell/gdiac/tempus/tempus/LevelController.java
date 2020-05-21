@@ -476,6 +476,7 @@ public class LevelController extends WorldController {
 
 		canvas.updateSpriteBatch();
 		viewport.getCamera().update();
+		canvas.getSpriteBatch().setProjectionMatrix(viewport.getCamera().combined);
 		stage.getCamera().update();
 		hudViewport.getCamera().update();
 		resetRipple();
@@ -1785,7 +1786,7 @@ public class LevelController extends WorldController {
 				canvas.endDebug();
 			}
 
-			if(!isTutorial) {
+			if(!isTutorial && !isLongRoom) {
 				canvas.getSpriteBatch().setProjectionMatrix(hudViewport.getCamera().combined);
 				hudViewport.apply();
 			}
