@@ -180,6 +180,9 @@ public class LevelController extends WorldController {
 	/**The room timer*/
 	protected float roomTimer;
 
+	protected Slider soundEffectsSlider;
+	protected Slider musicSlider;
+
 	/**
 	 * Preloads the assets for this controller.
 	 *
@@ -586,7 +589,6 @@ public class LevelController extends WorldController {
 	 * Lays out the game geography.
 	 */
 	protected void populateLevel() {
-
 		// tester stage!
 		skin = new Skin(Gdx.files.internal("jsons/uiskin.json"));
 		stage = new Stage(viewport);
@@ -739,6 +741,7 @@ public class LevelController extends WorldController {
 			Enemy obj = new Enemy(avatar, enemy);
 			obj.setDrawScale(scale);
 			addEnemy(obj);
+			obj.setLinearVelocity(new Vector2(0,0));
 			numEnemies++;
 			enemy = enemy.next();
 		}
@@ -862,14 +865,25 @@ public class LevelController extends WorldController {
 		volumeTable = new Table();
 		volumeContainer.setActor(volumeTable);
 		volumeContainer.setVisible(false);
-		Slider soundEffectsSlider = new Slider(0.0f, 1.25f, .05f, false, skin);
-		soundEffectsSlider.setValue(1f);
-		Slider musicSlider = new Slider(0.0f, 1.25f, .05f, false, skin);
-		musicSlider.setValue(1f);
+		float soundVolume = 1f;
+		if (soundEffectsSlider != null){
+			soundVolume = soundEffectsSlider.getValue();
+		}
+		float musicVolume = 1f;
+		if (musicSlider != null){
+			musicVolume = musicSlider.getValue();
+		}
+		soundEffectsSlider = new Slider(0.0f, 1.25f, .05f, false, skin);
+		soundEffectsSlider.setValue(soundVolume);
+		musicSlider = new Slider(0.0f, 1.25f, .05f, false, skin);
+		musicSlider.setValue(musicVolume);
 		Button exitVolumeMenuButton = new Button(exitVolumeMenuButtonResource);
 		exitVolumeMenuButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
+				MusicController.getInstance().setVolume(musicSlider.getValue());
+				MusicController.getInstance().update(shifted);
+				SoundController.getInstance().setVolume(soundEffectsSlider.getValue());
 				super.clicked(event, x, y);
 				hideVolumeMenu();
 			}
@@ -1044,6 +1058,7 @@ public class LevelController extends WorldController {
 	 * @return whether to process the update loop
 	 */
 	public boolean preUpdate(float dt) {
+
 
 		//set values relative to FPS
 		if(BEGIN_COUNT_OG == 0){
