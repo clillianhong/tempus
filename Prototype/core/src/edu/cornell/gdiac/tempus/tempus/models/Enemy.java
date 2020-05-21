@@ -75,6 +75,8 @@ public class Enemy extends CapsuleObstacle {
     /** Texture filmstrip for enemy after tp */
     private FilmStrip tpEndTexture;
 
+    /** The current animation state */
+    public EnemyState animationState = EnemyState.NEUTRAL;
     /** The texture filmstrip for the current animation */
     private FilmStrip currentStrip;
     /** The texture filmstrip for the neutral animation */
@@ -283,6 +285,9 @@ public class Enemy extends CapsuleObstacle {
         switch (json.get("aitype").asInt()) {
         case 1:
             ai = EnemyType.WALK;
+            if (entitytype.equals("past")) {
+                FRAME_RATE = Gdx.graphics.getFramesPerSecond()/4;
+            }
             neutralTexture = JsonAssetManager.getInstance().getEntry(("enemywalking" + "_" + entitytype), FilmStrip.class);
             attackingTexture = neutralTexture;
             setDensity(20);
@@ -320,10 +325,15 @@ public class Enemy extends CapsuleObstacle {
         case 4:
             ai = EnemyType.FLY;
 //            FRAME_RATE = 6;
-            FRAME_RATE = Gdx.graphics.getFramesPerSecond()/10;
+            if (entitytype.equals("present")) {
+                FRAME_RATE = Gdx.graphics.getFramesPerSecond()/10;
+                minimizeScale = 0.5f;
+            } else if (entitytype.equals("past")) {
+                FRAME_RATE = Gdx.graphics.getFramesPerSecond()/8;
+                minimizeScale = 0.4f;
+            }
             neutralTexture = JsonAssetManager.getInstance().getEntry(("enemyflying" + "_" + entitytype), FilmStrip.class);
             attackingTexture = neutralTexture;
-            minimizeScale = 0.5f;
             sight = new LineOfSight(this);
             setName("fly enemy");
             isFiring = false;
@@ -812,6 +822,10 @@ public class Enemy extends CapsuleObstacle {
         }
     }
 
+    public void setAnimationState(EnemyState s){
+        this.animationState = s;
+    }
+
     /**
      * Animates the given state.
      *
@@ -831,6 +845,11 @@ public class Enemy extends CapsuleObstacle {
             break;
         default:
             assert false : "Invalid EnemyState enumeration";
+        }
+
+        // when beginning a new state, set frame to first frame
+        if (animationState != state) {
+            currentStrip.setFrame(0);
         }
 
         // Adjust animation speed

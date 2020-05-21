@@ -478,6 +478,7 @@ public class LevelController extends WorldController {
 
 		canvas.updateSpriteBatch();
 		viewport.getCamera().update();
+		canvas.getSpriteBatch().setProjectionMatrix(viewport.getCamera().combined);
 		stage.getCamera().update();
 		hudViewport.getCamera().update();
 		resetRipple();
@@ -1815,7 +1816,7 @@ public class LevelController extends WorldController {
 
 //				 render batch with shader
 			stage.getBatch().begin();
-			if (rippleOn) {
+			if (!isLongRoom && rippleOn) {
 				updateShader();
 				stage.getBatch().setShader(shaderprog);
 			}
@@ -1835,10 +1836,6 @@ public class LevelController extends WorldController {
 				canvas.getSpriteBatch().setProjectionMatrix(hudViewport.getCamera().combined);
 				hudViewport.apply();
 
-				if (rippleOn) {
-					updateShader();
-					canvas.getSpriteBatch().setShader(shaderprog);
-				}
 				if (shifted) {
 					bgSprite.setRegion(pastBackgroundTexture);
 				} else {
@@ -1854,20 +1851,18 @@ public class LevelController extends WorldController {
 			drawObjectInWorld();
 			drawIndicator(canvas);
 
-
 			if (debug) {
 				canvas.beginDebug();
 				drawDebugInWorld();
 				canvas.endDebug();
 			}
 
-			if(!isTutorial) {
+			if(!isTutorial && !isLongRoom) {
 				canvas.getSpriteBatch().setProjectionMatrix(hudViewport.getCamera().combined);
 				hudViewport.apply();
-				drawLives(canvas);
-			}else{
-				drawLives(canvas);
 			}
+
+			drawLives(canvas);
 
 			// Final message
 			if (complete && !failed && !drawEndRoom) {
@@ -1878,27 +1873,28 @@ public class LevelController extends WorldController {
 				resetRipple();
 
 				if(GameStateManager.getInstance().lastRoom()){
-					rippleOn = true;
+					if(!isLongRoom){
+						rippleOn = true;
+						rippleSpeed = 60 * (0.1f/(float) Gdx.graphics.getFramesPerSecond());
+					}
 					countdown = Gdx.graphics.getFramesPerSecond()*3;
-					rippleSpeed = 60 * (0.1f/(float) Gdx.graphics.getFramesPerSecond());
 					//TODO: ADD END LEVEL STATE
 				}else{
-					rippleOn = true;
-					countdown = Gdx.graphics.getFramesPerSecond();
-					rippleSpeed =  Gdx.graphics.getFramesPerSecond() >= 60 ? 0.2f : 0.75f;
+					if(!isLongRoom){
+						rippleOn = true;
+						rippleSpeed =  Gdx.graphics.getFramesPerSecond() >= 60 ? 0.2f : 0.75f;
+					}
+					countdown = Math.max(30,Gdx.graphics.getFramesPerSecond());
+
 				}
-				ripple_reset = ((float)Gdx.graphics.getFramesPerSecond() / 60f)* (sw * 0.0006f);
+				if(!isLongRoom){
+					ripple_reset = ((float)Gdx.graphics.getFramesPerSecond() / 60f)* (sw * 0.0006f);
+					ripple_intensity = 0.09f;
+				}
 				minAlpha = 0.5f;
-				ripple_intensity = 0.09f;
 				updateShader();
 			} else if (failed) {
-//				rippleOn = true;
-//				rippleSpeed = 0.1f;
-//				ripple_intensity = 0.2f;
-//				updateShader();
-//				displayFont.setColor(Color.WHITE);
 				canvas.draw(overlayDark,Color.WHITE, 0, 0, sw, sh);
-//				canvas.drawTextCentered("FAILURE", displayFont, 0.0f);
 			}
 
 			if(!enemyController.getPlayerVisible()){
@@ -1906,10 +1902,7 @@ public class LevelController extends WorldController {
 					canvas.draw(overlayDark, Color.WHITE, 0, 0, sw, sh);
 				}
 			}
-
 			canvas.end();
-
-
 		}
 //		stage.setViewport(hudViewport);
 		if(isLongRoom){
