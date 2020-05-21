@@ -12,6 +12,7 @@ package edu.cornell.gdiac.tempus.tempus;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
@@ -76,8 +77,16 @@ public class LevelController extends WorldController {
 
 	protected Table endlevelTable;
 	protected Container endlevelContainer;
+	protected TextureRegionDrawable youWonImg;
+	protected TextureRegionDrawable newRecordImg;
+	protected Table wonLevelBannerTable;
+	protected Label timerLabel;
+	protected Label pauseTimeLabel;
 	/** index of the current level */
 	protected int levelNum;
+	/** index of the current room within the level */
+	protected int roomNum;
+
 
 	/**
 	 * RIPPLE SHADER ** /
@@ -525,6 +534,8 @@ public class LevelController extends WorldController {
 			closeWinLevel();
 		}
 
+
+
 		avatar.setEnemyContact(false);
 		avatar.setCatchReady(false);
 		avatar.setPosition(avatarStart);
@@ -801,7 +812,26 @@ public class LevelController extends WorldController {
 		pauseButtonContainer.fillY();
 
 		pauseTable = new Table();
-		pauseButtonContainer.setActor(pauseTable);
+
+		Image timerImg = new Image(assetManager.getEntry("timer", TextureRegion.class));
+		Table pauseTimerTable = new Table();
+		pauseTimeLabel = new Label("0:00", style);
+		pauseTimeLabel.setAlignment(Align.left);
+		pauseTimeLabel.setWrap(true);
+		pauseTimeLabel.setWidth(20);
+		pauseTimerTable.row().pad(10f);
+		pauseTimerTable.add(timerImg).width(sw/35).height(sh/25).right().top().padRight(8f);
+		pauseTimerTable.add(pauseTimeLabel).width(sw/20).height(sh/25).right().top();
+		pauseTimerTable.align(Align.topRight);
+		Container pauseTimerCont = new Container();
+		pauseTimerCont.setSize(sw-10, sh-10);
+		pauseTimerCont.setActor(pauseTimerTable);
+
+		Stack pauseStack = new Stack();
+		pauseStack.add(pauseTable);
+		pauseStack.add(pauseTimerTable);
+
+		pauseButtonContainer.setActor(pauseStack);
 		pauseButtonContainer.setVisible(false);
 
 		Button resumeButton = new Button(resumeResource);
@@ -929,8 +959,8 @@ public class LevelController extends WorldController {
 		}
 		isRoom10 = false;
 		levelNum = GameStateManager.getInstance().getCurrentLevel().getLevelNumber();
-		if(levelNum != 3  && levelNum != 0 &&
-				GameStateManager.getInstance().getCurrentLevel().getCurrentRoomNumber() == 10){
+		roomNum = GameStateManager.getInstance().getCurrentLevel().getCurrentRoomNumber();
+		if(levelNum != 3  && levelNum != 0 && roomNum == 10){
 			isRoom10 = true;
 			createRoom10UI(tableStack);
 		}
@@ -954,16 +984,23 @@ public class LevelController extends WorldController {
 		endlevelContainer.setActor(endlevelTable);
 		endlevelContainer.setVisible(false);
 
-		Table overlayPageHeader = new Table();
+		wonLevelBannerTable = new Table();
+
+		Table timerTable = new Table();
 		//back button
-		String winpath = "textures/gui/roommode/level_" + GameStateManager.getInstance().getCurrentLevel().getLevelNumber() + "_win.png";
-		TextureRegionDrawable headerimg = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal(winpath))));
-		Image header = new Image(headerimg);
-		overlayPageHeader.add(header).expand().center();
+		String winpath = "level_" + GameStateManager.getInstance().getCurrentLevel().getLevelNumber() + "_win";
+		TextureRegionDrawable timerText = new TextureRegionDrawable(assetManager.getEntry(winpath, TextureRegion.class));
+		Image timerTextImg = new Image(timerText);
+		timerTable.setBackground(timerText);
+
 
 		TextureRegionDrawable levelsResource = new TextureRegionDrawable(assetManager.getEntry("win_levels_button", TextureRegion.class));
 		TextureRegionDrawable nextResource = new TextureRegionDrawable(assetManager.getEntry("win_next_button", TextureRegion.class));
 		TextureRegionDrawable replayResource = new TextureRegionDrawable(assetManager.getEntry("win_replay_button", TextureRegion.class));
+
+		youWonImg = new TextureRegionDrawable(assetManager.getEntry("you_win", TextureRegion.class));
+		newRecordImg = new TextureRegionDrawable(assetManager.getEntry("new_record", TextureRegion.class));
+		wonLevelBannerTable.setBackground(youWonImg);
 
 		Button levelButton = new Button(levelsResource);
 		levelButton.addListener(new ClickListener() {
@@ -1002,18 +1039,23 @@ public class LevelController extends WorldController {
 			}
 		});
 
+		timerLabel = new Label("0:00", style);
+		timerLabel.setAlignment(Align.left);
+		timerLabel.setWrap(true);
+		timerLabel.setWidth(20);
+
 		float width_mult = 0.4f;
 		float height_mult = 0.8f;
-		endlevelTable.add(overlayPageHeader).width(sw/4).height(sh/4).center().expandX().padBottom(sh/30);
-		endlevelTable.row();
+		endlevelTable.add(wonLevelBannerTable).width(sw/4).height(sh/7).center().expandX().padBottom(sh/30).colspan(2);
+		endlevelTable.row().padBottom(10f);
+		endlevelTable.add(timerTable).width(sw/4).height(sh/18).right();
+		endlevelTable.add(timerLabel).width(sw/20).height(sh/18).left().padLeft(10f);
+		endlevelTable.row().colspan(2);;
 		endlevelTable.add(levelButton).width(sw / 2.66f * width_mult).height(sh / 6.2f * height_mult).center().expandX();
-		endlevelTable.row();
+		endlevelTable.row().colspan(2);;
 		endlevelTable.add(replayButton).width(sw / 2.66f * width_mult).height(sh / 6 * height_mult).center().expandX();
-		endlevelTable.row();
+		endlevelTable.row().colspan(2);;
 		endlevelTable.add(nextButton).width(sw / 2.66f * width_mult).height(sh / 6 * height_mult).expandX();
-
-		endlevelTable.setVisible(false);
-		endlevelContainer.setVisible(false);
 		tableStack.add(endlevelContainer);
 	}
 
@@ -1062,6 +1104,8 @@ public class LevelController extends WorldController {
 		});
 
 
+
+
 		float width_mult = 0.4f;
 		float height_mult = 0.8f;
 		endlevelTable.add(overlayPageHeader).width(sw/1.5f).height(sh/8.5f).center().colspan(2).padBottom(30);
@@ -1075,6 +1119,7 @@ public class LevelController extends WorldController {
 	public void pauseGame() {
 		paused = true;
 		// table.setVisible(false);
+		pauseTimeLabel.setText(getFormattedTime(roomTimer));
 		pauseButtonContainer.setVisible(true);
 		pauseTable.setVisible(true);
 	}
@@ -1090,11 +1135,31 @@ public class LevelController extends WorldController {
 		volumeContainer.setVisible(false);
 		volumeTable.setVisible(false);
 	}
+	public String getFormattedTime(float time){
+		int minutes = (int) (time / 60);
+		System.out.println("MINUTES " + minutes);
+		String seconds = "" + (int) time % 60;
+		if(seconds.length() > 2) {
+			seconds = seconds.substring(0,2);
+		}else if (seconds.length() == 1){
+			seconds = "0" + seconds;
+		}
+		return minutes + ":" + seconds;
+	}
 	public void showWinLevel() {
 		paused = true;
 		stage.getBatch().setColor(1f,1f,1f,1f);
 		stage.getBatch().setBlendFunction(GL20.GL_SRC_ALPHA,GL20.GL_ONE_MINUS_SRC_ALPHA);
 		stage.addAction(Actions.alpha(1));
+		LevelModel curLevel = GameStateManager.getInstance().getCurrentLevel();
+		if(curLevel.getBestLevelTime() > curLevel.sumTimer(roomNum) + roomTimer){
+			wonLevelBannerTable.setBackground(newRecordImg);
+			float [] times = curLevel.getBestTime();
+			times[roomNum] = roomTimer;
+			GameStateManager.getInstance().getCurrentLevel().setBestTime(times);
+		}
+
+		timerLabel.setText(getFormattedTime(curLevel.sumTimer(roomNum) + roomTimer));
 		endlevelContainer.setVisible(true);
 		endlevelTable.setVisible(true);
 	}
@@ -1110,7 +1175,6 @@ public class LevelController extends WorldController {
 	}
 	public void closeWinLevel() {
 		paused = false;
-
 		canvas.getSpriteBatch().setColor(1f,1f,1f,1f);
 		endlevelContainer.setVisible(false);
 		endlevelTable.setVisible(false);
@@ -1240,6 +1304,11 @@ public class LevelController extends WorldController {
 //			listener.exitScreen(this, ScreenExitCodes.EXIT_PREV.ordinal());
 //			return false;
 //		} else
+
+		if(InputController.getInstance().didDebug()){
+			countdown = 0;
+			complete = true;
+		}
 
 		if (countdown > 0) {
 			countdown--;
@@ -1899,6 +1968,7 @@ public class LevelController extends WorldController {
 	 * @param delta The drawing context
 	 */
 	public void draw(float delta) {
+
 
 		if(active){
 

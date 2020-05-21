@@ -226,8 +226,8 @@ public class InputController {
 	 * @return true if the player wants to go toggle the debug mode.
 	 */
 	public boolean didDebug() {
-		return false;
-		//return debugPressed && !debugPrevious;
+//		return false;
+		return debugPressed && !debugPrevious;
 	}
 	
 	/**
