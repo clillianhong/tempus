@@ -203,12 +203,12 @@ public class GameStateManager {
     }
 
     public GameState writeNewGameState(){
-        FileHandle gamefile = Gdx.files.external("tempus/jsons/game.json");
+        FileHandle gamefile = Gdx.files.external("tempus/jsons/game_state_prototype.json");
         Json json = new Json(JsonWriter.OutputType.json);
         json.setWriter(gamefile.writer(false));
         json.setOutputType(JsonWriter.OutputType.json);
-        int unfinishedLevel = 3;
-        int[] unfinishedRoom = {20, 14, 14, 9};
+        int unfinishedLevel = 1;
+        int[] unfinishedRoom = {20, 15, 15, 15};
         int num_levels = 4;
 
         String[] level_paths = {
@@ -222,17 +222,15 @@ public class GameStateManager {
                 100f,100f,100f,100f,100f,
                 100f,100f,100f,100f,100f,
                 100f,100f,100f,100f,100f,100f};
-        float [] t1 = {100f,100f,100f,100f,100f,
+        float [] t1 = {100f,100f,100f,100f,100f,100f,
                 100f,100f,100f,100f,100f,
                 100f,100f,100f,100f,100f,};
-        float [] t2 = {100f,100f,100f,100f,100f,
+        float [] t2 = {100f,100f,100f,100f,100f,100f,
                 100f,100f,100f,100f,100f,
+                100f,100f,100f,100f,100f,};
+        float [] t3 ={100f,100f,100f,100f,100f,100f,
                 100f,100f,100f,100f,100f,
-                100f,100f,100f,100f,100f,100f};
-        float [] t3 = {100f,100f,100f,100f,100f,
-                100f,100f,100f,100f,100f,
-                100f,100f,100f,100f,100f,
-                100f,100f,100f,100f,100f,100f};
+                100f,100f,100f,100f,100f,};
 
         timelist.add(t1);
         timelist.add(t1);
@@ -513,8 +511,7 @@ public class GameStateManager {
      * Saves the whole game state to game.json and level jsons
      */
     public void saveGameState() {
-        String currentdir = System.getProperty("user.dir");
-        FileHandle gamefile = Gdx.files.external("tempus/jsons/game.json");
+        FileHandle gamefile = Gdx.files.external("tempus/jsons/game_state_prototype.json");
         Json json = new Json(JsonWriter.OutputType.json);
         json.setWriter(gamefile.writer(false));
         json.setOutputType(JsonWriter.OutputType.json);
