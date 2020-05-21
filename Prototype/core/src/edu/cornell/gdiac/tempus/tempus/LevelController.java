@@ -70,6 +70,9 @@ public class LevelController extends WorldController {
 	protected Container pauseButtonContainer;
 	protected Table volumeTable;
 	protected Container volumeContainer;
+
+	protected Table helpInfoTable;
+	protected Container helpContainer;
 	private TextureRegionDrawable overlayBG;
 	protected TextureRegion overlayDark;
 	protected Container<Stack> edgeContainer;
@@ -819,17 +822,55 @@ public class LevelController extends WorldController {
 		pauseTimeLabel.setAlignment(Align.left);
 		pauseTimeLabel.setWrap(true);
 		pauseTimeLabel.setWidth(20);
+		pauseTimerTable.add(timerImg).width(sw/35).height(sh/25).right().top().padRight(8f);
+		pauseTimerTable.add(pauseTimeLabel).width(sw/20).height(sh/25).right().top();
+		pauseTimerTable.align(Align.topRight);
+
+		Table helpTable = new Table();
+		Button helpButton = new Button(new TextureRegionDrawable(assetManager.getEntry("help_icon", TextureRegion.class)));
+		helpTable.add(helpButton).width(sw/25).height(sw/25).top().right().pad(10f);
+		helpTable.align(Align.topLeft);
+		helpButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				super.clicked(event, x, y);
+				showHelpMenu();
+			}
+		});
+
+		helpContainer = new Container<>();
+		helpContainer.setBackground(overlayBG);
+		helpContainer.setPosition(0, 0);
+		helpContainer.fillX();
+		helpContainer.fillY();
+
+		TextureRegionDrawable exitInnerMenuButtonResource = new TextureRegionDrawable(assetManager.getEntry("select_backbutton", TextureRegion.class));
+
+		helpInfoTable = new Table();
+		helpInfoTable.setBackground(new TextureRegionDrawable(assetManager.getEntry("help_info_transparent", TextureRegion.class)));
+		Button exitHelpMenuButton = new Button(exitInnerMenuButtonResource);
+		exitHelpMenuButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				super.clicked(event, x, y);
+				hideHelpMenu();
+			}
+		});
+		helpInfoTable.align(Align.bottomLeft);
+		helpInfoTable.add(exitHelpMenuButton).width(sw/12).height(sw/15).bottom().left();
+		helpContainer.setActor(helpInfoTable);
+		helpContainer.setVisible(false);
+
+
 		pauseTimerTable.row().pad(10f);
 		pauseTimerTable.add(timerImg).width(sw/35).height(sh/25).right().top().padRight(8f);
 		pauseTimerTable.add(pauseTimeLabel).width(sw/20).height(sh/25).right().top();
 		pauseTimerTable.align(Align.topRight);
-		Container pauseTimerCont = new Container();
-		pauseTimerCont.setSize(sw-10, sh-10);
-		pauseTimerCont.setActor(pauseTimerTable);
 
 		Stack pauseStack = new Stack();
 		pauseStack.add(pauseTable);
 		pauseStack.add(pauseTimerTable);
+		pauseStack.add(helpTable);
 
 		pauseButtonContainer.setActor(pauseStack);
 		pauseButtonContainer.setVisible(false);
@@ -889,7 +930,6 @@ public class LevelController extends WorldController {
 		 * START VOLUME SCREEN SETUP ---------------------
 		 */
 		TextureRegionDrawable volumeButtonResource = new TextureRegionDrawable(assetManager.getEntry("settings_button", TextureRegion.class));
-		TextureRegionDrawable exitVolumeMenuButtonResource = new TextureRegionDrawable(assetManager.getEntry("select_backbutton", TextureRegion.class));
 
 		volumeContainer = new Container<>();
 		volumeContainer.setBackground(overlayBG);
@@ -906,7 +946,7 @@ public class LevelController extends WorldController {
 		soundEffectsSlider.setValue(soundVolume);
 		musicSlider = new Slider(0.0f, 1.25f, .05f, false, skin);
 		musicSlider.setValue(musicVolume);
-		Button exitVolumeMenuButton = new Button(exitVolumeMenuButtonResource);
+		Button exitVolumeMenuButton = new Button(exitInnerMenuButtonResource);
 		exitVolumeMenuButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -942,6 +982,8 @@ public class LevelController extends WorldController {
 		volumeTable.add(exitVolumeMenuButton).width(sw / 4 / 1.5f).height(sh / 5.1f / .9f).colspan(sw).expandX();
 
 		tableStack.add(volumeContainer);
+
+		tableStack.add(helpContainer);
 		/*
 		 * END VOLUME SCREEN SETUP---------------------
 		 */
@@ -1122,6 +1164,18 @@ public class LevelController extends WorldController {
 		pauseTable.setVisible(false);
 		volumeContainer.setVisible(true);
 		volumeTable.setVisible(true);
+	}
+	public void showHelpMenu(){
+		pauseButtonContainer.setVisible(false);
+		pauseTable.setVisible(false);
+		helpContainer.setVisible(true);
+		helpInfoTable.setVisible(true);
+	}
+	public void hideHelpMenu(){
+		pauseButtonContainer.setVisible(true);
+		pauseTable.setVisible(true);
+		helpContainer.setVisible(false);
+		helpInfoTable.setVisible(false);
 	}
 	public void hideVolumeMenu(){
 		pauseButtonContainer.setVisible(true);
