@@ -75,6 +75,8 @@ public class Enemy extends CapsuleObstacle {
     /** Texture filmstrip for enemy after tp */
     private FilmStrip tpEndTexture;
 
+    /** The current animation state */
+    public EnemyState animationState = EnemyState.NEUTRAL;
     /** The texture filmstrip for the current animation */
     private FilmStrip currentStrip;
     /** The texture filmstrip for the neutral animation */
@@ -820,6 +822,10 @@ public class Enemy extends CapsuleObstacle {
         }
     }
 
+    public void setAnimationState(EnemyState s){
+        this.animationState = s;
+    }
+
     /**
      * Animates the given state.
      *
@@ -839,6 +845,11 @@ public class Enemy extends CapsuleObstacle {
             break;
         default:
             assert false : "Invalid EnemyState enumeration";
+        }
+
+        // when beginning a new state, set frame to first frame
+        if (animationState != state) {
+            currentStrip.setFrame(0);
         }
 
         // Adjust animation speed

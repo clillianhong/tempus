@@ -599,26 +599,26 @@
     },
     "enemyteleporting_past": {
       "file": "filmstrips/enemy/enemy_teleporting_neutral.png",
-      "rows": 1,
-      "cols": 2,
-      "size": 2
+      "rows": 2,
+      "cols": 3,
+      "size": 6
     },
     "enemyteleporting_present": {
       "file": "filmstrips/enemy/enemy_teleporting_neutral.png",
-      "rows": 1,
-      "cols": 2,
-      "size": 2
+      "rows": 2,
+      "cols": 3,
+      "size": 6
     },
     "enemyteleporting_activate": {
       "file": "filmstrips/enemy/enemy_teleporting_activate.png",
       "rows": 4,
-      "cols": 5,
+      "cols": 4,
       "size": 16
     },
     "enemyteleporting_deactivate": {
-      "file": "filmstrips/enemy/enemy_teleporting_deactivate.png",
+      "file": "filmstrips/enemy/enemy_teleporting_activate.png",
       "rows": 4,
-      "cols": 5,
+      "cols": 4,
       "size": 16
     },
     "turret_shooting_present": {
