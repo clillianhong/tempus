@@ -67,6 +67,8 @@ public class LevelController extends WorldController {
 	protected Table table;
 	protected Table pauseTable;
 	protected Container pauseButtonContainer;
+	protected Table volumeTable;
+	protected Container volumeContainer;
 	private TextureRegionDrawable overlayBG;
 	protected TextureRegion overlayDark;
 	protected Container<Stack> edgeContainer;
@@ -782,6 +784,7 @@ public class LevelController extends WorldController {
 		TextureRegionDrawable resumeResource = new TextureRegionDrawable(assetManager.getEntry("resume_button", TextureRegion.class));
 		TextureRegionDrawable restartResource = new TextureRegionDrawable(assetManager.getEntry("restart_button", TextureRegion.class));
 		TextureRegionDrawable exitResource = new TextureRegionDrawable(assetManager.getEntry("pause_exit_button", TextureRegion.class));
+		TextureRegionDrawable volumeResource = new TextureRegionDrawable(assetManager.getEntry("pause_exit_button", TextureRegion.class));
 
 		pauseButtonContainer = new Container<>();
 		pauseButtonContainer.setBackground(overlayBG);
@@ -821,6 +824,17 @@ public class LevelController extends WorldController {
 				exitLevelSelect();
 			}
 		});
+
+		Button volumeButton = new Button(volumeResource);
+		volumeButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				super.clicked(event, x, y);
+				showVolumeMenu();
+			}
+		});
+		pauseTable.add(volumeButton).width(sw / 4 / 1.5f).height(sh / 5.1f / 1.5f).center().expandX().padBottom(sh / 20);
+		pauseTable.row();
 		pauseTable.add(resumeButton).width(sw / 4 / 1.5f).height(sh / 5.1f / 1.5f).center().expandX().padBottom(sh / 20);
 		pauseTable.row();
 		pauseTable.add(restartButton).width(sw / 4 / 1.5f).height(sh / 5.1f / 1.5f).center().expandX().padBottom(sh / 20);
@@ -832,6 +846,52 @@ public class LevelController extends WorldController {
 		tableStack.add(pauseButtonContainer);
 		/*
 		 * END PAUSE SCREEN SETUP---------------------
+		 */
+		/*
+		 * START VOLUME SCREEN SETUP ---------------------
+		 */
+		TextureRegionDrawable volumeButtonResource = new TextureRegionDrawable(assetManager.getEntry("pause_button", TextureRegion.class));
+		TextureRegionDrawable exitVolumeMenuButtonResource = new TextureRegionDrawable(assetManager.getEntry("select_backbutton", TextureRegion.class));
+
+		volumeContainer = new Container<>();
+		volumeContainer.setBackground(overlayBG);
+		volumeContainer.setPosition(0, 0);
+		volumeContainer.fillX();
+		volumeContainer.fillY();
+
+		volumeTable = new Table();
+		volumeContainer.setActor(volumeTable);
+		volumeContainer.setVisible(false);
+		Slider soundEffectsSlider = new Slider(0.0f, 1.25f, .05f, false, skin);
+		soundEffectsSlider.setValue(1f);
+		Slider musicSlider = new Slider(0.0f, 1.25f, .05f, false, skin);
+		musicSlider.setValue(1f);
+		Button exitVolumeMenuButton = new Button(exitVolumeMenuButtonResource);
+		exitVolumeMenuButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				super.clicked(event, x, y);
+				hideVolumeMenu();
+			}
+		});
+		BitmapFont fontSlider = new BitmapFont(Gdx.files.internal("fonts/carterone.fnt"));
+		Label.LabelStyle carterStyleSlider = new Label.LabelStyle(fontSlider, Color.WHITE);
+		BitmapFont fontTitle = new BitmapFont(Gdx.files.internal("fonts/carterone.fnt"));
+		Label.LabelStyle carterStyleTitle= new Label.LabelStyle(fontTitle, Color.WHITE);
+		Label volumeTitle = new Label("Volume", carterStyleTitle);
+		fontSlider.getData().setScale(.7f);
+		fontTitle.getData().setScale(1.5f);
+		Label soundEffectsLabel = new Label("Sound Effects: ", carterStyleSlider);
+		Label musicLabel = new Label("Music: ", carterStyleSlider);
+		volumeTable.add(soundEffectsLabel).colspan(sw/3).left().padBottom(sh / 10).padLeft(sw/7).expandX();
+		volumeTable.add(soundEffectsSlider).width(sw / 2f).right().colspan(2 * sw / 3).padBottom(sh / 10).padRight(sw/7).expandX().row();
+		volumeTable.add(musicLabel).colspan(sw/3).left().padBottom(sh / 10).padLeft(sw/7).expandX();
+		volumeTable.add(musicSlider).width(sw / 2f).right().colspan(2 * sw / 3).padBottom(sh / 10).padRight(sw/7).expandX().row();
+		volumeTable.add(exitVolumeMenuButton).width(sw / 4 / 1.5f).height(sh / 5.1f / .9f).colspan(sw).expandX();
+
+		tableStack.add(volumeContainer);
+		/*
+		 * END VOLUME SCREEN SETUP---------------------
 		 */
 		/* START END-GAME SCREEN CREATION */
 		isEndRoom = false;
@@ -928,7 +988,18 @@ public class LevelController extends WorldController {
 		pauseButtonContainer.setVisible(true);
 		pauseTable.setVisible(true);
 	}
-
+	public void showVolumeMenu(){
+		pauseButtonContainer.setVisible(false);
+		pauseTable.setVisible(false);
+		volumeContainer.setVisible(true);
+		volumeTable.setVisible(true);
+	}
+	public void hideVolumeMenu(){
+		pauseButtonContainer.setVisible(true);
+		pauseTable.setVisible(true);
+		volumeContainer.setVisible(false);
+		volumeTable.setVisible(false);
+	}
 	public void showWinLevel() {
 		paused = true;
 		stage.getBatch().setColor(1f,1f,1f,1f);

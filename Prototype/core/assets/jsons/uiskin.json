@@ -1,11 +1,15 @@
 {
   com.badlogic.gdx.graphics.g2d.BitmapFont: { default-font: { file: Razer.fnt } },
   com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
-   default: { font: default-font },
+   default: { font: default-font }
   },
   com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle: {
     default:  {
       titleFont: default-font
      }
-   }
+   },
+  com.badlogic.gdx.scenes.scene2d.ui.Slider$SliderStyle: {
+    default-horizontal: {background: slider, knob: slider-knob, knobOver: slider-knob-over, knobDown: slider-knob-down, disabledKnob: slider-knob-disabled },
+    default-vertical: {background: slider-vertical, knob: slider-knob, knobOver: slider-knob-over, knobDown: slider-knob-down, disabledKnob: slider-knob-disabled }
+  }
 }

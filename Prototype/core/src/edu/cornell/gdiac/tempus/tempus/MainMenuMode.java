@@ -265,11 +265,10 @@ public class MainMenuMode implements Screen {
 
         //add buttons
 
-        mainTable.add(exitButton).width(cw/5f).height(ch/4f).pad(cw/15f).expand().fillX();
-        mainTable.add(helpButton).width(cw/5f).height(ch/4f).pad(cw/15f).expand().fillX();
         mainTable.add(startButton).width(cw/5f).height(ch/4f).pad(cw/25f).expand().fillX();
+        mainTable.add(helpButton).width(cw/5f).height(ch/4f).pad(cw/15f).expand().fillX();
         mainTable.add(aboutButton).width(cw/5f).height(ch/4f).pad(cw/15f).expand().fillX();
-//        mainTable.add(aboutButton).width(cw/5f).height(ch/5f).pad(cw/15f).expand().fillX();
+        mainTable.add(exitButton).width(cw/5f).height(ch/4f).pad(cw/15f).expand().fillX();
 
         tableContainer.setActor(mainTable);
         //Add table to stage
