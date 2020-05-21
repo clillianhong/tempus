@@ -283,6 +283,9 @@ public class Enemy extends CapsuleObstacle {
         switch (json.get("aitype").asInt()) {
         case 1:
             ai = EnemyType.WALK;
+            if (entitytype == "past") {
+                FRAME_RATE = Gdx.graphics.getFramesPerSecond()/8;
+            }
             neutralTexture = JsonAssetManager.getInstance().getEntry(("enemywalking" + "_" + entitytype), FilmStrip.class);
             attackingTexture = neutralTexture;
             setDensity(20);

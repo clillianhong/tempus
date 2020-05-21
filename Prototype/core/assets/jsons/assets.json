@@ -569,9 +569,9 @@
     },
     "enemywalking_past": {
       "file": "filmstrips/enemy/enemy_shooting_past.png",
-      "rows": 1,
-      "cols": 1,
-      "size": 1
+      "rows": 6,
+      "cols": 6,
+      "size": 35
     },
     "enemyshooting_present": {
       "file": "filmstrips/enemy/enemy_shooting_present.png",
@@ -581,9 +581,9 @@
     },
     "enemyshooting_past": {
       "file": "filmstrips/enemy/enemy_shooting_past.png",
-      "rows": 1,
-      "cols": 1,
-      "size": 1
+      "rows": 6,
+      "cols": 6,
+      "size": 35
     },
     "enemyflying_past": {
       "file": "filmstrips/enemy/enemy_flying.png",
