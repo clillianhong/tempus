@@ -1744,7 +1744,7 @@ public class LevelController extends WorldController {
 
 //				 render batch with shader
 			stage.getBatch().begin();
-			if (rippleOn) {
+			if (!isLongRoom && rippleOn) {
 				updateShader();
 				stage.getBatch().setShader(shaderprog);
 			}
@@ -1764,10 +1764,6 @@ public class LevelController extends WorldController {
 				canvas.getSpriteBatch().setProjectionMatrix(hudViewport.getCamera().combined);
 				hudViewport.apply();
 
-				if (rippleOn) {
-					updateShader();
-					canvas.getSpriteBatch().setShader(shaderprog);
-				}
 				if (shifted) {
 					bgSprite.setRegion(pastBackgroundTexture);
 				} else {
@@ -1807,18 +1803,28 @@ public class LevelController extends WorldController {
 				resetRipple();
 
 				if(GameStateManager.getInstance().lastRoom()){
-					rippleOn = true;
+					if(!isLongRoom){
+						rippleOn = true;
+						rippleSpeed = 60 * (0.1f/(float) Gdx.graphics.getFramesPerSecond());
+					}
 					countdown = Gdx.graphics.getFramesPerSecond()*3;
-					rippleSpeed = 60 * (0.1f/(float) Gdx.graphics.getFramesPerSecond());
 					//TODO: ADD END LEVEL STATE
 				}else{
-					rippleOn = true;
+					if(!isLongRoom){
+						rippleOn = true;
+						rippleSpeed =  Gdx.graphics.getFramesPerSecond() >= 60 ? 0.2f : 0.75f;
+					}
+
 					countdown = Gdx.graphics.getFramesPerSecond();
-					rippleSpeed =  Gdx.graphics.getFramesPerSecond() >= 60 ? 0.2f : 0.75f;
+
 				}
-				ripple_reset = ((float)Gdx.graphics.getFramesPerSecond() / 60f)* (sw * 0.0006f);
+				if(!isLongRoom){
+					ripple_reset = ((float)Gdx.graphics.getFramesPerSecond() / 60f)* (sw * 0.0006f);
+					ripple_intensity = 0.09f;
+				}
+
 				minAlpha = 0.5f;
-				ripple_intensity = 0.09f;
+
 				updateShader();
 			} else if (failed) {
 //				rippleOn = true;
