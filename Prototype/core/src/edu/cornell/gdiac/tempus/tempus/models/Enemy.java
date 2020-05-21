@@ -331,6 +331,9 @@ public class Enemy extends CapsuleObstacle {
             } else if (entitytype.equals("past")) {
                 FRAME_RATE = Gdx.graphics.getFramesPerSecond()/8;
                 minimizeScale = 0.4f;
+                setDimension(2.5f, 1f);
+                setMass(ENEMY_MASS/2);
+                setOrientation(Orientation.HORIZONTAL);
             }
             neutralTexture = JsonAssetManager.getInstance().getEntry(("enemyflying" + "_" + entitytype), FilmStrip.class);
             attackingTexture = neutralTexture;
@@ -478,7 +481,11 @@ public class Enemy extends CapsuleObstacle {
      * @param vel vector the the flying enemy velocity
      */
     public void setFlyingVelocity(Vector2 vel) {
-        this.flyingVelocity = vel.scl(FLY_FORCE);
+        if (getSpace() == 1) {
+            this.flyingVelocity = vel.scl(FLY_FORCE);
+        } else {
+            this.flyingVelocity = vel.scl(FLY_FORCE * 2);
+        }
     }
 
     /**
@@ -787,7 +794,11 @@ public class Enemy extends CapsuleObstacle {
             FixtureDef sensorDef = new FixtureDef();
             sensorDef.density = 0;
             sensorShapeCenter = new CircleShape();
-            sensorShapeCenter.setRadius(1.25f * getWidth());
+            if (getSpace() == 1) {
+                sensorShapeCenter.setRadius(1.25f * getWidth());
+            } else {
+                sensorShapeCenter.setRadius(0.4f * getWidth());
+            }
             sensorShapeCenter.setPosition(sensorSky);
             sensorDef.shape = sensorShapeCenter;
             sensorDef.isSensor = true;
@@ -904,7 +915,11 @@ public class Enemy extends CapsuleObstacle {
             float dist = getHeight() * drawScale.y;
             switch (ai) {
                 case FLY:
-                    dist = getHeight() * 1.25f * drawScale.y;
+                    if (space == 1) {
+                        dist = getHeight() * 1.25f * drawScale.y;
+                    } else {
+                        dist = getHeight() * 2f * drawScale.y;
+                    }
                     break;
 
                 case TELEPORT:
@@ -932,7 +947,12 @@ public class Enemy extends CapsuleObstacle {
         }
 
         if(getAi() == EnemyType.FLY) {
-            float faceOffset = 1.5f* getWidth() * faceDirection;
+            float faceOffset = 0;
+            if(getSpace() == 1) {
+                faceOffset = 1.5f * getWidth() * faceDirection;
+            } else {
+                faceOffset = 0.5f * getWidth() * faceDirection;
+            }
 
             canvas.draw(currentStrip, Color.WHITE, origin.x, origin.y,  (getX() - faceOffset) * drawScale.x, (getY()- 0.6f * getHeight()) * drawScale.y,
                     getAngle(), 0.018f * minimizeScale * drawScale.x * faceDirection , 0.0169f * minimizeScale * drawScale.y);
@@ -961,11 +981,17 @@ public class Enemy extends CapsuleObstacle {
      */
     public void drawFade(GameCanvas canvas, float frames, float mul) {
         if(getAi() == EnemyType.FLY){
-            float faceOffset = 1.5f* getWidth() * faceDirection;
+            float faceOffset = 0;
+            if(getSpace() == 1) {
+                faceOffset = 1.5f * getWidth() * faceDirection;
+            } else {
+                faceOffset = 0.5f * getWidth() * faceDirection;
+            }
 
             canvas.draw(currentStrip, new Color(1,1,1, mul * frames), origin.x, origin.y,
                     (getX() - faceOffset) * drawScale.x, (getY()- 0.6f * getHeight()) * drawScale.y, getAngle(),
                     0.018f * minimizeScale * drawScale.x * faceDirection, 0.0169f * minimizeScale * drawScale.y);
+
         } else if (getAi() == EnemyType.TELEPORT){
             float faceOffset = 0.7f * getWidth() * faceDirection;
 
