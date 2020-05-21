@@ -76,6 +76,8 @@ public class LevelController extends WorldController {
 
 	protected Table endlevelTable;
 	protected Container endlevelContainer;
+	/** index of the current level */
+	protected int levelNum;
 
 	/**
 	 * RIPPLE SHADER ** /
@@ -301,6 +303,9 @@ public class LevelController extends WorldController {
 	protected boolean isLongRoom;
 	/** is end of level room */
 	protected boolean isEndRoom;
+	/** is room 10 of level room */
+	protected boolean isRoom10;
+
 
 	/** The information of all the enemies */
 	protected int NUMBER_ENEMIES = 2;
@@ -899,6 +904,13 @@ public class LevelController extends WorldController {
 			isEndRoom = true;
 			createEndlevelUI(tableStack);
 		}
+		isRoom10 = false;
+		levelNum = GameStateManager.getInstance().getCurrentLevel().getLevelNumber();
+		if(levelNum != 3  && levelNum != 0 &&
+				GameStateManager.getInstance().getCurrentLevel().getCurrentRoomNumber() == 10){
+			isRoom10 = true;
+			createRoom10UI(tableStack);
+		}
 
 		edgeContainer.setActor(tableStack);
 		stage.addActor(edgeContainer);
@@ -982,6 +994,61 @@ public class LevelController extends WorldController {
 		tableStack.add(endlevelContainer);
 	}
 
+	public void createRoom10UI(Stack tableStack){
+		JsonAssetManager assetManager = JsonAssetManager.getInstance();
+
+		endlevelContainer = new Container<>();
+		endlevelContainer.setBackground(overlayBG);
+		endlevelContainer.setPosition(0, 0);
+		endlevelContainer.fillX();
+		endlevelContainer.fillY();
+
+		endlevelTable = new Table();
+		endlevelContainer.setActor(endlevelTable);
+		endlevelContainer.setVisible(false);
+
+		Table overlayPageHeader = new Table();
+		//back button
+		TextureRegionDrawable headerimg = new TextureRegionDrawable(JsonAssetManager.getInstance().getEntry("lv10_unlock_message", TextureRegion.class));
+		Image header = new Image(headerimg);
+		overlayPageHeader.add(header).expand().center();
+		overlayPageHeader.align(Align.center);
+
+		TextureRegionDrawable continuelevel = new TextureRegionDrawable(assetManager.getEntry("lv10_continue_button", TextureRegion.class));
+		TextureRegionDrawable nextlevel = new TextureRegionDrawable(assetManager.getEntry("lv10_next_button", TextureRegion.class));
+
+		Button continueButton = new Button(continuelevel);
+		continueButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				super.clicked(event, x, y);
+				GameStateManager.getInstance().stepGame(true);
+				exitNextRoom();
+
+			}
+		});
+
+		Button nextLevelButton = new Button(nextlevel);
+		nextLevelButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				super.clicked(event, x, y);
+				GameStateManager.getInstance().stepGame(false);
+				exitNextLevel();
+			}
+		});
+
+
+		float width_mult = 0.4f;
+		float height_mult = 0.8f;
+		endlevelTable.add(overlayPageHeader).width(sw/1.5f).height(sh/8.5f).center().colspan(2).padBottom(30);
+		endlevelTable.row();
+		endlevelTable.add(continueButton).width(sw/5).height(sh / 6 * height_mult).center();
+		endlevelTable.add(nextLevelButton).width(sw/5).height(sh / 6 * height_mult).center();
+		endlevelTable.setVisible(false);
+		endlevelContainer.setVisible(false);
+		tableStack.add(endlevelContainer);
+	}
 	public void pauseGame() {
 		paused = true;
 		// table.setVisible(false);
@@ -1004,7 +1071,16 @@ public class LevelController extends WorldController {
 		paused = true;
 		stage.getBatch().setColor(1f,1f,1f,1f);
 		stage.getBatch().setBlendFunction(GL20.GL_SRC_ALPHA,GL20.GL_ONE_MINUS_SRC_ALPHA);
-
+		stage.addAction(Actions.alpha(1));
+		endlevelContainer.setVisible(true);
+		endlevelTable.setVisible(true);
+	}
+	public void showRoom10(){
+		paused = true;
+		resetRipple();
+		updateShader();
+		stage.getBatch().setColor(1f,1f,1f,1f);
+		stage.getBatch().setBlendFunction(GL20.GL_SRC_ALPHA,GL20.GL_ONE_MINUS_SRC_ALPHA);
 		stage.addAction(Actions.alpha(1));
 		endlevelContainer.setVisible(true);
 		endlevelTable.setVisible(true);
@@ -1147,6 +1223,8 @@ public class LevelController extends WorldController {
 				inputReady = false;
 				if(GameStateManager.getInstance().lastRoom()){
 					showWinLevel();
+				}else if (isRoom10){
+					showRoom10();
 				}else{
 					GameStateManager.getInstance().stepGame(true);
 					listener.exitScreen(this, ScreenExitCodes.EXIT_NEXT.ordinal());
@@ -1949,6 +2027,11 @@ public class LevelController extends WorldController {
 	}
 
 	public void exitNextRoom(){
+		listener.exitScreen(this, ScreenExitCodes.EXIT_NEXT.ordinal());
+	}
+
+	public void exitNextLevel(){
+		GameStateManager.getInstance().setCurrentLevel(levelNum+1, 0);
 		listener.exitScreen(this, ScreenExitCodes.EXIT_NEXT.ordinal());
 	}
 

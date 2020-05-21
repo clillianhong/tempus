@@ -261,12 +261,8 @@ public class GameStateManager {
         // TODO: CHANGE THIS TO LOCAL (UNCOMMENT AND REPLACE LINE) FOR FINISHED VERSION
         try{
             gameDirectory = jsonReader.parse(Gdx.files.external(game_state_json));
-            // parsing game_state json
             unfinishedLevel = gameDirectory.getInt("highest_level");
             unfinishedRoom = gameDirectory.get("room_unlocked").asIntArray();
-
-//        String[] level_paths = gameDirectory.get("level_jsons").asStringArray();
-
         }catch(Exception e){
             gameState = writeNewGameState();
             gameDirectory = jsonReader.parse(Gdx.files.external(game_state_json));

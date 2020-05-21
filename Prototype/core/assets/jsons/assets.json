@@ -1,5 +1,17 @@
 {
   "textures": {
+    "lv10_unlock_message" : {
+      "file": "textures/gui/roommode/unlock_text.png",
+      "wrap": false
+    },
+    "lv10_continue_button" : {
+      "file": "textures/gui/roommode/continue_button.png",
+      "wrap": false
+    },
+    "lv10_next_button" : {
+      "file": "textures/gui/roommode/next_level_unlock.png",
+      "wrap": false
+    },
     "catch_indicator": {
       "file": "textures/catch_indicator.png",
       "wrap": true
