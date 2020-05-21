@@ -149,7 +149,7 @@ public class LevelModel {
     public boolean stepLevel(){
         //Steps the room
         current_room_idx = current_room_idx + 1;
-        highest_room_unlocked = Math.max(highest_room_unlocked, current_room_idx);
+        highest_room_unlocked = Math.min(rooms.length-1, Math.max(highest_room_unlocked, current_room_idx));
         if(current_room_idx == rooms.length){
             current_room_idx = 0;
             return true;
