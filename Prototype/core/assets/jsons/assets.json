@@ -283,6 +283,10 @@
       "file": "textures/gui/pause_restart_button.png",
       "wrap": false
     },
+    "settings_button" : {
+      "file": "textures/gui/settings_button.png",
+      "wrap": false
+    },
     "pause_button" : {
       "file": "textures/gui/pausebutton.png",
       "wrap": false

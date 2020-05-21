@@ -792,7 +792,7 @@ public class LevelController extends WorldController {
 		TextureRegionDrawable resumeResource = new TextureRegionDrawable(assetManager.getEntry("resume_button", TextureRegion.class));
 		TextureRegionDrawable restartResource = new TextureRegionDrawable(assetManager.getEntry("restart_button", TextureRegion.class));
 		TextureRegionDrawable exitResource = new TextureRegionDrawable(assetManager.getEntry("pause_exit_button", TextureRegion.class));
-		TextureRegionDrawable volumeResource = new TextureRegionDrawable(assetManager.getEntry("pause_exit_button", TextureRegion.class));
+		TextureRegionDrawable volumeResource = new TextureRegionDrawable(assetManager.getEntry("settings_button", TextureRegion.class));
 
 		pauseButtonContainer = new Container<>();
 		pauseButtonContainer.setBackground(overlayBG);
@@ -841,12 +841,12 @@ public class LevelController extends WorldController {
 				showVolumeMenu();
 			}
 		});
-		pauseTable.add(volumeButton).width(sw / 4 / 1.5f).height(sh / 5.1f / 1.5f).center().expandX().padBottom(sh / 20);
-		pauseTable.row();
+
 		pauseTable.add(resumeButton).width(sw / 4 / 1.5f).height(sh / 5.1f / 1.5f).center().expandX().padBottom(sh / 20);
 		pauseTable.row();
 		pauseTable.add(restartButton).width(sw / 4 / 1.5f).height(sh / 5.1f / 1.5f).center().expandX().padBottom(sh / 20);
-
+		pauseTable.row();
+		pauseTable.add(volumeButton).width(sw / 4 / 1.5f).height(sh / 5.1f / 1.5f).center().expandX().padBottom(sh / 20);
 		pauseTable.row();
 		pauseTable.add(exitButton).width(sw / 4 / 1.5f).height(sh / 5.1f / 1.5f).expandX();
 
@@ -858,7 +858,7 @@ public class LevelController extends WorldController {
 		/*
 		 * START VOLUME SCREEN SETUP ---------------------
 		 */
-		TextureRegionDrawable volumeButtonResource = new TextureRegionDrawable(assetManager.getEntry("pause_button", TextureRegion.class));
+		TextureRegionDrawable volumeButtonResource = new TextureRegionDrawable(assetManager.getEntry("settings_button", TextureRegion.class));
 		TextureRegionDrawable exitVolumeMenuButtonResource = new TextureRegionDrawable(assetManager.getEntry("select_backbutton", TextureRegion.class));
 
 		volumeContainer = new Container<>();
