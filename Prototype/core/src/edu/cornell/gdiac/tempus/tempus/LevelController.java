@@ -1779,7 +1779,6 @@ public class LevelController extends WorldController {
 			drawObjectInWorld();
 			drawIndicator(canvas);
 
-
 			if (debug) {
 				canvas.beginDebug();
 				drawDebugInWorld();
@@ -1789,10 +1788,9 @@ public class LevelController extends WorldController {
 			if(!isTutorial) {
 				canvas.getSpriteBatch().setProjectionMatrix(hudViewport.getCamera().combined);
 				hudViewport.apply();
-				drawLives(canvas);
-			}else{
-				drawLives(canvas);
 			}
+
+			drawLives(canvas);
 
 			// Final message
 			if (complete && !failed && !drawEndRoom) {
@@ -1814,26 +1812,17 @@ public class LevelController extends WorldController {
 						rippleOn = true;
 						rippleSpeed =  Gdx.graphics.getFramesPerSecond() >= 60 ? 0.2f : 0.75f;
 					}
-
-					countdown = Gdx.graphics.getFramesPerSecond();
+					countdown = Math.max(30,Gdx.graphics.getFramesPerSecond());
 
 				}
 				if(!isLongRoom){
 					ripple_reset = ((float)Gdx.graphics.getFramesPerSecond() / 60f)* (sw * 0.0006f);
 					ripple_intensity = 0.09f;
 				}
-
 				minAlpha = 0.5f;
-
 				updateShader();
 			} else if (failed) {
-//				rippleOn = true;
-//				rippleSpeed = 0.1f;
-//				ripple_intensity = 0.2f;
-//				updateShader();
-//				displayFont.setColor(Color.WHITE);
 				canvas.draw(overlayDark,Color.WHITE, 0, 0, sw, sh);
-//				canvas.drawTextCentered("FAILURE", displayFont, 0.0f);
 			}
 
 			if(!enemyController.getPlayerVisible()){
@@ -1841,10 +1830,7 @@ public class LevelController extends WorldController {
 					canvas.draw(overlayDark, Color.WHITE, 0, 0, sw, sh);
 				}
 			}
-
 			canvas.end();
-
-
 		}
 //		stage.setViewport(hudViewport);
 		if(isLongRoom){
