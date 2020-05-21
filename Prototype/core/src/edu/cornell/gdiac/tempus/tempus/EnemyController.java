@@ -376,6 +376,9 @@ public class EnemyController {
      */
     private void createBullet(Enemy enemy) {
         float offset = BULLET_OFFSET;
+        if (enemy.getAi() == Enemy.EnemyType.FLY && enemy.getSpace() == 2) {
+            offset = offset / 2;
+        }
 
         if (enemy.isTurret()){
             if (enemy.getProjVel().y < 0 && enemy.getProjVel().x == 0){

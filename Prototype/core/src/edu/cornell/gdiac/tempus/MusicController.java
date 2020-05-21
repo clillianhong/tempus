@@ -281,6 +281,10 @@ public class MusicController {
             MusicBuffer past_music = actives.get("past").music;
             float presVol = present_music.getVolume();
             float pastVol = past_music.getVolume();
+            present_music.setVolume(presVol * volume);
+            past_music.setVolume(pastVol * volume);
+            presVol = present_music.getVolume();
+            pastVol = past_music.getVolume();
             float crossfade = 0.05f;
             if (shifted) {
                 //present_music.setVolume(0);
@@ -289,16 +293,16 @@ public class MusicController {
                     present_music.setVolume(Math.max(0, presVol - crossfade) * volume);
                 }
                 if (pastVol < volume) {
-                    past_music.setVolume(Math.min(1, pastVol + crossfade)* volume);
+                    past_music.setVolume(Math.min(1, pastVol + crossfade) * volume);
                 }
             } else {
                 //present_music.setVolume(1);
                 //past_music.setVolume(0);
                 if (presVol < volume) {
-                    present_music.setVolume(Math.max(1, presVol + crossfade)* volume);
+                    present_music.setVolume(Math.max(1, presVol + crossfade) * volume);
                 }
                 if (pastVol > 0) {
-                    past_music.setVolume(Math.min(0, pastVol - crossfade)* volume);
+                    past_music.setVolume(Math.max(0, pastVol - crossfade) * volume);
                 }
             }
         }
