@@ -471,14 +471,6 @@ public class LevelController extends WorldController {
 		addQueue.clear();
 		world.dispose();
 		shifted = false;
-		for (Obstacle o: objects) {
-			if (o instanceof Platform) {
-				Platform p = (Platform) o;
-				if (p.getSpace() == 3){
-					p.shift(shifted);
-				}
-			}
-		}
 		ripple_intensity = 0.009f;
 		rippleSpeed = 0.25f;
 		rippleOn = false;
@@ -492,6 +484,20 @@ public class LevelController extends WorldController {
 		levelFormat = jsonReader.parse(Gdx.files.internal(json_filepath));
 
 		populateLevel();
+		for (Obstacle o: objects) {
+			if (o instanceof Platform) {
+				Platform p = (Platform) o;
+				if (p.getSpace() == 3){
+					p.shift(shifted);
+				}
+			} else if (o instanceof Spikes) {
+				Spikes p = (Spikes) o;
+				if (p.getSpace() == 3){
+					System.out.println("wnfowe");
+					p.shift(shifted);
+				}
+			}
+		}
 		goalDoor.setOpen(false);
 		goalDoor.setAnimationState(Door.DoorState.LOCKED);
 		timeFreeze = false;
@@ -564,6 +570,12 @@ public class LevelController extends WorldController {
 			if (o instanceof Platform) {
 				Platform p = (Platform) o;
 				if (p.getSpace() == 3){
+					p.shift(shifted);
+				}
+			} else if (o instanceof Spikes) {
+				Spikes p = (Spikes) o;
+				if (p.getSpace() == 3){
+					System.out.println("wnfowe");
 					p.shift(shifted);
 				}
 			}
@@ -2174,6 +2186,8 @@ public class LevelController extends WorldController {
 
 	public void exitNextLevel(){
 		GameStateManager.getInstance().setCurrentLevel(levelNum+1, 0);
+		MusicController.getInstance().stopAll();
+		GameStateManager.getInstance().getCurrentLevel().playMusic();
 		listener.exitScreen(this, ScreenExitCodes.EXIT_NEXT.ordinal());
 	}
 
