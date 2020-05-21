@@ -24,6 +24,7 @@ import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -70,6 +71,9 @@ public class LevelController extends WorldController {
 	protected Container pauseButtonContainer;
 	protected Table volumeTable;
 	protected Container volumeContainer;
+
+	protected Table helpInfoTable;
+	protected Container helpContainer;
 	private TextureRegionDrawable overlayBG;
 	protected TextureRegion overlayDark;
 	protected Container<Stack> edgeContainer;
@@ -364,6 +368,10 @@ public class LevelController extends WorldController {
 	/** is the timeshift ripple active */
 	protected boolean shiftripple;
 
+	protected float zoom;
+	protected Float x_dist;
+	protected Float y_dist;
+
 	/**
 	 * Creates and initialize a new instance of the platformer game
 	 *
@@ -468,14 +476,6 @@ public class LevelController extends WorldController {
 		addQueue.clear();
 		world.dispose();
 		shifted = false;
-		for (Obstacle o: objects) {
-			if (o instanceof Platform) {
-				Platform p = (Platform) o;
-				if (p.getSpace() == 3){
-					p.shift(shifted);
-				}
-			}
-		}
 		ripple_intensity = 0.009f;
 		rippleSpeed = 0.25f;
 		rippleOn = false;
@@ -489,6 +489,20 @@ public class LevelController extends WorldController {
 		levelFormat = jsonReader.parse(Gdx.files.internal(json_filepath));
 
 		populateLevel();
+		for (Obstacle o: objects) {
+			if (o instanceof Platform) {
+				Platform p = (Platform) o;
+				if (p.getSpace() == 3){
+					p.shift(shifted);
+				}
+			} else if (o instanceof Spikes) {
+				Spikes p = (Spikes) o;
+				if (p.getSpace() == 3){
+					System.out.println("wnfowe");
+					p.shift(shifted);
+				}
+			}
+		}
 		goalDoor.setOpen(false);
 		goalDoor.setAnimationState(Door.DoorState.LOCKED);
 		timeFreeze = false;
@@ -499,7 +513,10 @@ public class LevelController extends WorldController {
 		hudViewport.getCamera().update();
 		resetRipple();
 		updateShader();
-
+		x_dist = null;
+		y_dist = null;
+		zoom = 3;
+		avatar.setHighestPos(avatar.getY());
 	}
 
 	public void resetGame() {
@@ -563,6 +580,12 @@ public class LevelController extends WorldController {
 				if (p.getSpace() == 3){
 					p.shift(shifted);
 				}
+			} else if (o instanceof Spikes) {
+				Spikes p = (Spikes) o;
+				if (p.getSpace() == 3){
+					System.out.println("wnfowe");
+					p.shift(shifted);
+				}
 			}
 		}
 		ripple_intensity = 0.009f;
@@ -588,7 +611,10 @@ public class LevelController extends WorldController {
 		viewport.getCamera().update();
 		stage.getCamera().update();
 		hudViewport.getCamera().update();
-
+		x_dist = null;
+		y_dist = null;
+		zoom = 3;
+		avatar.setHighestPos(avatar.getY());
 	}
 
 
@@ -819,17 +845,55 @@ public class LevelController extends WorldController {
 		pauseTimeLabel.setAlignment(Align.left);
 		pauseTimeLabel.setWrap(true);
 		pauseTimeLabel.setWidth(20);
+		pauseTimerTable.add(timerImg).width(sw/35).height(sh/25).right().top().padRight(8f);
+		pauseTimerTable.add(pauseTimeLabel).width(sw/20).height(sh/25).right().top();
+		pauseTimerTable.align(Align.topRight);
+
+		Table helpTable = new Table();
+		Button helpButton = new Button(new TextureRegionDrawable(assetManager.getEntry("help_icon", TextureRegion.class)));
+		helpTable.add(helpButton).width(sw/25).height(sw/25).top().right().pad(10f);
+		helpTable.align(Align.topLeft);
+		helpButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				super.clicked(event, x, y);
+				showHelpMenu();
+			}
+		});
+
+		helpContainer = new Container<>();
+		helpContainer.setBackground(overlayBG);
+		helpContainer.setPosition(0, 0);
+		helpContainer.fillX();
+		helpContainer.fillY();
+
+		TextureRegionDrawable exitInnerMenuButtonResource = new TextureRegionDrawable(assetManager.getEntry("select_backbutton", TextureRegion.class));
+
+		helpInfoTable = new Table();
+		helpInfoTable.setBackground(new TextureRegionDrawable(assetManager.getEntry("help_info_transparent", TextureRegion.class)));
+		Button exitHelpMenuButton = new Button(exitInnerMenuButtonResource);
+		exitHelpMenuButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				super.clicked(event, x, y);
+				hideHelpMenu();
+			}
+		});
+		helpInfoTable.align(Align.bottomLeft);
+		helpInfoTable.add(exitHelpMenuButton).width(sw/12).height(sw/15).bottom().left();
+		helpContainer.setActor(helpInfoTable);
+		helpContainer.setVisible(false);
+
+
 		pauseTimerTable.row().pad(10f);
 		pauseTimerTable.add(timerImg).width(sw/35).height(sh/25).right().top().padRight(8f);
 		pauseTimerTable.add(pauseTimeLabel).width(sw/20).height(sh/25).right().top();
 		pauseTimerTable.align(Align.topRight);
-		Container pauseTimerCont = new Container();
-		pauseTimerCont.setSize(sw-10, sh-10);
-		pauseTimerCont.setActor(pauseTimerTable);
 
 		Stack pauseStack = new Stack();
 		pauseStack.add(pauseTable);
 		pauseStack.add(pauseTimerTable);
+		pauseStack.add(helpTable);
 
 		pauseButtonContainer.setActor(pauseStack);
 		pauseButtonContainer.setVisible(false);
@@ -889,7 +953,6 @@ public class LevelController extends WorldController {
 		 * START VOLUME SCREEN SETUP ---------------------
 		 */
 		TextureRegionDrawable volumeButtonResource = new TextureRegionDrawable(assetManager.getEntry("settings_button", TextureRegion.class));
-		TextureRegionDrawable exitVolumeMenuButtonResource = new TextureRegionDrawable(assetManager.getEntry("select_backbutton", TextureRegion.class));
 
 		volumeContainer = new Container<>();
 		volumeContainer.setBackground(overlayBG);
@@ -906,7 +969,7 @@ public class LevelController extends WorldController {
 		soundEffectsSlider.setValue(soundVolume);
 		musicSlider = new Slider(0.0f, 1.25f, .05f, false, skin);
 		musicSlider.setValue(musicVolume);
-		Button exitVolumeMenuButton = new Button(exitVolumeMenuButtonResource);
+		Button exitVolumeMenuButton = new Button(exitInnerMenuButtonResource);
 		exitVolumeMenuButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -942,6 +1005,8 @@ public class LevelController extends WorldController {
 		volumeTable.add(exitVolumeMenuButton).width(sw / 8 / 1.5f).height(sh / 5.1f / .9f /2).colspan(sw).expand().bottom().left();
 
 		tableStack.add(volumeContainer);
+
+		tableStack.add(helpContainer);
 		/*
 		 * END VOLUME SCREEN SETUP---------------------
 		 */
@@ -1122,6 +1187,18 @@ public class LevelController extends WorldController {
 		pauseTable.setVisible(false);
 		volumeContainer.setVisible(true);
 		volumeTable.setVisible(true);
+	}
+	public void showHelpMenu(){
+		pauseButtonContainer.setVisible(false);
+		pauseTable.setVisible(false);
+		helpContainer.setVisible(true);
+		helpInfoTable.setVisible(true);
+	}
+	public void hideHelpMenu(){
+		pauseButtonContainer.setVisible(true);
+		pauseTable.setVisible(true);
+		helpContainer.setVisible(false);
+		helpInfoTable.setVisible(false);
 	}
 	public void hideVolumeMenu(){
 		pauseButtonContainer.setVisible(true);
@@ -2006,8 +2083,21 @@ public class LevelController extends WorldController {
 				} else {
 					bgSprite.setRegion(presentBackgroundTexture);
 				}
-
-				canvas.getSpriteBatch().draw(bgSprite, 0, 0, sw , sh);
+				avatar.setHighestPos(Math.max(avatar.getY(), avatar.getHighestPos()));
+				if (x_dist == null) {
+					x_dist = -canvas.getWidth() * 1f;
+				}
+				if (y_dist == null) {
+					y_dist = -canvas.getHeight() * 1f;
+				}
+				canvas.getSpriteBatch().draw(bgSprite, x_dist,y_dist, sw * zoom, sh * zoom);
+				float ratio = 3 / (goalDoor.getY() - avatar.getStartPos().y);
+				float x_ratio = -canvas.getWidth() * (zoom - 1) / 2f / (goalDoor.getY() - avatar.getStartPos().y);
+				float y_ratio = -canvas.getHeight() * (zoom - 1) / 2f / (goalDoor.getY() - avatar.getStartPos().y);
+				float dist = goalDoor.getY() - avatar.getHighestPos();
+				zoom = Interpolation.pow2Out.apply(zoom, Math.max(ratio * dist, 1), 0.025f);
+				x_dist = Interpolation.pow2Out.apply(x_dist, Math.min(x_ratio * dist, 0), 0.025f);
+				y_dist = Interpolation.pow2Out.apply(y_dist, Math.min(y_ratio * dist, 0), 0.025f);
 			}
 
 			canvas.getSpriteBatch().setProjectionMatrix(viewport.getCamera().combined);
@@ -2120,6 +2210,8 @@ public class LevelController extends WorldController {
 
 	public void exitNextLevel(){
 		GameStateManager.getInstance().setCurrentLevel(levelNum+1, 0);
+		MusicController.getInstance().stopAll();
+		GameStateManager.getInstance().getCurrentLevel().playMusic();
 		listener.exitScreen(this, ScreenExitCodes.EXIT_NEXT.ordinal());
 	}
 

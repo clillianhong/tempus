@@ -51,11 +51,11 @@
         0.0168,
         0.021375
       ],
-      "texture": "present_turret",
+      "texture": "past_turret",
       "density": 1,
       "bodytype": "static",
-      "entitytype": "present",
-      "cooldown": 360,
+      "entitytype": "past",
+      "cooldown": 500,
       "direction": [
         2.5,
         3
@@ -70,11 +70,11 @@
         0.0168,
         0.021375
       ],
-      "texture": "past_turret",
+      "texture": "present_turret",
       "density": 1,
       "bodytype": "static",
-      "entitytype": "past",
-      "cooldown": 360,
+      "entitytype": "present",
+      "cooldown": 500,
       "direction": [
         -2.5,
         3
