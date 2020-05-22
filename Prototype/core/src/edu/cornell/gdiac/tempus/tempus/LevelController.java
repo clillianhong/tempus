@@ -505,7 +505,6 @@ public class LevelController extends WorldController {
 			} else if (o instanceof Spikes) {
 				Spikes p = (Spikes) o;
 				if (p.getSpace() == 3){
-					System.out.println("wnfowe");
 					p.shift(shifted);
 				}
 			}
@@ -591,7 +590,6 @@ public class LevelController extends WorldController {
 			} else if (o instanceof Spikes) {
 				Spikes p = (Spikes) o;
 				if (p.getSpace() == 3){
-					System.out.println("wnfowe");
 					p.shift(shifted);
 				}
 			}
@@ -1075,9 +1073,7 @@ public class LevelController extends WorldController {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
-				GameStateManager.getInstance().printGameState();
 				GameStateManager.getInstance().stepGame(false);
-				GameStateManager.getInstance().printGameState();
 				exitLevelSelect();
 			}
 		});
