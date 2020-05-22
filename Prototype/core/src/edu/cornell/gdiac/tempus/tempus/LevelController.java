@@ -1380,11 +1380,11 @@ public class LevelController extends WorldController {
 //			listener.exitScreen(this, ScreenExitCodes.EXIT_PREV.ordinal());
 //			return false;
 //		} else
-
-		if(InputController.getInstance().didDebug()){
-			countdown=0;
-			complete = true;
-		}
+//
+//		if(InputController.getInstance().didDebug()){
+//			countdown=0;
+//			complete = true;
+//		}
 
 		if (countdown > 0) {
 			countdown--;
