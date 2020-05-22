@@ -480,8 +480,8 @@ public class GameStateManager {
     public void setCurrentLevel(int idx, int roomidx) {
         current_level_idx = idx;
         levels[current_level_idx].setCurrentRoom(roomidx);
-        System.out.println("idx " + idx);
-        System.out.println("roomidx " + roomidx);
+        //System.out.println("idx " + idx);
+        //System.out.println("roomidx " + roomidx);
     }
 
     /**

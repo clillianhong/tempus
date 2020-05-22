@@ -240,8 +240,8 @@ public class EnemyController {
                     }
                 } else if (e.getAi() == Enemy.EnemyType.TELEPORT) {
                     e.coolDown(true);
-                    System.out.println("frames after move: " + framesAfterMove);
-                    System.out.println("waiting to fire" + e.getWaitToFire());
+                    //System.out.println("frames after move: " + framesAfterMove);
+                    //System.out.println("waiting to fire" + e.getWaitToFire());
                     if (framesAfterMove >= 59 && e.getWaitToFire()) {
                         if (playerVisible) {
                             setBulletVelocity(BULLET_OFFSET, e);
