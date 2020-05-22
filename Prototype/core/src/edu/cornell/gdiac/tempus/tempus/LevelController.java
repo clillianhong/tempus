@@ -652,7 +652,7 @@ public class LevelController extends WorldController {
 
 		float[] newPlatCapsule = {0.5f, 1.1f, 0.6f, 1.1f, 2.4f, 1.1f, 2.6f, 1.1f, 2.6f, 0.6f, 2.0f, 0.3f, 1.1f, 0.3f, 0.5f, 0.6f};
 		float[] newPlatDiamond = {0.4f, 1.8f, 0.5f, 1.8f, 2.0f, 1.8f, 2.2f, 1.8f, 1.4f, 0.1f};
-		float[] newPlatRounded = {0.4f, 1.4f, 0.8f, 1.7f, 2.1f, 1.7f, 2.4f, 1.4f, 2.3f, 0.8f, 1.7f, 0.3f, 1.1f, 0.3f};
+		float[] newPlatRounded = {0.4f, 1.4f, 0.7f, 1.7f, 0.8f, 1.7f, 2.1f, 1.7f, 2.2f, 1.7f, 2.4f, 1.4f, 2.3f, 0.8f, 1.7f, 0.3f, 1.1f, 0.3f};
 		float[] newSpikes = {0.3f, -0.6f, 0.0f, -0.2f, -0.6f, 0.0f, -0.5f, 0.4f, 0.0f, 0.6f, 0.4f, -0.2f, 0.6f, -0.3f};
 		float[] newPlatLongcapsule = {0.5f, 1.1f, 0.6f, 1.1f, 4.7f, 1.1f, 4.9f, 1.1f, 4.9f, 0.6f, 4.3f, 0.3f, 3.4f, 0.3f,
 				2.7f, 0.5f, 2.0f, 0.3f, 1.1f, 0.3f, 0.5f, 0.6f};
@@ -1690,7 +1690,7 @@ public class LevelController extends WorldController {
 			}
 			m_rippleDistance += rippleSpeed * ticks;
 			m_rippleRange = (1 - m_rippleDistance / maxRippleDistance) * ripple_intensity;
-		}
+	}
 
 		// Process actions in object model
 		avatar.setJumping(InputController.getInstance().didPrimary());
@@ -1763,9 +1763,9 @@ public class LevelController extends WorldController {
 		m_rippleDistance = 0;
 		m_rippleRange = 0;
 		ripple_intensity = 0.009f;
-		rippleSpeed =  60 * (0.25f/(float) Gdx.graphics.getFramesPerSecond());
+		rippleSpeed =  60 * (0.25f / Math.min(Gdx.graphics.getFramesPerSecond(), 0.016f));
 		maxRippleDistance = 2f;
-		ripple_reset = Gdx.graphics.getFramesPerSecond() * (sw * 0.00025f / 60f);
+		ripple_reset = Math.min(Gdx.graphics.getFramesPerSecond(), 0.016f) * (sw * 0.00025f / 60f);
 	}
 	/**
 	 *
