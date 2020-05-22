@@ -467,6 +467,7 @@ public class LevelController extends WorldController {
 		flickerCount = 20;
 		flickerPeriod = 20;
 		inputReady = false;
+		isLongRoom = false;
 		shiftripple = false;
 		drawFadeAlpha = 0;
 		canvas.getSpriteBatch().setColor(1,1,1,1);
@@ -529,6 +530,7 @@ public class LevelController extends WorldController {
 		setComplete(false);
 		setFailure(false);
 		resetTimer();
+		isLongRoom = false;
 		drawEndRoom = false;
 		flickerCount = 20;
 		flickerPeriod = 20;
@@ -1573,16 +1575,6 @@ public class LevelController extends WorldController {
 			boolean dashAttempt = InputController.getInstance().releasedLeftMouseButton();
 			if (inputReady && dashAttempt) {
 
-//				if(avatar.getNumDashes()==1 && !shiftripple){
-//					rippleOn = true;
-//					ticks = 0;
-//					m_rippleDistance = 0;
-//					m_rippleRange = 0;
-//					ripple_intensity = 0.02f;
-//					rippleSpeed = (60/(float) Gdx.graphics.getFramesPerSecond()) * 0.25f ;
-//					maxRippleDistance = 0.25f;
-//					ripple_reset = ((float)Gdx.graphics.getFramesPerSecond() / 60f)* sw * 0.00025f / 4;
-//				}
 				enemyController.setPlayerVisible(true);
 				if(avatar.isSticking()){
 					avatar.setDashing(false);
@@ -1786,9 +1778,11 @@ public class LevelController extends WorldController {
 		m_rippleDistance = 0;
 		m_rippleRange = 0;
 		ripple_intensity = 0.009f;
-		rippleSpeed =  60 * (0.25f / Math.min(Gdx.graphics.getFramesPerSecond(), 0.016f));
+		rippleSpeed =  60 * (0.25f / Gdx.graphics.getFramesPerSecond());
 		maxRippleDistance = 2f;
-		ripple_reset = Math.min(Gdx.graphics.getFramesPerSecond(), 0.016f) * (sw * 0.00025f / 60f);
+//		System.out.println("fPS " + Gdx.graphics.getFramesPerSecond());
+		ripple_reset =  ((float) Gdx.graphics.getFramesPerSecond() / 60f) * (((float)sw) * 0.00025f);
+//		ripple_reset = sw * 0.00025f;
 	}
 	/**
 	 *
@@ -1807,6 +1801,8 @@ public class LevelController extends WorldController {
 	 */
 	public void postUpdate(float dt) {
 		super.postUpdate(dt);
+
+
 		if (avatar.getStartedDashing() > 0) {
 			avatar.setStartedDashing(0);
 		}
@@ -1875,7 +1871,6 @@ public class LevelController extends WorldController {
 			cursor = viewport.getCamera().unproject(cursor);
 			cursor.scl(1/scale.x, 1/scale.y,0);
 			Vector2 mousePos = new Vector2(cursor.x , cursor.y );
-			System.out.println("Mouse position: " + mousePos);
 		}
 	}
 
@@ -2046,7 +2041,6 @@ public class LevelController extends WorldController {
 	 */
 	public void draw(float delta) {
 
-
 		if(active){
 
 			canvas.clear();
@@ -2085,13 +2079,18 @@ public class LevelController extends WorldController {
 				flickerPeriod--;
 			}
 
+
 			//VIEWPORT UPDATES
 			if(!isLongRoom && !isEndGame){
+				stage.getBatch().begin();
 				stage.getBatch().setProjectionMatrix(stage.getViewport().getCamera().combined);
 
 	//				 render batch with shader
-				stage.getBatch().begin();
-				if (!isLongRoom && rippleOn) {
+//				System.out.println("is long room " + isLongRoom);
+//				if(rippleOn){
+//					System.out.println("IT IS RIPPLE TIME");
+//				}
+				if (rippleOn) {
 					updateShader();
 					stage.getBatch().setShader(shaderprog);
 				}
@@ -2104,6 +2103,7 @@ public class LevelController extends WorldController {
 				stage.getBatch().end();
 			}
 			else if(isEndGame){
+				stage.getBatch().begin();
 				stage.getBatch().setShader(shaderprog);
 				stage.getBatch().setProjectionMatrix(hudViewport.getCamera().combined);
 
@@ -2119,6 +2119,8 @@ public class LevelController extends WorldController {
 				stage.getBatch().end();
 			}
 
+
+
 			canvas.begin();
 
 			 if(isLongRoom){
@@ -2132,6 +2134,7 @@ public class LevelController extends WorldController {
 				}
 				avatar.setHighestPos(Math.max(avatar.getY(), avatar.getHighestPos()));
 
+				 System.out.println("not drawing");
 				canvas.getSpriteBatch().draw(bgSprite, 0, 0, canvas.getWidth() / 2,
 						canvas.getHeight() / 2, sw, sh, zoom, zoom, 0);
 				float ratio = 3 / (goalDoor.getY() - avatar.getStartPos().y);
@@ -2189,7 +2192,8 @@ public class LevelController extends WorldController {
 
 				}
 				if(!isLongRoom){
-					ripple_reset = ((float)Gdx.graphics.getFramesPerSecond() / 60f)* (sw * 0.0006f);
+//					ripple_reset = ((float)Gdx.graphics.getFramesPerSecond() / 60f)* (sw * 0.0006f);
+					ripple_reset = sw * 0.00025f;
 					ripple_intensity = 0.09f;
 				}
 				minAlpha = 0.5f;
@@ -2203,7 +2207,8 @@ public class LevelController extends WorldController {
 				minAlpha = 0f;
 				rippleOn = true;
 				rippleSpeed = 60 * (0.1f/(float) Gdx.graphics.getFramesPerSecond());
-				ripple_reset = ((float)Gdx.graphics.getFramesPerSecond() / 60f)* (sw * 0.0006f);
+//				ripple_reset = ((float)Gdx.graphics.getFramesPerSecond() / 60f)* (sw * 0.0006f);
+				ripple_reset = sw * 0.00025f;
 				ripple_intensity = 0.2f;
 				updateShader();
 
