@@ -50,6 +50,21 @@ public class SelectLevelMode implements Screen {
         private TextureRegionDrawable block;
         private  TextureRegionDrawable bdown;
 
+        public String getFormattedTime(float time){
+            int minutes = (int) (time / 60);
+            int second_i = (int) time % 60;
+            String seconds = "" + second_i;
+            if(seconds.length() > 2) {
+                seconds = seconds.substring(0,2);
+            }else if (seconds.length() == 1){
+                seconds = "0" + seconds;
+            }
+            if(minutes >= 60){
+                minutes = 0;
+            }
+            return minutes + ":" + seconds;
+        }
+
         public Level(int lev, boolean l, String preview, String buttonUp, String buttonDown, String buttonLocked, String textlore)
         {
             level = lev;
@@ -58,7 +73,13 @@ public class SelectLevelMode implements Screen {
             filePressUp = buttonUp;
             filePressDown = buttonDown;
             filePressLocked = buttonLocked;
-            this.loreLabel = new Label(textlore, style);
+            String loreText = textlore;
+            LevelModel levelM = GameStateManager.getInstance().getLevel(lev);
+            if(lev > 0 && levelM.getBestLevelTime() != 0){
+                loreText += "\n                  " +
+                        "                    Best Time: " + getFormattedTime(levelM.getBestLevelTime()) + " [m:s]";
+            }
+            this.loreLabel = new Label(loreText, style);
             this.loreLabel.setAlignment(Align.left);
             this.loreLabel.setWrap(true);
             this.loreLabel.setWidth(100);
@@ -269,8 +290,7 @@ public class SelectLevelMode implements Screen {
                 "tutorial_locked_button",
                 "There was once balance between the terra " +
                         "and the sky. Long ago, a deal was struck, " +
-                        "a hundred year curse. Beasts of each kind must " +
-                        "stay in their domain. Every living soul " +
+                        "a hundred year curse. Every living soul " +
                         "respected this promise. That is, until the " +
                         "Timewalkers were born.");
         levels[1] = new Level(1,true, "past_background1",
