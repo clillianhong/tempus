@@ -1381,6 +1381,11 @@ public class LevelController extends WorldController {
 //			return false;
 //		} else
 
+		if(InputController.getInstance().didDebug()){
+			countdown=0;
+			complete = true;
+		}
+
 		if (countdown > 0) {
 			countdown--;
 		} else if (countdown == 0 && complete) {
