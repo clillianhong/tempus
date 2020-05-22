@@ -220,6 +220,26 @@
       "file": "textures/gui/glow_logo.png",
       "wrap": false
     },
+    "endgame_background": {
+      "file": "textures/endgame/bg_end.jpg",
+      "wrap": false
+    },
+    "endgame_fluz_background": {
+      "file": "textures/endgame/fluz_bg_end.jpg",
+      "wrap": false
+    },
+    "endgame_fluz_eyeglow": {
+      "file": "textures/endgame/fluz_bg_end_glow.png",
+      "wrap": false
+    },
+    "endgame_fluz_bigglow": {
+      "file": "textures/endgame/fluz_bg_end_bigglow.png",
+      "wrap": false
+    },
+    "endgame_platform": {
+      "file": "textures/endgame/end_platform.png",
+      "wrap": false
+    },
     "past_background1": {
       "file": "textures/background/bg_past_lv_1.jpg",
       "wrap": false

@@ -108,6 +108,7 @@ public class LevelController extends WorldController {
 	Sprite bgSprite;
 	/** Alpha adjustment for end level drawing sequence */
 	protected boolean drawEndRoom;
+	protected boolean endSwitch;
 	/** Alpha adjustment for end level drawing sequence */
 	private float drawFadeAlpha;
 	/** Alpha minimum (darker for end of level) */
@@ -317,6 +318,8 @@ public class LevelController extends WorldController {
 	protected boolean isTutorial;
 	/** is long room mode */
 	protected boolean isLongRoom;
+	/** is long room mode */
+	protected boolean isEndGame;
 	/** is end of level room */
 	protected boolean isEndRoom;
 	/** is room 10 of level room */
@@ -351,6 +354,9 @@ public class LevelController extends WorldController {
 	/** FILEPATH TO JSON RESOURCE FOR THE LEVEL **/
 	protected String json_filepath;
 
+	protected boolean drawEndGame;
+	protected int flickerCount;
+	protected int flickerPeriod;
 	/** TextureRegion for room win state **/
 	protected TextureRegion win_room;
 
@@ -395,7 +401,10 @@ public class LevelController extends WorldController {
 		isTutorial = false;
 		ripple_intensity = 0.009f;
 		inputReady = false;
+		flickerCount = 20;
+		flickerPeriod = 20;
 		isLongRoom = false;
+		isEndGame = false;
 		//catchTicks = 0;
 		// ripple shader
 		ticks = 0f;
@@ -415,6 +424,7 @@ public class LevelController extends WorldController {
 		delta_y = 1000;
 		fish_pos = new Vector2(0, 0);
 		drawEndRoom = false;
+		drawEndGame = false;
 		drawFadeAlpha = 0;
 		minAlpha = 0.5f;
 		catchRepress = false;
@@ -432,6 +442,14 @@ public class LevelController extends WorldController {
 	 */
 	public void setLongRoom(boolean isLong){
 		isLongRoom = isLong;
+	}
+
+	/**
+	 * Sets isLongRoom
+	 * @param isEnd
+	 */
+	public void setEndGame(boolean isEnd){
+		isEndGame = isEnd;
 	}
 
 	/**
@@ -459,6 +477,9 @@ public class LevelController extends WorldController {
 	public void reset() {
 		// Vector2 gravity = new Vector2(world.getGravity());
 		drawEndRoom = false;
+		drawEndGame = false;
+		flickerCount = 20;
+		flickerPeriod = 20;
 		inputReady = false;
 		shiftripple = false;
 		drawFadeAlpha = 0;
@@ -526,6 +547,9 @@ public class LevelController extends WorldController {
 		setFailure(false);
 		resetTimer();
 		drawEndRoom = false;
+		flickerCount = 20;
+		flickerPeriod = 20;
+		drawEndGame = false;
 		shiftripple = false;
 		drawFadeAlpha = 0;
 		stage.clear();
@@ -648,6 +672,9 @@ public class LevelController extends WorldController {
 		presentBackgroundTexture = JsonAssetManager.getInstance().getEntry(levelFormat.get("present_background").asString(),
 				TextureRegion.class);
 		bgSprite = new Sprite(presentBackgroundTexture);
+
+		bgSprite.setRegion(presentBackgroundTexture,0,(int) (presentBackgroundTexture.getRegionHeight() * 0.9f),
+				presentBackgroundTexture.getRegionWidth(), presentBackgroundTexture.getRegionHeight()/3);
 
 //		win_room = new TextureRegion(new Texture(Gdx.files.local("textures/background/blackscreen.png")));
 		createUI();
@@ -1376,11 +1403,6 @@ public class LevelController extends WorldController {
 //			return false;
 //		} else
 
-		if(InputController.getInstance().didDebug()){
-			countdown = 0;
-			complete = true;
-		}
-
 		if (countdown > 0) {
 			countdown--;
 		} else if (countdown == 0 && complete) {
@@ -1389,6 +1411,8 @@ public class LevelController extends WorldController {
 					showWinLevel();
 				}else if (isRoom10){
 					showRoom10();
+				}else if(isEndGame){
+					listener.exitScreen(this, ScreenExitCodes.EXIT_ENDGAME.ordinal());
 				}else{
 					GameStateManager.getInstance().stepGame(true);
 					listener.exitScreen(this, ScreenExitCodes.EXIT_NEXT.ordinal());
@@ -1617,7 +1641,7 @@ public class LevelController extends WorldController {
 				}
 			}
 		}
-		if (inputReady && InputController.getInstance().pressedShiftKey()) {
+		if (inputReady && !isEndGame && InputController.getInstance().pressedShiftKey()) {
 			// update ripple shader params
 			if(!isLongRoom){
 				rippleOn = true;
@@ -2052,29 +2076,70 @@ public class LevelController extends WorldController {
 				drawFadeAlpha +=.01f;
 			}
 
+			if(drawEndGame){
+				if(flickerPeriod == 0){
+					drawEndRoom = false;
+					flickerPeriod = flickerCount;
+					flickerCount = Math.max(flickerCount-2, 2);
+					if (countdown < 250 && countdown > 200){
+						presentBackgroundTexture = JsonAssetManager.getInstance().getEntry("endgame_fluz_eyeglow", TextureRegion.class);
+					}else if (countdown < 200 && countdown > 100){
+						presentBackgroundTexture = JsonAssetManager.getInstance().getEntry("endgame_fluz_bigglow", TextureRegion.class);
+					}else if(countdown < 100){
+						presentBackgroundTexture = JsonAssetManager.getInstance().getEntry("endgame_fluz_eyeglow", TextureRegion.class);
+						stage.getBatch().setColor(1f,1f,1f,Math.max(minAlpha,1-drawFadeAlpha));
+						drawFadeAlpha +=.015f;
+					}
+					if(countdown > 200){
+						endSwitch = !endSwitch;
+						if(endSwitch){
+							presentBackgroundTexture = JsonAssetManager.getInstance().getEntry("endgame_fluz_background", TextureRegion.class);
+						}else{
+							presentBackgroundTexture = JsonAssetManager.getInstance().getEntry("endgame_background", TextureRegion.class);
+						}
+					}
+
+				}
+				flickerPeriod--;
+			}
+
 			//VIEWPORT UPDATES
-			if(!isLongRoom){
+			if(!isLongRoom && !isEndGame){
 				stage.getBatch().setProjectionMatrix(stage.getViewport().getCamera().combined);
 
-//				 render batch with shader
-			stage.getBatch().begin();
-			if (!isLongRoom && rippleOn) {
-				updateShader();
+	//				 render batch with shader
+				stage.getBatch().begin();
+				if (!isLongRoom && rippleOn) {
+					updateShader();
+					stage.getBatch().setShader(shaderprog);
+				}
+				if (shifted) {
+					bgSprite.setRegion(pastBackgroundTexture);
+				} else {
+					bgSprite.setRegion(presentBackgroundTexture);
+				}
+				stage.getBatch().draw(bgSprite, 0, 0, sw, sh);
+				stage.getBatch().end();
+			}
+			else if(isEndGame){
 				stage.getBatch().setShader(shaderprog);
-			}
-			if (shifted) {
-				bgSprite.setRegion(pastBackgroundTexture);
-			} else {
-				bgSprite.setRegion(presentBackgroundTexture);
-			}
-			stage.getBatch().draw(bgSprite, 0, 0, sw, sh);
-			stage.getBatch().end();
-			}
+				stage.getBatch().setProjectionMatrix(hudViewport.getCamera().combined);
 
+				stage.getBatch().begin();
+				int ystart = 0;
+				avatar.setHighestPos(Math.max(avatar.getY(), avatar.getHighestPos()));
+				ystart = (int) (presentBackgroundTexture.getRegionHeight() - (int) (presentBackgroundTexture.getRegionHeight() *
+						(avatar.getHighestPos()) / bounds.height ) - (presentBackgroundTexture.getRegionHeight()*0.3f)) ;
+				ystart = Math.max(0, ystart);
+				bgSprite.setRegion(presentBackgroundTexture,0,ystart,
+						presentBackgroundTexture.getRegionWidth(), presentBackgroundTexture.getRegionHeight()/3);
+				stage.getBatch().draw(bgSprite, 0,0, sw, sh);
+				stage.getBatch().end();
+			}
 
 			canvas.begin();
 
-			if(isLongRoom){
+			 if(isLongRoom){
 				canvas.getSpriteBatch().setProjectionMatrix(hudViewport.getCamera().combined);
 				hudViewport.apply();
 
@@ -2103,8 +2168,11 @@ public class LevelController extends WorldController {
 			canvas.getSpriteBatch().setProjectionMatrix(viewport.getCamera().combined);
 			viewport.apply();
 
-			drawObjectInWorld();
-			drawIndicator(canvas);
+			if(!drawEndGame){
+				drawObjectInWorld();
+				drawIndicator(canvas);
+			}
+
 
 			if (debug) {
 				canvas.beginDebug();
@@ -2112,15 +2180,18 @@ public class LevelController extends WorldController {
 				canvas.endDebug();
 			}
 
-			if(!isTutorial) {
+			if(isLongRoom || isEndGame) {
 				canvas.getSpriteBatch().setProjectionMatrix(hudViewport.getCamera().combined);
 				hudViewport.apply();
 			}
 
-			drawLives(canvas);
+			if(!isTutorial && !isEndGame){
+				drawLives(canvas);
+			}
+
 
 			// Final message
-			if (complete && !failed && !drawEndRoom) {
+			if (complete && !failed && !drawEndRoom && !isEndGame) {
 				inputReady = false;
 				drawEndRoom = true;
 				canvas.setBlendState(GameCanvas.BlendState.ADDITIVE);
@@ -2148,7 +2219,20 @@ public class LevelController extends WorldController {
 				}
 				minAlpha = 0.5f;
 				updateShader();
-			} else if (failed) {
+			} else if (complete && !failed && !drawEndGame && isEndGame){
+				inputReady = false;
+				canvas.setBlendState(GameCanvas.BlendState.ADDITIVE);
+				stage.getBatch().setBlendFunction(GL20.GL_SRC_ALPHA,GL20.GL_ONE);
+				drawEndGame = true;
+				countdown = 400;
+				minAlpha = 0f;
+				rippleOn = true;
+				rippleSpeed = 60 * (0.1f/(float) Gdx.graphics.getFramesPerSecond());
+				ripple_reset = ((float)Gdx.graphics.getFramesPerSecond() / 60f)* (sw * 0.0006f);
+				ripple_intensity = 0.2f;
+				updateShader();
+
+			}else if (failed) {
 				canvas.draw(overlayDark,Color.WHITE, 0, 0, sw, sh);
 			}
 

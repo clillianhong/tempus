@@ -1,8 +1,6 @@
 package edu.cornell.gdiac.tempus.tempus;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
@@ -19,8 +17,6 @@ import edu.cornell.gdiac.util.JsonAssetManager;
 
 public class EndGameController extends LevelController{
 
-
-
     /**
      * Creates and initialize a new instance of the platformer game
      * <p>
@@ -30,9 +26,15 @@ public class EndGameController extends LevelController{
      */
     public EndGameController(String json) {
         super(json);
-        this.bounds.height = DEFAULT_HEIGHT * 2;
+        this.bounds.height = DEFAULT_HEIGHT * 3;
     }
 
+    @Override
+    public void reset() {
+        super.reset();
+        levelFormat = jsonReader.parse(Gdx.files.internal("jsons/levels/endgame.json"));
+
+    }
 
     @Override
     public void render(float delta) {
@@ -40,6 +42,14 @@ public class EndGameController extends LevelController{
         updateCamera(sh, 2*sh);
         stage.getCamera().update();
         super.render(delta);
+    }
+
+    @Override
+    public void draw(float delta) {
+        super.draw(delta);
+        if(complete && !failed && !drawEndRoom){
+
+        }
     }
 
     @Override
@@ -169,7 +179,6 @@ public class EndGameController extends LevelController{
             enemy = enemy.next();
         }
 
-
         JsonValue turret = levelFormat.get("turrets").child();
         while (turret != null) {
             Enemy obj = new Enemy(turret);
@@ -186,13 +195,15 @@ public class EndGameController extends LevelController{
 
     public void updateCamera(float bottomCiel, float topFloor){
         Vector3 screenAvatarPos =new Vector3(camera.position.x, camera.position.y + (avatar.getY()*scale.y - camera.position.y) * 0.08f, 0);
-        camera.position.set(screenAvatarPos);
+
         if(screenAvatarPos.y < bottomCiel/2) {
             camera.position.y = camera.position.y + ( bottomCiel/2 - camera.position.y) * 0.02f;
         }
-
-        if(screenAvatarPos.y > topFloor){
-            camera.position.y = camera.position.y + ( topFloor+(bottomCiel/2)- camera.position.y) * 0.02f;
+        else if(screenAvatarPos.y > topFloor){
+            camera.position.y = camera.position.y + ( topFloor - camera.position.y) * 0.02f;
+        }
+        else{
+            camera.position.set(screenAvatarPos);
         }
 //        gameCam.unproject(new Vector3(avatar.getX(), avatar.getY(), 0));
         camera.update();
