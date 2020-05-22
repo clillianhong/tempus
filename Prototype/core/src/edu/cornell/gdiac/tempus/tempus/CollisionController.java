@@ -139,10 +139,7 @@ public class CollisionController implements ContactListener {
         Float norm_angle = contact.getWorldManifold().getNormal().angle();
 
         if (!norm_angle.isNaN()) {
-                        /*if ((norm_angle.intValue()) == 0){
-                            System.out.println("Fekwbfiewq");
-                            cur_normal = (float) Math.toRadians(90);
-                        } else {*/
+
             cur_normal = (float) Math.toRadians(norm_angle + 180);
             //}
         }

@@ -70,7 +70,6 @@ public class JsonAssetManager extends AssetManager {
      */
     public static JsonAssetManager getInstance() {
         if (manager == null) {
-            System.out.println("MADE A NEW JSON ASSET MANAGER INSTANCE");
             manager = new JsonAssetManager();
         }
         return manager;

@@ -1213,7 +1213,6 @@ public class LevelController extends WorldController {
 	}
 	public String getFormattedTime(float time){
 		int minutes = (int) (time / 60);
-		System.out.println("MINUTES " + minutes);
 		String seconds = "" + (int) time % 60;
 		if(seconds.length() > 2) {
 			seconds = seconds.substring(0,2);
@@ -1289,7 +1288,6 @@ public class LevelController extends WorldController {
 		if(BEGIN_COUNT_OG == 0){
 			BEGIN_COUNT_OG = Gdx.graphics.getFramesPerSecond()/2;
 			begincount = BEGIN_COUNT_OG;
-			System.out.println("BEGIN COUNT OG " + BEGIN_COUNT_OG);
 			resetRipple();
 		}
 
