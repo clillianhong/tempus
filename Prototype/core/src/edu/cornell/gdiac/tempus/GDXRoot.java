@@ -15,20 +15,10 @@ package edu.cornell.gdiac.tempus;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.assets.*;
-import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.graphics.g2d.freetype.*;
-import com.badlogic.gdx.assets.loaders.*;
-import com.badlogic.gdx.assets.loaders.resolvers.*;
 
-import com.badlogic.gdx.utils.JsonReader;
-import com.badlogic.gdx.utils.JsonValue;
-import com.badlogic.gdx.utils.Select;
-import edu.cornell.gdiac.audio.MusicBuffer;
 import edu.cornell.gdiac.tempus.tempus.*;
 import edu.cornell.gdiac.tempus.tempus.models.ScreenExitCodes;
 import edu.cornell.gdiac.util.*;
-
-import java.util.logging.Level;
 
 /**
  * Root class for a LibGDX.
@@ -64,7 +54,7 @@ public class GDXRoot extends Game implements ScreenListener {
 	/** Room Select Mode tester */
 	private SelectRoomMode roomSelectMode;
 	/** End Game controller */
-	private EndGameController endgame;
+	private LongRoomController endgame;
 
 
 	/**
@@ -99,7 +89,7 @@ public class GDXRoot extends Game implements ScreenListener {
 		canvas = new GameCanvas();
 //		canvas.setFullscreen(true,true);
 		loading = new LoadingMode(canvas, 1);
-		gameManager.loadGameState("tempus/jsons/game_state_prototype.json");
+		gameManager.loadGameState("tempus/jsons/game_state_final.json");
 		gameManager.setCanvas(canvas);
 		gameManager.setListener(this);
 		menu = new MainMenuMode();
@@ -170,18 +160,15 @@ public class GDXRoot extends Game implements ScreenListener {
 
 		if ((screen.getClass() == TutorialController.class ||
 				screen.getClass() == LevelController.class ||
-				screen.getClass() == EndGameController.class )) {
+				screen.getClass() == LongRoomController.class )) {
 
 			if(exitCode == ScreenExitCodes.EXIT_NEXT.ordinal()){
 				if (gameManager.endGameState()) {
 					gameManager.updateGameState();
 					gameManager.resetEndGame();
-					//MusicController.getInstance().stopAll();
-					levelselect.setScreenListener(this);
-					levelselect.setCanvas(canvas);
-					levelselect.createMode();
-
-					setScreen(levelselect);
+					gameManager.getEndGame().reset();
+					MusicController.getInstance().stopAll();
+					setScreen(gameManager.getEndGame());
 				} else {
 					gameManager.updateGameState();
 					LevelController room = gameManager.getCurrentRoom();
@@ -209,6 +196,11 @@ public class GDXRoot extends Game implements ScreenListener {
 			}
 			roomSelectMode.dispose();
 			roomSelectMode = null;
+		}else if(exitCode ==  ScreenExitCodes.EXIT_ENDGAME.ordinal()){
+			levelselect.setScreenListener(this);
+			levelselect.setCanvas(canvas);
+			levelselect.createMode();
+			setScreen(levelselect);
 		}
 		else if (screen == loading || exitCode == ScreenExitCodes.EXIT_LOAD.ordinal()) {
 			gameManager.readyLevels();
@@ -216,13 +208,6 @@ public class GDXRoot extends Game implements ScreenListener {
 			menu.setScreenListener(this);
 			menu.setCanvas(canvas);
 			setScreen(menu);
-
-//			endgame.loadContent();
-//			endgame.setScreenListener(this);
-//			endgame.setCanvas(canvas);
-//			endgame.reset();
-//			endgame.playMusic(1);
-
 			loading.dispose();
 			loading = null;
 		} else if (screen == menu) {

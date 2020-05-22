@@ -1,7 +1,6 @@
 package edu.cornell.gdiac.util;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
@@ -12,16 +11,13 @@ import com.badlogic.gdx.utils.*;
 import edu.cornell.gdiac.tempus.GameCanvas;
 import edu.cornell.gdiac.tempus.MusicController;
 import edu.cornell.gdiac.tempus.tempus.EndGameController;
+import edu.cornell.gdiac.tempus.tempus.LongRoomController;
 import edu.cornell.gdiac.tempus.tempus.LevelController;
 import edu.cornell.gdiac.tempus.tempus.TutorialController;
 import edu.cornell.gdiac.tempus.tempus.models.LevelModel;
-import edu.cornell.gdiac.tempus.tempus.models.ScreenExitCodes;
 import edu.cornell.gdiac.tempus.tempus.models.TutorialModel;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.HashMap;
 
 /**
@@ -128,6 +124,8 @@ public class GameStateManager {
     // private LevelModel currentLevel;
     /** Highest level unlocked this session **/
     private LevelModel highestUnlockedLevel;
+    /** the controller for the end game */
+    private EndGameController endgameController;
 
     /** current level index **/
     private int current_level_idx;
@@ -203,11 +201,11 @@ public class GameStateManager {
     }
 
     public GameState writeNewGameState(){
-        FileHandle gamefile = Gdx.files.external("tempus/jsons/game_state_prototype.json");
+        FileHandle gamefile = Gdx.files.external("tempus/jsons/game_state_final.json");
         Json json = new Json(JsonWriter.OutputType.json);
         json.setWriter(gamefile.writer(false));
         json.setOutputType(JsonWriter.OutputType.json);
-        int unfinishedLevel = 1;
+        int unfinishedLevel = 3;
         int[] unfinishedRoom = {20, 15, 15, 15};
         int num_levels = 4;
 
@@ -297,6 +295,13 @@ public class GameStateManager {
 //        for (int j = 0; j < num_levels; j++) {
 //            System.out.println(Arrays.toString(gameTime.get(j).asFloatArray()));
 //        }
+        endgameController = new EndGameController("jsons/levels/endgame.json");
+        endgameController.preLoadContent();
+        endgameController.setEndGame(true);
+    }
+
+    public EndGameController getEndGame(){
+        return endgameController;
     }
 
     /**
@@ -308,6 +313,10 @@ public class GameStateManager {
             level.setListener(listener);
             level.createLevel();
         }
+        endgameController.loadContent();
+        endgameController.setScreenListener(listener);
+        endgameController.setCanvas(canvas);
+
     }
 
     /**
@@ -325,7 +334,7 @@ public class GameStateManager {
 
         for (int i = 0; i < room_count; i++) {
             if(i==0){
-                rooms[i] = new EndGameController(room_paths[i]);
+                rooms[i] = new LongRoomController(room_paths[i]);
                 rooms[i].setLongRoom(true);
             }else{
                 rooms[i] = new LevelController(room_paths[i]);
@@ -511,7 +520,7 @@ public class GameStateManager {
      * Saves the whole game state to game.json and level jsons
      */
     public void saveGameState() {
-        FileHandle gamefile = Gdx.files.external("tempus/jsons/game_state_prototype.json");
+        FileHandle gamefile = Gdx.files.external("tempus/jsons/game_state_final.json");
         Json json = new Json(JsonWriter.OutputType.json);
         json.setWriter(gamefile.writer(false));
         json.setOutputType(JsonWriter.OutputType.json);
