@@ -371,7 +371,6 @@ public class SelectLevelMode implements Screen {
 
         pIContainer = new Container<>();
         pIContainer.size(cw/2f* 0.9f, ch/2f);
-        System.out.println("FILE PREVIEW " + levels[currentLevel].getFilePreview());
         Image previewImg = new Image(assetManager.getEntry(levels[currentLevel].getFilePreview(), TextureRegion.class));
 
         pIContainer.setActor(previewImg);
@@ -413,9 +412,6 @@ public class SelectLevelMode implements Screen {
 
         });
 
-        System.out.println("PREVIEW IMAGES: " + previewTextures);
-//        stage.addAction(Actions.alpha(0f));
-//        stage.addAction(Actions.fadeIn(1f));
 
     }
 

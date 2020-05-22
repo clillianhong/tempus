@@ -156,7 +156,6 @@ public class GDXRoot extends Game implements ScreenListener {
 	 * @param exitCode The state of the screen upon exit
 	 */
 	public void exitScreen(Screen screen, int exitCode) {
-		gameManager.printGameState();
 
 		if ((screen.getClass() == TutorialController.class ||
 				screen.getClass() == LevelController.class ||
