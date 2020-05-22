@@ -221,7 +221,7 @@
       "wrap": false
     },
     "endgame_background": {
-      "file": "textures/endgame/bg_end.jpg",
+      "file": "textures/endgame/bg_end.png",
       "wrap": false
     },
     "endgame_fluz_background": {

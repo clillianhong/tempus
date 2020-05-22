@@ -255,7 +255,6 @@ public class SelectRoomMode implements Screen {
                         if(roomNum <= highestRoom){
                             gameManager.setCurrentLevel(levelNum, roomNum);
                             gameManager.getCurrentLevel().setCurrentRoom(roomNum);
-                            gameManager.printGameState();
                             exitToRoom();
                         }
                     }
