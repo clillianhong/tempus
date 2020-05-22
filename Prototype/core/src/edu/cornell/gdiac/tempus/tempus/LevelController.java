@@ -10,27 +10,18 @@
  */
 package edu.cornell.gdiac.tempus.tempus;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.scenes.scene2d.Action;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -38,10 +29,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.*;
-import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import edu.cornell.gdiac.audio.MusicBuffer;
 import edu.cornell.gdiac.tempus.*;
 import edu.cornell.gdiac.util.*;
 import edu.cornell.gdiac.tempus.obstacle.*;
@@ -375,8 +363,6 @@ public class LevelController extends WorldController {
 	protected boolean shiftripple;
 
 	protected float zoom;
-	protected Float x_dist;
-	protected Float y_dist;
 
 	/**
 	 * Creates and initialize a new instance of the platformer game
@@ -534,8 +520,6 @@ public class LevelController extends WorldController {
 		hudViewport.getCamera().update();
 		resetRipple();
 		updateShader();
-		x_dist = null;
-		y_dist = null;
 		zoom = 3;
 		avatar.setHighestPos(avatar.getY());
 	}
@@ -635,8 +619,6 @@ public class LevelController extends WorldController {
 		viewport.getCamera().update();
 		stage.getCamera().update();
 		hudViewport.getCamera().update();
-		x_dist = null;
-		y_dist = null;
 		zoom = 3;
 		avatar.setHighestPos(avatar.getY());
 	}
@@ -1021,15 +1003,15 @@ public class LevelController extends WorldController {
 		Label musicPlusLabel = new Label("+", carterStyleSlider);
 		Label musicMinusLabel = new Label("-", carterStyleSlider);
 //		volumeTable.debug();
-		volumeTable.add(soundEffectsLabel).colspan(sw/4).left().padBottom(sh / 10).padLeft(sw/8).expandX();
-		volumeTable.add(soundEffectsMinusLabel).colspan(sw/8).padBottom(sh/10).right().padRight(4).expandX();
-		volumeTable.add(soundEffectsSlider).colspan(2 * sw / 4).padBottom(sh / 10).right().fillX().expandX();
-		volumeTable.add(soundEffectsPlusLabel).colspan(sw/8).padBottom(sh / 10).padLeft(4).left().expandX().padLeft(2).padRight(sw/8).row();
+		volumeTable.add(soundEffectsLabel).colspan(sw/4).left().padBottom(sh / 10).padLeft(sw/8).padTop(sh/4).expandX();
+		volumeTable.add(soundEffectsMinusLabel).colspan(sw/8).padBottom(sh/10).right().padRight(4).padTop(sh/4).expandX();
+		volumeTable.add(soundEffectsSlider).colspan(2 * sw / 4).padBottom(sh / 10).right().fillX().padTop(sh/4).expandX();
+		volumeTable.add(soundEffectsPlusLabel).colspan(sw/8).padBottom(sh / 10).padLeft(4).left().expandX().padTop(sh/4).padLeft(2).padRight(sw/8).row();
 		volumeTable.add(musicLabel).colspan(sw/4).left().padBottom(sh / 10).padLeft(sw/8).expandX();
 		volumeTable.add(musicMinusLabel).colspan(sw/8).padBottom(sh/10).padRight(4).right().expandX();
 		volumeTable.add(musicSlider).left().colspan(2 * sw / 4).fillX().padBottom(sh / 10).expandX();
 		volumeTable.add(musicPlusLabel).colspan(sw/8).padBottom(sh / 10).left().padLeft(4).expandX().padLeft(2).padRight(sw/8).row();
-		volumeTable.add(exitVolumeMenuButton).width(sw / 4 / 1.5f).height(sh / 5.1f / .9f).colspan(sw).expandX();
+		volumeTable.add(exitVolumeMenuButton).width(sw / 8 / 1.5f).height(sh / 5.1f / .9f /2).colspan(sw).expand().bottom().left();
 
 		tableStack.add(volumeContainer);
 
@@ -1992,14 +1974,15 @@ public class LevelController extends WorldController {
 		canvas.draw(streak, Color.WHITE, 0, 0, -0.2f * scale.x, canvas.getHeight() / 2 + 3.45f * scale.y, 6.5f * scale.x,
 				6.5f * scale.y);
 		int lvNum = GameStateManager.getInstance().getCurrentLevelIndex();
-		int rmNum = GameStateManager.getInstance().getCurrentLevel().getCurrentRoomNumber() + 1;
-		String levelInfo = "Level " + lvNum+"-"+rmNum;
-		glyphLayout.setText(displayFont, levelInfo);
-		//System.out.println(scale.x);
-		//System.out.println(scale.y);
-		displayFont.draw(canvas.getSpriteBatch(), glyphLayout, 1.5f * scale.x, canvas.getHeight()-2.5f * scale.y);
+		int rmNum = GameStateManager.getInstance().getCurrentLevel().getCurrentRoomNumber();
+		if (rmNum != 0) {
+			String levelInfo = "Level " + lvNum + "-" + rmNum;
+			glyphLayout.setText(displayFont, levelInfo);
+			//System.out.println(scale.x);
+			//System.out.println(scale.y);
+			displayFont.draw(canvas.getSpriteBatch(), glyphLayout, 1.5f * scale.x, canvas.getHeight() - 2.5f * scale.y);
 //		displayFont.draw(canvas.getSpriteBatch(), glyphLayout, -0.8f * scale.x, canvas.getHeight() / 2 + 3 * scale.y);
-
+		}
 		for (int i = 0; i < avatar.getLives(); i++) {
 			canvas.draw(life, Color.WHITE, 0, 0,
 					life.getRegionWidth() * 0.004f * scale.x + (life.getRegionWidth() * 0.005f * scale.x * i),
@@ -2149,20 +2132,12 @@ public class LevelController extends WorldController {
 					bgSprite.setRegion(presentBackgroundTexture);
 				}
 				avatar.setHighestPos(Math.max(avatar.getY(), avatar.getHighestPos()));
-				if (x_dist == null) {
-					x_dist = -canvas.getWidth() * 1f;
-				}
-				if (y_dist == null) {
-					y_dist = -canvas.getHeight() * 1f;
-				}
-				canvas.getSpriteBatch().draw(bgSprite, x_dist,y_dist, sw * zoom, sh * zoom);
+
+				canvas.getSpriteBatch().draw(bgSprite, 0, 0, canvas.getWidth() / 2,
+						canvas.getHeight() / 2, sw, sh, zoom, zoom, 0);
 				float ratio = 3 / (goalDoor.getY() - avatar.getStartPos().y);
-				float x_ratio = -canvas.getWidth() * (zoom - 1) / 2f / (goalDoor.getY() - avatar.getStartPos().y);
-				float y_ratio = -canvas.getHeight() * (zoom - 1) / 2f / (goalDoor.getY() - avatar.getStartPos().y);
 				float dist = goalDoor.getY() - avatar.getHighestPos();
 				zoom = Interpolation.pow2Out.apply(zoom, Math.max(ratio * dist, 1), 0.025f);
-				x_dist = Interpolation.pow2Out.apply(x_dist, Math.min(x_ratio * dist, 0), 0.025f);
-				y_dist = Interpolation.pow2Out.apply(y_dist, Math.min(y_ratio * dist, 0), 0.025f);
 			}
 
 			canvas.getSpriteBatch().setProjectionMatrix(viewport.getCamera().combined);
@@ -2188,6 +2163,7 @@ public class LevelController extends WorldController {
 			if(!isTutorial && !isEndGame){
 				drawLives(canvas);
 			}
+
 
 
 			// Final message

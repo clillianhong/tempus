@@ -314,7 +314,13 @@ public class SelectRoomMode implements Screen {
                     finishPage = true;
                     break;
                 }
-                String roomLabel = "Room " + (roomNum+1);
+                String roomLabel = "Room " + (roomNum);
+                if (levelNum == 0) {
+                    roomLabel = "Room " + (roomNum + 1);
+                }
+                if (roomNum == 0 && levelNum != 0){
+                    roomLabel = "Prologue";
+                }
                 Label tempLabel = new Label(roomLabel, style);
                 tempLabel.setAlignment(Align.center);
                 roomTables[page].add(tempLabel).width(cw/4).height(ch*0.2f).center();

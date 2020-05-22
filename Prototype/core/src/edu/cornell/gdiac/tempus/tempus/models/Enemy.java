@@ -304,8 +304,8 @@ public class Enemy extends CapsuleObstacle {
 //            FRAME_RATE = 11;
             FRAME_RATE = Gdx.graphics.getFramesPerSecond()/4;
             neutralTexture = JsonAssetManager.getInstance().getEntry(("enemyteleporting" + "_" + entitytype), FilmStrip.class);
-            attackingTexture = JsonAssetManager.getInstance().getEntry(("enemyteleporting_activate"), FilmStrip.class);
-            tpEndTexture = JsonAssetManager.getInstance().getEntry(("enemyteleporting_deactivate"), FilmStrip.class);
+            attackingTexture = JsonAssetManager.getInstance().getEntry(("enemyteleporting_activate" + "_" + entitytype), FilmStrip.class);
+            tpEndTexture = JsonAssetManager.getInstance().getEntry(("enemyteleporting_deactivate" + "_" + entitytype), FilmStrip.class);
             setFilmStrip(EnemyState.TPEND, tpEndTexture);
             minimizeScale = 0.35f;
             waitToFire = true;
