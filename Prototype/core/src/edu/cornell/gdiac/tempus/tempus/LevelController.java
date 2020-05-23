@@ -2089,7 +2089,6 @@ public class LevelController extends WorldController {
 				stage.getBatch().end();
 			}
 			else if(isEndGame){
-				stage.getBatch().begin();
 				stage.getBatch().setShader(shaderprog);
 				stage.getBatch().setProjectionMatrix(hudViewport.getCamera().combined);
 
