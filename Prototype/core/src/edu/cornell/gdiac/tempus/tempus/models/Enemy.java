@@ -202,11 +202,11 @@ public class Enemy extends CapsuleObstacle {
         if (entitytype.equals("present")) {
             minimizeScale = 0.4f;
 //            FRAME_RATE = 10;
-            FRAME_RATE = Gdx.graphics.getFramesPerSecond()/6;
+            FRAME_RATE = Gdx.graphics.getFramesPerSecond() < 40 ? 5 : 10;
         } else if (entitytype.equals("past")) {
             minimizeScale = 0.4f;
 //            FRAME_RATE = 10;
-            FRAME_RATE = Gdx.graphics.getFramesPerSecond()/6;
+            FRAME_RATE = Gdx.graphics.getFramesPerSecond() < 40 ? 5 : 10;
         }
 
         setPosition(pos[0], pos[1]);
@@ -288,7 +288,7 @@ public class Enemy extends CapsuleObstacle {
         case 1:
             ai = EnemyType.WALK;
             if (entitytype.equals("past")) {
-                FRAME_RATE = Gdx.graphics.getFramesPerSecond()/4;
+                FRAME_RATE = Gdx.graphics.getFramesPerSecond() < 40 ? 7.5f : 15;
             }
             neutralTexture = JsonAssetManager.getInstance().getEntry(("enemywalking" + "_" + entitytype), FilmStrip.class);
             attackingTexture = neutralTexture;
@@ -301,8 +301,7 @@ public class Enemy extends CapsuleObstacle {
 
         case 2:
             ai = EnemyType.TELEPORT;
-//            FRAME_RATE = 11;
-            FRAME_RATE = Gdx.graphics.getFramesPerSecond()/4;
+            FRAME_RATE =Gdx.graphics.getFramesPerSecond() < 40 ? 7.5f : 15;
             neutralTexture = JsonAssetManager.getInstance().getEntry(("enemyteleporting" + "_" + entitytype), FilmStrip.class);
             attackingTexture = JsonAssetManager.getInstance().getEntry(("enemyteleporting_activate" + "_" + entitytype), FilmStrip.class);
             tpEndTexture = JsonAssetManager.getInstance().getEntry(("enemyteleporting_deactivate" + "_" + entitytype), FilmStrip.class);
@@ -326,12 +325,11 @@ public class Enemy extends CapsuleObstacle {
 
         case 4:
             ai = EnemyType.FLY;
-//            FRAME_RATE = 6;
             if (entitytype.equals("present")) {
-                FRAME_RATE = Gdx.graphics.getFramesPerSecond()/10;
+                FRAME_RATE = Gdx.graphics.getFramesPerSecond() < 40 ? 5 : 10 ;
                 minimizeScale = 0.5f;
             } else if (entitytype.equals("past")) {
-                FRAME_RATE = Gdx.graphics.getFramesPerSecond()/8;
+                FRAME_RATE = Gdx.graphics.getFramesPerSecond() < 40 ? 3.75f : 7.5f;
                 minimizeScale = 0.4f;
                 setDimension(2.5f, 1f);
                 setMass(ENEMY_MASS/2);

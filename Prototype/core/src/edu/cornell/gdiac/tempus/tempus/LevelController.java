@@ -2143,7 +2143,6 @@ public class LevelController extends WorldController {
 			}
 
 			if(isLongRoom || isEndGame) {
-				System.out.println("entering here ");
 				canvas.getSpriteBatch().setProjectionMatrix(hudViewport.getCamera().combined);
 				hudViewport.apply();
 			}
