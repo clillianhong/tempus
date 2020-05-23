@@ -467,7 +467,6 @@ public class LevelController extends WorldController {
 		flickerCount = 20;
 		flickerPeriod = 20;
 		inputReady = false;
-		isLongRoom = false;
 		shiftripple = false;
 		drawFadeAlpha = 0;
 		canvas.getSpriteBatch().setColor(1,1,1,1);
@@ -530,7 +529,6 @@ public class LevelController extends WorldController {
 		setComplete(false);
 		setFailure(false);
 		resetTimer();
-		isLongRoom = false;
 		drawEndRoom = false;
 		flickerCount = 20;
 		flickerPeriod = 20;
@@ -1458,7 +1456,6 @@ public class LevelController extends WorldController {
 		// world.step(WORLD_STEP,WORLD_VELOC,WORLD_POSIT)
 		InputController input = InputController.getInstance();
 
-		//System.out.println("input ready: " + inputReady);
 		if (inputReady && input.didPause() && !paused) {
 			pauseGame();
 		}
@@ -1534,7 +1531,6 @@ public class LevelController extends WorldController {
 			t = t - 1;
 			avatar.setStartedDashing(t);
 		}
-		// System.out.println(numEnemies);
 		if (inputReady && enemyController.getEnemies() == 0) {
 			if (!goalDoor.getOpen()){
 				JsonValue chains = assetDirectory.get("sounds").get("door_unlock");
@@ -1783,9 +1779,7 @@ public class LevelController extends WorldController {
 		ripple_intensity = 0.009f;
 		rippleSpeed =  60 * (0.25f / Gdx.graphics.getFramesPerSecond());
 		maxRippleDistance = 2f;
-//		System.out.println("fPS " + Gdx.graphics.getFramesPerSecond());
 		ripple_reset =  ((float) Gdx.graphics.getFramesPerSecond() / 60f) * (((float)sw) * 0.00025f);
-//		ripple_reset = sw * 0.00025f;
 	}
 	/**
 	 *
@@ -1948,7 +1942,6 @@ public class LevelController extends WorldController {
 		// If player is holding a projectile, draw projectile indicator
 		// TODO: need to fix - line is a bit off
 		Vector2 projDir = startPos.cpy().sub(mousePos).scl(scale);
-		// System.out.println("HOLDING: " + avatar.isHolding());*/
 		TextureRegion projCircle = JsonAssetManager.getInstance().getEntry("projectile_circle", TextureRegion.class);
 		TextureRegion projArrow = JsonAssetManager.getInstance().getEntry("projectile_arrow", TextureRegion.class);
 		//The OG scale of the arrow
@@ -1975,10 +1968,8 @@ public class LevelController extends WorldController {
 		if (rmNum != 0) {
 			String levelInfo = "Level " + lvNum + "-" + rmNum;
 			glyphLayout.setText(displayFont, levelInfo);
-			//System.out.println(scale.x);
-			//System.out.println(scale.y);
+
 			displayFont.draw(canvas.getSpriteBatch(), glyphLayout, 1.5f * scale.x, canvas.getHeight() - 2.5f * scale.y);
-//		displayFont.draw(canvas.getSpriteBatch(), glyphLayout, -0.8f * scale.x, canvas.getHeight() / 2 + 3 * scale.y);
 		}
 		for (int i = 0; i < avatar.getLives(); i++) {
 			canvas.draw(life, Color.WHITE, 0, 0,
@@ -1998,15 +1989,12 @@ public class LevelController extends WorldController {
 		shaderprog.begin();
 		shaderprog.setUniformf("time", ticks);
 
-		// shaderprog.setUniformf("mousePos", new Vector2(0 * scale.x /
-		// sw , 0 * scale.y / sh));
-//		System.out.println("shader y position " + ((DEFAULT_HEIGHT - avatar.getPosition().y) * scale.y / sh));
+
 		shaderprog.setUniformf("mousePos", new Vector2(avatar.getPosition().x * scale.x / sw,
 				 (DEFAULT_HEIGHT - avatar.getPosition().y)*scale.y / sh));
 		shaderprog.setUniformf("deltax", Math.abs(delta_x / 100));
 		shaderprog.setUniformf("deltay", Math.abs(delta_y / 100));
 		// update ripple params
-//		System.out.println("Shader log: " +  shaderprog.getLog());
 		shaderprog.setUniformf("u_rippleDistance", m_rippleDistance);
 		shaderprog.setUniformf("u_rippleRange", m_rippleRange);
 		shaderprog.end();
@@ -2088,11 +2076,6 @@ public class LevelController extends WorldController {
 				stage.getBatch().begin();
 				stage.getBatch().setProjectionMatrix(stage.getViewport().getCamera().combined);
 
-	//				 render batch with shader
-//				System.out.println("is long room " + isLongRoom);
-//				if(rippleOn){
-//					System.out.println("IT IS RIPPLE TIME");
-//				}
 				if (rippleOn) {
 					updateShader();
 					stage.getBatch().setShader(shaderprog);
@@ -2137,7 +2120,6 @@ public class LevelController extends WorldController {
 				}
 				avatar.setHighestPos(Math.max(avatar.getY(), avatar.getHighestPos()));
 
-				 System.out.println("not drawing");
 				canvas.getSpriteBatch().draw(bgSprite, 0, 0, canvas.getWidth() / 2,
 						canvas.getHeight() / 2, sw, sh, zoom, zoom, 0);
 				float ratio = 3 / (goalDoor.getY() - avatar.getStartPos().y);
@@ -2161,6 +2143,7 @@ public class LevelController extends WorldController {
 			}
 
 			if(isLongRoom || isEndGame) {
+				System.out.println("entering here ");
 				canvas.getSpriteBatch().setProjectionMatrix(hudViewport.getCamera().combined);
 				hudViewport.apply();
 			}
